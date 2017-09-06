@@ -16,10 +16,10 @@
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
-    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>\\SERVER02\Company\Employee Folders\Tim Fehr\Programs\Batch Program\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Web</InstallFrom>
+    <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
@@ -27,7 +27,6 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://github.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/</InstallUrl>
     <TargetCulture>en-CA</TargetCulture>
     <ProductName>Inventor Batch Program</ProductName>
     <PublisherName>Flying Garden Gnome Studios</PublisherName>

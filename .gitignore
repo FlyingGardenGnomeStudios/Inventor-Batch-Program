@@ -240,3 +240,8 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+# Click-Once Application
+*.manifest binary
+*.application binary
+*.deploy binary
