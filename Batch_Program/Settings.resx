@@ -1,0 +1,888 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="rdoPDFChoose.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="rdoPDFChoose.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 6</value>
+  </data>
+  <data name="rdoPDFChoose.Size" type="System.Drawing.Size, System.Drawing">
+    <value>117, 17</value>
+  </data>
+  <data name="rdoPDFChoose.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="rdoPDFChoose.Text" xml:space="preserve">
+    <value>Choose Every Time</value>
+  </data>
+  <data name="&gt;&gt;rdoPDFChoose.Name" xml:space="preserve">
+    <value>rdoPDFChoose</value>
+  </data>
+  <data name="&gt;&gt;rdoPDFChoose.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rdoPDFChoose.Parent" xml:space="preserve">
+    <value>tabPDF</value>
+  </data>
+  <data name="&gt;&gt;rdoPDFChoose.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="chkPDFRev.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkPDFRev.Location" type="System.Drawing.Point, System.Drawing">
+    <value>126, 7</value>
+  </data>
+  <data name="chkPDFRev.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 17</value>
+  </data>
+  <data name="chkPDFRev.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="chkPDFRev.Text" xml:space="preserve">
+    <value>Append Revision</value>
+  </data>
+  <data name="&gt;&gt;chkPDFRev.Name" xml:space="preserve">
+    <value>chkPDFRev</value>
+  </data>
+  <data name="&gt;&gt;chkPDFRev.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkPDFRev.Parent" xml:space="preserve">
+    <value>tabPDF</value>
+  </data>
+  <data name="&gt;&gt;chkPDFRev.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="txtPDFTag.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="txtPDFTag.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 101</value>
+  </data>
+  <data name="txtPDFTag.Size" type="System.Drawing.Size, System.Drawing">
+    <value>227, 20</value>
+  </data>
+  <data name="txtPDFTag.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="txtPDFTag.Text" xml:space="preserve">
+    <value>ex: \Drawings\PDF</value>
+  </data>
+  <data name="&gt;&gt;txtPDFTag.Name" xml:space="preserve">
+    <value>txtPDFTag</value>
+  </data>
+  <data name="&gt;&gt;txtPDFTag.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtPDFTag.Parent" xml:space="preserve">
+    <value>tabPDF</value>
+  </data>
+  <data name="&gt;&gt;txtPDFTag.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="rdoPDFTag.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="rdoPDFTag.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="rdoPDFTag.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 78</value>
+  </data>
+  <data name="rdoPDFTag.Size" type="System.Drawing.Size, System.Drawing">
+    <value>227, 17</value>
+  </data>
+  <data name="rdoPDFTag.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="rdoPDFTag.Text" xml:space="preserve">
+    <value>Tag following structure to drawing location:</value>
+  </data>
+  <data name="&gt;&gt;rdoPDFTag.Name" xml:space="preserve">
+    <value>rdoPDFTag</value>
+  </data>
+  <data name="&gt;&gt;rdoPDFTag.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rdoPDFTag.Parent" xml:space="preserve">
+    <value>tabPDF</value>
+  </data>
+  <data name="&gt;&gt;rdoPDFTag.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="btnPDFLocBrowse.Location" type="System.Drawing.Point, System.Drawing">
+    <value>173, 52</value>
+  </data>
+  <data name="btnPDFLocBrowse.Size" type="System.Drawing.Size, System.Drawing">
+    <value>61, 23</value>
+  </data>
+  <data name="btnPDFLocBrowse.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="btnPDFLocBrowse.Text" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="&gt;&gt;btnPDFLocBrowse.Name" xml:space="preserve">
+    <value>btnPDFLocBrowse</value>
+  </data>
+  <data name="&gt;&gt;btnPDFLocBrowse.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnPDFLocBrowse.Parent" xml:space="preserve">
+    <value>tabPDF</value>
+  </data>
+  <data name="&gt;&gt;btnPDFLocBrowse.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="txtPDFSaveLoc.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="txtPDFSaveLoc.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 52</value>
+  </data>
+  <data name="txtPDFSaveLoc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>160, 20</value>
+  </data>
+  <data name="txtPDFSaveLoc.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;txtPDFSaveLoc.Name" xml:space="preserve">
+    <value>txtPDFSaveLoc</value>
+  </data>
+  <data name="&gt;&gt;txtPDFSaveLoc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtPDFSaveLoc.Parent" xml:space="preserve">
+    <value>tabPDF</value>
+  </data>
+  <data name="&gt;&gt;txtPDFSaveLoc.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="rdoPDFSaveLoc.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rdoPDFSaveLoc.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 29</value>
+  </data>
+  <data name="rdoPDFSaveLoc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>160, 17</value>
+  </data>
+  <data name="rdoPDFSaveLoc.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="rdoPDFSaveLoc.Text" xml:space="preserve">
+    <value>Use The Following Location:</value>
+  </data>
+  <data name="&gt;&gt;rdoPDFSaveLoc.Name" xml:space="preserve">
+    <value>rdoPDFSaveLoc</value>
+  </data>
+  <data name="&gt;&gt;rdoPDFSaveLoc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rdoPDFSaveLoc.Parent" xml:space="preserve">
+    <value>tabPDF</value>
+  </data>
+  <data name="&gt;&gt;rdoPDFSaveLoc.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="tabPDF.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabPDF.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabPDF.Size" type="System.Drawing.Size, System.Drawing">
+    <value>240, 127</value>
+  </data>
+  <data name="tabPDF.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="tabPDF.Text" xml:space="preserve">
+    <value>PDF</value>
+  </data>
+  <data name="&gt;&gt;tabPDF.Name" xml:space="preserve">
+    <value>tabPDF</value>
+  </data>
+  <data name="&gt;&gt;tabPDF.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPDF.Parent" xml:space="preserve">
+    <value>tabSaveLoc</value>
+  </data>
+  <data name="&gt;&gt;tabPDF.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="chkDXFRev.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkDXFRev.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkDXFRev.Location" type="System.Drawing.Point, System.Drawing">
+    <value>126, 7</value>
+  </data>
+  <data name="chkDXFRev.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 17</value>
+  </data>
+  <data name="chkDXFRev.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="chkDXFRev.Text" xml:space="preserve">
+    <value>Append Revision</value>
+  </data>
+  <data name="&gt;&gt;chkDXFRev.Name" xml:space="preserve">
+    <value>chkDXFRev</value>
+  </data>
+  <data name="&gt;&gt;chkDXFRev.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkDXFRev.Parent" xml:space="preserve">
+    <value>tabDXF</value>
+  </data>
+  <data name="&gt;&gt;chkDXFRev.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="txtDXFTag.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="txtDXFTag.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 101</value>
+  </data>
+  <data name="txtDXFTag.Size" type="System.Drawing.Size, System.Drawing">
+    <value>227, 20</value>
+  </data>
+  <data name="txtDXFTag.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="txtDXFTag.Text" xml:space="preserve">
+    <value>ex: \Drawings\DXF</value>
+  </data>
+  <data name="&gt;&gt;txtDXFTag.Name" xml:space="preserve">
+    <value>txtDXFTag</value>
+  </data>
+  <data name="&gt;&gt;txtDXFTag.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtDXFTag.Parent" xml:space="preserve">
+    <value>tabDXF</value>
+  </data>
+  <data name="&gt;&gt;txtDXFTag.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="rdoDXFTag.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rdoDXFTag.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="rdoDXFTag.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 78</value>
+  </data>
+  <data name="rdoDXFTag.Size" type="System.Drawing.Size, System.Drawing">
+    <value>227, 17</value>
+  </data>
+  <data name="rdoDXFTag.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="rdoDXFTag.Text" xml:space="preserve">
+    <value>Tag following structure to drawing location:</value>
+  </data>
+  <data name="&gt;&gt;rdoDXFTag.Name" xml:space="preserve">
+    <value>rdoDXFTag</value>
+  </data>
+  <data name="&gt;&gt;rdoDXFTag.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rdoDXFTag.Parent" xml:space="preserve">
+    <value>tabDXF</value>
+  </data>
+  <data name="&gt;&gt;rdoDXFTag.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="btnDXFLocBrowse.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnDXFLocBrowse.Location" type="System.Drawing.Point, System.Drawing">
+    <value>173, 52</value>
+  </data>
+  <data name="btnDXFLocBrowse.Size" type="System.Drawing.Size, System.Drawing">
+    <value>61, 23</value>
+  </data>
+  <data name="btnDXFLocBrowse.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="btnDXFLocBrowse.Text" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="&gt;&gt;btnDXFLocBrowse.Name" xml:space="preserve">
+    <value>btnDXFLocBrowse</value>
+  </data>
+  <data name="&gt;&gt;btnDXFLocBrowse.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnDXFLocBrowse.Parent" xml:space="preserve">
+    <value>tabDXF</value>
+  </data>
+  <data name="&gt;&gt;btnDXFLocBrowse.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="rdoDXFChoose.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rdoDXFChoose.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 6</value>
+  </data>
+  <data name="rdoDXFChoose.Size" type="System.Drawing.Size, System.Drawing">
+    <value>117, 17</value>
+  </data>
+  <data name="rdoDXFChoose.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="rdoDXFChoose.Text" xml:space="preserve">
+    <value>Choose Every Time</value>
+  </data>
+  <data name="&gt;&gt;rdoDXFChoose.Name" xml:space="preserve">
+    <value>rdoDXFChoose</value>
+  </data>
+  <data name="&gt;&gt;rdoDXFChoose.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rdoDXFChoose.Parent" xml:space="preserve">
+    <value>tabDXF</value>
+  </data>
+  <data name="&gt;&gt;rdoDXFChoose.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="txtDXFSaveLoc.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="txtDXFSaveLoc.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 52</value>
+  </data>
+  <data name="txtDXFSaveLoc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>160, 20</value>
+  </data>
+  <data name="txtDXFSaveLoc.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;txtDXFSaveLoc.Name" xml:space="preserve">
+    <value>txtDXFSaveLoc</value>
+  </data>
+  <data name="&gt;&gt;txtDXFSaveLoc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtDXFSaveLoc.Parent" xml:space="preserve">
+    <value>tabDXF</value>
+  </data>
+  <data name="&gt;&gt;txtDXFSaveLoc.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="rdoDXFSaveLoc.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rdoDXFSaveLoc.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 29</value>
+  </data>
+  <data name="rdoDXFSaveLoc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>160, 17</value>
+  </data>
+  <data name="rdoDXFSaveLoc.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="rdoDXFSaveLoc.Text" xml:space="preserve">
+    <value>Use The Following Location:</value>
+  </data>
+  <data name="&gt;&gt;rdoDXFSaveLoc.Name" xml:space="preserve">
+    <value>rdoDXFSaveLoc</value>
+  </data>
+  <data name="&gt;&gt;rdoDXFSaveLoc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rdoDXFSaveLoc.Parent" xml:space="preserve">
+    <value>tabDXF</value>
+  </data>
+  <data name="&gt;&gt;rdoDXFSaveLoc.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="tabDXF.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabDXF.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabDXF.Size" type="System.Drawing.Size, System.Drawing">
+    <value>240, 127</value>
+  </data>
+  <data name="tabDXF.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tabDXF.Text" xml:space="preserve">
+    <value>DXF</value>
+  </data>
+  <data name="&gt;&gt;tabDXF.Name" xml:space="preserve">
+    <value>tabDXF</value>
+  </data>
+  <data name="&gt;&gt;tabDXF.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabDXF.Parent" xml:space="preserve">
+    <value>tabSaveLoc</value>
+  </data>
+  <data name="&gt;&gt;tabDXF.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="chkDWGRev.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkDWGRev.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkDWGRev.Location" type="System.Drawing.Point, System.Drawing">
+    <value>126, 7</value>
+  </data>
+  <data name="chkDWGRev.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 17</value>
+  </data>
+  <data name="chkDWGRev.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="chkDWGRev.Text" xml:space="preserve">
+    <value>Append Revision</value>
+  </data>
+  <data name="&gt;&gt;chkDWGRev.Name" xml:space="preserve">
+    <value>chkDWGRev</value>
+  </data>
+  <data name="&gt;&gt;chkDWGRev.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkDWGRev.Parent" xml:space="preserve">
+    <value>tabDWG</value>
+  </data>
+  <data name="&gt;&gt;chkDWGRev.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="txtDWGTag.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="txtDWGTag.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 101</value>
+  </data>
+  <data name="txtDWGTag.Size" type="System.Drawing.Size, System.Drawing">
+    <value>227, 20</value>
+  </data>
+  <data name="txtDWGTag.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="txtDWGTag.Text" xml:space="preserve">
+    <value>ex: \Drawings\DWG</value>
+  </data>
+  <data name="&gt;&gt;txtDWGTag.Name" xml:space="preserve">
+    <value>txtDWGTag</value>
+  </data>
+  <data name="&gt;&gt;txtDWGTag.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtDWGTag.Parent" xml:space="preserve">
+    <value>tabDWG</value>
+  </data>
+  <data name="&gt;&gt;txtDWGTag.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="rdoDWGTag.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rdoDWGTag.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="rdoDWGTag.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 78</value>
+  </data>
+  <data name="rdoDWGTag.Size" type="System.Drawing.Size, System.Drawing">
+    <value>227, 17</value>
+  </data>
+  <data name="rdoDWGTag.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="rdoDWGTag.Text" xml:space="preserve">
+    <value>Tag following structure to drawing location:</value>
+  </data>
+  <data name="&gt;&gt;rdoDWGTag.Name" xml:space="preserve">
+    <value>rdoDWGTag</value>
+  </data>
+  <data name="&gt;&gt;rdoDWGTag.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rdoDWGTag.Parent" xml:space="preserve">
+    <value>tabDWG</value>
+  </data>
+  <data name="&gt;&gt;rdoDWGTag.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="btnDWGBrowse.Location" type="System.Drawing.Point, System.Drawing">
+    <value>173, 52</value>
+  </data>
+  <data name="btnDWGBrowse.Size" type="System.Drawing.Size, System.Drawing">
+    <value>61, 23</value>
+  </data>
+  <data name="btnDWGBrowse.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="btnDWGBrowse.Text" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="&gt;&gt;btnDWGBrowse.Name" xml:space="preserve">
+    <value>btnDWGBrowse</value>
+  </data>
+  <data name="&gt;&gt;btnDWGBrowse.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnDWGBrowse.Parent" xml:space="preserve">
+    <value>tabDWG</value>
+  </data>
+  <data name="&gt;&gt;btnDWGBrowse.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="rdoDWGChoose.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rdoDWGChoose.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 6</value>
+  </data>
+  <data name="rdoDWGChoose.Size" type="System.Drawing.Size, System.Drawing">
+    <value>117, 17</value>
+  </data>
+  <data name="rdoDWGChoose.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="rdoDWGChoose.Text" xml:space="preserve">
+    <value>Choose Every Time</value>
+  </data>
+  <data name="&gt;&gt;rdoDWGChoose.Name" xml:space="preserve">
+    <value>rdoDWGChoose</value>
+  </data>
+  <data name="&gt;&gt;rdoDWGChoose.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rdoDWGChoose.Parent" xml:space="preserve">
+    <value>tabDWG</value>
+  </data>
+  <data name="&gt;&gt;rdoDWGChoose.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="txtDWGSaveLoc.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="txtDWGSaveLoc.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 52</value>
+  </data>
+  <data name="txtDWGSaveLoc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>160, 20</value>
+  </data>
+  <data name="txtDWGSaveLoc.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;txtDWGSaveLoc.Name" xml:space="preserve">
+    <value>txtDWGSaveLoc</value>
+  </data>
+  <data name="&gt;&gt;txtDWGSaveLoc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtDWGSaveLoc.Parent" xml:space="preserve">
+    <value>tabDWG</value>
+  </data>
+  <data name="&gt;&gt;txtDWGSaveLoc.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="rdoDWGSaveLoc.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rdoDWGSaveLoc.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 29</value>
+  </data>
+  <data name="rdoDWGSaveLoc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>160, 17</value>
+  </data>
+  <data name="rdoDWGSaveLoc.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="rdoDWGSaveLoc.Text" xml:space="preserve">
+    <value>Use The Following Location:</value>
+  </data>
+  <data name="&gt;&gt;rdoDWGSaveLoc.Name" xml:space="preserve">
+    <value>rdoDWGSaveLoc</value>
+  </data>
+  <data name="&gt;&gt;rdoDWGSaveLoc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rdoDWGSaveLoc.Parent" xml:space="preserve">
+    <value>tabDWG</value>
+  </data>
+  <data name="&gt;&gt;rdoDWGSaveLoc.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="tabDWG.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabDWG.Size" type="System.Drawing.Size, System.Drawing">
+    <value>240, 127</value>
+  </data>
+  <data name="tabDWG.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="tabDWG.Text" xml:space="preserve">
+    <value>DWG</value>
+  </data>
+  <data name="&gt;&gt;tabDWG.Name" xml:space="preserve">
+    <value>tabDWG</value>
+  </data>
+  <data name="&gt;&gt;tabDWG.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabDWG.Parent" xml:space="preserve">
+    <value>tabSaveLoc</value>
+  </data>
+  <data name="&gt;&gt;tabDWG.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="tabSaveLoc.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 19</value>
+  </data>
+  <data name="tabSaveLoc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>248, 153</value>
+  </data>
+  <data name="tabSaveLoc.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;tabSaveLoc.Name" xml:space="preserve">
+    <value>tabSaveLoc</value>
+  </data>
+  <data name="&gt;&gt;tabSaveLoc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabSaveLoc.Parent" xml:space="preserve">
+    <value>GroupBox1</value>
+  </data>
+  <data name="&gt;&gt;tabSaveLoc.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="GroupBox1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 12</value>
+  </data>
+  <data name="GroupBox1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>260, 178</value>
+  </data>
+  <data name="GroupBox1.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="GroupBox1.Text" xml:space="preserve">
+    <value>Export Locations</value>
+  </data>
+  <data name="&gt;&gt;GroupBox1.Name" xml:space="preserve">
+    <value>GroupBox1</value>
+  </data>
+  <data name="&gt;&gt;GroupBox1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;GroupBox1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;GroupBox1.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="btnOK.Location" type="System.Drawing.Point, System.Drawing">
+    <value>197, 196</value>
+  </data>
+  <data name="btnOK.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btnOK.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="btnOK.Text" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="&gt;&gt;btnOK.Name" xml:space="preserve">
+    <value>btnOK</value>
+  </data>
+  <data name="&gt;&gt;btnOK.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnOK.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnOK.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="btnCancel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>116, 196</value>
+  </data>
+  <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btnCancel.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="btnCancel.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.Name" xml:space="preserve">
+    <value>btnCancel</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnCancel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="FolderBrowserDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>284, 231</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="&gt;&gt;FolderBrowserDialog1.Name" xml:space="preserve">
+    <value>FolderBrowserDialog1</value>
+  </data>
+  <data name="&gt;&gt;FolderBrowserDialog1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FolderBrowserDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+</root>

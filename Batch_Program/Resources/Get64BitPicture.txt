@@ -1,0 +1,28 @@
+Attribute VB_Name = "Get64BitPicture"
+Public Sub Thumbnail()
+Dim FSO As Object, TmpFolder As Object
+Set FSO = CreateObject("scripting.filesystemobject")
+Set TmpFolder = FSO.GetSpecialFolder(2)
+Dim strFilename As String: strFilename = TmpFolder & "\PartSource.txt"
+Dim strTextLine As String
+Dim iFile As Integer: iFile = FreeFile
+        Open strFilename For Input As #iFile
+Do Until EOF(1)
+        Line Input #1, strTextLine
+Loop
+        Close #iFile
+' Get the active document.
+Dim doc As Document
+Set doc = ThisApplication.Documents.Open(strTextLine, False)
+' Get the thumbnail from the document.
+Dim thumb As IPictureDisp
+Set thumb = doc.PropertySets.Item("Inventor Summary Information").Item("Thumbnail").Value
+' Create the filename for the bmp file so it is the same
+' as the document name but with a "bmp" extension.
+Dim fileName As String
+If Not thumb Is Nothing Then
+     fileName = TmpFolder & "\Thumbnail.jpg"
+     ' Save the thumbnail.
+     Call SavePicture(thumb, fileName)
+End If
+End Sub

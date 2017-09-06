@@ -1,0 +1,138 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="PDFSaveLoc" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DXFSaveLoc" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DWGSaveLoc" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PDFTag" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DXFTag" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DWGTag" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PDFSaveNewLoc" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PDFSaveTag" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DXFSaveNewLoc" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DXFSaveTag" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DWGSaveNewLoc" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DWGSaveTag" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PDFRev" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DXFRev" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DWGRev" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DupName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Title" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Subject" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Author" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Manager" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Company" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Category" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Keywords" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Comments" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Location" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Subtype" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="PPartNumber" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="PStockNumber" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Description" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Revision" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Drawing</Value>
+    </Setting>
+    <Setting Name="Project" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Designer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Engineer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Vendor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="SPartNumber" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="SStockNumber" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="Status" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Drawing</Value>
+    </Setting>
+    <Setting Name="ModelDate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Model</Value>
+    </Setting>
+    <Setting Name="DrawingDate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Drawing</Value>
+    </Setting>
+    <Setting Name="DrawingBy" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Drawing</Value>
+    </Setting>
+    <Setting Name="DesignState" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Drawing</Value>
+    </Setting>
+    <Setting Name="CheckedBy" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Drawing</Value>
+    </Setting>
+    <Setting Name="CheckedDate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Drawing</Value>
+    </Setting>
+    <Setting Name="Custom" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Drawing</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
