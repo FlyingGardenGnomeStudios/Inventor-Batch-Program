@@ -153,21 +153,21 @@ Public Class Main
     End Sub
     Private Sub Main_Load(sender As Object, e As System.EventArgs) Handles Me.Load
 
-        Dim Days As Integer
-        HandleRegistry(My.Settings.Registered, Days)
-        Trial.PopMain(Me)
-        If My.Settings.Registered = False Then
+        'Dim Days As Integer
+        'HandleRegistry(My.Settings.Registered, Days)
+        'Trial.PopMain(Me)
+        'If My.Settings.Registered = False Then
 
-            If Days < 1 Then 'something went wrong
-                Trial.Label1.Text = "The trial period for this program has expired"
+        '    If Days < 1 Then 'something went wrong
+        '        Trial.Label1.Text = "The trial period for this program has expired"
 
-            Else
-                Trial.Label1.Text = "You are currently running the trial version" & vbNewLine &
-               "This version will expire in " & Days & " Days"
-            End If
-            Trial.ShowDialog()
-        End If
-        UpdateForm()
+        '    Else
+        '        Trial.Label1.Text = "You are currently running the trial version" & vbNewLine &
+        '       "This version will expire in " & Days & " Days"
+        '    End If
+        '    Trial.ShowDialog()
+        'End If
+        'UpdateForm()
     End Sub
     Private Sub btnExit_Click(sender As System.Object, e As System.EventArgs) Handles btnExit.Click
         If btnExit.Text = "Exit" Then

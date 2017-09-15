@@ -86,8 +86,8 @@ Partial Class Main
         Me.AboutBatchProgramToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HowToToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.MsVistaProgressBar1 = New MSVistaProgressBar()
         Me.Button1 = New System.Windows.Forms.Button()
+        Me.MsVistaProgressBar1 = New MSVistaProgressBar()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -682,6 +682,16 @@ Partial Class Main
         Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
         Me.ContextMenuStrip1.Size = New System.Drawing.Size(61, 4)
         '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(676, 213)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 23)
+        Me.Button1.TabIndex = 62
+        Me.Button1.Text = "Button1"
+        Me.Button1.UseVisualStyleBackColor = True
+        Me.Button1.Visible = False
+        '
         'MsVistaProgressBar1
         '
         Me.MsVistaProgressBar1.BackColor = System.Drawing.Color.Transparent
@@ -698,15 +708,6 @@ Partial Class Main
         Me.MsVistaProgressBar1.Size = New System.Drawing.Size(536, 20)
         Me.MsVistaProgressBar1.TabIndex = 56
         Me.MsVistaProgressBar1.Visible = False
-        '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(676, 213)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 62
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
         '
         'Main
         '
