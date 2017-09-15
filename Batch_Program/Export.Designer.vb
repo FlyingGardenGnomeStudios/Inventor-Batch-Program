@@ -150,6 +150,7 @@ Partial Class Export
         Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.GroupBox1)
         Me.Name = "Export"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Export"
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()

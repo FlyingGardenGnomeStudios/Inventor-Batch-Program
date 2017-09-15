@@ -11,6 +11,10 @@ Imports System.Drawing
 Imports System.Drawing.Imaging
 Imports System.Diagnostics
 Imports System.Threading
+Imports System.IO
+Imports System.Text.RegularExpressions
+Imports System.Security.Cryptography
+Imports System.Net.NetworkInformation
 
 Public Class Main
     Dim _invApp As Inventor.Application
@@ -31,6 +35,13 @@ Public Class Main
     Dim InvRef(0 To 9) As Inventor.Property
     Dim CustomPropSet As PropertySet
     Dim Time As System.DateTime = Now
+    Dim Loading As Boolean = True
+    Dim strFileToEncrypt As String
+    Dim strFileToDecrypt As String
+    Dim strOutputEncrypt As String
+    Dim strOutputDecrypt As String
+    Dim fsInput As System.IO.FileStream
+    Dim fsOutput As System.IO.FileStream
 
     Public Sub writeDebug(ByVal x As String)
         Dim path As String = My.Computer.FileSystem.SpecialDirectories.Temp
@@ -70,7 +81,7 @@ Public Class Main
             End Try
         End Try
         writeDebug("Inventor Accessed")
-
+        LVSubFiles.Columns(0).Width = LVSubFiles.Width - 10
     End Sub
     Public Function PopiProperties(CalledFunction As iProperties)
         iProperties = CalledFunction
@@ -141,6 +152,21 @@ Public Class Main
         End If
     End Sub
     Private Sub Main_Load(sender As Object, e As System.EventArgs) Handles Me.Load
+
+        Dim Days As Integer
+        HandleRegistry(My.Settings.Registered, Days)
+        Trial.PopMain(Me)
+        If My.Settings.Registered = False Then
+
+            If Days < 1 Then 'something went wrong
+                Trial.Label1.Text = "The trial period for this program has expired"
+
+            Else
+                Trial.Label1.Text = "You are currently running the trial version" & vbNewLine &
+               "This version will expire in " & Days & " Days"
+            End If
+            Trial.ShowDialog()
+        End If
         UpdateForm()
     End Sub
     Private Sub btnExit_Click(sender As System.Object, e As System.EventArgs) Handles btnExit.Click
@@ -579,7 +605,7 @@ Public Class Main
 
     Private Sub RunCompleted()
         If SubFiles.Count > 10 Then
-            LVSubFiles.Height = lstOpenfiles.Height - 25
+            txtSearch.Location = New Drawing.Point(LVSubFiles.Location.X, Me.Height - 122)
             txtSearch.Visible = True
             txtSearch.Text = "Search"
             txtSearch.ForeColor = Drawing.Color.Gray
@@ -606,6 +632,7 @@ Public Class Main
                 End If
             Next
         End If
+        LVSubFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
         MsVistaProgressBar1.Visible = False
         Me.Update()
     End Sub
@@ -2016,7 +2043,7 @@ Public Class Main
                 For Each Rtr In oRevTable.RevisionTableRows
                     For Each RTCell In Rtr
                         If i = 3 And RevType = 1 Then
-                            RTCell.Text = "ISSUED FOR CONSTRUCTION"
+                            RTCell.Text = "APPROVED FOR MANUFACTURING"
                             Exit For
                         ElseIf i = 3 And RevType = 0 Then
                             RTCell.Text = "ISSUED FOR REVIEW"
@@ -2380,7 +2407,7 @@ Public Class Main
         End If
     End Sub
     Private Sub txtSearch_TextChanged(sender As Object, e As System.EventArgs) Handles txtSearch.TextChanged
-        If txtSearch.ForeColor = Drawing.Color.Gray Then Exit Sub
+        If txtSearch.ForeColor = Drawing.Color.Gray Or txtSearch.Text = "Search" Then Exit Sub
         LVSubFiles.Items.Clear()
 
         For Each item As KeyValuePair(Of String, String) In SubFiles
@@ -2436,6 +2463,11 @@ Public Class Main
     Private Sub LVSubFiles_MouseUp(sender As Object, e As MouseEventArgs) Handles LVSubFiles.MouseUp
         If e.Button = Windows.Forms.MouseButtons.Right Then
             CMSSubFiles.Show(Cursor.Position)
+            If LVSubFiles.Items(LVSubFiles.FocusedItem.Index).Checked = True Then
+                LVSubFiles.Items(LVSubFiles.FocusedItem.Index).Checked = False
+            Else
+                LVSubFiles.Items(LVSubFiles.FocusedItem.Index).Checked = True
+            End If
         End If
     End Sub
     Private Sub CMSAlphabetical_Click(sender As Object, e As EventArgs) Handles CMSAlphabetical.Click
@@ -2584,10 +2616,139 @@ Public Class Main
         CMSHide.Checked = False
     End Sub
     Private Sub ExportText(Heirarchical As Boolean, Hidden As Boolean, Text As Boolean, OpenFiles As Boolean)
-        MsgBox("Heirarchical: " & Heirarchical & vbNewLine &
-               "Show: " & Hidden & vbNewLine &
-               "Text: " & Text & vbNewLine &
-               "Openfiles: " & OpenFiles)
+        Dim filetype As String = ""
+        If Text = True Then
+            filetype = ".txt"
+
+            If My.Computer.FileSystem.FileExists(My.Computer.FileSystem.SpecialDirectories.Temp & "\Parts List" & filetype) Then
+                Kill(My.Computer.FileSystem.SpecialDirectories.Temp & "\Parts List" & filetype)
+            End If
+
+            Dim File As System.IO.StreamWriter = My.Computer.FileSystem.OpenTextFileWriter(
+                My.Computer.FileSystem.SpecialDirectories.Temp & "\Parts List" & filetype, True)
+            Dim Parents As String = ""
+
+            Try
+
+                File.WriteLine("File created at-- " & DateTime.Now)
+                For Each item In lstOpenfiles.CheckedItems
+                    Parents = vbTab & item.ToString & vbNewLine & Parents
+                Next
+                File.WriteLine(vbNewLine & "Files associated with " & vbNewLine & vbNewLine & Parents & vbNewLine & vbNewLine &
+                                "Filename:" & vbTab & vbTab & "Location:" & vbNewLine)
+                If CMSHeirarchical.Checked = True Then
+                    For Each pair As KeyValuePair(Of String, String) In SubFiles
+                        If CMSShow.Checked = True Then
+                            If InStr(pair.Key, "(DNE)") <> 0 Then
+                                File.WriteLine(Strings.Replace(pair.Key, "(DNE)", "") & ":" & vbTab & pair.Value)
+                            Else
+                                File.WriteLine(pair.Key & ":" & vbTab & pair.Value)
+                            End If
+                        Else
+                            If Not InStr(pair.Key, "(DNE)") <> 0 Then
+                                File.WriteLine(pair.Key & ":" & vbTab & pair.Value)
+                            End If
+                        End If
+                    Next
+                ElseIf CMSHeirarchical.Checked = False Then
+                    For Each pair As KeyValuePair(Of String, String) In AlphaSub
+                        If CMSShow.Checked = True Then
+                            If InStr(pair.Key, "(DNE)") <> 0 Then
+                                File.WriteLine(Strings.Replace(pair.Key, "(DNE)", "") & ":" & vbTab & pair.Value)
+                            Else
+                                File.WriteLine(pair.Key & ":" & vbTab & pair.Value)
+                            End If
+                        Else
+                            If Not InStr(pair.Key, "(DNE)") <> 0 Then
+                                File.WriteLine(pair.Key & ":" & vbTab & pair.Value)
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                MsgBox("Error Creating Log File")
+            End Try
+        Else
+            filetype = ".xls"
+            If My.Computer.FileSystem.FileExists(My.Computer.FileSystem.SpecialDirectories.Temp & "\Parts List" & filetype) Then
+                Kill(My.Computer.FileSystem.SpecialDirectories.Temp & "\Parts List" & filetype)
+            End If
+            Dim xlApp As Excel.Application = New Microsoft.Office.Interop.Excel.Application()
+            If xlApp Is Nothing Then
+                MessageBox.Show("Excel is not properly installed!!")
+                Return
+            End If
+            Dim xlWorkBook As Excel.Workbook
+            Dim xlWorkSheet As Excel.Worksheet
+            xlApp.Visible = False
+            Dim misValue As Object = System.Reflection.Missing.Value
+            xlWorkBook = xlApp.Workbooks.Add(misValue)
+            xlWorkSheet = xlWorkBook.Sheets("sheet1")
+            xlWorkSheet.Cells(2, 2) = "Files associated with"
+            Dim X As Integer
+            For X = 0 To lstOpenfiles.CheckedItems.Count - 1
+                xlWorkSheet.Cells(3 + X, 2) = lstOpenfiles.Items(X)
+            Next
+            If CMSHeirarchical.Checked = True Then
+                For Each pair As KeyValuePair(Of String, String) In SubFiles
+                    If CMSShow.Checked = True Then
+                        If InStr(pair.Key, "(DNE)") <> 0 Then
+                            'xlWorkSheet.Cells(InStrRev(pair.Key, " "), X + 2) = Strings.Replace(pair.Key, "(DNE)", "") & ":" & vbTab & pair.Value
+                            xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(DNE)", "")
+                            xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
+                        Else
+                            xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Trim(pair.Key)
+                            xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
+                        End If
+                    Else
+                        If Not InStr(pair.Key, "(DNE)") <> 0 Then
+                            xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Trim(pair.Key)
+                            xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
+                        End If
+                    End If
+                    X += 1
+                Next
+            ElseIf CMSHeirarchical.Checked = False Then
+                For Each pair As KeyValuePair(Of String, String) In AlphaSub
+                    If CMSShow.Checked = True Then
+                        If InStr(pair.Key, "(DNE)") <> 0 Then
+                            xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(DNE)", "")
+                            xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
+                        Else
+                            xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Trim(pair.Key)
+                            xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
+                        End If
+                    Else
+                        If Not InStr(pair.Key, "(DNE)") <> 0 Then
+                            xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Trim(pair.Key)
+                            xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
+                        End If
+                    End If
+                    X += 1
+                Next
+            End If
+            xlWorkBook.SaveAs(My.Computer.FileSystem.SpecialDirectories.Temp & "\Parts List" & filetype, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue,
+            Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue)
+            xlWorkBook.Close(True, misValue, misValue)
+            xlApp.Quit()
+            releaseObject(xlWorkSheet)
+            releaseObject(xlWorkBook)
+            releaseObject(xlApp)
+
+        End If
+        Process.Start(My.Computer.FileSystem.SpecialDirectories.Temp & "\Parts List" & filetype)
+    End Sub
+
+
+    Private Sub releaseObject(ByVal obj As Object)
+        Try
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(obj)
+            obj = Nothing
+        Catch ex As Exception
+            obj = Nothing
+        Finally
+            GC.Collect()
+        End Try
     End Sub
 
     Private Sub CMSSubSpreadsheet_Click(sender As Object, e As EventArgs) Handles CMSSubSpreadsheet.Click
@@ -2621,9 +2782,276 @@ Public Class Main
             e.Item.Checked = False
         End If
         LVSubFiles.FocusedItem = Nothing
+        If LVSubFiles.Items.Count > 10 Then LVSubFiles.Height = lstOpenfiles.Height - 25
     End Sub
 
-    Private Sub LVSubFiles_ItemActivate(sender As Object, e As EventArgs) Handles LVSubFiles.ItemActivate
-
+    Private Sub Rename_Resize(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Resize
+        GroupBox4.Location = New Drawing.Point(Me.Width - 208, 27)
+        btnOK.Location = New Drawing.Point(Me.Width - 115, Me.Height - 70)
+        btnExit.Location = New Drawing.Point(Me.Width - 196, btnOK.Location.Y)
+        GroupBox2.Height = (Me.Height - 96)
+        GroupBox2.Width = (Me.Width - 375) / 2
+        GroupBox3.Height = GroupBox2.Height
+        GroupBox3.Width = GroupBox2.Width
+        GroupBox3.Location = New Drawing.Point(GroupBox2.Location.X + GroupBox2.Width + 6, GroupBox2.Location.Y)
+        lstOpenfiles.Height = GroupBox2.Height - 24
+        lstOpenfiles.Width = GroupBox2.Width - 22
+        LVSubFiles.Width = GroupBox3.Width - 22
+        LVSubFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
+        MsVistaProgressBar1.Location = New Drawing.Point(12, Me.Height - 67)
+        MsVistaProgressBar1.Width = Me.Width - 226
+        GroupBox5.Location = New Drawing.Point(12, Me.Height - 187)
+        If VScrollVis = False Then
+            LVSubFiles.Height = GroupBox2.Height - 24
+        Else
+            LVSubFiles.Height = GroupBox2.Height - 49
+            txtSearch.Width = LVSubFiles.Width
+            txtSearch.Location = New Drawing.Point(LVSubFiles.Location.X, Me.Height - 122)
+        End If
+        PictureBox2.Location = New Drawing.Point(GroupBox3.Location.X + 21, 27)
     End Sub
+    Private VScrollVis As Boolean = False
+    Private Sub lvsubfiles_ClientSizeChanged(sender As Object, e As EventArgs) Handles LVSubFiles.ClientSizeChanged
+
+        'VScrollVis = IsVScrollVisible(LVSubFiles)
+        'If VScrollVis = True Then
+        '    txtSearch.Visible = True
+        '    LVSubFiles.Height = lstOpenfiles.Height - 25
+        'txtSearch.Visible = True
+        'txtSearch.Text = "Search"
+        'txtSearch.ForeColor = Drawing.Color.Gray
+        'Else
+        'LVSubFiles.Height = lstOpenfiles.Height
+        'txtSearch.Visible = False
+        'End If
+        'MyBase.OnClientSizeChanged(e)
+    End Sub
+    Private Const GWL_STYLE As Integer = -16
+    Private Const WS_HSCROLL = &H100000
+    Private Const WS_VSCROLL = &H200000
+
+    <DllImport("user32.dll", SetLastError:=True)>
+    Private Shared Function GetWindowLong(ByVal hWnd As IntPtr,
+                       ByVal nIndex As Integer) As Integer
+    End Function
+
+    ' sometimes you use wrappers since many, many, many things could call
+    ' SendMessage and so that your code doesnt need to know all the MSG params
+    Friend Shared Function IsVScrollVisible(ByVal ctl As Control) As Boolean
+        Dim wndStyle As Integer = GetWindowLong(ctl.Handle, GWL_STYLE)
+        Return ((wndStyle And WS_VSCROLL) <> 0)
+
+    End Function
+
+    Private Sub LVSubFiles_Resize(sender As Object, e As EventArgs) Handles LVSubFiles.Resize
+        If Not txtSearch.IsHandleCreated Then
+            If LVSubFiles.Items.Count > 10 Then
+                'VScrollVis = IsVScrollVisible(LVSubFiles)
+                ' If VScrollVis = True Then
+                txtSearch.Visible = True
+                txtSearch.Location = New Drawing.Point(LVSubFiles.Location.X, Me.Height - 122)
+                txtSearch.Visible = True
+                txtSearch.Text = "Search"
+                txtSearch.ForeColor = Drawing.Color.Gray
+            Else
+                LVSubFiles.Height = lstOpenfiles.Height
+                    txtSearch.Visible = False
+                End If
+            End If
+    End Sub
+    Private Sub HandleRegistry(ByRef Registered As Boolean, ByRef Days As Integer)
+        Dim firstRunDate As Date
+        Try
+            If Registered = False Then
+                firstRunDate = My.Computer.Registry.GetValue("HKEY_CURRENT_USER\Software\Autodesk\Inventor\Current Version", "FirstRun", Nothing)
+                If firstRunDate = Nothing Then
+                    firstRunDate = Now
+                    My.Computer.Registry.SetValue("HKEY_CURRENT_USER\Software\Autodesk\Inventor\Current Version", "FirstRun", firstRunDate)
+                ElseIf (Now - firstRunDate).Days > My.Settings.RegTime Then
+                    Days = My.Settings.RegTime - (Now - firstRunDate).Days
+                End If
+                Days = My.Settings.RegTime - (Now - firstRunDate).Days
+            End If
+        Catch
+        End Try
+    End Sub
+    Function getMacAddress()
+        Dim nics() As NetworkInterface = NetworkInterface.GetAllNetworkInterfaces()
+        Return nics(0).GetPhysicalAddress.ToString
+    End Function
+    'Public Sub SetupEncrypt()
+    '    Try
+
+    '        Dim original As String = getMacAddress()
+
+    '        ' Create a new instance of the RijndaelManaged
+    '        ' class.  This generates a new key and initialization 
+    '        ' vector (IV).
+    '        Using myRijndael As New RijndaelManaged()
+
+    '            myRijndael.GenerateKey()
+    '            myRijndael.GenerateIV()
+
+    '            ' Encrypt the string to an array of bytes.
+    '            Dim encrypted As Byte() = EncryptStringToBytes(original, myRijndael.Key, myRijndael.IV)
+
+    '            ' Decrypt the bytes to a string.
+    '            Dim roundtrip As String = DecryptStringFromBytes(encrypted, myRijndael.Key, myRijndael.IV)
+
+    '            'Display the original data and the decrypted data.
+    '            Console.WriteLine("Original:   {0}", original)
+    '            Console.WriteLine("Round Trip: {0}", roundtrip)
+    '        End Using
+    '    Catch e As Exception
+    '        Console.WriteLine("Error: {0}", e.Message)
+    '    End Try
+
+    'End Sub 'Main
+
+    'Shared Function EncryptStringToBytes(ByVal plainText As String, ByVal Key() As Byte, ByVal IV() As Byte) As Byte()
+    '    ' Check arguments.
+    '    If plainText Is Nothing OrElse plainText.Length <= 0 Then
+    '        Throw New ArgumentNullException("plainText")
+    '    End If
+    '    If Key Is Nothing OrElse Key.Length <= 0 Then
+    '        Throw New ArgumentNullException("Key")
+    '    End If
+    '    If IV Is Nothing OrElse IV.Length <= 0 Then
+    '        Throw New ArgumentNullException("IV")
+    '    End If
+    '    Dim encrypted() As Byte
+    '    ' Create an RijndaelManaged object
+    '    ' with the specified key and IV.
+    '    Using rijAlg As New RijndaelManaged()
+
+    '        rijAlg.Key = Key
+    '        rijAlg.IV = IV
+
+    '        ' Create a decrytor to perform the stream transform.
+    '        Dim encryptor As ICryptoTransform = rijAlg.CreateEncryptor(rijAlg.Key, rijAlg.IV)
+    '        ' Create the streams used for encryption.
+    '        Using msEncrypt As New MemoryStream()
+    '            Using csEncrypt As New CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write)
+    '                Using swEncrypt As New StreamWriter(csEncrypt)
+
+    '                    'Write all data to the stream.
+    '                    swEncrypt.Write(plainText)
+    '                End Using
+    '                encrypted = msEncrypt.ToArray()
+    '            End Using
+    '        End Using
+    '    End Using
+
+    '    ' Return the encrypted bytes from the memory stream.
+    '    Return encrypted
+
+    'End Function 'EncryptStringToBytes
+
+    'Shared Function DecryptStringFromBytes(ByVal cipherText() As Byte, ByVal Key() As Byte, ByVal IV() As Byte) As String
+    '    ' Check arguments.
+    '    If cipherText Is Nothing OrElse cipherText.Length <= 0 Then
+    '        Throw New ArgumentNullException("cipherText")
+    '    End If
+    '    If Key Is Nothing OrElse Key.Length <= 0 Then
+    '        Throw New ArgumentNullException("Key")
+    '    End If
+    '    If IV Is Nothing OrElse IV.Length <= 0 Then
+    '        Throw New ArgumentNullException("IV")
+    '    End If
+    '    ' Declare the string used to hold
+    '    ' the decrypted text.
+    '    Dim plaintext As String = Nothing
+
+    '    ' Create an RijndaelManaged object
+    '    ' with the specified key and IV.
+    '    Using rijAlg As New RijndaelManaged
+    '        rijAlg.Key = Key
+    '        rijAlg.IV = IV
+
+    '        ' Create a decrytor to perform the stream transform.
+    '        Dim decryptor As ICryptoTransform = rijAlg.CreateDecryptor(rijAlg.Key, rijAlg.IV)
+
+    '        ' Create the streams used for decryption.
+    '        Using msDecrypt As New MemoryStream(cipherText)
+
+    '            Using csDecrypt As New CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read)
+
+    '                Using srDecrypt As New StreamReader(csDecrypt)
+
+
+    '                    ' Read the decrypted bytes from the decrypting stream
+    '                    ' and place them in a string.
+    '                    plaintext = srDecrypt.ReadToEnd()
+    '                End Using
+    '            End Using
+    '        End Using
+    '    End Using
+
+    '    Return plaintext
+
+    'End Function 'DecryptStringFromBytes 
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        'SetupEncrypt()
+    End Sub
+    Private Function CreateKey(ByVal strPassword As String) As Byte()
+        'Convert strPassword to an array and store in chrData.
+        Dim chrData() As Char = strPassword.ToCharArray
+        'Use intLength to get strPassword size.
+        Dim intLength As Integer = chrData.GetUpperBound(0)
+        'Declare bytDataToHash and make it the same size as chrData.
+        Dim bytDataToHash(intLength) As Byte
+
+        'Use For Next to convert and store chrData into bytDataToHash.
+        For i As Integer = 0 To chrData.GetUpperBound(0)
+            bytDataToHash(i) = CByte(Asc(chrData(i)))
+        Next
+
+        'Declare what hash to use.
+        Dim SHA512 As New System.Security.Cryptography.SHA512Managed
+        'Declare bytResult, Hash bytDataToHash and store it in bytResult.
+        Dim bytResult As Byte() = SHA512.ComputeHash(bytDataToHash)
+        'Declare bytKey(31).  It will hold 256 bits.
+        Dim bytKey(31) As Byte
+
+        'Use For Next to put a specific size (256 bits) of 
+        'bytResult into bytKey. The 0 To 31 will put the first 256 bits
+        'of 512 bits into bytKey.
+        For i As Integer = 0 To 31
+            bytKey(i) = bytResult(i)
+        Next
+
+        Return bytKey 'Return the key.
+    End Function
+    Private Function CreateIV(ByVal strPassword As String) As Byte()
+        'Convert strPassword to an array and store in chrData.
+        Dim chrData() As Char = strPassword.ToCharArray
+        'Use intLength to get strPassword size.
+        Dim intLength As Integer = chrData.GetUpperBound(0)
+        'Declare bytDataToHash and make it the same size as chrData.
+        Dim bytDataToHash(intLength) As Byte
+
+        'Use For Next to convert and store chrData into bytDataToHash.
+        For i As Integer = 0 To chrData.GetUpperBound(0)
+            bytDataToHash(i) = CByte(Asc(chrData(i)))
+        Next
+
+        'Declare what hash to use.
+        Dim SHA512 As New System.Security.Cryptography.SHA512Managed
+        'Declare bytResult, Hash bytDataToHash and store it in bytResult.
+        Dim bytResult As Byte() = SHA512.ComputeHash(bytDataToHash)
+        'Declare bytIV(15).  It will hold 128 bits.
+        Dim bytIV(15) As Byte
+
+        'Use For Next to put a specific size (128 bits) of bytResult into bytIV.
+        'The 0 To 30 for bytKey used the first 256 bits of the hashed password.
+        'The 32 To 47 will put the next 128 bits into bytIV.
+        For i As Integer = 32 To 47
+            bytIV(i - 32) = bytResult(i)
+        Next
+
+        Return bytIV 'Return the IV.
+    End Function
+
+
 End Class

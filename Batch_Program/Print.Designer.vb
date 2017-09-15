@@ -212,6 +212,7 @@ Partial Class Print
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.GroupBox1)
         Me.Name = "Print"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Print"
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()

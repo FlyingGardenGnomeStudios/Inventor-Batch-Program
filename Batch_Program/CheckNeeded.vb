@@ -318,7 +318,7 @@ Public Class CheckNeeded
                 'Set drawing source for current inventor document
                 'DrawSource = Strings.Left(odoc.FullDocumentName, Strings.Len(odoc.FullDocumentName) - 3) & "idw"
                 Main.MatchDrawing(DrawSource, DrawingName, X)
-                DrawingName = Trim(Main.LVSubFiles.Items.Item(X).ToString)
+                DrawingName = Trim(Main.LVSubFiles.Items.Item(X).Text)
                 'strPath = Strings.Right(DrawSource, Strings.Len(DrawSource) - InStrRev(DrawSource, "\"))
                 'test to see if the document has the same name as the listed file
                 'If InStr(DrawSource, DrawingName) <> 0 Then

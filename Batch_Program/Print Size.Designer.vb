@@ -127,6 +127,7 @@ Partial Class Print_Size
         Me.Controls.Add(Me.rdoDontAsk)
         Me.Controls.Add(Me.lblDWGSize)
         Me.Name = "Print_Size"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Large Paper Size"
         Me.ResumeLayout(False)
         Me.PerformLayout()

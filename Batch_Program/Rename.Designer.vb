@@ -24,6 +24,13 @@ Partial Class Rename
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Rename))
         Me.DGVRename = New System.Windows.Forms.DataGridView()
+        Me.FileLocation = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Drawing = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Part = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.NewName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Thumbnail = New System.Windows.Forms.DataGridViewImageColumn()
+        Me.ID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Reuse = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.btnThumbs = New System.Windows.Forms.Button()
         Me.btnExcel = New System.Windows.Forms.Button()
         Me.btnRename = New System.Windows.Forms.Button()
@@ -38,13 +45,6 @@ Partial Class Rename
         Me.RenameProgress = New MSVistaProgressBar()
         Me.txtParentSource = New System.Windows.Forms.Label()
         Me.chkStructure = New System.Windows.Forms.CheckBox()
-        Me.FileLocation = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Drawing = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Part = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.NewName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Thumbnail = New System.Windows.Forms.DataGridViewImageColumn()
-        Me.ID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Reuse = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         CType(Me.DGVRename, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -60,6 +60,64 @@ Partial Class Rename
         Me.DGVRename.RowHeadersVisible = False
         Me.DGVRename.Size = New System.Drawing.Size(1169, 387)
         Me.DGVRename.TabIndex = 0
+        '
+        'FileLocation
+        '
+        Me.FileLocation.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.FileLocation.HeaderText = "File Location:"
+        Me.FileLocation.MinimumWidth = 200
+        Me.FileLocation.Name = "FileLocation"
+        Me.FileLocation.ReadOnly = True
+        Me.FileLocation.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        '
+        'Drawing
+        '
+        Me.Drawing.HeaderText = "Drawing Number:"
+        Me.Drawing.MinimumWidth = 50
+        Me.Drawing.Name = "Drawing"
+        Me.Drawing.ReadOnly = True
+        Me.Drawing.Width = 125
+        '
+        'Part
+        '
+        Me.Part.HeaderText = "Part Number:"
+        Me.Part.MinimumWidth = 50
+        Me.Part.Name = "Part"
+        Me.Part.ReadOnly = True
+        '
+        'NewName
+        '
+        Me.NewName.HeaderText = "New Name:"
+        Me.NewName.MinimumWidth = 50
+        Me.NewName.Name = "NewName"
+        '
+        'Thumbnail
+        '
+        Me.Thumbnail.FillWeight = 125.0!
+        Me.Thumbnail.HeaderText = "Thumbnail"
+        Me.Thumbnail.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom
+        Me.Thumbnail.MinimumWidth = 50
+        Me.Thumbnail.Name = "Thumbnail"
+        Me.Thumbnail.ReadOnly = True
+        Me.Thumbnail.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Thumbnail.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
+        'ID
+        '
+        Me.ID.HeaderText = "ID"
+        Me.ID.MinimumWidth = 50
+        Me.ID.Name = "ID"
+        Me.ID.ReadOnly = True
+        Me.ID.Visible = False
+        '
+        'Reuse
+        '
+        Me.Reuse.FalseValue = "False"
+        Me.Reuse.HeaderText = "Reuse"
+        Me.Reuse.MinimumWidth = 50
+        Me.Reuse.Name = "Reuse"
+        Me.Reuse.TrueValue = "True"
+        Me.Reuse.Width = 50
         '
         'btnThumbs
         '
@@ -211,64 +269,6 @@ Partial Class Rename
         Me.chkStructure.Text = "Keep Folder" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Structure"
         Me.chkStructure.UseVisualStyleBackColor = True
         '
-        'FileLocation
-        '
-        Me.FileLocation.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.FileLocation.HeaderText = "File Location:"
-        Me.FileLocation.MinimumWidth = 200
-        Me.FileLocation.Name = "FileLocation"
-        Me.FileLocation.ReadOnly = True
-        Me.FileLocation.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        '
-        'Drawing
-        '
-        Me.Drawing.HeaderText = "Drawing Number:"
-        Me.Drawing.MinimumWidth = 50
-        Me.Drawing.Name = "Drawing"
-        Me.Drawing.ReadOnly = True
-        Me.Drawing.Width = 125
-        '
-        'Part
-        '
-        Me.Part.HeaderText = "Part Number:"
-        Me.Part.MinimumWidth = 50
-        Me.Part.Name = "Part"
-        Me.Part.ReadOnly = True
-        '
-        'NewName
-        '
-        Me.NewName.HeaderText = "New Name:"
-        Me.NewName.MinimumWidth = 50
-        Me.NewName.Name = "NewName"
-        '
-        'Thumbnail
-        '
-        Me.Thumbnail.FillWeight = 125.0!
-        Me.Thumbnail.HeaderText = "Thumbnail"
-        Me.Thumbnail.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom
-        Me.Thumbnail.MinimumWidth = 50
-        Me.Thumbnail.Name = "Thumbnail"
-        Me.Thumbnail.ReadOnly = True
-        Me.Thumbnail.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Thumbnail.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        '
-        'ID
-        '
-        Me.ID.HeaderText = "ID"
-        Me.ID.MinimumWidth = 50
-        Me.ID.Name = "ID"
-        Me.ID.ReadOnly = True
-        Me.ID.Visible = False
-        '
-        'Reuse
-        '
-        Me.Reuse.FalseValue = "False"
-        Me.Reuse.HeaderText = "Reuse"
-        Me.Reuse.MinimumWidth = 50
-        Me.Reuse.Name = "Reuse"
-        Me.Reuse.TrueValue = "True"
-        Me.Reuse.Width = 50
-        '
         'Rename
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -292,7 +292,7 @@ Partial Class Rename
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MinimumSize = New System.Drawing.Size(900, 350)
         Me.Name = "Rename"
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Rename"
         CType(Me.DGVRename, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)

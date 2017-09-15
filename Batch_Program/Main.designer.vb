@@ -87,6 +87,7 @@ Partial Class Main
         Me.HowToToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.MsVistaProgressBar1 = New MSVistaProgressBar()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -280,10 +281,12 @@ Partial Class Main
         '
         'GroupBox2
         '
+        Me.GroupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.GroupBox2.Controls.Add(Me.PictureBox1)
         Me.GroupBox2.Controls.Add(Me.chkPartSelect)
         Me.GroupBox2.Controls.Add(Me.lstOpenfiles)
         Me.GroupBox2.Location = New System.Drawing.Point(160, 27)
+        Me.GroupBox2.MinimumSize = New System.Drawing.Size(191, 214)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(191, 214)
         Me.GroupBox2.TabIndex = 51
@@ -317,8 +320,9 @@ Partial Class Main
         Me.lstOpenfiles.FormattingEnabled = True
         Me.lstOpenfiles.IntegralHeight = False
         Me.lstOpenfiles.Location = New System.Drawing.Point(7, 18)
+        Me.lstOpenfiles.MinimumSize = New System.Drawing.Size(180, 190)
         Me.lstOpenfiles.Name = "lstOpenfiles"
-        Me.lstOpenfiles.Size = New System.Drawing.Size(180, 191)
+        Me.lstOpenfiles.Size = New System.Drawing.Size(180, 190)
         Me.lstOpenfiles.TabIndex = 0
         Me.lstOpenfiles.ThreeDCheckBoxes = True
         Me.ToolTip1.SetToolTip(Me.lstOpenfiles, "Documents that are currently open")
@@ -444,6 +448,7 @@ Partial Class Main
         '
         'GroupBox3
         '
+        Me.GroupBox3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.GroupBox3.Controls.Add(Me.LVSubFiles)
         Me.GroupBox3.Controls.Add(Me.txtSearch)
         Me.GroupBox3.Controls.Add(Me.chkDWGSelect)
@@ -464,14 +469,14 @@ Partial Class Main
         Me.LVSubFiles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None
         Me.LVSubFiles.Location = New System.Drawing.Point(6, 18)
         Me.LVSubFiles.Name = "LVSubFiles"
-        Me.LVSubFiles.Size = New System.Drawing.Size(178, 190)
+        Me.LVSubFiles.Size = New System.Drawing.Size(180, 190)
         Me.LVSubFiles.TabIndex = 62
         Me.LVSubFiles.UseCompatibleStateImageBehavior = False
         Me.LVSubFiles.View = System.Windows.Forms.View.Details
         '
         'ColumnHeader1
         '
-        Me.ColumnHeader1.Width = 160
+        Me.ColumnHeader1.Width = 170
         '
         'txtSearch
         '
@@ -630,7 +635,7 @@ Partial Class Main
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(742, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(746, 24)
         Me.MenuStrip1.TabIndex = 61
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -694,12 +699,22 @@ Partial Class Main
         Me.MsVistaProgressBar1.TabIndex = 56
         Me.MsVistaProgressBar1.Visible = False
         '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(676, 213)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 23)
+        Me.Button1.TabIndex = 62
+        Me.Button1.Text = "Button1"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Control
-        Me.ClientSize = New System.Drawing.Size(742, 268)
+        Me.ClientSize = New System.Drawing.Size(746, 272)
+        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.MenuStrip1)
         Me.Controls.Add(Me.PictureBox2)
         Me.Controls.Add(Me.GroupBox4)
@@ -710,12 +725,13 @@ Partial Class Main
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.GroupBox5)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.MaximizeBox = False
         Me.MinimizeBox = False
+        Me.MinimumSize = New System.Drawing.Size(762, 310)
         Me.Name = "Main"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Batch Program"
         Me.TransparencyKey = System.Drawing.Color.Maroon
         Me.GroupBox1.ResumeLayout(False)
@@ -805,9 +821,10 @@ Partial Class Main
     Friend WithEvents ContextMenuStrip1 As Windows.Forms.ContextMenuStrip
     Friend WithEvents HowToToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents LVSubFiles As Windows.Forms.ListView
-    Friend WithEvents ColumnHeader1 As Windows.Forms.ColumnHeader
     Friend WithEvents ExportToToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSSubSpreadsheet As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSSubText As Windows.Forms.ToolStripMenuItem
     Friend WithEvents IPropertySettingsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ColumnHeader1 As Windows.Forms.ColumnHeader
+    Friend WithEvents Button1 As Windows.Forms.Button
 End Class

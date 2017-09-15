@@ -35,16 +35,16 @@ Partial Class iPropertySettings
         Me.DGVStatus = New System.Windows.Forms.DataGridView()
         Me.SiProperty = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SReference = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.CustomTab = New System.Windows.Forms.TabPage()
+        Me.DGVCustom = New System.Windows.Forms.DataGridView()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CReference = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.cmbDefault = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.btnOK = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnApply = New System.Windows.Forms.Button()
         Me.btnDefaults = New System.Windows.Forms.Button()
-        Me.CustomTab = New System.Windows.Forms.TabPage()
-        Me.DGVCustom = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CReference = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.iPropertiesTab.SuspendLayout()
         Me.SummaryTab.SuspendLayout()
         CType(Me.DGVSummary, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -195,6 +195,48 @@ Partial Class iPropertySettings
         Me.SReference.Items.AddRange(New Object() {"Drawing", "Model"})
         Me.SReference.Name = "SReference"
         '
+        'CustomTab
+        '
+        Me.CustomTab.Controls.Add(Me.DGVCustom)
+        Me.CustomTab.Location = New System.Drawing.Point(4, 22)
+        Me.CustomTab.Name = "CustomTab"
+        Me.CustomTab.Padding = New System.Windows.Forms.Padding(3)
+        Me.CustomTab.Size = New System.Drawing.Size(371, 283)
+        Me.CustomTab.TabIndex = 3
+        Me.CustomTab.Text = "Custom"
+        Me.CustomTab.UseVisualStyleBackColor = True
+        '
+        'DGVCustom
+        '
+        Me.DGVCustom.AllowUserToAddRows = False
+        Me.DGVCustom.AllowUserToDeleteRows = False
+        Me.DGVCustom.AllowUserToOrderColumns = True
+        Me.DGVCustom.AllowUserToResizeColumns = False
+        Me.DGVCustom.AllowUserToResizeRows = False
+        Me.DGVCustom.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DGVCustom.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn2, Me.CReference})
+        Me.DGVCustom.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
+        Me.DGVCustom.Location = New System.Drawing.Point(6, 6)
+        Me.DGVCustom.MultiSelect = False
+        Me.DGVCustom.Name = "DGVCustom"
+        Me.DGVCustom.RowHeadersVisible = False
+        Me.DGVCustom.Size = New System.Drawing.Size(359, 271)
+        Me.DGVCustom.TabIndex = 2
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.DataGridViewTextBoxColumn2.HeaderText = "iProperty"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
+        '
+        'CReference
+        '
+        Me.CReference.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.CReference.HeaderText = "Reference"
+        Me.CReference.Items.AddRange(New Object() {"Drawing", "Model"})
+        Me.CReference.Name = "CReference"
+        '
         'cmbDefault
         '
         Me.cmbDefault.FormattingEnabled = True
@@ -249,48 +291,6 @@ Partial Class iPropertySettings
         Me.btnDefaults.Text = "Reset Defaults"
         Me.btnDefaults.UseVisualStyleBackColor = True
         '
-        'CustomTab
-        '
-        Me.CustomTab.Controls.Add(Me.DGVCustom)
-        Me.CustomTab.Location = New System.Drawing.Point(4, 22)
-        Me.CustomTab.Name = "CustomTab"
-        Me.CustomTab.Padding = New System.Windows.Forms.Padding(3)
-        Me.CustomTab.Size = New System.Drawing.Size(371, 283)
-        Me.CustomTab.TabIndex = 3
-        Me.CustomTab.Text = "Custom"
-        Me.CustomTab.UseVisualStyleBackColor = True
-        '
-        'DGVCustom
-        '
-        Me.DGVCustom.AllowUserToAddRows = False
-        Me.DGVCustom.AllowUserToDeleteRows = False
-        Me.DGVCustom.AllowUserToOrderColumns = True
-        Me.DGVCustom.AllowUserToResizeColumns = False
-        Me.DGVCustom.AllowUserToResizeRows = False
-        Me.DGVCustom.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DGVCustom.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn2, Me.CReference})
-        Me.DGVCustom.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
-        Me.DGVCustom.Location = New System.Drawing.Point(6, 6)
-        Me.DGVCustom.MultiSelect = False
-        Me.DGVCustom.Name = "DGVCustom"
-        Me.DGVCustom.RowHeadersVisible = False
-        Me.DGVCustom.Size = New System.Drawing.Size(359, 271)
-        Me.DGVCustom.TabIndex = 2
-        '
-        'DataGridViewTextBoxColumn2
-        '
-        Me.DataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.DataGridViewTextBoxColumn2.HeaderText = "iProperty"
-        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
-        Me.DataGridViewTextBoxColumn2.ReadOnly = True
-        '
-        'CReference
-        '
-        Me.CReference.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.CReference.HeaderText = "Reference"
-        Me.CReference.Items.AddRange(New Object() {"Drawing", "Model"})
-        Me.CReference.Name = "CReference"
-        '
         'iPropertySettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -305,6 +305,7 @@ Partial Class iPropertySettings
         Me.Controls.Add(Me.iPropertiesTab)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Name = "iPropertySettings"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "iPropertySettings"
         Me.iPropertiesTab.ResumeLayout(False)
         Me.SummaryTab.ResumeLayout(False)

@@ -91,6 +91,7 @@ Partial Class About
         Me.Controls.Add(Me.PicDonate)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Name = "About"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "About"
         CType(Me.PicDonate, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
