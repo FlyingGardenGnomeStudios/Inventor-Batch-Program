@@ -15,6 +15,8 @@ Imports System.IO
 Imports System.Text.RegularExpressions
 Imports System.Security.Cryptography
 Imports System.Net.NetworkInformation
+Imports wyDay.TurboActivate
+
 
 Public Class Main
     Dim _invApp As Inventor.Application
@@ -42,6 +44,21 @@ Public Class Main
     Dim strOutputDecrypt As String
     Dim fsInput As System.IO.FileStream
     Dim fsOutput As System.IO.FileStream
+    Dim ReVerifyNow As ReVerifyNow
+    Private ta As TurboActivate
+    Private isGenuine As Boolean
+    Private Delegate Sub IsActivatedDelegate()
+    ' Set the trial flags you want to use. Here we've selected that the
+    ' trial data should be stored system-wide (TA_SYSTEM) and that we should
+    ' use un-resetable verified trials (TA_VERIFIED_TRIAL).
+    Private trialFlags As TA_Flags = TA_Flags.TA_SYSTEM Or TA_Flags.TA_VERIFIED_TRIAL
+
+    ' Don't use 0 for either of these values.
+    ' We recommend 90, 14. But if you want to lower the values
+    ' we don't recommend going below 7 days for each value.
+    ' Anything lower and you're just punishing legit users.
+    Private Const DaysBetweenChecks As UInteger = 90
+    Private Const GracePeriodLength As UInteger = 14
 
     Public Sub writeDebug(ByVal x As String)
         Dim path As String = My.Computer.FileSystem.SpecialDirectories.Temp
@@ -81,7 +98,65 @@ Public Class Main
             End Try
         End Try
         writeDebug("Inventor Accessed")
+
         LVSubFiles.Columns(0).Width = LVSubFiles.Width - 10
+
+        Try
+            'TODO: goto the version page at LimeLM and paste this GUID here
+            ta = New TurboActivate("3d2a7b7e59bfcc74c5df44.47834669")
+
+            ' Check if we're activated, and every 90 days verify it with the activation servers
+            ' In this example we won't show an error if the activation was done offline
+            ' (see the 3rd parameter of the IsGenuine() function)
+            ' https://wyday.com/limelm/help/offline-activation/
+            Dim gr As IsGenuineResult = ta.IsGenuine(DaysBetweenChecks, GracePeriodLength, True)
+
+            isGenuine = (gr = IsGenuineResult.Genuine _
+                         OrElse gr = IsGenuineResult.GenuineFeaturesChanged _
+                         OrElse gr = IsGenuineResult.InternetError)
+            ' an internet error means the user is activated but
+            ' TurboActivate failed to contact the LimeLM servers
+
+
+
+            ' If IsGenuineEx() is telling us we're not activated
+            ' but the IsActivated() function is telling us that the activation
+            ' data on the computer is valid (i.e. the crypto-signed-fingerprint matches the computer)
+            ' then that means that the customer has passed the grace period and they must re-verify
+            ' with the servers to continue to use your app.
+
+            'Note: DO NOT allow the customer to just continue to use your app indefinitely with absolutely
+            '      no reverification with the servers. If you want to do that then don't use IsGenuine() or
+            '      IsGenuineEx() at all -- just use IsActivated().
+            If Not isGenuine AndAlso ta.IsActivated() Then
+
+                ' We're treating the customer as is if they aren't activated, so they can't use your app.
+
+                ' However, we show them a dialog where they can reverify with the servers immediately.
+
+                Dim frmReverify As ReVerifyNow = New ReVerifyNow(ta, DaysBetweenChecks, GracePeriodLength)
+
+                If frmReverify.ShowDialog(Me) = DialogResult.OK Then
+                    isGenuine = True
+                ElseIf Not frmReverify.noLongerActivated Then ' the user clicked cancel and the user is still activated
+
+                    ' Just bail out of your app
+                    Close()
+                    Return
+                End If
+            End If
+
+        Catch ex As TurboActivateException
+            ' failed to check if activated, meaning the customer screwed
+            ' something up so kill the app immediately
+            MessageBox.Show("Failed to check if activated: " + ex.Message)
+            Close()
+            Return
+        End Try
+
+        ' Show a trial if we're not genuine
+        ' See step 9, below.
+        ShowTrial(Not isGenuine)
     End Sub
     Public Function PopiProperties(CalledFunction As iProperties)
         iProperties = CalledFunction
@@ -768,7 +843,7 @@ Public Class Main
         '  , ByRef DrawingName As String, ByRef DrawSource As String, X As Integer)
         If SubFiles.Count > LVSubFiles.Items.Count Then
             For Each item In SubFiles
-                If item.Key.Contains(Trim(LVSubFiles.Items(Y).ToString)) Then
+                If item.Key = LVSubFiles.Items(Y).Text Then
                     DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "idw"
                     DrawingName = Trim(item.Key)
                     Exit For
@@ -2801,7 +2876,7 @@ Public Class Main
         MsVistaProgressBar1.Location = New Drawing.Point(12, Me.Height - 67)
         MsVistaProgressBar1.Width = Me.Width - 226
         GroupBox5.Location = New Drawing.Point(12, Me.Height - 187)
-        If VScrollVis = False Then
+        If LVSubFiles.Items.Count > 10 Then
             LVSubFiles.Height = GroupBox2.Height - 24
         Else
             LVSubFiles.Height = GroupBox2.Height - 49
@@ -2810,44 +2885,10 @@ Public Class Main
         End If
         PictureBox2.Location = New Drawing.Point(GroupBox3.Location.X + 21, 27)
     End Sub
-    Private VScrollVis As Boolean = False
-    Private Sub lvsubfiles_ClientSizeChanged(sender As Object, e As EventArgs) Handles LVSubFiles.ClientSizeChanged
-
-        'VScrollVis = IsVScrollVisible(LVSubFiles)
-        'If VScrollVis = True Then
-        '    txtSearch.Visible = True
-        '    LVSubFiles.Height = lstOpenfiles.Height - 25
-        'txtSearch.Visible = True
-        'txtSearch.Text = "Search"
-        'txtSearch.ForeColor = Drawing.Color.Gray
-        'Else
-        'LVSubFiles.Height = lstOpenfiles.Height
-        'txtSearch.Visible = False
-        'End If
-        'MyBase.OnClientSizeChanged(e)
-    End Sub
-    Private Const GWL_STYLE As Integer = -16
-    Private Const WS_HSCROLL = &H100000
-    Private Const WS_VSCROLL = &H200000
-
-    <DllImport("user32.dll", SetLastError:=True)>
-    Private Shared Function GetWindowLong(ByVal hWnd As IntPtr,
-                       ByVal nIndex As Integer) As Integer
-    End Function
-
-    ' sometimes you use wrappers since many, many, many things could call
-    ' SendMessage and so that your code doesnt need to know all the MSG params
-    Friend Shared Function IsVScrollVisible(ByVal ctl As Control) As Boolean
-        Dim wndStyle As Integer = GetWindowLong(ctl.Handle, GWL_STYLE)
-        Return ((wndStyle And WS_VSCROLL) <> 0)
-
-    End Function
 
     Private Sub LVSubFiles_Resize(sender As Object, e As EventArgs) Handles LVSubFiles.Resize
         If Not txtSearch.IsHandleCreated Then
             If LVSubFiles.Items.Count > 10 Then
-                'VScrollVis = IsVScrollVisible(LVSubFiles)
-                ' If VScrollVis = True Then
                 txtSearch.Visible = True
                 txtSearch.Location = New Drawing.Point(LVSubFiles.Location.X, Me.Height - 122)
                 txtSearch.Visible = True
@@ -2855,203 +2896,97 @@ Public Class Main
                 txtSearch.ForeColor = Drawing.Color.Gray
             Else
                 LVSubFiles.Height = lstOpenfiles.Height
-                    txtSearch.Visible = False
-                End If
+                txtSearch.Visible = False
             End If
+        End If
     End Sub
-    Private Sub HandleRegistry(ByRef Registered As Boolean, ByRef Days As Integer)
-        Dim firstRunDate As Date
+
+    Private Sub mnuActDeact_Click(sender As Object, e As EventArgs) Handles mnuActDeact.Click
+        If isGenuine Then
+            ' deactivate product without deleting the product key
+            ' allows the user to easily reactivate
+            Try
+                ta.Deactivate(False)
+            Catch ex As TurboActivateException
+                MessageBox.Show("Failed to deactivate: " + ex.Message)
+                Return
+            End Try
+
+            isGenuine = False
+            ShowTrial(True)
+        Else
+            'Note: you can launch the TurboActivate wizard or you can create you own interface
+
+            'launch TurboActivate.exe to get the product key from the user
+            Dim TAProcess As New Process
+            TAProcess.StartInfo.FileName = IO.Path.Combine(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath), "TurboActivate.exe")
+            TAProcess.EnableRaisingEvents = True
+
+            AddHandler TAProcess.Exited, New EventHandler(AddressOf p_Exited)
+            TAProcess.Start()
+        End If
+    End Sub
+    ''' This event handler is called when TurboActivate.exe closes.
+    Private Sub p_Exited(ByVal sender As Object, ByVal e As EventArgs)
+
+        ' remove the event
+        RemoveHandler DirectCast(sender, Process).Exited, New EventHandler(AddressOf p_Exited)
+
+        ' the UI thread is running asynchronous to TurboActivate closing
+        ' that's why we can't call TAIsActivated(); directly
+        Invoke(New IsActivatedDelegate(AddressOf CheckIfActivated))
+    End Sub
+
+    ''' Rechecks if we're activated -- if so enable the app features.
+    Private Sub CheckIfActivated()
+        ' recheck if activated
+        Dim isNowActivated As Boolean = False
+
         Try
-            If Registered = False Then
-                firstRunDate = My.Computer.Registry.GetValue("HKEY_CURRENT_USER\Software\Autodesk\Inventor\Current Version", "FirstRun", Nothing)
-                If firstRunDate = Nothing Then
-                    firstRunDate = Now
-                    My.Computer.Registry.SetValue("HKEY_CURRENT_USER\Software\Autodesk\Inventor\Current Version", "FirstRun", firstRunDate)
-                ElseIf (Now - firstRunDate).Days > My.Settings.RegTime Then
-                    Days = My.Settings.RegTime - (Now - firstRunDate).Days
-                End If
-                Days = My.Settings.RegTime - (Now - firstRunDate).Days
-            End If
-        Catch
+            isNowActivated = ta.IsActivated
+        Catch ex As TurboActivateException
+            MessageBox.Show("Failed to check if activated: " + ex.Message)
+            Exit Sub
         End Try
+
+        If isNowActivated Then
+            isGenuine = True
+            ReEnableAppFeatures()
+            ShowTrial(False)
+        End If
     End Sub
-    Function getMacAddress()
-        Dim nics() As NetworkInterface = NetworkInterface.GetAllNetworkInterfaces()
-        Return nics(0).GetPhysicalAddress.ToString
-    End Function
-    'Public Sub SetupEncrypt()
-    '    Try
+    Private Sub ShowTrial(ByVal show As Boolean)
 
-    '        Dim original As String = getMacAddress()
+        'lblTrialMessage.Visible = show
+        'btnExtendTrial.Visible = show
 
-    '        ' Create a new instance of the RijndaelManaged
-    '        ' class.  This generates a new key and initialization 
-    '        ' vector (IV).
-    '        Using myRijndael As New RijndaelManaged()
+        mnuActDeact.Text = (If(show, "Activate...", "Deactivate"))
 
-    '            myRijndael.GenerateKey()
-    '            myRijndael.GenerateIV()
+        If show Then
+            Dim trialDaysRemaining As UInteger = 0UI
 
-    '            ' Encrypt the string to an array of bytes.
-    '            Dim encrypted As Byte() = EncryptStringToBytes(original, myRijndael.Key, myRijndael.IV)
+            Try
+                ta.UseTrial(trialFlags)
 
-    '            ' Decrypt the bytes to a string.
-    '            Dim roundtrip As String = DecryptStringFromBytes(encrypted, myRijndael.Key, myRijndael.IV)
+                ' get the number of remaining trial days
+                trialDaysRemaining = ta.TrialDaysRemaining(trialFlags)
+            Catch ex As TurboActivateException
+                MessageBox.Show("Failed to start the trial: " + ex.Message)
+            End Try
 
-    '            'Display the original data and the decrypted data.
-    '            Console.WriteLine("Original:   {0}", original)
-    '            Console.WriteLine("Round Trip: {0}", roundtrip)
-    '        End Using
-    '    Catch e As Exception
-    '        Console.WriteLine("Error: {0}", e.Message)
-    '    End Try
-
-    'End Sub 'Main
-
-    'Shared Function EncryptStringToBytes(ByVal plainText As String, ByVal Key() As Byte, ByVal IV() As Byte) As Byte()
-    '    ' Check arguments.
-    '    If plainText Is Nothing OrElse plainText.Length <= 0 Then
-    '        Throw New ArgumentNullException("plainText")
-    '    End If
-    '    If Key Is Nothing OrElse Key.Length <= 0 Then
-    '        Throw New ArgumentNullException("Key")
-    '    End If
-    '    If IV Is Nothing OrElse IV.Length <= 0 Then
-    '        Throw New ArgumentNullException("IV")
-    '    End If
-    '    Dim encrypted() As Byte
-    '    ' Create an RijndaelManaged object
-    '    ' with the specified key and IV.
-    '    Using rijAlg As New RijndaelManaged()
-
-    '        rijAlg.Key = Key
-    '        rijAlg.IV = IV
-
-    '        ' Create a decrytor to perform the stream transform.
-    '        Dim encryptor As ICryptoTransform = rijAlg.CreateEncryptor(rijAlg.Key, rijAlg.IV)
-    '        ' Create the streams used for encryption.
-    '        Using msEncrypt As New MemoryStream()
-    '            Using csEncrypt As New CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write)
-    '                Using swEncrypt As New StreamWriter(csEncrypt)
-
-    '                    'Write all data to the stream.
-    '                    swEncrypt.Write(plainText)
-    '                End Using
-    '                encrypted = msEncrypt.ToArray()
-    '            End Using
-    '        End Using
-    '    End Using
-
-    '    ' Return the encrypted bytes from the memory stream.
-    '    Return encrypted
-
-    'End Function 'EncryptStringToBytes
-
-    'Shared Function DecryptStringFromBytes(ByVal cipherText() As Byte, ByVal Key() As Byte, ByVal IV() As Byte) As String
-    '    ' Check arguments.
-    '    If cipherText Is Nothing OrElse cipherText.Length <= 0 Then
-    '        Throw New ArgumentNullException("cipherText")
-    '    End If
-    '    If Key Is Nothing OrElse Key.Length <= 0 Then
-    '        Throw New ArgumentNullException("Key")
-    '    End If
-    '    If IV Is Nothing OrElse IV.Length <= 0 Then
-    '        Throw New ArgumentNullException("IV")
-    '    End If
-    '    ' Declare the string used to hold
-    '    ' the decrypted text.
-    '    Dim plaintext As String = Nothing
-
-    '    ' Create an RijndaelManaged object
-    '    ' with the specified key and IV.
-    '    Using rijAlg As New RijndaelManaged
-    '        rijAlg.Key = Key
-    '        rijAlg.IV = IV
-
-    '        ' Create a decrytor to perform the stream transform.
-    '        Dim decryptor As ICryptoTransform = rijAlg.CreateDecryptor(rijAlg.Key, rijAlg.IV)
-
-    '        ' Create the streams used for decryption.
-    '        Using msDecrypt As New MemoryStream(cipherText)
-
-    '            Using csDecrypt As New CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read)
-
-    '                Using srDecrypt As New StreamReader(csDecrypt)
-
-
-    '                    ' Read the decrypted bytes from the decrypting stream
-    '                    ' and place them in a string.
-    '                    plaintext = srDecrypt.ReadToEnd()
-    '                End Using
-    '            End Using
-    '        End Using
-    '    End Using
-
-    '    Return plaintext
-
-    'End Function 'DecryptStringFromBytes 
-
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        'SetupEncrypt()
+            ' if no more trial days then disable all app features
+            If trialDaysRemaining = 0 Then
+                DisableAppFeatures()
+            Else
+                'lblTrialMessage.Text = "Your trial expires in " & trialDaysRemaining & " days."
+            End If
+        End If
     End Sub
-    Private Function CreateKey(ByVal strPassword As String) As Byte()
-        'Convert strPassword to an array and store in chrData.
-        Dim chrData() As Char = strPassword.ToCharArray
-        'Use intLength to get strPassword size.
-        Dim intLength As Integer = chrData.GetUpperBound(0)
-        'Declare bytDataToHash and make it the same size as chrData.
-        Dim bytDataToHash(intLength) As Byte
+    Private Sub DisableAppFeatures()
+        'TODO: disable all the features of the program
+    End Sub
 
-        'Use For Next to convert and store chrData into bytDataToHash.
-        For i As Integer = 0 To chrData.GetUpperBound(0)
-            bytDataToHash(i) = CByte(Asc(chrData(i)))
-        Next
-
-        'Declare what hash to use.
-        Dim SHA512 As New System.Security.Cryptography.SHA512Managed
-        'Declare bytResult, Hash bytDataToHash and store it in bytResult.
-        Dim bytResult As Byte() = SHA512.ComputeHash(bytDataToHash)
-        'Declare bytKey(31).  It will hold 256 bits.
-        Dim bytKey(31) As Byte
-
-        'Use For Next to put a specific size (256 bits) of 
-        'bytResult into bytKey. The 0 To 31 will put the first 256 bits
-        'of 512 bits into bytKey.
-        For i As Integer = 0 To 31
-            bytKey(i) = bytResult(i)
-        Next
-
-        Return bytKey 'Return the key.
-    End Function
-    Private Function CreateIV(ByVal strPassword As String) As Byte()
-        'Convert strPassword to an array and store in chrData.
-        Dim chrData() As Char = strPassword.ToCharArray
-        'Use intLength to get strPassword size.
-        Dim intLength As Integer = chrData.GetUpperBound(0)
-        'Declare bytDataToHash and make it the same size as chrData.
-        Dim bytDataToHash(intLength) As Byte
-
-        'Use For Next to convert and store chrData into bytDataToHash.
-        For i As Integer = 0 To chrData.GetUpperBound(0)
-            bytDataToHash(i) = CByte(Asc(chrData(i)))
-        Next
-
-        'Declare what hash to use.
-        Dim SHA512 As New System.Security.Cryptography.SHA512Managed
-        'Declare bytResult, Hash bytDataToHash and store it in bytResult.
-        Dim bytResult As Byte() = SHA512.ComputeHash(bytDataToHash)
-        'Declare bytIV(15).  It will hold 128 bits.
-        Dim bytIV(15) As Byte
-
-        'Use For Next to put a specific size (128 bits) of bytResult into bytIV.
-        'The 0 To 30 for bytKey used the first 256 bits of the hashed password.
-        'The 32 To 47 will put the next 128 bits into bytIV.
-        For i As Integer = 32 To 47
-            bytIV(i - 32) = bytResult(i)
-        Next
-
-        Return bytIV 'Return the IV.
-    End Function
-
-
+    Private Sub ReEnableAppFeatures()
+        'TODO: re-enable all the features of the program
+    End Sub
 End Class

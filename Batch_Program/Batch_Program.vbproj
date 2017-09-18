@@ -49,6 +49,7 @@
     <DocumentationFile>Batch Program.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -156,6 +157,7 @@
     <Import Include="System.Diagnostics" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
+    <Import Include="wyDay.TurboActivate" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="About.Designer.vb">
@@ -186,6 +188,12 @@
       <DependentUpon>iPropertySettings.vb</DependentUpon>
     </Compile>
     <Compile Include="iPropertySettings.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReVerifyNow.Designer.vb">
+      <DependentUpon>ReVerifyNow.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ReVerifyNow.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Settings.Designer.vb">
@@ -247,12 +255,7 @@
     <Compile Include="Splash.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Trial.Designer.vb">
-      <DependentUpon>Trial.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Trial.vb">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="TurboActivate.vb" />
     <None Include="Batch Program Signature.pfx" />
     <None Include="Batch_Program_1_TemporaryKey.pfx" />
     <None Include="ClassDiagram2.cd" />
@@ -286,6 +289,9 @@
     <EmbeddedResource Include="iPropertySettings.resx">
       <DependentUpon>iPropertySettings.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ReVerifyNow.resx">
+      <DependentUpon>ReVerifyNow.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.vb</DependentUpon>
     </EmbeddedResource>
@@ -318,9 +324,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Splash.resx">
       <DependentUpon>Splash.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Trial.resx">
-      <DependentUpon>Trial.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
