@@ -126,7 +126,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Batch Program Signature.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Inventor Batch Program.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autodesk.Inventor.Interop, Version=19.0.0.0, Culture=neutral, PublicKeyToken=d84147f8b4276564, processorArchitecture=MSIL">
@@ -271,6 +271,7 @@
     <Compile Include="RevTable.vb">
       <SubType>Form</SubType>
     </Compile>
+    <None Include="Inventor Batch Program.pfx" />
     <None Include="Resources\List-Blank.xlsm" />
     <None Include="Resources\Quote-Blank.xlsm" />
     <None Include="Resources\Rename.xlsm" />

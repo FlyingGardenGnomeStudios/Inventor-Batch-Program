@@ -85,10 +85,9 @@ Partial Class Main
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutBatchProgramToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuActDeact = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.MsVistaProgressBar1 = New MSVistaProgressBar()
         Me.HowToToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.MsVistaProgressBar1 = New MSVistaProgressBar()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -678,20 +677,16 @@ Partial Class Main
         Me.mnuActDeact.Size = New System.Drawing.Size(189, 22)
         Me.mnuActDeact.Text = "Deactivate"
         '
+        'HowToToolStripMenuItem1
+        '
+        Me.HowToToolStripMenuItem1.Name = "HowToToolStripMenuItem1"
+        Me.HowToToolStripMenuItem1.Size = New System.Drawing.Size(189, 22)
+        Me.HowToToolStripMenuItem1.Text = "How to..."
+        '
         'ContextMenuStrip1
         '
         Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
         Me.ContextMenuStrip1.Size = New System.Drawing.Size(61, 4)
-        '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(676, 213)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 62
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
-        Me.Button1.Visible = False
         '
         'MsVistaProgressBar1
         '
@@ -710,19 +705,12 @@ Partial Class Main
         Me.MsVistaProgressBar1.TabIndex = 56
         Me.MsVistaProgressBar1.Visible = False
         '
-        'HowToToolStripMenuItem1
-        '
-        Me.HowToToolStripMenuItem1.Name = "HowToToolStripMenuItem1"
-        Me.HowToToolStripMenuItem1.Size = New System.Drawing.Size(189, 22)
-        Me.HowToToolStripMenuItem1.Text = "How to..."
-        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Control
         Me.ClientSize = New System.Drawing.Size(746, 272)
-        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.MenuStrip1)
         Me.Controls.Add(Me.PictureBox2)
         Me.Controls.Add(Me.GroupBox4)
@@ -834,6 +822,5 @@ Partial Class Main
     Friend WithEvents CMSSubText As Windows.Forms.ToolStripMenuItem
     Friend WithEvents IPropertySettingsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents ColumnHeader1 As Windows.Forms.ColumnHeader
-    Friend WithEvents Button1 As Windows.Forms.Button
     Friend WithEvents HowToToolStripMenuItem1 As Windows.Forms.ToolStripMenuItem
 End Class

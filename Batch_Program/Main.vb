@@ -225,6 +225,7 @@ Public Class Main
                 End
             End If
         End If
+        LVSubFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
     End Sub
     Private Sub Main_Load(sender As Object, e As System.EventArgs) Handles Me.Load
 
@@ -877,36 +878,37 @@ Public Class Main
         ' , ByRef PartName As String, ByRef CheckedFile As String,
         'ByRef PartSource As String, X As Integer)
 
-        If SubFiles.Count > LVSubFiles.Items.Count Then
-            For Each item In SubFiles
-                If item.Key.Contains(Trim(LVSubFiles.Items(Y).ToString)) Then
-                    DrawSource = Strings.Left(item.Value, Len(item.Value))
-                    DrawingName = Trim(item.Key)
-                    Exit For
+        'If SubFiles.Count > LVSubFiles.Items.Count Then
+        For Each item In SubFiles
+                If item.Key.Contains(LVSubFiles.Items(Y).Text) Then
+
+                    If System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "ipt") And
+                        System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "iam") Then
+                        If My.Settings.DupName = "Model" Then
+                            DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "ipt"
+                            DrawingName = Strings.Left(item.Key, Len(item.Key) - 3) & "ipt"
+                        Else
+                            DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "iam"
+                            DrawingName = Strings.Left(item.Key, Len(item.Key) - 3) & "iam"
+                        End If
+                        Exit For
+                    ElseIf System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "ipt") And
+                        Not System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "iam") Then
+                        DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "ipt"
+                        DrawingName = Strings.Left(item.Key, Len(item.Key) - 3) & "ipt"
+                        Exit For
+                    ElseIf System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "iam") And
+                        Not System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "ipt") Then
+                        DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "iam"
+                        DrawingName = Strings.Left(item.Key, Len(item.Key) - 3) & "iam"
+                        Exit For
+                    Else
+                        MsgBox("Couldn't locate model data for " & DrawingName)
+                        Exit Sub
+                    End If
                 End If
             Next
-        ElseIf System.IO.File.Exists(Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "ipt") And
-            Not System.IO.File.Exists(Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "iam") Then
-            DrawSource = Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "ipt"
-            DrawingName = Strings.Left(SubFiles.Item(Y).Key, Len(SubFiles.Item(Y).Key) - 3) & "ipt"
-        ElseIf System.IO.File.Exists(Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "iam") And
-            Not System.IO.File.Exists(Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "ipt") Then
-            DrawSource = Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "iam"
-            DrawingName = Strings.Left(SubFiles.Item(Y).Key, Len(SubFiles.Item(Y).Key) - 3) & "iam"
-        ElseIf System.IO.File.Exists(Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "ipt") And
-            System.IO.File.Exists(Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "iam") Then
-            If My.Settings.DupName = "Model" Then
-                DrawSource = Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "ipt"
-                DrawingName = Strings.Left(SubFiles.Item(Y).Key, Len(SubFiles.Item(Y).Key) - 3) & "ipt"
-            Else
-                DrawSource = Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "iam"
-                DrawingName = Strings.Left(SubFiles.Item(Y).Key, Len(SubFiles.Item(Y).Key) - 3) & "iam"
-            End If
-        Else
-            MsgBox("Couldn't locate model data for " & DrawingName)
-            Exit Sub
-        End If
-
+        'End If
         'Look for selected item
         'Dim CheckedFile As String = Trim(lstSubfiles.Items.Item(X))
         '        For J = 1 To _invApp.Documents.Count
@@ -2861,7 +2863,7 @@ Public Class Main
     End Sub
 
     Private Sub Rename_Resize(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Resize
-        GroupBox4.Location = New Drawing.Point(Me.Width - 208, 27)
+        GroupBox4.Location = New Drawing.Point(Me.Width - 203, 27)
         btnOK.Location = New Drawing.Point(Me.Width - 115, Me.Height - 70)
         btnExit.Location = New Drawing.Point(Me.Width - 196, btnOK.Location.Y)
         GroupBox2.Height = (Me.Height - 96)
@@ -2887,18 +2889,19 @@ Public Class Main
     End Sub
 
     Private Sub LVSubFiles_Resize(sender As Object, e As EventArgs) Handles LVSubFiles.Resize
-        If Not txtSearch.IsHandleCreated Then
-            If LVSubFiles.Items.Count > 10 Then
-                txtSearch.Visible = True
-                txtSearch.Location = New Drawing.Point(LVSubFiles.Location.X, Me.Height - 122)
-                txtSearch.Visible = True
-                txtSearch.Text = "Search"
-                txtSearch.ForeColor = Drawing.Color.Gray
-            Else
-                LVSubFiles.Height = lstOpenfiles.Height
+        'If Not txtSearch.IsHandleCreated Then
+        If LVSubFiles.Height / LVSubFiles.Items.Count < 19 Then
+            LVSubFiles.Height = Me.Height - 122 - 25
+            txtSearch.Visible = True
+            txtSearch.Location = New Drawing.Point(LVSubFiles.Location.X, Me.Height - 122)
+            txtSearch.Visible = True
+            txtSearch.Text = "Search"
+            txtSearch.ForeColor = Drawing.Color.Gray
+        Else
+            LVSubFiles.Height = lstOpenfiles.Height
                 txtSearch.Visible = False
             End If
-        End If
+        'End If
     End Sub
 
     Private Sub mnuActDeact_Click(sender As Object, e As EventArgs) Handles mnuActDeact.Click
