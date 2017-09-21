@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="Batch Program.exe" version="1.1.2.10" publicKeyToken="60d66aa593f35c76" language="en-CA" processorArchitecture="x86" type="win32" />
+  <description asmv2:iconFile="Batch_Runner-Logo_256px.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="Batch Program" version="1.0.0.0" publicKeyToken="92E4A33C0B54A42E" language="neutral" processorArchitecture="x86" />
+    <commandLine file="Batch Program.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet version="1" class="System.Security.NamedPermissionSet" Name="LocalIntranet" Description="Default rights given to applications on the local intranet" Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!-- UAC Manifest Options
+            If you want to change the Windows User Account Control level replace the 
+            requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+            Specifying requestedExecutionLevel node will disable file and registry virtualization.
+            If you want to utilize File and Registry Virtualization for backward 
+            compatibility then delete the requestedExecutionLevel node.
+        -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Batch Program.exe" size="3530704">
+      <assemblyIdentity name="Batch Program" version="1.0.0.0" publicKeyToken="92E4A33C0B54A42E" language="neutral" processorArchitecture="x86" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>IhEE8I/1U3GIA1GUeTuLXUiRPCs=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="Batch Program.exe.config" size="7249">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>CQccChFG3D0xI5zbCNOd4ujNSDE=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Batch_Program.Addin" size="767">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>jYxIsaroWXNLGSY+xDAUpiiW7u0=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Batch_Runner-Logo_256px.ico" size="370070">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>9cuvXvxxsQq5LPXb5r+O6oqp/i4=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="ReadMe.txt" size="1206">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>+wTDVqT3T9V+KiaRCZr6BBMnV3c=</dsig:DigestValue>
+    </hash>
+  </file>
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- A list of all Windows versions that this application is designed to work with. Windows will automatically select the most compatible environment.-->
+      <!-- If your application is designed to work with Windows 7, uncomment the following supportedOS node-->
+      <!--<supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}"/>-->
+    </application>
+  </compatibility>
+<publisherIdentity name="CN=Tim Fehr" issuerKeyHash="9d99fccef0586810b948516796bf1dce820f275f" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>L6RT2KOZ3pAm0p0PIwjlszz4gnM=</DigestValue></Reference></SignedInfo><SignatureValue>zf3zsGH91wqBLuG7kWhIBzjh/rGa0Z1KuooHKGGJ8xPbpONgYMoSiBxBxLo45E0InSucrnlO0isUDb/HHH90fYY10uR3wpg8xazDkJHJoKVWUH8wQvC7F+rPuAKBDg3Yk6Cz06OC5Ehegxiukjl1JJglLxamoGiNTekky3r3TvQ=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>37q+5cI/lJM1AHMdbPQjbW/rHW+zv75lkjjJZsFuTninoSBuGlXqa+YuK3Vv6J9ZvujdRKSa3Y8Q+Eu7aCviZr+mCOujUuON7WzcUsLjPyZDqNrdTjclW/lwzH0nSMnft2KxhDSdv5qAGOkA/klCaZQdfjwmEQN+90d+VjC5lr0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="7382f83cb3e508230f9dd22690de99a3d853a42f" Description="" Url=""><as:assemblyIdentity name="Batch Program.exe" version="1.1.2.10" publicKeyToken="60d66aa593f35c76" language="en-CA" processorArchitecture="x86" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=Tim Fehr</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>etReH3a+dYLUs/CkE/mRLAl4buE=</DigestValue></Reference></SignedInfo><SignatureValue>WogtBf3eHwsRZT/vX3Nu8laUO+4/LSPC2jTgt4xVTAZR6bQ8dMZB10nD1E+TzAnFWfyF1TgUS7Zj6qQVVQ0CDJQ0WHyn8Dkj7YiOSEtC+HifYrYRfnkmSLxLzJHhJFhz0CY9HyijFJ+2a1DkftSfuJcYpU1TudQQ0DEFlg3JTqo=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>37q+5cI/lJM1AHMdbPQjbW/rHW+zv75lkjjJZsFuTninoSBuGlXqa+YuK3Vv6J9ZvujdRKSa3Y8Q+Eu7aCviZr+mCOujUuON7WzcUsLjPyZDqNrdTjclW/lwzH0nSMnft2KxhDSdv5qAGOkA/klCaZQdfjwmEQN+90d+VjC5lr0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIICCDCCAXGgAwIBAgIQazsnPODZ65dAIWM3K7N88jANBgkqhkiG9w0BAQUFADATMREwDwYDVQQDEwhUaW0gRmVocjAeFw0xNjAxMDEwNjAwMDBaFw0yMjAxMDEwNjAwMDBaMBMxETAPBgNVBAMTCFRpbSBGZWhyMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDfur7lwj+UkzUAcx1s9CNtb+sdb7O/vmWSOMlmwW5OeKehIG4aVepr5i4rdW/on1m+6N1EpJrdjxD4S7toK+Jmv6YI66NS443tbNxSwuM/JkOo2t1ONyVb+XDMfSdIyd+3YrGENJ2/moAY6QD+SUJplB1+PCYRA373R35WMLmWvQIDAQABo10wWzATBgNVHSUEDDAKBggrBgEFBQcDAzBEBgNVHQEEPTA7gBC1dExjT2WnkcUB6ecpqy1UoRUwEzERMA8GA1UEAxMIVGltIEZlaHKCEGs7Jzzg2euXQCFjNyuzfPIwDQYJKoZIhvcNAQEFBQADgYEA3pcjAXMBO8pNUhMDTGhv8Z7nsZTLmJaBzMsG282EzUcvE0lSBcoU8HAP8i1SweedcjGPnJa0pbqvt1Nl92Oels23P9343CgVFAYYLvqkidN8OTRHUHmlNywJYxBFnYtkGcZOaUEwBL4by8PZGtqRMQFfoVp82QZsH3hCK96yeZs=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
