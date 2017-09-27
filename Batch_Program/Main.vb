@@ -89,9 +89,7 @@ Public Class Main
             End Try
         End Try
         writeDebug("Inventor Accessed")
-
         LVSubFiles.Columns(0).Width = LVSubFiles.Width - 10
-
         'Try
         '    'TODO: goto the version page at LimeLM and paste this GUID here
         '    ta = New TurboActivate("3d2a7b7e59bfcc74c5df44.47834669")
@@ -1346,9 +1344,9 @@ Public Class Main
     End Sub
     Private Sub ExportPart(DrawSource As String, Archive As String, FlatPattern As Boolean, Destin As String, DrawingName As String,
              OpenDocs As ArrayList, Output As String, RevNo As String)
-        MsgBox("This current operation has been cancelled" & vbNewLine &
-               "due to a bug. A solution is currently being investigated")
-        Exit Sub
+        'MsgBox("This current operation has been cancelled" & vbNewLine &
+        '   "due to a bug. A solution is currently being investigated")
+        'Exit Sub
         Dim odoc As Document = _invApp.ActiveDocument
         If FlatPattern = False Then
             odoc = _invApp.Documents.Open(DrawSource, True)
@@ -1383,13 +1381,15 @@ Public Class Main
             If Output = "DXF" Then
                 If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC4-122E-11D5-8E91-0010B541CD80}" Then
                     oDWGAddIn = _invApp.ApplicationAddIns.Item(i)
-                    strIniFile = My.Resources.DXF
+                    IO.File.WriteAllText(IO.Path.Combine(IO.Path.GetTempPath, "DXFout.ini"), My.Resources.DXF)
+                    strIniFile = IO.Path.GetTempPath & "DXFout.ini"
                     Exit For
                 End If
             ElseIf Output = "DWG" Then
                 If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC2-122E-11D5-8E91-0010B541CD80}" Then
                     oDWGAddIn = _invApp.ApplicationAddIns.Item(i)
-                    strIniFile = My.Resources.dwg
+                    IO.File.WriteAllText(IO.Path.Combine(IO.Path.GetTempPath, "DWGout.ini"), My.Resources.dwg)
+                    strIniFile = IO.Path.GetTempPath & "DWGout.ini"
                     Exit For
                 End If
             Else
@@ -1423,7 +1423,7 @@ Public Class Main
         Me.Focus()
     End Sub
 
-       Private Sub SMDXF(oDoc As Document, DXFSource As String, Flatpattern As Boolean, DrawingName As String)
+    Private Sub SMDXF(oDoc As Document, DXFSource As String, Flatpattern As Boolean, DrawingName As String)
         'Dim oPartDoc As Document = _invApp.ActiveDocument
         _invApp.SilentOperation = True
         Dim oCompDef As ComponentDefinition = oDoc.ComponentDefinition
