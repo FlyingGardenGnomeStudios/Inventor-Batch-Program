@@ -271,7 +271,16 @@ Public Class CheckNeeded
                     Next
                     oDoc.Update()
                     _invApp.SilentOperation = True
-                    oDoc.Save()
+                    Try
+                        oDoc.Save()
+                    Catch ex As Exception
+                        Ans = MsgBox("Drawing " & DrawingName & " could not be saved." & vbNewLine _
+                             & "Make sure the drawing is not read-only", MsgBoxStyle.OkCancel, "Error During Save")
+                        If Ans = vbCancel Then
+                            ProgressBar1.Hide()
+                            Exit Sub
+                        End If
+                    End Try
                     Main.CloseLater(DrawingName, oDoc)
                     _invApp.SilentOperation = False
                     ProgressBar1.Value = ((X + 1) / lstCheckNeeded.Items.Count) * 100
@@ -304,7 +313,7 @@ Public Class CheckNeeded
         Dim RevisionTable As RevisionTable
         Dim Col, Row, i, k As Integer
         Dim More As Boolean = False
-        Main.MsVistaProgressBar1.ProgressBarStyle = MSVistaProgressBar.BarStyle.Continuous
+        Main.MsVistaProgressBar.ProgressBarStyle = MSVistaProgressBar.BarStyle.Continuous
         'Iterate through all files in the subfiles window
         For X = 0 To Main.LVSubFiles.Items.Count - 1
             'get the checkbox state of each item
@@ -385,7 +394,7 @@ Skip:
             End If
             Main.ProgressBar(Main.LVSubFiles.CheckedItems.Count, X + 1, "Checking Revs: ", DrawingName)
         Next
-        Main.MsVistaProgressBar1.Visible = False
+        Main.MsVistaProgressBar.Visible = False
     End Sub
     Private Sub btnApplytoall_Click(sender As System.Object, e As System.EventArgs) Handles btnApplytoall.Click
         Dim CheckedBy, RevInit, RevCheckBy, DateChecked, RevDate As String

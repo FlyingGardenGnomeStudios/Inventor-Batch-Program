@@ -54,7 +54,7 @@ Namespace wyDay.TurboActivate
         ''' <summary>Creates a TurboActivate object instance.</summary>
         ''' <param name="vGUID">The GUID for this product version. This is found on the LimeLM site on the version overview.</param>
         ''' <param name="pdetsFilename">The absolute location to the TurboActivate.dat file on the disk.</param>
-        Public Sub New(vGUID As String, Optional pdetsFilename As String = Nothing)
+        Public Sub New(vGUID As String, Optional pdetsFilename As String = "C:\Users\tfehr\Google Drive\Programs\Batch Program\Batch_Program\bin\Debug\TurboActivate.dat")
             If pdetsFilename <> Nothing Then
 
 #If TA_BOTH_DLL Then

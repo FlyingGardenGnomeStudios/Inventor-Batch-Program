@@ -1,4 +1,5 @@
 ﻿Imports System.Windows.Forms
+Imports System.Text.RegularExpressions
 
 Public Class Settings
     Dim Main As Main
@@ -135,8 +136,8 @@ Public Class Settings
             My.Settings.PDFSaveNewLoc = True
             My.Settings.PDFSaveTag = False
         ElseIf rdoPDFTag.Checked = True Then
-            If IsAlphaNum(txtPDFTag.Text) = False Then
-                MsgBox("The PDF location you have selected is invalid")
+            If Regex.IsMatch(txtPDFTag.Text, ("^[a-zA-Z0-9_]*$")) Then
+                MsgBox("The PDF location you have selected Is invalid")
                 Exit Sub
             End If
             If Strings.Left(txtPDFTag.Text, 1) <> "\" Then
@@ -164,8 +165,8 @@ Public Class Settings
             My.Settings.DXFSaveNewLoc = True
             My.Settings.DXFSaveTag = False
         ElseIf rdoDXFTag.Checked = True Then
-            If IsAlphaNum(txtDXFTag.Text) = False Then
-                MsgBox("The DXF location you have selected is invalid")
+            If Regex.IsMatch(txtDXFTag.Text, ("^[a-zA-Z0-9_]*$")) Then
+                MsgBox("The DXF location you have selected Is invalid")
                 Exit Sub
             End If
             If Strings.Left(txtDXFTag.Text, 1) <> "\" Then
@@ -192,8 +193,8 @@ Public Class Settings
             My.Settings.DWGSaveNewLoc = True
             My.Settings.DWGSaveTag = False
         ElseIf rdoDWGTag.Checked = True Then
-            If IsAlphaNum(txtDWGTag.Text) = False Then
-                MsgBox("The DWG location you have selected is invalid")
+            If Regex.IsMatch(txtDWGTag.Text, ("^[a-zA-Z0-9_]*$")) Then
+                MsgBox("The DWG location you have selected Is invalid")
                 Exit Sub
             End If
             If Strings.Left(txtDWGTag.Text, 1) <> "\" Then
@@ -220,7 +221,7 @@ Public Class Settings
 
     Private Sub btnPDFLocBrowse_Click(sender As Object, e As EventArgs) Handles btnPDFLocBrowse.Click
         Dim Folder As FolderBrowserDialog = New FolderBrowserDialog
-        Folder.Description = "Choose the location you wish to save to"
+        Folder.Description = "Choose the location you wish To save To"
         Folder.RootFolder = System.Environment.SpecialFolder.Desktop
         Try
             If Folder.ShowDialog() = Windows.Forms.DialogResult.OK Then
@@ -235,7 +236,7 @@ Public Class Settings
 
     Private Sub btnDXFLocBrowse_Click(sender As Object, e As EventArgs) Handles btnDXFLocBrowse.Click
         Dim Folder As FolderBrowserDialog = New FolderBrowserDialog
-        Folder.Description = "Choose the location you wish to save to"
+        Folder.Description = "Choose the location you wish To save To"
         Folder.RootFolder = System.Environment.SpecialFolder.Desktop
         Try
             If Folder.ShowDialog() = Windows.Forms.DialogResult.OK Then
@@ -250,7 +251,7 @@ Public Class Settings
 
     Private Sub btnDWGBrowse_Click(sender As Object, e As EventArgs) Handles btnDWGBrowse.Click
         Dim Folder As FolderBrowserDialog = New FolderBrowserDialog
-        Folder.Description = "Choose the location you wish to save to"
+        Folder.Description = "Choose the location you wish To save To"
         Folder.RootFolder = System.Environment.SpecialFolder.Desktop
         Try
             If Folder.ShowDialog() = Windows.Forms.DialogResult.OK Then
@@ -265,9 +266,9 @@ Public Class Settings
     Private Function IsAlphaNum(ByVal strInputText As String) As Boolean
         Dim IsAlpha As Boolean = False
         If System.Text.RegularExpressions.Regex.IsMatch(strInputText, "^[a-zA-Z0-9-\\]+$") Then
-            IsAlpha = True
-        Else
-            IsAlpha = False
+                IsAlpha = True
+            Else
+                IsAlpha = False
         End If
         Return IsAlpha
     End Function

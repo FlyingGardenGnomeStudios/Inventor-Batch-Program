@@ -16,10 +16,10 @@
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
-    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>\\SERVER02\Company\Employee Folders\Tim Fehr\Programs\Batch Program\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Web</InstallFrom>
+    <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
@@ -27,14 +27,12 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/</InstallUrl>
-    <UpdateUrl>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/</UpdateUrl>
     <TargetCulture>en-CA</TargetCulture>
     <ProductName>Inventor Batch Program</ProductName>
     <PublisherName>Flying Garden Gnome Studios</PublisherName>
     <MinimumRequiredVersion>1.1.2.6</MinimumRequiredVersion>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>10</ApplicationRevision>
+    <ApplicationRevision>35</ApplicationRevision>
     <ApplicationVersion>1.1.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -50,6 +48,7 @@
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>x86</PlatformTarget>
+    <DefineConstants>TA_BOTH_DLL=TRUE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -84,6 +83,8 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <DefineConstants>
+    </DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <DefineTrace>true</DefineTrace>
@@ -257,7 +258,6 @@
     </Compile>
     <Compile Include="TurboActivate.vb" />
     <None Include="Batch Program Signature.pfx" />
-    <None Include="Batch_Program_1_TemporaryKey.pfx" />
     <None Include="ClassDiagram2.cd" />
     <Compile Include="Rev Switch.Designer.vb">
       <DependentUpon>Rev Switch.vb</DependentUpon>
@@ -306,7 +306,7 @@
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <LastGenOutput>Resources2.Designer.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Print Size.resx">
       <DependentUpon>Print Size.vb</DependentUpon>
@@ -353,10 +353,9 @@
     <None Include="Resources\Splash.jpeg" />
     <None Include="Resources\btn_donate_LG.gif" />
     <None Include="Resources\About.JPG" />
-    <None Include="Resources\velociraptor_cat.jpg" />
-    <None Include="Resources\dwg.ini" />
+    <EmbeddedResource Include="Resources\dwg.ini" />
     <None Include="Resources\DXF.bmp" />
-    <None Include="Resources\DXF.ini" />
+    <EmbeddedResource Include="Resources\DXF.ini" />
     <None Include="Resources\Get64BitPicture.txt" />
     <None Include="Resources\inverse1.png" />
     <None Include="Resources\inverse.png" />
@@ -417,6 +416,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PostBuildEvent>"C:\Program Files (x86)\InventorNetAddinWizardPRO\Bin\mt.exe" -manifest "$(ProjectDir)Batch_Program.X.manifest" -outputresource:"$(TargetPath)";#5</PostBuildEvent>

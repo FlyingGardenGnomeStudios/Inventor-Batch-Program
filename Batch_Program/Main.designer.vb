@@ -87,7 +87,7 @@ Partial Class Main
         Me.mnuActDeact = New System.Windows.Forms.ToolStripMenuItem()
         Me.HowToToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.MsVistaProgressBar1 = New MSVistaProgressBar()
+        Me.MsVistaProgressBar = New MSVistaProgressBar()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -675,7 +675,7 @@ Partial Class Main
         '
         Me.mnuActDeact.Name = "mnuActDeact"
         Me.mnuActDeact.Size = New System.Drawing.Size(189, 22)
-        Me.mnuActDeact.Text = "Deactivate"
+        Me.mnuActDeact.Text = "Activate"
         '
         'HowToToolStripMenuItem1
         '
@@ -688,22 +688,21 @@ Partial Class Main
         Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
         Me.ContextMenuStrip1.Size = New System.Drawing.Size(61, 4)
         '
-        'MsVistaProgressBar1
+        'MsVistaProgressBar
         '
-        Me.MsVistaProgressBar1.BackColor = System.Drawing.Color.Transparent
-        Me.MsVistaProgressBar1.BlockSize = 10
-        Me.MsVistaProgressBar1.BlockSpacing = 10
-        Me.MsVistaProgressBar1.Cursor = System.Windows.Forms.Cursors.AppStarting
-        Me.MsVistaProgressBar1.DisplayText = "%P%"
-        Me.MsVistaProgressBar1.DisplayTextColor = System.Drawing.SystemColors.ControlText
-        Me.MsVistaProgressBar1.DisplayTextFont = New System.Drawing.Font("Arial", 8.0!)
-        Me.MsVistaProgressBar1.GradiantStyle = MSVistaProgressBar.BackGradiant.None
-        Me.MsVistaProgressBar1.Location = New System.Drawing.Point(12, 243)
-        Me.MsVistaProgressBar1.Name = "MsVistaProgressBar1"
-        Me.MsVistaProgressBar1.ShowText = True
-        Me.MsVistaProgressBar1.Size = New System.Drawing.Size(536, 20)
-        Me.MsVistaProgressBar1.TabIndex = 56
-        Me.MsVistaProgressBar1.Visible = False
+        Me.MsVistaProgressBar.BackColor = System.Drawing.Color.Transparent
+        Me.MsVistaProgressBar.BlockSize = 10
+        Me.MsVistaProgressBar.BlockSpacing = 10
+        Me.MsVistaProgressBar.DisplayText = "%P%"
+        Me.MsVistaProgressBar.DisplayTextColor = System.Drawing.SystemColors.ControlText
+        Me.MsVistaProgressBar.DisplayTextFont = New System.Drawing.Font("Arial", 8.0!)
+        Me.MsVistaProgressBar.GradiantStyle = MSVistaProgressBar.BackGradiant.None
+        Me.MsVistaProgressBar.Location = New System.Drawing.Point(12, 242)
+        Me.MsVistaProgressBar.Name = "MsVistaProgressBar"
+        Me.MsVistaProgressBar.ShowText = True
+        Me.MsVistaProgressBar.Size = New System.Drawing.Size(536, 23)
+        Me.MsVistaProgressBar.TabIndex = 62
+        Me.MsVistaProgressBar.Visible = False
         '
         'Main
         '
@@ -711,10 +710,10 @@ Partial Class Main
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Control
         Me.ClientSize = New System.Drawing.Size(746, 272)
+        Me.Controls.Add(Me.MsVistaProgressBar)
         Me.Controls.Add(Me.MenuStrip1)
         Me.Controls.Add(Me.PictureBox2)
         Me.Controls.Add(Me.GroupBox4)
-        Me.Controls.Add(Me.MsVistaProgressBar1)
         Me.Controls.Add(Me.btnExit)
         Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.GroupBox3)
@@ -775,7 +774,7 @@ Partial Class Main
     Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
     Friend WithEvents tmr As System.Windows.Forms.Timer
     Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
-    Friend WithEvents MsVistaProgressBar1 As MSVistaProgressBar
+    Friend WithEvents MsVistaProgressBar As MSVistaProgressBar
     Friend WithEvents txtSearch As System.Windows.Forms.TextBox
     Friend WithEvents chkDWG As Windows.Forms.CheckBox
     Friend WithEvents chkPDF As Windows.Forms.CheckBox
