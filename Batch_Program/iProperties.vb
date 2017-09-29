@@ -118,8 +118,6 @@ Public Class iProperties
                 If DrawSource = "" And DrawingName = "" Then
                     Exit Sub
                 End If
-                'Path, oDoc, Archive, DrawingName, Trim(Main.lstSubfiles.Items.Item(X)), DrawSource, Y)
-                'DrawSource = Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "idw"
                 oDoc = _invApp.Documents.Open(DrawSource, False)
                 If Read = True Then
                     Call SetModelProps(oDoc)
@@ -129,8 +127,6 @@ Public Class iProperties
                 End If
                 Main.CloseLater(DrawingName, oDoc)
                 Main.MatchDrawing(DrawSource, DrawingName, Y)
-                'Path, oDoc, Archive, DrawingName, DrawSource, Y)
-                'DrawSource = SubFiles.Item(Y).Value
                 oDoc = _invApp.Documents.Open(DrawSource, False)
                 If Read = True Then
 

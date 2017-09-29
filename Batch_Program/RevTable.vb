@@ -184,17 +184,7 @@ Public Class RevTable
 
 
         oDoc = _invApp.ActiveDocument
-        'Path = _invApp.Documents
-        'For J = 1 To Path.Count
-        'oDoc = Path.Item(J)
-        'strPath = oDoc.FullDocumentName
-        'strFile = Strings.Right(strPath, Strings.Len(strPath) - InStrRev(strPath, "\"))
-        'If strPath IsNot Nothing Then
-        'If My.Computer.FileSystem.FileExists(Strings.Left(strPath, (Strings.Len(strPath) - 3)) & "idw") Then
-        'If _invApp.ActiveStrings.Right(Document.FullDocumentName, len(Document.FullDocumentName)-InStrRev(Document.FullDocumentName, "\")) = strFile Then
-        'Main.MatchDrawing(DrawSource, DrawingName, X)
-        'oDoc = _invApp.Documents.Open(Strings.Left(strPath, (Strings.Len(strPath) - 3)) & "idw", True)
-        'oDoc = _invApp.Documents.Open(DrawSource, True)
+
         oDoc.Sheets.Item(1).activate()
         Dim Flag As Boolean = False
         Sheet = oDoc.ActiveSheet

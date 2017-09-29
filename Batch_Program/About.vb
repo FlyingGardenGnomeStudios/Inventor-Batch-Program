@@ -11,11 +11,11 @@ Public Class About
                 lblName.Text = "Inventor Batch Program " & .Major.ToString() & "." &
                 .Minor.ToString() & "." &
                 .Build.ToString() & "." &
-                .Revision.ToString() & " Build Date: " & fecha.ToShortDateString.ToString
+                .Revision.ToString() '& " Build Date: " & fecha.ToShortDateString.ToString
 
             End With
         Else
-            lblPublish.Text = "Test Mode" & " Build Date: " & fecha.ToShortDateString.ToString
+            lblPublish.Text = "Test Mode" & " Build Date: " '& fecha.ToShortDateString.ToString
         End If
 
     End Sub

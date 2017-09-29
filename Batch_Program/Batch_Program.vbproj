@@ -191,6 +191,11 @@
     <Compile Include="iPropertySettings.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="My Project\Resources2.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="ReVerifyNow.Designer.vb">
       <DependentUpon>ReVerifyNow.vb</DependentUpon>
     </Compile>
@@ -221,11 +226,6 @@
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
-    </Compile>
-    <Compile Include="My Project\Resources.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="My Project\Settings.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -350,6 +350,15 @@
     <Content Include="Batch_Program.Addin" />
     <Content Include="Batch_Runner-Logo_256px.ico" />
     <Content Include="ReadMe.txt" />
+    <Content Include="Resources\TurboActivate.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\TurboActivate.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\TurboActivate.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\Splash.jpeg" />
     <None Include="Resources\btn_donate_LG.gif" />
     <None Include="Resources\About.JPG" />

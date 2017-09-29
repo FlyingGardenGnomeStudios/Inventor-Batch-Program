@@ -89,7 +89,18 @@ Public Class Main
             End Try
         End Try
         writeDebug("Inventor Accessed")
+
         LVSubFiles.Columns(0).Width = LVSubFiles.Width - 10
+        'Try
+        'If Not My.Computer.FileSystem.FileExists(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath) & "\TurboActivate.exe") Then
+        '    IO.File.Copy(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\TurboActivate.exe"), My.Resources.TurboActivate)
+        '    IO.File.WriteAllLines(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\TurboActivate.dll"), My.Resources.TurboActivate1)
+        '        IO.File.WriteAllLines(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\TurboActivate.dat"), My.Resources.TurboActivate2)
+        '    End If
+        'Catch
+        '    msgbox("Could Not load TurboActivate files")
+        '    Exit Sub
+        'End Try
         'Try
         '    'TODO: goto the version page at LimeLM and paste this GUID here
         '    ta = New TurboActivate("3d2a7b7e59bfcc74c5df44.47834669")
@@ -138,7 +149,7 @@ Public Class Main
         'Catch ex As TurboActivateException
         '    ' failed to check if activated, meaning the customer screwed
         '    ' something up so kill the app immediately
-        '    MessageBox.Show("Failed to check if activated: " + ex.Message)
+        '    MessageBox.Show("Failed to check if activated:  " + ex.Message)
         '    Close()
         '    Return
         'End Try
@@ -810,9 +821,7 @@ Public Class Main
         Err.Clear()
     End Sub
     Public Sub MatchDrawing(ByRef DrawSource As String, ByRef DrawingName As String, Y As Integer)
-        'Path As Documents, ByRef oDoc As Document, ByRef Archive As String _
-        '  , ByRef DrawingName As String, ByRef DrawSource As String, X As Integer)
-        If SubFiles.Count > LVSubFiles.Items.Count Then
+        If CMSHeirarchical.Checked = True Then
             For Each item In SubFiles
                 If item.Key = LVSubFiles.Items(Y).Text Then
                     DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "idw"
@@ -821,27 +830,14 @@ Public Class Main
                 End If
             Next
         Else
-            DrawSource = Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "idw"
-            DrawingName = SubFiles.Item(Y).Key
+            For Each item In AlphaSub
+                If item.Key = LVSubFiles.Items(Y).Text Then
+                    DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "idw"
+                    DrawingName = Trim(item.Key)
+                    Exit For
+                End If
+            Next
         End If
-        'Look for selected item
-        '        For J = 1 To _invApp.Documents.Count
-        '            oDoc = Path.Item(J)
-        '            Archive = oDoc.FullFileName
-        '            If Archive = Nothing Then
-        '                GoTo Skip
-        '            ElseIf Strings.Right(Archive, 3) <> "idw" Then
-        '                Dim mass As Double = oDoc.ComponentDefinition.MassProperties.Mass
-        '            End If
-        '            'Use the Partsource file to create the drawingsource file
-        '            DrawSource = Strings.Left(Archive, Strings.Len(Archive) - 3) & "idw"
-        '            DrawingName = Strings.Right(DrawSource, Strings.Len(DrawSource) - Strings.InStrRev(DrawSource, "\"))
-        '            'If the drawing file is checked, open the drawing in Inventor
-        '            If Trim(lstSubfiles.Items.Item(X).ToString) = DrawingName Then
-        '                Exit Sub
-        '            End If
-        'Skip:
-        '        Next
     End Sub
     Public Sub MatchPart(ByRef DrawSource As String, ByRef DrawingName As String, Y As Integer)
         'Path As Documents, ByRef oDoc As Document, ByRef Archive As String _
@@ -1051,6 +1047,7 @@ Public Class Main
             End If
         End If
     End Sub
+
     Private Sub PDFCreator(Path As Documents, ByRef oDoc As Document, ByRef PDFSource As String, ByRef Archive As String _
                              , ByRef DrawingName As String, ByRef DrawSource As String, ByRef Destin As String, OpenDocs As ArrayList _
                              , Total As Integer, Counter As Integer)
@@ -1073,9 +1070,9 @@ Public Class Main
         For X = 0 To LVSubFiles.Items.Count - 1
             'Look through all sub files in open documents to get the part sourcefile
             If LVSubFiles.Items(X).Checked = True Then
-                'iterate through opend documents to find the selected file
-                DrawSource = Strings.Left(SubFiles.Item(X).Value, Len(SubFiles.Item(X).Value) - 3) & "idw"
-                DrawingName = Trim(SubFiles.Item(X).Key)
+                'iterate through open documents to find the selected file
+                MatchDrawing(DrawSource, DrawingName, X)
+
                 'open drawing
                 oDoc = _invApp.Documents.Open(DrawSource, True)
                 If oPDFTrans.HasSaveCopyAsOptions(_invApp.ActiveDocument, oContext, oOptions) Then
@@ -1116,28 +1113,6 @@ Public Class Main
                         'if the archive folder doesn't exist create a new one
                         Dim Filetype As String = ".pdf"
                         Search_For_Duplicates(PDFSource, DrawingName, Filetype)
-                        'For Each file As IO.FileInfo In Get_Files(Strings.Left(PDFSource, InStrRev(PDFSource, "\")),
-                        '                                          IO.SearchOption.TopDirectoryOnly, "pdf",
-                        '                                          "\" & Strings.Left(DrawingName, InStrRev(DrawingName, ".")))
-                        '    If file.FullName <> PDFSource Then
-                        '        If My.Computer.FileSystem.FileExists(file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived")) Then
-                        '            Kill(file.FullName)
-                        '        Else
-                        '            System.IO.File.Move(file.FullName, file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived"))
-                        '        End If
-                        '    End If
-                        'Next
-                        'For Each file As IO.FileInfo In Get_Files(Strings.Left(PDFSource, InStrRev(PDFSource, "\")),
-                        '                                          IO.SearchOption.TopDirectoryOnly, "pdf",
-                        '                                          "\" & Strings.Left(DrawingName, InStrRev(DrawingName, ".") - 1) & "-R")
-                        '    If file.FullName <> PDFSource Then
-                        '        If My.Computer.FileSystem.FileExists(file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived")) Then
-                        '            Kill(file.FullName)
-                        '        Else
-                        '            System.IO.File.Move(file.FullName, file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived"))
-                        '        End If
-                        '    End If
-                        'Next
                         Dim oDocument As Document
                         oDocument = _invApp.ActiveDocument
                         ' Call the translator.  
@@ -1344,9 +1319,9 @@ Public Class Main
     End Sub
     Private Sub ExportPart(DrawSource As String, Archive As String, FlatPattern As Boolean, Destin As String, DrawingName As String,
              OpenDocs As ArrayList, Output As String, RevNo As String)
-        'MsgBox("This current operation has been cancelled" & vbNewLine &
-        '   "due to a bug. A solution is currently being investigated")
-        'Exit Sub
+        MsgBox("This current operation has been cancelled" & vbNewLine &
+               "due to a bug. A solution is currently being investigated")
+        Exit Sub
         Dim odoc As Document = _invApp.ActiveDocument
         If FlatPattern = False Then
             odoc = _invApp.Documents.Open(DrawSource, True)
@@ -1381,15 +1356,13 @@ Public Class Main
             If Output = "DXF" Then
                 If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC4-122E-11D5-8E91-0010B541CD80}" Then
                     oDWGAddIn = _invApp.ApplicationAddIns.Item(i)
-                    IO.File.WriteAllText(IO.Path.Combine(IO.Path.GetTempPath, "DXFout.ini"), My.Resources.DXF)
-                    strIniFile = IO.Path.GetTempPath & "DXFout.ini"
+                    strIniFile = My.Resources.DXF
                     Exit For
                 End If
             ElseIf Output = "DWG" Then
                 If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC2-122E-11D5-8E91-0010B541CD80}" Then
                     oDWGAddIn = _invApp.ApplicationAddIns.Item(i)
-                    IO.File.WriteAllText(IO.Path.Combine(IO.Path.GetTempPath, "DWGout.ini"), My.Resources.dwg)
-                    strIniFile = IO.Path.GetTempPath & "DWGout.ini"
+                    strIniFile = My.Resources.dwg
                     Exit For
                 End If
             Else
@@ -1423,7 +1396,7 @@ Public Class Main
         Me.Focus()
     End Sub
 
-    Private Sub SMDXF(oDoc As Document, DXFSource As String, Flatpattern As Boolean, DrawingName As String)
+       Private Sub SMDXF(oDoc As Document, DXFSource As String, Flatpattern As Boolean, DrawingName As String)
         'Dim oPartDoc As Document = _invApp.ActiveDocument
         _invApp.SilentOperation = True
         Dim oCompDef As ComponentDefinition = oDoc.ComponentDefinition
@@ -1911,7 +1884,7 @@ Public Class Main
         Dim oDoc As Document = Nothing
         Dim dDoc As DrawingDocument = Nothing
         Dim Path As Documents = _invApp.Documents
-        Dim DrawingName As String
+        Dim DrawingName As String = Nothing
         Dim Archive As String = Nothing
         Dim DrawSource As String = Nothing
         Dim OpenDocs As New ArrayList
@@ -1922,10 +1895,8 @@ Public Class Main
         For Y = 0 To LVSubFiles.Items.Count - 1
             If LVSubFiles.Items(Y).Checked = True Then
                 Q += 1
-                DrawingName = Trim(LVSubFiles.Items.Item(Y).Text)
-                'MatchDrawing(Path, oDoc, Archive, DrawingName, DrawSource, Y)
+                MatchDrawing(DrawSource, DrawingName, Y)
                 'open drawing
-                DrawSource = Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "idw"
                 oDoc = _invApp.Documents.Open(DrawSource, True)
                 Dim Sheets As Sheets
                 Dim Sheet As Sheet
@@ -2817,7 +2788,7 @@ Public Class Main
             TAProcess.StartInfo.FileName = IO.Path.Combine(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath), "TurboActivate.exe")
             TAProcess.EnableRaisingEvents = True
             AddHandler TAProcess.Exited, New EventHandler(AddressOf p_Exited)
-            TAProcess.Start()
+            ' TAProcess.Start()
         End If
     End Sub
     ''' This event handler is called when TurboActivate.exe closes.
