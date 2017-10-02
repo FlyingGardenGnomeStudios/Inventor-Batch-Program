@@ -1,20 +1,13 @@
-﻿Imports System
-Imports System.Type
+﻿Imports System.Type
 Imports System.Activator
 Imports System.Runtime.InteropServices
 Imports Inventor
 Imports System.Windows.Forms
 Imports Microsoft.Office.Interop
-Imports System.Collections.Generic
-Imports Microsoft.VisualBasic
 Imports System.Drawing
-Imports System.Drawing.Imaging
-Imports System.Diagnostics
-Imports System.Threading
-Imports System.IO
 Imports System.Text.RegularExpressions
-Imports System.Security.Cryptography
-Imports System.Net.NetworkInformation
+
+
 
 Public Class Main
     Dim _invApp As Inventor.Application
@@ -42,6 +35,21 @@ Public Class Main
     Dim strOutputDecrypt As String
     Dim fsInput As System.IO.FileStream
     Dim fsOutput As System.IO.FileStream
+    Dim ReVerifyNow As ReVerifyNow
+    Private ta As TurboActivate
+    Private isGenuine As Boolean
+    Private Delegate Sub IsActivatedDelegate()
+    ' Set the trial flags you want to use. Here we've selected that the
+    ' trial data should be stored system-wide (TA_SYSTEM) and that we should
+    ' use un-resetable verified trials (TA_VERIFIED_TRIAL).
+    Private trialFlags As TA_Flags = TA_Flags.TA_SYSTEM Or TA_Flags.TA_VERIFIED_TRIAL
+
+    ' Don't use 0 for either of these values.
+    ' We recommend 90, 14. But if you want to lower the values
+    ' we don't recommend going below 7 days for each value.
+    ' Anything lower and you're just punishing legit users.
+    Private Const DaysBetweenChecks As UInteger = 90
+    Private Const GracePeriodLength As UInteger = 14
 
     Public Sub writeDebug(ByVal x As String)
         Dim path As String = My.Computer.FileSystem.SpecialDirectories.Temp
@@ -81,7 +89,74 @@ Public Class Main
             End Try
         End Try
         writeDebug("Inventor Accessed")
+
         LVSubFiles.Columns(0).Width = LVSubFiles.Width - 10
+        'Try
+        'If Not My.Computer.FileSystem.FileExists(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath) & "\TurboActivate.exe") Then
+        '    IO.File.Copy(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\TurboActivate.exe"), My.Resources.TurboActivate)
+        '    IO.File.WriteAllLines(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\TurboActivate.dll"), My.Resources.TurboActivate1)
+        '        IO.File.WriteAllLines(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\TurboActivate.dat"), My.Resources.TurboActivate2)
+        '    End If
+        'Catch
+        '    msgbox("Could Not load TurboActivate files")
+        '    Exit Sub
+        'End Try
+        'Try
+        '    'TODO: goto the version page at LimeLM and paste this GUID here
+        '    ta = New TurboActivate("3d2a7b7e59bfcc74c5df44.47834669")
+
+        '    ' Check if we're activated, and every 90 days verify it with the activation servers
+        '    ' In this example we won't show an error if the activation was done offline
+        '    ' (see the 3rd parameter of the IsGenuine() function)
+        '    ' https://wyday.com/limelm/help/offline-activation/
+        '    Dim gr As IsGenuineResult = ta.IsGenuine(DaysBetweenChecks, GracePeriodLength, True)
+
+        '    isGenuine = (gr = IsGenuineResult.Genuine _
+        '                 OrElse gr = IsGenuineResult.GenuineFeaturesChanged _
+        '                 OrElse gr = IsGenuineResult.InternetError)
+        '    ' an internet error means the user is activated but
+        '    ' TurboActivate failed to contact the LimeLM servers
+
+
+
+        '    ' If IsGenuineEx() is telling us we're not activated
+        '    ' but the IsActivated() function is telling us that the activation
+        '    ' data on the computer is valid (i.e. the crypto-signed-fingerprint matches the computer)
+        '    ' then that means that the customer has passed the grace period and they must re-verify
+        '    ' with the servers to continue to use your app.
+
+        '    'Note: DO NOT allow the customer to just continue to use your app indefinitely with absolutely
+        '    '      no reverification with the servers. If you want to do that then don't use IsGenuine() or
+        '    '      IsGenuineEx() at all -- just use IsActivated().
+        '    If Not isGenuine AndAlso ta.IsActivated() Then
+
+        '        ' We're treating the customer as is if they aren't activated, so they can't use your app.
+
+        '        ' However, we show them a dialog where they can reverify with the servers immediately.
+
+        '        Dim frmReverify As ReVerifyNow = New ReVerifyNow(ta, DaysBetweenChecks, GracePeriodLength)
+
+        '        If frmReverify.ShowDialog(Me) = DialogResult.OK Then
+        '            isGenuine = True
+        '        ElseIf Not frmReverify.noLongerActivated Then ' the user clicked cancel and the user is still activated
+
+        '            ' Just bail out of your app
+        '            Close()
+        '            Return
+        '        End If
+        '    End If
+
+        'Catch ex As TurboActivateException
+        '    ' failed to check if activated, meaning the customer screwed
+        '    ' something up so kill the app immediately
+        '    MessageBox.Show("Failed to check if activated:  " + ex.Message)
+        '    Close()
+        '    Return
+        'End Try
+
+        ''Show a trial if we're not genuine
+        ''See step 9, below.
+        'ShowTrial(Not isGenuine)
     End Sub
     Public Function PopiProperties(CalledFunction As iProperties)
         iProperties = CalledFunction
@@ -95,21 +170,21 @@ Public Class Main
         'Iterate through each document open in Inventor and retrieve the display name
         Try
             For Each oDoc In _invApp.Documents.VisibleDocuments
-                If oDoc.FullDocumentName <> Nothing Then
+                If oDoc.FullFileName <> Nothing Then
                     'Compare file type to the files chosen to display and only display the selected documents.
                     'Add the document name to key & location to value for faster recall
                     If chkAssy.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
-                        OpenFiles.Add(New KeyValuePair(Of String, String)(Strings.Right(oDoc.FullDocumentName, Len(oDoc.FullDocumentName) - InStrRev(oDoc.FullDocumentName, "\")), oDoc.FullDocumentName))
-                        'lstOpenfiles.Items.Add(Strings.Right(oDoc.FullDocumentName, len(oDoc.FullDocumentName)-InStrRev(oDoc.FullDocumentName, "\")))
+                        OpenFiles.Add(New KeyValuePair(Of String, String)(Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\")), oDoc.FullFileName))
+                        'lstOpenfiles.Items.Add(Strings.Right(oDoc.FullFileName, len(oDoc.FullFileName)-InStrRev(oDoc.FullFileName, "\")))
                     ElseIf chkParts.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kPartDocumentObject Then
-                        OpenFiles.Add(New KeyValuePair(Of String, String)(Strings.Right(oDoc.FullDocumentName, Len(oDoc.FullDocumentName) - InStrRev(oDoc.FullDocumentName, "\")), oDoc.FullDocumentName))
-                        'lstOpenfiles.Items.Add(Strings.Right(oDoc.FullDocumentName, len(oDoc.FullDocumentName)-InStrRev(oDoc.FullDocumentName, "\")))
+                        OpenFiles.Add(New KeyValuePair(Of String, String)(Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\")), oDoc.FullFileName))
+                        'lstOpenfiles.Items.Add(Strings.Right(oDoc.FullFileName, len(oDoc.FullFileName)-InStrRev(oDoc.FullFileName, "\")))
                     ElseIf chkDrawings.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kDrawingDocumentObject Then
-                        OpenFiles.Add(New KeyValuePair(Of String, String)(Strings.Right(oDoc.FullDocumentName, Len(oDoc.FullDocumentName) - InStrRev(oDoc.FullDocumentName, "\")), oDoc.FullDocumentName))
-                        'lstOpenfiles.Items.Add(Strings.Right(oDoc.FullDocumentName, len(oDoc.FullDocumentName)-InStrRev(oDoc.FullDocumentName, "\")))
+                        OpenFiles.Add(New KeyValuePair(Of String, String)(Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\")), oDoc.FullFileName))
+                        'lstOpenfiles.Items.Add(Strings.Right(oDoc.FullFileName, len(oDoc.FullFileName)-InStrRev(oDoc.FullFileName, "\")))
                     ElseIf chkPres.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kPresentationDocumentObject Then
-                        OpenFiles.Add(New KeyValuePair(Of String, String)(Strings.Right(oDoc.FullDocumentName, Len(oDoc.FullDocumentName) - InStrRev(oDoc.FullDocumentName, "\")), oDoc.FullDocumentName))
-                        'lstOpenfiles.Items.Add(Strings.Right(oDoc.FullDocumentName, len(oDoc.FullDocumentName)-InStrRev(oDoc.FullDocumentName, "\")))
+                        OpenFiles.Add(New KeyValuePair(Of String, String)(Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\")), oDoc.FullFileName))
+                        'lstOpenfiles.Items.Add(Strings.Right(oDoc.FullFileName, len(oDoc.FullFileName)-InStrRev(oDoc.FullFileName, "\")))
                     End If
                 End If
             Next
@@ -150,24 +225,7 @@ Public Class Main
                 End
             End If
         End If
-    End Sub
-    Private Sub Main_Load(sender As Object, e As System.EventArgs) Handles Me.Load
-
-        Dim Days As Integer
-        HandleRegistry(My.Settings.Registered, Days)
-        Trial.PopMain(Me)
-        If My.Settings.Registered = False Then
-
-            If Days < 1 Then 'something went wrong
-                Trial.Label1.Text = "The trial period for this program has expired"
-
-            Else
-                Trial.Label1.Text = "You are currently running the trial version" & vbNewLine &
-               "This version will expire in " & Days & " Days"
-            End If
-            Trial.ShowDialog()
-        End If
-        UpdateForm()
+        LVSubFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
     End Sub
     Private Sub btnExit_Click(sender As System.Object, e As System.EventArgs) Handles btnExit.Click
         If btnExit.Text = "Exit" Then
@@ -223,9 +281,9 @@ Public Class Main
         tmr.Enabled = True
     End Sub
     Private Sub tmr_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles tmr.Tick
-        MsVistaProgressBar1.Visible = True
+        MsVistaProgressBar.Visible = True
         LVSubFiles.Enabled = False
-        'MsVistaProgressBar1.ProgressBarStyle = MSVistaProgressBar.BarStyle.Marquee
+        'MsVistaProgressBar.ProgressBarStyle = MSVistaProgressBar.BarStyle.Marquee
         tmr.Enabled = False
         'set the colour and style of the subfiles window
         SubFiles.Clear()
@@ -259,7 +317,7 @@ Public Class Main
                     Path = _invApp.Documents
                     oDoc = Path.Item(J)
                     'get the source path of the targeted file
-                    PartSource = oDoc.FullDocumentName
+                    PartSource = oDoc.FullFileName
                     'If the targeted document is the checked document, identify its type
                     If lstOpenfiles.CheckedItems.Item(X) = Strings.Right(PartSource, Strings.Len(PartSource) - InStrRev(PartSource, "\")) Then
                         'Drawing documents can be directly sent to the subfiles list
@@ -336,7 +394,7 @@ Public Class Main
             For X = 1 To oDoc.ReferencedDocuments.Count
                 oDerived = oDoc.ReferencedDocuments.Item(X)
                 DerDrawing = oDerived.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("5").Value.ToString & ".idw"
-                PartSource = oDerived.FullDocumentName
+                PartSource = oDerived.FullFileName
                 If oDerived.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
                     Total = Total + oDoc.ReferencedDocuments.Count - 1
                     If _invApp.ActiveDocument.FullFileName = PartSource Then
@@ -379,7 +437,7 @@ Public Class Main
                 Exit Sub
             End Try
         End If
-        PartSource = oAsmDoc.FullDocumentName
+        PartSource = oAsmDoc.FullFileName
         Rename.PopMain(Me)
         'Create a drawing name assuming the name/location is the same as the part
         strFile = Strings.Right(PartSource, Strings.Len(PartSource) - InStrRev(PartSource, "\"))
@@ -595,14 +653,13 @@ Public Class Main
         OpenDocs.Clear()
         Dim Archive, DocSource, DocName As String
         For Each oDoc In _invApp.Documents.VisibleDocuments
-            Archive = oDoc.FullDocumentName
+            Archive = oDoc.FullFileName
             'Use the Partsource file to create the drawingsource file
             DocSource = Strings.Left(Archive, Strings.Len(Archive))
             DocName = Strings.Right(DocSource, Strings.Len(DocSource) - Strings.InStrRev(DocSource, "\"))
             OpenDocs.Add(DocName)
         Next
     End Sub
-
     Private Sub RunCompleted()
         If SubFiles.Count > 10 Then
             txtSearch.Location = New Drawing.Point(LVSubFiles.Location.X, Me.Height - 122)
@@ -633,11 +690,11 @@ Public Class Main
             Next
         End If
         LVSubFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
-        MsVistaProgressBar1.Visible = False
+        MsVistaProgressBar.Visible = False
         Me.Update()
     End Sub
     Public Sub btnOK_Click(sender As System.Object, e As System.EventArgs) Handles btnOK.Click
-        MsVistaProgressBar1.ProgressBarStyle = MSVistaProgressBar.BarStyle.Continuous
+        MsVistaProgressBar.ProgressBarStyle = MsVistaProgressBar.BarStyle.Continuous
         Dim NoPart, NoDraw As Boolean
         Dim Path As Documents = _invApp.Documents
         Dim oDoc As Document = Nothing
@@ -748,7 +805,7 @@ Public Class Main
         On Error Resume Next
 
         For Each oDoc In _invApp.Documents.VisibleDocuments
-            Archive = oDoc.FullDocumentName
+            Archive = oDoc.FullFileName
             'Use the Partsource file to create the drawingsource file
             DocSource = Strings.Left(Archive, Strings.Len(Archive))
             DocName = Strings.Right(DocSource, Strings.Len(DocSource) - Strings.InStrRev(DocSource, "\"))
@@ -764,79 +821,65 @@ Public Class Main
         Err.Clear()
     End Sub
     Public Sub MatchDrawing(ByRef DrawSource As String, ByRef DrawingName As String, Y As Integer)
-        'Path As Documents, ByRef oDoc As Document, ByRef Archive As String _
-        '  , ByRef DrawingName As String, ByRef DrawSource As String, X As Integer)
-        If SubFiles.Count > LVSubFiles.Items.Count Then
+        If CMSHeirarchical.Checked = True Then
             For Each item In SubFiles
-                If item.Key.Contains(Trim(LVSubFiles.Items(Y).ToString)) Then
+                If item.Key = LVSubFiles.Items(Y).Text Then
                     DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "idw"
                     DrawingName = Trim(item.Key)
                     Exit For
                 End If
             Next
         Else
-            DrawSource = Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "idw"
-            DrawingName = SubFiles.Item(Y).Key
+            For Each item In AlphaSub
+                If item.Key = LVSubFiles.Items(Y).Text Then
+                    DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "idw"
+                    DrawingName = Trim(item.Key)
+                    Exit For
+                End If
+            Next
         End If
-        'Look for selected item
-        '        For J = 1 To _invApp.Documents.Count
-        '            oDoc = Path.Item(J)
-        '            Archive = oDoc.FullDocumentName
-        '            If Archive = Nothing Then
-        '                GoTo Skip
-        '            ElseIf Strings.Right(Archive, 3) <> "idw" Then
-        '                Dim mass As Double = oDoc.ComponentDefinition.MassProperties.Mass
-        '            End If
-        '            'Use the Partsource file to create the drawingsource file
-        '            DrawSource = Strings.Left(Archive, Strings.Len(Archive) - 3) & "idw"
-        '            DrawingName = Strings.Right(DrawSource, Strings.Len(DrawSource) - Strings.InStrRev(DrawSource, "\"))
-        '            'If the drawing file is checked, open the drawing in Inventor
-        '            If Trim(lstSubfiles.Items.Item(X).ToString) = DrawingName Then
-        '                Exit Sub
-        '            End If
-        'Skip:
-        '        Next
     End Sub
     Public Sub MatchPart(ByRef DrawSource As String, ByRef DrawingName As String, Y As Integer)
         'Path As Documents, ByRef oDoc As Document, ByRef Archive As String _
         ' , ByRef PartName As String, ByRef CheckedFile As String,
         'ByRef PartSource As String, X As Integer)
 
-        If SubFiles.Count > LVSubFiles.Items.Count Then
-            For Each item In SubFiles
-                If item.Key.Contains(Trim(LVSubFiles.Items(Y).ToString)) Then
-                    DrawSource = Strings.Left(item.Value, Len(item.Value))
-                    DrawingName = Trim(item.Key)
-                    Exit For
-                End If
-            Next
-        ElseIf System.IO.File.Exists(Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "ipt") And
-            Not System.IO.File.Exists(Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "iam") Then
-            DrawSource = Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "ipt"
-            DrawingName = Strings.Left(SubFiles.Item(Y).Key, Len(SubFiles.Item(Y).Key) - 3) & "ipt"
-        ElseIf System.IO.File.Exists(Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "iam") And
-            Not System.IO.File.Exists(Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "ipt") Then
-            DrawSource = Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "iam"
-            DrawingName = Strings.Left(SubFiles.Item(Y).Key, Len(SubFiles.Item(Y).Key) - 3) & "iam"
-        ElseIf System.IO.File.Exists(Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "ipt") And
-            System.IO.File.Exists(Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "iam") Then
-            If My.Settings.DupName = "Model" Then
-                DrawSource = Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "ipt"
-                DrawingName = Strings.Left(SubFiles.Item(Y).Key, Len(SubFiles.Item(Y).Key) - 3) & "ipt"
-            Else
-                DrawSource = Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "iam"
-                DrawingName = Strings.Left(SubFiles.Item(Y).Key, Len(SubFiles.Item(Y).Key) - 3) & "iam"
-            End If
-        Else
-            MsgBox("Couldn't locate model data for " & DrawingName)
-            Exit Sub
-        End If
+        'If SubFiles.Count > LVSubFiles.Items.Count Then
+        For Each item In SubFiles
+            If item.Key.Contains(LVSubFiles.Items(Y).Text) Then
 
+                If System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "ipt") And
+                        System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "iam") Then
+                    If My.Settings.DupName = "Model" Then
+                        DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "ipt"
+                        DrawingName = Strings.Left(item.Key, Len(item.Key) - 3) & "ipt"
+                    Else
+                        DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "iam"
+                        DrawingName = Strings.Left(item.Key, Len(item.Key) - 3) & "iam"
+                    End If
+                    Exit For
+                ElseIf System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "ipt") And
+                        Not System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "iam") Then
+                    DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "ipt"
+                    DrawingName = Strings.Left(item.Key, Len(item.Key) - 3) & "ipt"
+                    Exit For
+                ElseIf System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "iam") And
+                        Not System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "ipt") Then
+                    DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "iam"
+                    DrawingName = Strings.Left(item.Key, Len(item.Key) - 3) & "iam"
+                    Exit For
+                Else
+                    MsgBox("Couldn't locate model data for " & DrawingName)
+                    Exit Sub
+                End If
+            End If
+        Next
+        'End If
         'Look for selected item
         'Dim CheckedFile As String = Trim(lstSubfiles.Items.Item(X))
         '        For J = 1 To _invApp.Documents.Count
         '            oDoc = Path.Item(J)
-        '            Archive = oDoc.FullDocumentName
+        '            Archive = oDoc.FullFileName
         '            If Archive = Nothing Then GoTo skip
         '            If Strings.Right(Archive, 1) <> ">" Then
         '                If Strings.Right(Archive, 3) <> "idw" Then
@@ -873,100 +916,11 @@ Public Class Main
             If LVSubFiles.Items(X).Checked = True Then
                 MatchDrawing(DrawSource, DrawingName, X)
                 'DrawSource = Strings.Left(SubFiles.Item(X).Value, Len(SubFiles.Item(X).Value) - 3) & "idw"
+                ProgressBar(LVSubFiles.CheckedItems.Count, X, "Opening:   ", DrawingName)
                 odoc = _invApp.Documents.Open(DrawSource, True)
             End If
         Next
     End Sub
-    'Private Sub PrintDrawings(Path As Documents, ByRef odoc As Document, ByRef Archive As String _
-    '                         , ByRef DrawingName As String, ByRef DrawSource As String, OpenDocs As ArrayList)
-    '    Dim Z, Y As Integer
-    '    Dim Ans As Integer
-    '    Dim Size, Compare As Double
-    '    Dim ScaleSelect, MSheetQ, PrintMSheets, First, ScaleCheck, Flag As Boolean
-    '    Dim dDoc As DrawingDocument
-    '    Size = 0
-    '    Compare = 0
-    '    'Create loop. First loop creates a list of files to be printed getting spec's
-    '    'Second loop print the selected files according to the selected size
-    '    'Check to see if the drawings should be scaled
-    '    Ans = MsgBox("Would you like to print full size?", vbYesNoCancel, "Scale Drawings")
-    '    If Ans = vbYes Then
-    '        ScaleSelect = False
-    '    ElseIf Ans = vbNo Then
-    '        ScaleSelect = True
-    '    Else
-    '        Exit Sub
-    '    End If
-    '    For Y = 1 To 2
-    '        'Go through drawings to see which ones are selected
-    '        For X = 0 To lstSubfiles.Items.Count - 1
-    '            'Look through all sub files in open documents to get the part sourcefile
-    '            If lstSubfiles.GetItemCheckState(X) = CheckState.Checked Then
-    '                'MatchDrawing(Path, odoc, Archive, DrawingName, DrawSource, X)
-    '                DrawSource = Strings.Left(SubFiles.Item(X).Value, Len(SubFiles.Item(X).Value) - 3) & "idw"
-    '                If Y = 1 Then
-    '                    dDoc = _invApp.Documents.Open(DrawSource, False)
-    '                Else
-    '                    dDoc = _invApp.Documents.Open(DrawSource, True)
-    '                End If
-    '                DrawingName = Strings.Right(dDoc.FullDocumentName, Len(dDoc.FullDocumentName) - InStrRev(dDoc.FullDocumentName, "\"))
-    '                'Check to see if there are multiple pages to be printed
-    '                For Z = 1 To dDoc.Sheets.Count
-    '                    If Z > 1 And Y = 1 And MSheetQ = False Then
-    '                        'If there are multiple sheets check if they should all be printed
-    '                        Ans = MsgBox("Some drawings have multiple sheets." _
-    '                                     & vbNewLine & "Do you wish to print these as well?",
-    '                                    vbYesNoCancel, "Print Multiple Sheets")
-    '                        MSheetQ = True
-    '                        'Record whether to print single or multiple sheets
-    '                        If Ans = vbYes Then
-    '                            PrintMSheets = True
-    '                        ElseIf Ans = vbNo Then
-    '                            PrintMSheets = False
-    '                        Else
-    '                            Exit Sub
-    '                        End If
-    '                    End If
-    '                    'Record sheet size for the first drawing
-    '                    Size = dDoc.Sheets.Item(Z).Size
-    '                    dDoc.Sheets.Item(Z).Activate()
-    '                    If First = False Then
-    '                        Compare = Size
-    '                        First = True
-    '                    End If
-    '                    'On second iteration print the selected sheet
-    '                    If Y = 2 Then
-    '                        PrintSheets(DrawingName, ScaleSelect, Size)
-    '                        If PrintMSheets = False Then
-    '                            Exit For
-    '                        End If
-    '                        'Printed = True
-    '                    End If
-    '                Next
-    '                'Compare curent sheet size to first sheet size to check if the are different
-    '                'If Size <> Compare Then
-    '                ' ScaleCheck = True
-    '                ' 'Notify the user of differing sheet sizes and ask for input
-    '                ' If Y = 1 And Flag = True Then
-    '                ' Ans = MsgBox("The sheets to be printed are of different sizes." _
-    '                '              & vbNewLine & "Do you wish to scale the drawings to the same size?", _
-    '                '             vbYesNo, "Scale Drawings")
-    '                ' If Ans = vbYes Then
-    '                ' 'Scale all drawings to the same size
-    '                ' ScaleCheck = True
-    '                'End If
-    '                'End If
-    '                'End If
-    '                'Close drawings that have been opened by the program
-    '                CloseLater(DrawingName, dDoc)
-    '                'If Printed = True Then
-    '                'Exit For
-    '                'End If
-    '            End If
-    '        Next
-    '    Next
-    'End Sub
-
     Public Sub ExportCheck(Path As Documents, ByRef odoc As Document, ByRef Archive As String _
                              , ByRef DrawingName As String, ByRef DrawSource As String, ExportType As String)
         Dim OpenDocs As New ArrayList
@@ -1075,7 +1029,7 @@ Public Class Main
                 DXFCreator(Path, odoc, Destin, Archive, DrawingName, DrawSource, OpenDocs, Total, Counter, DXFSource)
             Else
                 chkCheck.CheckState = CheckState.Unchecked
-                MsVistaProgressBar1.Visible = False
+                MsVistaProgressBar.Visible = False
                 Exit Sub
             End If
         Else
@@ -1093,6 +1047,7 @@ Public Class Main
             End If
         End If
     End Sub
+
     Private Sub PDFCreator(Path As Documents, ByRef oDoc As Document, ByRef PDFSource As String, ByRef Archive As String _
                              , ByRef DrawingName As String, ByRef DrawSource As String, ByRef Destin As String, OpenDocs As ArrayList _
                              , Total As Integer, Counter As Integer)
@@ -1115,9 +1070,9 @@ Public Class Main
         For X = 0 To LVSubFiles.Items.Count - 1
             'Look through all sub files in open documents to get the part sourcefile
             If LVSubFiles.Items(X).Checked = True Then
-                'iterate through opend documents to find the selected file
-                DrawSource = Strings.Left(SubFiles.Item(X).Value, Len(SubFiles.Item(X).Value) - 3) & "idw"
-                DrawingName = Trim(SubFiles.Item(X).Key)
+                'iterate through open documents to find the selected file
+                MatchDrawing(DrawSource, DrawingName, X)
+
                 'open drawing
                 oDoc = _invApp.Documents.Open(DrawSource, True)
                 If oPDFTrans.HasSaveCopyAsOptions(_invApp.ActiveDocument, oContext, oOptions) Then
@@ -1145,7 +1100,7 @@ Public Class Main
                     PDFSource = Destin & "\" & DrawingName
                     PDFSource = PDFSource.Insert(PDFSource.LastIndexOf("."), RevNo)
                     'PDFSource = Destin & "\" & DrawingName & "-R" & RevNo
-                    PDFSource = Replace(PDFSource, "idw", "pdf")
+                    PDFSource = Replace(PDFSource, ".idw", ".pdf")
                     'check if the file exists. If the directory is missing, create a new one
                     If chkPDF.CheckState = CheckState.Checked Then
                         If My.Computer.FileSystem.DirectoryExists(Strings.Left(PDFSource, InStrRev(PDFSource, "\"))) = False Then
@@ -1156,15 +1111,8 @@ Public Class Main
                         End If
                         'if an older revision exists move it into the archive folder
                         'if the archive folder doesn't exist create a new one
-                        For Each file As IO.FileInfo In Get_Files(Strings.Left(PDFSource, InStrRev(PDFSource, "\")), IO.SearchOption.TopDirectoryOnly, "pdf", Strings.Left(DrawingName, Len(DrawingName) - (Len(RevNo) + 4)))
-                            If file.FullName <> PDFSource Then
-                                If My.Computer.FileSystem.FileExists(file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived")) Then
-                                    Kill(file.FullName)
-                                Else
-                                    System.IO.File.Move(file.FullName, file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived"))
-                                End If
-                            End If
-                        Next
+                        Dim Filetype As String = ".pdf"
+                        Search_For_Duplicates(PDFSource, DrawingName, Filetype)
                         Dim oDocument As Document
                         oDocument = _invApp.ActiveDocument
                         ' Call the translator.  
@@ -1179,12 +1127,12 @@ Public Class Main
                     End If
                 End If
                 Title = "Saving: "
-                ProgressBar(Total, Counter, Title, DrawingName)
+                ProgressBar(Total, Counter, Title, Replace(DrawingName, ".idw", ".pdf"))
                 Counter += 1
             End If
         Next
         _invApp.SilentOperation = False
-        MsVistaProgressBar1.Visible = False
+        MsVistaProgressBar.Visible = False
         'notify user of drawings that caused problems
         If Len(ErrorReport) > 0 Then
             MsgBox("The following files were Not created: " & vbNewLine & vbNewLine & ErrorReport & vbNewLine &
@@ -1194,13 +1142,39 @@ Public Class Main
     Private Function Get_Files(ByVal directory As String,
                            ByVal recursive As IO.SearchOption,
                            ByVal ext As String,
-                           ByVal with_word_in_filename As String) As List(Of IO.FileInfo)
+                           ByVal filename As String) As List(Of IO.FileInfo)
+
         'Check the directory for older revisions that have the same base name and select them to be moved to the archive folder
         Return IO.Directory.GetFiles(directory, "*" & If(ext.StartsWith("*"), ext.Substring(1), ext), recursive) _
-                           .Where(Function(o) o.ToLower.Contains(with_word_in_filename.ToLower)) _
+                           .Where(Function(o) o.ToLower.Contains(filename.ToLower)) _
                            .Select(Function(p) New IO.FileInfo(p)).ToList
 
+
     End Function
+    Private Sub Search_For_Duplicates(ByVal Filename As String, DrawingName As String, ByVal Filetype As String)
+        For Each file As IO.FileInfo In Get_Files(Strings.Left(Filename, InStrRev(Filename, "\")),
+                                                                  IO.SearchOption.TopDirectoryOnly, Filetype,
+                                                                  "\" & Strings.Left(DrawingName, InStrRev(DrawingName, ".")))
+            If file.FullName <> Filename Then
+                If My.Computer.FileSystem.FileExists(file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived")) Then
+                    Kill(file.FullName)
+                Else
+                    System.IO.File.Move(file.FullName, file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived"))
+                End If
+            End If
+        Next
+        For Each file As IO.FileInfo In Get_Files(Strings.Left(Filename, InStrRev(Filename, "\")),
+                                                                  IO.SearchOption.TopDirectoryOnly, Filetype,
+                                                                  "\" & Strings.Left(DrawingName, InStrRev(DrawingName, ".") - 1) & "-R")
+            If file.FullName <> Filename Then
+                If My.Computer.FileSystem.FileExists(file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived")) Then
+                    Kill(file.FullName)
+                Else
+                    System.IO.File.Move(file.FullName, file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived"))
+                End If
+            End If
+        Next
+    End Sub
     Public Sub DXFCreator(Path As Documents, ByRef oDoc As Document, ByRef Destin As String, ByRef Archive As String _
                              , ByRef DrawingName As String, ByRef DrawSource As String, OpenDocs As ArrayList _
                              , Total As Integer, Counter As Integer, DXFSource As String)
@@ -1237,14 +1211,14 @@ Public Class Main
                     If sReadableType = "P" And chkDWG.Checked = False Then
                         Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "DXF", RevNo)
                     ElseIf sReadableType = "S" And chkDWG.Checked = False And chkUseDrawings.Checked = False Then
-                        Call SMDXF(oDoc, DXFSource, True)
+                        Call SMDXF(oDoc, DXFSource, True, Replace(DrawingName, ".idw", ".dxf"))
                         CloseLater(Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt", oDoc)
                     ElseIf sReadableType = "S" And chkDWG.Checked = False And chkUseDrawings.Checked = True Then
                         Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "DXF", RevNo)
                     ElseIf sReadableType = "P" And chkDWG.Checked = True Then
                         Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "DWG", RevNo)
                     ElseIf sReadableType = "" Then
-                        CloseLater(Strings.Right(oDoc.FullDocumentName, Len(oDoc.FullDocumentName) - InStrRev(oDoc.FullDocumentName, "\")), oDoc)
+                        CloseLater(Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\")), oDoc)
                     End If
                     If chkCheck.CheckState = CheckState.Indeterminate Then
                         chkCheck.CheckState = CheckState.Unchecked
@@ -1307,13 +1281,13 @@ Public Class Main
                     DXFSource = Replace(DXFSource, "ipt", "dxf")
                     SheetMetalTest(Archive, oDoc, sReadableType)
                     If sReadableType = "S" Then
-                        Call SMDXF(oDoc, DXFSource, True)
+                        Call SMDXF(oDoc, DXFSource, True, Replace(PartName, ".idw", ".dxf"))
                     End If
                     ProgressBar(Total, X + 1, "Saving: ", PartName)
                 End If
             Next
         End If
-        MsVistaProgressBar1.Visible = False
+        MsVistaProgressBar.Visible = False
     End Sub
     Private Sub SheetMetalTest(ByRef Archive As String, oDoc As Document, ByRef sReadableType As String)
         Dim sDocumentSubType As String = oDoc.SubType
@@ -1345,9 +1319,9 @@ Public Class Main
     End Sub
     Private Sub ExportPart(DrawSource As String, Archive As String, FlatPattern As Boolean, Destin As String, DrawingName As String,
              OpenDocs As ArrayList, Output As String, RevNo As String)
-
-
-
+        MsgBox("This current operation has been cancelled" & vbNewLine &
+               "due to a bug. A solution is currently being investigated")
+        Exit Sub
         Dim odoc As Document = _invApp.ActiveDocument
         If FlatPattern = False Then
             odoc = _invApp.Documents.Open(DrawSource, True)
@@ -1356,37 +1330,22 @@ Public Class Main
         End If
         Dim oDWGAddIn As TranslatorAddIn = Nothing
         Dim i As Long
-        Dim strIniFile As String
+        Dim strIniFile As String = ""
         Dim DwgName, DWGSource, ExportName As String
-        Archive = _invApp.ActiveDocument.FullDocumentName
+        Archive = _invApp.ActiveDocument.FullFileName
         DwgName = Strings.Right(Archive, Len(Archive) - InStrRev(Archive, "\"))
         DWGSource = Destin & "\" & DrawingName
         DWGSource = DWGSource.Insert(DWGSource.LastIndexOf("."), RevNo)
-        'PDFSource = Destin & "\" & DrawingName & "-R" & RevNo
         ExportName = Replace(DWGSource, "idw", LCase(Output))
-        'DWGSource = Replace(DWGSource, "idw", "dwg")
-        'DXFSource = Replace(DWGSource, "dwg", "dxf")
 
-        'DXFSource = Strings.Left(Archive, InStrRev(Archive, "\")) & "DWG_DXF\" & Strings.Left(DwgName, Len(DwgName) - 4) & "-R" & RevNo & ".dxf"
-
-        'DWGSource = Strings.Left(Archive, InStrRev(Archive, "\")) & "DWG_DXF\" & Strings.Left(DwgName, Len(DwgName) - 4) & "-R" & RevNo & ".dwg"
-        ' Create a name-value map to
-        ' supply information
-        ' to the translator.
-        'ExportName = Strings.Right(ExportName, Len(ExportName) - InStrRev(ExportName, "\"))
         If My.Computer.FileSystem.DirectoryExists(Strings.Left(ExportName, InStrRev(ExportName, "\"))) = False Then
             MkDir(Strings.Left(ExportName, InStrRev(ExportName, "\")))
         End If
         If My.Computer.FileSystem.DirectoryExists(Strings.Left(ExportName, InStrRev(ExportName, "\")) & "Archived\") = False Then
             MkDir(Strings.Left(ExportName, InStrRev(ExportName, "\")) & "Archived\")
         End If
-        For Each file As IO.FileInfo In Get_Files(Strings.Left(ExportName, InStrRev(ExportName, "\")), IO.SearchOption.TopDirectoryOnly, "dxf", Strings.Left(DrawingName, Len(DrawingName) - (Len(RevNo) + 4)))
-            If file.FullName <> ExportName Then
-                If Not My.Computer.FileSystem.FileExists(file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived")) Then
-                    System.IO.File.Move(file.FullName, file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived"))
-                End If
-            End If
-        Next
+        Dim Filetype As String = "." & LCase(Output)
+        Search_For_Duplicates(ExportName, DrawingName, Filetype)
         Dim oNameValueMap As NameValueMap
         oNameValueMap = _invApp.TransientObjects.CreateNameValueMap
         ' Define the type of output by
@@ -1395,19 +1354,15 @@ Public Class Main
         oOutputFile = _invApp.TransientObjects.CreateDataMedium
         For i = 1 To _invApp.ApplicationAddIns.Count
             If Output = "DXF" Then
-                If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC2-122E-11D5-8E91-0010B541CD80}" Then
+                If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC4-122E-11D5-8E91-0010B541CD80}" Then
                     oDWGAddIn = _invApp.ApplicationAddIns.Item(i)
                     strIniFile = My.Resources.DXF
-                    Call oNameValueMap.Add("Export_Acad_IniFile", strIniFile)
-                    oOutputFile.FileName = ExportName
                     Exit For
                 End If
             ElseIf Output = "DWG" Then
                 If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC2-122E-11D5-8E91-0010B541CD80}" Then
                     oDWGAddIn = _invApp.ApplicationAddIns.Item(i)
                     strIniFile = My.Resources.dwg
-                    Call oNameValueMap.Add("Export_Acad_IniFile", strIniFile)
-                    oOutputFile.FileName = ExportName
                     Exit For
                 End If
             Else
@@ -1415,7 +1370,8 @@ Public Class Main
                 Exit Sub
             End If
         Next
-
+        Call oNameValueMap.Add("Export_Acad_IniFile", strIniFile)
+        oOutputFile.FileName = ExportName
 
         If oDWGAddIn Is Nothing Then
             MsgBox("DWG add-in not found.")
@@ -1433,15 +1389,14 @@ Public Class Main
         Dim oContext As TranslationContext
         oContext = _invApp.TransientObjects.CreateTranslationContext
         oContext.Type = IOMechanismEnum.kFileBrowseIOMechanism
-
-
         ' Call the SaveCopyAs method of the add-in.
         Call oDWGAddIn.SaveCopyAs(_invApp.ActiveDocument, oContext, oNameValueMap, oOutputFile)
         CloseLater(Strings.Right(DrawSource, Strings.Len(DrawSource) - Strings.InStrRev(DrawSource, "\")), _invApp.Documents.Open(DrawSource, True))
         CloseLater(Strings.Right(Archive, Strings.Len(Archive) - Strings.InStrRev(Archive, "\")), _invApp.Documents.Open(Archive, True))
         Me.Focus()
     End Sub
-    Private Sub SMDXF(oDoc As Document, DXFSource As String, Flatpattern As Boolean)
+
+       Private Sub SMDXF(oDoc As Document, DXFSource As String, Flatpattern As Boolean, DrawingName As String)
         'Dim oPartDoc As Document = _invApp.ActiveDocument
         _invApp.SilentOperation = True
         Dim oCompDef As ComponentDefinition = oDoc.ComponentDefinition
@@ -1457,7 +1412,7 @@ Public Class Main
             oDef.Execute()
             'Get active document
             If Len(Err.Description) <> 0 Then
-                MsgBox("An Error occurred during the flat pattern creation Of " & Strings.Right(oDoc.FullDocumentName, Len(oDoc.FullDocumentName) - InStrRev(oDoc.FullDocumentName, "\")) & "." & vbNewLine _
+                MsgBox("An Error occurred during the flat pattern creation Of " & Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\")) & "." & vbNewLine _
                       & "The .dxf was Not created" & vbNewLine & "Some parts require the flat patterns To be created manually." _
                       & vbNewLine & vbNewLine & Err.Description)
                 Err.Clear()
@@ -1469,6 +1424,8 @@ Public Class Main
         If My.Computer.FileSystem.DirectoryExists(Strings.Left(DXFSource, InStrRev(DXFSource, "\")) & "Archived\") = False Then
             MkDir(Strings.Left(DXFSource, InStrRev(DXFSource, "\")) & "Archived\")
         End If
+        Dim Filetype As String = ".dxf"
+        Search_For_Duplicates(DXFSource, DrawingName, Filetype)
         Dim oDataIO As DataIO
         oDataIO = oCompDef.DataIO
         'Build the string that defines the format of the DXF file
@@ -1482,7 +1439,7 @@ Public Class Main
         '
         oDataIO.WriteDataToFile(sOut, DXFSource)
         If Len(Err.Description) <> 0 Then
-            MsgBox("An error occurred while saving " & Strings.Right(oDoc.FullDocumentName, Len(oDoc.FullDocumentName) - InStrRev(oDoc.FullDocumentName, "\")) & "." & vbNewLine _
+            MsgBox("An error occurred while saving " & Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\")) & "." & vbNewLine _
                   & "Ensure the dxf is not open or write protected." _
                   & vbNewLine & vbNewLine & Err.Description)
             Err.Clear()
@@ -1542,7 +1499,7 @@ Public Class Main
         For x = 0 To LVSubFiles.CheckedItems.Count - 1
             'iterate through all open documents in inventor to find selected document
             For Each item As Document In _invApp.Documents
-                If Strings.Right(item.FullDocumentName, Len(item.FullDocumentName) - InStrRev(item.FullDocumentName, "\")) = Trim(LVSubFiles.CheckedItems(x).Text) Then
+                If Strings.Right(item.FullFileName, Len(item.FullFileName) - InStrRev(item.FullFileName, "\")) = Trim(LVSubFiles.CheckedItems(x).Text) Then
                     'save document if user selected save
                     If Checkin = True Then
                         item.Save()
@@ -1560,13 +1517,13 @@ Public Class Main
     End Sub
     Public Sub ProgressBar(Total As Integer, Counter As Integer, Title As String, FileName As String)
         Dim Percent As Integer = (Counter / Total) * 100
-        MsVistaProgressBar1.Visible = True
+        MsVistaProgressBar.Visible = True
         If Percent > 100 Then Percent = 100
-        Me.MsVistaProgressBar1.Value = Percent
+        Me.MsVistaProgressBar.Value = Percent
         If Title = "Found: " Or Title = "Getting References: " Then
-            Me.MsVistaProgressBar1.DisplayText = Title & " " & FileName
+            Me.MsVistaProgressBar.DisplayText = Title & " " & FileName
         Else
-            Me.MsVistaProgressBar1.DisplayText = Title & " " & FileName & " " & Percent & "%"
+            Me.MsVistaProgressBar.DisplayText = Title & " " & FileName & " " & Percent & "%"
         End If
     End Sub
     Public Sub CloseLater(Name As String, oDoc As Document)
@@ -1620,7 +1577,7 @@ Public Class Main
             If lstOpenfiles.GetItemCheckState(X) = CheckState.Checked Then
                 AssyName = Trim(lstOpenfiles.Items.Item(X).ToString)
                 For Each oDoc In _invApp.Documents
-                    If InStr(oDoc.FullDocumentName, AssyName) <> 0 Then
+                    If InStr(oDoc.FullFileName, AssyName) <> 0 Then
                         oDoc.Activate()
                         If oDoc.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
                             AsmDoc = _invApp.ActiveDocument
@@ -1645,14 +1602,14 @@ Public Class Main
                             ExcelDoc = _ExcelApp.ActiveWorkbook
                             'ShowParameters(oDoc)
                             GetProperties(oDoc, AsmDef.Occurrences, 0, 0, ExcelDoc, Total)
-                            MsVistaProgressBar1.Visible = False
+                            MsVistaProgressBar.Visible = False
                             ExcelDoc.Worksheets("Saw Cut Lengths").visible = False
                             'UpdateCustomiProperty(oDoc, "", "")
                             PropSets = AsmDoc.PropertySets
-                            'SaveName = Strings.Left(AsmDoc.FullDocumentName, InStrRev(AsmDoc.FullDocumentName, "\") - 1)
-                            SaveName = Strings.Left(AsmDoc.FullDocumentName, InStrRev(AsmDoc.FullDocumentName, "\"))
-                            PreSave = Strings.Left(Strings.Right(AsmDoc.FullDocumentName, Len(AsmDoc.FullDocumentName) - InStrRev(AsmDoc.FullDocumentName, "\")),
-                                                   Strings.Len(Strings.Right(AsmDoc.FullDocumentName, Len(AsmDoc.FullDocumentName) - InStrRev(AsmDoc.FullDocumentName, "\"))) - 4) & "-List.xlsm"
+                            'SaveName = Strings.Left(AsmDoc.FullFileName, InStrRev(AsmDoc.FullFileName, "\") - 1)
+                            SaveName = Strings.Left(AsmDoc.FullFileName, InStrRev(AsmDoc.FullFileName, "\"))
+                            PreSave = Strings.Left(Strings.Right(AsmDoc.FullFileName, Len(AsmDoc.FullFileName) - InStrRev(AsmDoc.FullFileName, "\")),
+                                                   Strings.Len(Strings.Right(AsmDoc.FullFileName, Len(AsmDoc.FullFileName) - InStrRev(AsmDoc.FullFileName, "\"))) - 4) & "-List.xlsm"
                             If My.Computer.FileSystem.DirectoryExists(SaveName & "Vendor Quotes\") Then
                             Else
                                 My.Computer.FileSystem.CreateDirectory(SaveName & "Vendor Quotes\")
@@ -1874,7 +1831,7 @@ Public Class Main
         Dim ErrList As String = ""
         Dim Elog As String = ""
         For Each Document In _invApp.Documents
-            CloseLater(Strings.Right(Document.FullDocumentName, Len(Document.FullDocumentName) - InStrRev(Document.FullDocumentName, "\")), Document)
+            CloseLater(Strings.Right(Document.FullFileName, Len(Document.FullFileName) - InStrRev(Document.FullFileName, "\")), Document)
         Next
         If VBAFlag = "False" Then CreateVBA()
         Dim Rename As New Rename
@@ -1927,7 +1884,7 @@ Public Class Main
         Dim oDoc As Document = Nothing
         Dim dDoc As DrawingDocument = Nothing
         Dim Path As Documents = _invApp.Documents
-        Dim DrawingName As String
+        Dim DrawingName As String = Nothing
         Dim Archive As String = Nothing
         Dim DrawSource As String = Nothing
         Dim OpenDocs As New ArrayList
@@ -1938,10 +1895,8 @@ Public Class Main
         For Y = 0 To LVSubFiles.Items.Count - 1
             If LVSubFiles.Items(Y).Checked = True Then
                 Q += 1
-                DrawingName = Trim(LVSubFiles.Items.Item(Y).Text)
-                'MatchDrawing(Path, oDoc, Archive, DrawingName, DrawSource, Y)
+                MatchDrawing(DrawSource, DrawingName, Y)
                 'open drawing
-                DrawSource = Strings.Left(SubFiles.Item(Y).Value, Len(SubFiles.Item(Y).Value) - 3) & "idw"
                 oDoc = _invApp.Documents.Open(DrawSource, True)
                 Dim Sheets As Sheets
                 Dim Sheet As Sheet
@@ -1954,7 +1909,7 @@ Public Class Main
                 Dim oRevTable As RevisionTable
                 Dim oTitleblock As TitleBlock
                 Dim C, R, i As Integer
-                MsVistaProgressBar1.Visible = True
+                MsVistaProgressBar.Visible = True
                 'Check the titleblock to see if it is the IMM TitleBlock, inform user if it is not
                 Dim oTitleBlockDef As TitleBlockDefinition
                 oTitleBlockDef = oDoc.TitleBlockDefinitions.Item(1)
@@ -1964,7 +1919,7 @@ Public Class Main
                 '    Exit Sub
                 'End If
                 'Set the point at which the rev table should be inserted
-                ProgressBar(LVSubFiles.CheckedItems.Count, Q, "Changing Rev: ", Strings.Right(oDoc.FullDocumentName, Len(oDoc.FullDocumentName) - InStrRev(oDoc.FullDocumentName, "\")))
+                ProgressBar(LVSubFiles.CheckedItems.Count, Q, "Changing Rev: ", Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\")))
                 RevNo = oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
                 oRevTable = oDoc.activesheet.RevisionTables(1)
                 'oRevTable.RevisionTableRows.Add()
@@ -2056,14 +2011,15 @@ Public Class Main
                 _invApp.SilentOperation = True
                 Try
                     oDoc.Save()
-                Catch
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                 End Try
                 CloseLater(DrawingName, oDoc)
                 _invApp.SilentOperation = False
             End If
         Next
         _invApp.SilentOperation = False
-        MsVistaProgressBar1.Visible = False
+        MsVistaProgressBar.Visible = False
     End Sub
     Private Sub RRev()
         Dim OpenDocs As New ArrayList
@@ -2098,7 +2054,7 @@ Public Class Main
             oDoc = Path.Item(j)
 
             'Parse the path from the document
-            strPath = Strings.Left(oDoc.FullDocumentName, Strings.Len(oDoc.FullDocumentName) - 3) & "idw"
+            strPath = Strings.Left(oDoc.FullFileName, Strings.Len(oDoc.FullFileName) - 3) & "idw"
             'Parse out the filename from the document
             strFile = Strings.Right(strPath, Strings.Len(strPath) - InStrRev(strPath, "\"))
             'Compare the selected file to the current document, if they are the same proceed
@@ -2198,7 +2154,7 @@ Public Class Main
                             ' activate matching document
                             AsmDoc = _invApp.ActiveDocument
                             DocType = AsmDoc.DocumentType
-                            strFile = Strings.Left(AsmDoc.FullDocumentName, Strings.Len(AsmDoc.FullDocumentName) - 4)
+                            strFile = Strings.Left(AsmDoc.FullFileName, Strings.Len(AsmDoc.FullFileName) - 4)
                             strFile = Strings.Right(strFile, Strings.Len(strFile) - InStrRev(strFile, "\"))
                             'Add list to the array for new Parent
                             Parent.Add(New List(Of String))
@@ -2216,7 +2172,7 @@ Public Class Main
             Counter += 1
             For Y = 1 To _invApp.Documents.Count - 1
                 oDoc = Path.Item(Y)
-                Archive = oDoc.FullDocumentName
+                Archive = oDoc.FullFileName
                 'Use the Partsource file to create the drawingsource file
                 DrawSource = Strings.Left(Archive, Strings.Len(Archive) - 3) & "idw"
                 If My.Computer.FileSystem.FileExists(DrawSource) Then
@@ -2225,7 +2181,7 @@ Public Class Main
                     If Trim(LVSubFiles.Items.Item(X).Text) = DrawingName Then
                         oDoc = _invApp.Documents.Open(DrawSource, False)
                         CustomPropSet = oDoc.PropertySets.Item("{D5CDD505-2E9C-101B-9397-08002B2CF9AE}")
-                        PartName = Strings.Right(oDoc.FullDocumentName, Len(oDoc.FullDocumentName) - InStrRev(oDoc.FullDocumentName, "\"))
+                        PartName = Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\"))
 
 
                         For P = 0 To 9
@@ -2281,13 +2237,13 @@ Public Class Main
                         Try
                             oDoc.Save2()
                         Catch ex As Exception
-                            MsgBox(ex.Message)
+                            MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                         End Try
                         CloseLater(DrawingName, oDoc)
                         _invApp.SilentOperation = False
                     End If
                 End If
-                'MsVistaProgressBar1.ProgressBarStyle = MSVistaProgressBar.BarStyle.Marquee
+                'MsVistaProgressBar.ProgressBarStyle = MSVistaProgressBar.BarStyle.Marquee
                 ProgressBar(Total, Counter, "Writing Reference: ", DrawingName)
                 If Written = True Then
                     Written = False
@@ -2295,7 +2251,7 @@ Public Class Main
                 End If
             Next
         Next
-        MsVistaProgressBar1.Visible = False
+        MsVistaProgressBar.Visible = False
         If Warning2 = True Then
             MsgBox(Fix & vbNewLine & "These drawings need to be updated manually.")
         End If
@@ -2398,6 +2354,7 @@ Public Class Main
         If txtSearch.ForeColor = Drawing.Color.Gray Then
             txtSearch.ForeColor = Drawing.Color.Black
             txtSearch.Text = ""
+
         End If
     End Sub
     Private Sub txtSearch_LostFocus(sender As Object, e As EventArgs) Handles txtSearch.LostFocus
@@ -2437,7 +2394,6 @@ Public Class Main
             GroupBox4.Height = GroupBox4.Height - 15
         End If
     End Sub
-
     Private Sub chkDWG_CheckedChanged(sender As Object, e As EventArgs) Handles chkDWG.CheckedChanged
         If chkDXF.CheckState = CheckState.Checked Then Exit Sub
         If chkDWG.CheckState = CheckState.Checked Then
@@ -2515,7 +2471,6 @@ Public Class Main
         CMSAlphabetical.Checked = False
         CMSHeirarchical.Checked = True
     End Sub
-
     Private Sub CMSSpreadsheet_Click(sender As Object, e As EventArgs) Handles CMSSpreadsheet.Click
         ExportText(CMSHeirarchical.Checked, CMSShow.Checked, False, True)
     End Sub
@@ -2550,15 +2505,12 @@ Public Class Main
             End If
         Next
     End Sub
-
     Private Sub CMSTextFile_Click(sender As Object, e As EventArgs) Handles CMSTextFile.Click
         ExportText(CMSHeirarchical.Checked, CMSHide.Checked, True, True)
     End Sub
-
     Private Sub DefaultSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DefaultSettingsToolStripMenuItem.Click
         Settings.ShowDialog()
     End Sub
-
     Private Sub HideMissingDrawingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CMSHide.Click
         LVSubFiles.Items.Clear()
 
@@ -2585,7 +2537,6 @@ Public Class Main
         CMSHide.Checked = True
 
     End Sub
-
     Private Sub ShowMissingDrawingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CMSShow.Click
         LVSubFiles.Items.Clear()
 
@@ -2666,7 +2617,7 @@ Public Class Main
                     Next
                 End If
             Catch ex As Exception
-                MsgBox("Error Creating Log File")
+                MessageBox.Show(ex.Message, "Error Creating Log File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             End Try
         Else
             filetype = ".xls"
@@ -2738,8 +2689,6 @@ Public Class Main
         End If
         Process.Start(My.Computer.FileSystem.SpecialDirectories.Temp & "\Parts List" & filetype)
     End Sub
-
-
     Private Sub releaseObject(ByVal obj As Object)
         Try
             System.Runtime.InteropServices.Marshal.ReleaseComObject(obj)
@@ -2750,15 +2699,12 @@ Public Class Main
             GC.Collect()
         End Try
     End Sub
-
     Private Sub CMSSubSpreadsheet_Click(sender As Object, e As EventArgs) Handles CMSSubSpreadsheet.Click
         ExportText(CMSHeirarchical.Checked, CMSShow.Checked, False, False)
     End Sub
-
     Private Sub CMSSubText_Click(sender As Object, e As EventArgs) Handles CMSSubText.Click
         ExportText(CMSHeirarchical.Checked, CMSShow.Checked, True, False)
     End Sub
-
     Private Sub LVSubFiles_Click(sender As Object, e As EventArgs) Handles LVSubFiles.Click
         If LVSubFiles.Items(LVSubFiles.FocusedItem.Index).ForeColor <> Drawing.Color.Gray Then
             If LVSubFiles.Items(LVSubFiles.FocusedItem.Index).Checked = True Then
@@ -2768,15 +2714,12 @@ Public Class Main
             End If
         End If
     End Sub
-
     Private Sub AboutBatchProgramToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutBatchProgramToolStripMenuItem.Click
         About.ShowDialog()
     End Sub
-
     Private Sub IPropertySettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles IPropertySettingsToolStripMenuItem.Click
         iPropertySettings.ShowDialog()
     End Sub
-
     Private Sub LVSubFiles_ItemChecked(sender As Object, e As ItemCheckedEventArgs) Handles LVSubFiles.ItemChecked
         If LVSubFiles.Items(e.Item.Index).ForeColor = Drawing.Color.Gray Then
             e.Item.Checked = False
@@ -2784,9 +2727,8 @@ Public Class Main
         LVSubFiles.FocusedItem = Nothing
         If LVSubFiles.Items.Count > 10 Then LVSubFiles.Height = lstOpenfiles.Height - 25
     End Sub
-
     Private Sub Rename_Resize(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Resize
-        GroupBox4.Location = New Drawing.Point(Me.Width - 208, 27)
+        GroupBox4.Location = New Drawing.Point(Me.Width - 203, 27)
         btnOK.Location = New Drawing.Point(Me.Width - 115, Me.Height - 70)
         btnExit.Location = New Drawing.Point(Me.Width - 196, btnOK.Location.Y)
         GroupBox2.Height = (Me.Height - 96)
@@ -2798,10 +2740,10 @@ Public Class Main
         lstOpenfiles.Width = GroupBox2.Width - 22
         LVSubFiles.Width = GroupBox3.Width - 22
         LVSubFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
-        MsVistaProgressBar1.Location = New Drawing.Point(12, Me.Height - 67)
-        MsVistaProgressBar1.Width = Me.Width - 226
+        MsVistaProgressBar.Location = New Drawing.Point(12, Me.Height - 67)
+        MsVistaProgressBar.Width = Me.Width - 226
         GroupBox5.Location = New Drawing.Point(12, Me.Height - 187)
-        If VScrollVis = False Then
+        If LVSubFiles.Items.Count > 10 Then
             LVSubFiles.Height = GroupBox2.Height - 24
         Else
             LVSubFiles.Height = GroupBox2.Height - 49
@@ -2810,44 +2752,10 @@ Public Class Main
         End If
         PictureBox2.Location = New Drawing.Point(GroupBox3.Location.X + 21, 27)
     End Sub
-    Private VScrollVis As Boolean = False
-    Private Sub lvsubfiles_ClientSizeChanged(sender As Object, e As EventArgs) Handles LVSubFiles.ClientSizeChanged
-
-        'VScrollVis = IsVScrollVisible(LVSubFiles)
-        'If VScrollVis = True Then
-        '    txtSearch.Visible = True
-        '    LVSubFiles.Height = lstOpenfiles.Height - 25
-        'txtSearch.Visible = True
-        'txtSearch.Text = "Search"
-        'txtSearch.ForeColor = Drawing.Color.Gray
-        'Else
-        'LVSubFiles.Height = lstOpenfiles.Height
-        'txtSearch.Visible = False
-        'End If
-        'MyBase.OnClientSizeChanged(e)
-    End Sub
-    Private Const GWL_STYLE As Integer = -16
-    Private Const WS_HSCROLL = &H100000
-    Private Const WS_VSCROLL = &H200000
-
-    <DllImport("user32.dll", SetLastError:=True)>
-    Private Shared Function GetWindowLong(ByVal hWnd As IntPtr,
-                       ByVal nIndex As Integer) As Integer
-    End Function
-
-    ' sometimes you use wrappers since many, many, many things could call
-    ' SendMessage and so that your code doesnt need to know all the MSG params
-    Friend Shared Function IsVScrollVisible(ByVal ctl As Control) As Boolean
-        Dim wndStyle As Integer = GetWindowLong(ctl.Handle, GWL_STYLE)
-        Return ((wndStyle And WS_VSCROLL) <> 0)
-
-    End Function
-
     Private Sub LVSubFiles_Resize(sender As Object, e As EventArgs) Handles LVSubFiles.Resize
         If Not txtSearch.IsHandleCreated Then
-            If LVSubFiles.Items.Count > 10 Then
-                'VScrollVis = IsVScrollVisible(LVSubFiles)
-                ' If VScrollVis = True Then
+            If LVSubFiles.Height / LVSubFiles.Items.Count < 19 Then
+                LVSubFiles.Height = Me.Height - 122 - 25
                 txtSearch.Visible = True
                 txtSearch.Location = New Drawing.Point(LVSubFiles.Location.X, Me.Height - 122)
                 txtSearch.Visible = True
@@ -2855,203 +2763,93 @@ Public Class Main
                 txtSearch.ForeColor = Drawing.Color.Gray
             Else
                 LVSubFiles.Height = lstOpenfiles.Height
-                    txtSearch.Visible = False
-                End If
+                txtSearch.Visible = False
             End If
+        End If
     End Sub
-    Private Sub HandleRegistry(ByRef Registered As Boolean, ByRef Days As Integer)
-        Dim firstRunDate As Date
+    Private Sub mnuActDeact_Click(sender As Object, e As EventArgs) Handles mnuActDeact.Click
+        If isGenuine Then
+            ' deactivate product without deleting the product key
+            ' allows the user to easily reactivate
+            Try
+                ta.Deactivate(False)
+            Catch ex As TurboActivateException
+                MessageBox.Show("Failed to deactivate: " + ex.Message)
+                Return
+            End Try
+
+            isGenuine = False
+            ShowTrial(True)
+        Else
+            'Note: you can launch the TurboActivate wizard or you can create you own interface
+
+            'launch TurboActivate.exe to get the product key from the user
+            Dim TAProcess As New Process
+            TAProcess.StartInfo.FileName = IO.Path.Combine(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath), "TurboActivate.exe")
+            TAProcess.EnableRaisingEvents = True
+            AddHandler TAProcess.Exited, New EventHandler(AddressOf p_Exited)
+            ' TAProcess.Start()
+        End If
+    End Sub
+    ''' This event handler is called when TurboActivate.exe closes.
+    Private Sub p_Exited(ByVal sender As Object, ByVal e As EventArgs)
+
+        ' remove the event
+        RemoveHandler DirectCast(sender, Process).Exited, New EventHandler(AddressOf p_Exited)
+
+        ' the UI thread is running asynchronous to TurboActivate closing
+        ' that's why we can't call TAIsActivated(); directly
+        Invoke(New IsActivatedDelegate(AddressOf CheckIfActivated))
+    End Sub
+    ''' Rechecks if we're activated -- if so enable the app features.
+    Private Sub CheckIfActivated()
+        ' recheck if activated
+        Dim isNowActivated As Boolean = False
+
         Try
-            If Registered = False Then
-                firstRunDate = My.Computer.Registry.GetValue("HKEY_CURRENT_USER\Software\Autodesk\Inventor\Current Version", "FirstRun", Nothing)
-                If firstRunDate = Nothing Then
-                    firstRunDate = Now
-                    My.Computer.Registry.SetValue("HKEY_CURRENT_USER\Software\Autodesk\Inventor\Current Version", "FirstRun", firstRunDate)
-                ElseIf (Now - firstRunDate).Days > My.Settings.RegTime Then
-                    Days = My.Settings.RegTime - (Now - firstRunDate).Days
-                End If
-                Days = My.Settings.RegTime - (Now - firstRunDate).Days
-            End If
-        Catch
+            isNowActivated = ta.IsActivated
+        Catch ex As TurboActivateException
+            MessageBox.Show("Failed to check if activated: " + ex.Message)
+            Exit Sub
         End Try
+
+        If isNowActivated Then
+            isGenuine = True
+            ReEnableAppFeatures()
+            ShowTrial(False)
+        End If
     End Sub
-    Function getMacAddress()
-        Dim nics() As NetworkInterface = NetworkInterface.GetAllNetworkInterfaces()
-        Return nics(0).GetPhysicalAddress.ToString
-    End Function
-    'Public Sub SetupEncrypt()
-    '    Try
+    Private Sub ShowTrial(ByVal show As Boolean)
 
-    '        Dim original As String = getMacAddress()
+        'lblTrialMessage.Visible = show
+        'btnExtendTrial.Visible = show
 
-    '        ' Create a new instance of the RijndaelManaged
-    '        ' class.  This generates a new key and initialization 
-    '        ' vector (IV).
-    '        Using myRijndael As New RijndaelManaged()
+        mnuActDeact.Text = (If(show, "Activate...", "Deactivate"))
 
-    '            myRijndael.GenerateKey()
-    '            myRijndael.GenerateIV()
+        If show Then
+            Dim trialDaysRemaining As UInteger = 0UI
 
-    '            ' Encrypt the string to an array of bytes.
-    '            Dim encrypted As Byte() = EncryptStringToBytes(original, myRijndael.Key, myRijndael.IV)
+            Try
+                ta.UseTrial(trialFlags)
 
-    '            ' Decrypt the bytes to a string.
-    '            Dim roundtrip As String = DecryptStringFromBytes(encrypted, myRijndael.Key, myRijndael.IV)
+                ' get the number of remaining trial days
+                trialDaysRemaining = ta.TrialDaysRemaining(trialFlags)
+            Catch ex As TurboActivateException
+                MessageBox.Show("Failed to start the trial: " + ex.Message)
+            End Try
 
-    '            'Display the original data and the decrypted data.
-    '            Console.WriteLine("Original:   {0}", original)
-    '            Console.WriteLine("Round Trip: {0}", roundtrip)
-    '        End Using
-    '    Catch e As Exception
-    '        Console.WriteLine("Error: {0}", e.Message)
-    '    End Try
-
-    'End Sub 'Main
-
-    'Shared Function EncryptStringToBytes(ByVal plainText As String, ByVal Key() As Byte, ByVal IV() As Byte) As Byte()
-    '    ' Check arguments.
-    '    If plainText Is Nothing OrElse plainText.Length <= 0 Then
-    '        Throw New ArgumentNullException("plainText")
-    '    End If
-    '    If Key Is Nothing OrElse Key.Length <= 0 Then
-    '        Throw New ArgumentNullException("Key")
-    '    End If
-    '    If IV Is Nothing OrElse IV.Length <= 0 Then
-    '        Throw New ArgumentNullException("IV")
-    '    End If
-    '    Dim encrypted() As Byte
-    '    ' Create an RijndaelManaged object
-    '    ' with the specified key and IV.
-    '    Using rijAlg As New RijndaelManaged()
-
-    '        rijAlg.Key = Key
-    '        rijAlg.IV = IV
-
-    '        ' Create a decrytor to perform the stream transform.
-    '        Dim encryptor As ICryptoTransform = rijAlg.CreateEncryptor(rijAlg.Key, rijAlg.IV)
-    '        ' Create the streams used for encryption.
-    '        Using msEncrypt As New MemoryStream()
-    '            Using csEncrypt As New CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write)
-    '                Using swEncrypt As New StreamWriter(csEncrypt)
-
-    '                    'Write all data to the stream.
-    '                    swEncrypt.Write(plainText)
-    '                End Using
-    '                encrypted = msEncrypt.ToArray()
-    '            End Using
-    '        End Using
-    '    End Using
-
-    '    ' Return the encrypted bytes from the memory stream.
-    '    Return encrypted
-
-    'End Function 'EncryptStringToBytes
-
-    'Shared Function DecryptStringFromBytes(ByVal cipherText() As Byte, ByVal Key() As Byte, ByVal IV() As Byte) As String
-    '    ' Check arguments.
-    '    If cipherText Is Nothing OrElse cipherText.Length <= 0 Then
-    '        Throw New ArgumentNullException("cipherText")
-    '    End If
-    '    If Key Is Nothing OrElse Key.Length <= 0 Then
-    '        Throw New ArgumentNullException("Key")
-    '    End If
-    '    If IV Is Nothing OrElse IV.Length <= 0 Then
-    '        Throw New ArgumentNullException("IV")
-    '    End If
-    '    ' Declare the string used to hold
-    '    ' the decrypted text.
-    '    Dim plaintext As String = Nothing
-
-    '    ' Create an RijndaelManaged object
-    '    ' with the specified key and IV.
-    '    Using rijAlg As New RijndaelManaged
-    '        rijAlg.Key = Key
-    '        rijAlg.IV = IV
-
-    '        ' Create a decrytor to perform the stream transform.
-    '        Dim decryptor As ICryptoTransform = rijAlg.CreateDecryptor(rijAlg.Key, rijAlg.IV)
-
-    '        ' Create the streams used for decryption.
-    '        Using msDecrypt As New MemoryStream(cipherText)
-
-    '            Using csDecrypt As New CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read)
-
-    '                Using srDecrypt As New StreamReader(csDecrypt)
-
-
-    '                    ' Read the decrypted bytes from the decrypting stream
-    '                    ' and place them in a string.
-    '                    plaintext = srDecrypt.ReadToEnd()
-    '                End Using
-    '            End Using
-    '        End Using
-    '    End Using
-
-    '    Return plaintext
-
-    'End Function 'DecryptStringFromBytes 
-
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        'SetupEncrypt()
+            ' if no more trial days then disable all app features
+            If trialDaysRemaining = 0 Then
+                DisableAppFeatures()
+            Else
+                'lblTrialMessage.Text = "Your trial expires in " & trialDaysRemaining & " days."
+            End If
+        End If
     End Sub
-    Private Function CreateKey(ByVal strPassword As String) As Byte()
-        'Convert strPassword to an array and store in chrData.
-        Dim chrData() As Char = strPassword.ToCharArray
-        'Use intLength to get strPassword size.
-        Dim intLength As Integer = chrData.GetUpperBound(0)
-        'Declare bytDataToHash and make it the same size as chrData.
-        Dim bytDataToHash(intLength) As Byte
-
-        'Use For Next to convert and store chrData into bytDataToHash.
-        For i As Integer = 0 To chrData.GetUpperBound(0)
-            bytDataToHash(i) = CByte(Asc(chrData(i)))
-        Next
-
-        'Declare what hash to use.
-        Dim SHA512 As New System.Security.Cryptography.SHA512Managed
-        'Declare bytResult, Hash bytDataToHash and store it in bytResult.
-        Dim bytResult As Byte() = SHA512.ComputeHash(bytDataToHash)
-        'Declare bytKey(31).  It will hold 256 bits.
-        Dim bytKey(31) As Byte
-
-        'Use For Next to put a specific size (256 bits) of 
-        'bytResult into bytKey. The 0 To 31 will put the first 256 bits
-        'of 512 bits into bytKey.
-        For i As Integer = 0 To 31
-            bytKey(i) = bytResult(i)
-        Next
-
-        Return bytKey 'Return the key.
-    End Function
-    Private Function CreateIV(ByVal strPassword As String) As Byte()
-        'Convert strPassword to an array and store in chrData.
-        Dim chrData() As Char = strPassword.ToCharArray
-        'Use intLength to get strPassword size.
-        Dim intLength As Integer = chrData.GetUpperBound(0)
-        'Declare bytDataToHash and make it the same size as chrData.
-        Dim bytDataToHash(intLength) As Byte
-
-        'Use For Next to convert and store chrData into bytDataToHash.
-        For i As Integer = 0 To chrData.GetUpperBound(0)
-            bytDataToHash(i) = CByte(Asc(chrData(i)))
-        Next
-
-        'Declare what hash to use.
-        Dim SHA512 As New System.Security.Cryptography.SHA512Managed
-        'Declare bytResult, Hash bytDataToHash and store it in bytResult.
-        Dim bytResult As Byte() = SHA512.ComputeHash(bytDataToHash)
-        'Declare bytIV(15).  It will hold 128 bits.
-        Dim bytIV(15) As Byte
-
-        'Use For Next to put a specific size (128 bits) of bytResult into bytIV.
-        'The 0 To 30 for bytKey used the first 256 bits of the hashed password.
-        'The 32 To 47 will put the next 128 bits into bytIV.
-        For i As Integer = 32 To 47
-            bytIV(i - 32) = bytResult(i)
-        Next
-
-        Return bytIV 'Return the IV.
-    End Function
-
-
+    Private Sub DisableAppFeatures()
+        'TODO: disable all the features of the program
+    End Sub
+    Private Sub ReEnableAppFeatures()
+        'TODO: re-enable all the features of the program
+    End Sub
 End Class

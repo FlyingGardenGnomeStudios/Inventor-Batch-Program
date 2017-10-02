@@ -271,7 +271,16 @@ Public Class CheckNeeded
                     Next
                     oDoc.Update()
                     _invApp.SilentOperation = True
-                    oDoc.Save()
+                    Try
+                        oDoc.Save()
+                    Catch ex As Exception
+                        Ans = MsgBox("Drawing " & DrawingName & " could not be saved." & vbNewLine _
+                             & "Make sure the drawing is not read-only", MsgBoxStyle.OkCancel, "Error During Save")
+                        If Ans = vbCancel Then
+                            ProgressBar1.Hide()
+                            Exit Sub
+                        End If
+                    End Try
                     Main.CloseLater(DrawingName, oDoc)
                     _invApp.SilentOperation = False
                     ProgressBar1.Value = ((X + 1) / lstCheckNeeded.Items.Count) * 100
@@ -304,24 +313,13 @@ Public Class CheckNeeded
         Dim RevisionTable As RevisionTable
         Dim Col, Row, i, k As Integer
         Dim More As Boolean = False
-        Main.MsVistaProgressBar1.ProgressBarStyle = MSVistaProgressBar.BarStyle.Continuous
+        Main.MsVistaProgressBar.ProgressBarStyle = MSVistaProgressBar.BarStyle.Continuous
         'Iterate through all files in the subfiles window
         For X = 0 To Main.LVSubFiles.Items.Count - 1
             'get the checkbox state of each item
             If Main.LVSubFiles.Items(X).Checked = True Then
                 'retrieve name of selected item
-
-                'iterate through documents in inventor
-                'For j = 1 To Path.Count
-                'odoc = Path.Item(j)
-                'If odoc.FullDocumentName = Nothing Then GoTo Skip
-                'Set drawing source for current inventor document
-                'DrawSource = Strings.Left(odoc.FullDocumentName, Strings.Len(odoc.FullDocumentName) - 3) & "idw"
                 Main.MatchDrawing(DrawSource, DrawingName, X)
-                DrawingName = Trim(Main.LVSubFiles.Items.Item(X).Text)
-                'strPath = Strings.Right(DrawSource, Strings.Len(DrawSource) - InStrRev(DrawSource, "\"))
-                'test to see if the document has the same name as the listed file
-                'If InStr(DrawSource, DrawingName) <> 0 Then
                 'open the document in the background
                 odoc = _invApp.Documents.Open(DrawSource, False)
                 'set active sheet and retrieve the values from the revision table
@@ -385,7 +383,7 @@ Skip:
             End If
             Main.ProgressBar(Main.LVSubFiles.CheckedItems.Count, X + 1, "Checking Revs: ", DrawingName)
         Next
-        Main.MsVistaProgressBar1.Visible = False
+        Main.MsVistaProgressBar.Visible = False
     End Sub
     Private Sub btnApplytoall_Click(sender As System.Object, e As System.EventArgs) Handles btnApplytoall.Click
         Dim CheckedBy, RevInit, RevCheckBy, DateChecked, RevDate As String
