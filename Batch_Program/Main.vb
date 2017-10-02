@@ -15,7 +15,7 @@ Public Class Main
     Dim _started As Boolean = False
     Public iProperties As iProperties
     Public Shared RevTable As New RevTable
-    Public Print_Size As New Print_Size
+    'Public Print_Size As New Print_Size
     Public CheckNeeded As CheckNeeded
     Public Settings As New Settings
     Dim RenameTable As New List(Of List(Of String))
@@ -772,14 +772,14 @@ Public Class Main
             chkPrint.Checked = False
         End If
         If chkDXF.Checked = True Then
-            ExportCheck(Path, oDoc, Archive, DrawingName, DrawSource, "DXF")
+            ExportCheck(Path, oDoc, Archive, DrawingName, DrawSource, "dxf")
             chkDXF.Checked = False
         End If
         If chkPDF.Checked = True Then
             ExportCheck(Path, oDoc, Archive, DrawingName, DrawSource, "PDF")
         End If
         If chkDWG.Checked = True Then
-            ExportCheck(Path, oDoc, Archive, DrawingName, DrawSource, "DWG")
+            ExportCheck(Path, oDoc, Archive, DrawingName, DrawSource, "dwg")
             chkDWG.Checked = False
         End If
         If chkOpen.Checked = True Then
@@ -932,26 +932,27 @@ Public Class Main
             'Look through all sub files in open documents to get the part sourcefile
             If LVSubFiles.Items(X).Checked = True Then
                 'iterate through opend documents to find the selected file
-                DrawSource = Strings.Left(SubFiles.Item(X).Value, Len(SubFiles.Item(X).Value) - 3) & "idw"
-                DrawingName = Trim(SubFiles.Item(X).Key)
+                MatchDrawing(DrawSource, DrawingName, X)
                 If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
                     Dim Folder As FolderBrowserDialog = New FolderBrowserDialog
                     Folder.Description = "Choose the location you wish to save to"
                     Folder.RootFolder = System.Environment.SpecialFolder.Desktop
                     Folder.SelectedPath = Strings.Left(DrawSource, InStrRev(DrawSource, "\"))
-                    Try
-                        If Folder.ShowDialog() = Windows.Forms.DialogResult.OK Then
-                            Destin = Folder.SelectedPath
-                        Else
-                            Exit Sub
-                        End If
-                    Catch ex As Exception
-                        MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                    End Try
+                    If Destin = "" Then
+                        Try
+                            If Folder.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                                Destin = Folder.SelectedPath
+                            Else
+                                Exit Sub
+                            End If
+                        Catch ex As Exception
+                            MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                        End Try
+                    End If
                 ElseIf My.Settings(ExportType & "SaveNewLoc") = True Then
-                    Destin = My.Settings(ExportType & "SaveLoc")
-                Else
-                    Destin = Strings.Left(DrawSource, InStrRev(DrawSource, "\") - 1) & My.Settings(ExportType & "Tag")
+                        Destin = My.Settings(ExportType & "SaveLoc")
+                    ElseIf My.Settings(ExportType & "Tag") Then
+                        Destin = Strings.Left(DrawSource, InStrRev(DrawSource, "\") - 1) & My.Settings(ExportType & "Tag")
                 End If
                 'open drawing
                 odoc = _invApp.Documents.Open(DrawSource, False)
@@ -980,7 +981,7 @@ Public Class Main
                             OWCounter += 1
                         End If
                     End If
-                ElseIf ExportType = "DWG" Then
+                ElseIf ExportType = "dwg" Then
                     If chkDWG.CheckState = CheckState.Checked Then
                         If My.Computer.FileSystem.FileExists(DWGSource) Or
                             My.Computer.FileSystem.FileExists(DWGSource.Insert(DWGSource.LastIndexOf("."), "_Sheet_1")) Then
@@ -988,7 +989,7 @@ Public Class Main
                             OWCounter += 1
                         End If
                     End If
-                ElseIf ExportType = "DXF" Then
+                ElseIf ExportType = "dxf" Then
                     If My.Computer.FileSystem.FileExists(DXFSource) Or
                     My.Computer.FileSystem.FileExists(DXFSource.Insert(DXFSource.LastIndexOf("."), "_Sheet_1")) Then
                         Overwrite = Overwrite & Strings.Left(DrawingName, Strings.Len(DrawingName) - 4) & RevNo & ".dxf" & vbNewLine
@@ -1006,17 +1007,17 @@ Public Class Main
         Counter = 1
         If Overwrite = "" And ExportType = "PDF" Then
             PDFCreator(Path, odoc, PDFSource, Archive, DrawingName, DrawSource, Destin, OpenDocs, Total, Counter)
-        ElseIf Overwrite = "" And ExportType = "DXF" Then
-            DXFCreator(Path, odoc, Destin, Archive, DrawingName, DrawSource, OpenDocs, Total, Counter, DXFSource)
-        ElseIf Overwrite = "" And ExportType = "DWG" Then
-            ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "DWG", RevNo)
+        ElseIf Overwrite = "" And ExportType = "dxf" Then
+            DXFDWGCreator(Path, odoc, Destin, Archive, DrawingName, DrawSource, OpenDocs, Total, Counter, DXFSource, "dxf")
+        ElseIf Overwrite = "" And ExportType = "dwg" Then
+            DXFDWGCreator(Path, odoc, Destin, Archive, DrawingName, DrawSource, OpenDocs, Total, Counter, DWGSource, "dwg")
         ElseIf OWCounter > 10 Then
             Ans = MsgBox("More than 10 files" & vbNewLine & "will be overwritten." _
                        & vbNewLine & " Do you wish to continue?", vbOKCancel, "Overwrite")
             If Ans = vbOK And ExportType = "PDF" Then
                 PDFCreator(Path, odoc, PDFSource, Archive, DrawingName, DrawSource, Destin, OpenDocs, Total, Counter)
-            ElseIf Ans = vbOK And ExportType = "DXF" Then
-                DXFCreator(Path, odoc, Destin, Archive, DrawingName, DrawSource, OpenDocs, Total, Counter, DXFSource)
+            ElseIf Ans = vbOK And ExportType = "dxf" Then
+                DXFDWGCreator(Path, odoc, Destin, Archive, DrawingName, DrawSource, OpenDocs, Total, Counter, DXFSource, "dxf")
             Else
                 chkCheck.CheckState = CheckState.Unchecked
                 MsVistaProgressBar.Visible = False
@@ -1027,10 +1028,10 @@ Public Class Main
                          & vbNewLine & vbNewLine & Overwrite, vbOKCancel, "Overwrite")
             If Ans = vbOK And ExportType = "PDF" Then
                 PDFCreator(Path, odoc, PDFSource, Archive, DrawingName, DrawSource, Destin, OpenDocs, Total, Counter)
-            ElseIf Ans = vbOK And ExportType = "DXF" Then
-                DXFCreator(Path, odoc, Destin, Archive, DrawingName, DrawSource, OpenDocs, Total, Counter, DXFSource)
-            ElseIf Ans = vbOK And ExportType = "DWG" Then
-                ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "DWG", RevNo)
+            ElseIf Ans = vbOK And ExportType = "dxf" Then
+                DXFDWGCreator(Path, odoc, Destin, Archive, DrawingName, DrawSource, OpenDocs, Total, Counter, DXFSource, "dxf")
+            ElseIf Ans = vbOK And ExportType = "dwg" Then
+                DXFDWGCreator(Path, odoc, Destin, Archive, DrawingName, DrawSource, OpenDocs, Total, Counter, DWGSource, "dwg")
             Else
                 chkCheck.CheckState = CheckState.Unchecked
                 Exit Sub
@@ -1165,9 +1166,9 @@ Public Class Main
             End If
         Next
     End Sub
-    Public Sub DXFCreator(Path As Documents, ByRef oDoc As Document, ByRef Destin As String, ByRef Archive As String _
+    Public Sub DXFDWGCreator(Path As Documents, ByRef oDoc As Document, ByRef Destin As String, ByRef Archive As String _
                              , ByRef DrawingName As String, ByRef DrawSource As String, OpenDocs As ArrayList _
-                             , Total As Integer, Counter As Integer, DXFSource As String)
+                             , Total As Integer, Counter As Integer, Source As String, ExportType As String)
         Dim sReadableType As String = ""
         Dim Title, RevNo As String
         Dim NotMade As String = ""
@@ -1177,36 +1178,45 @@ Public Class Main
             'Look through all sub files in open documents to get the part sourcefile
             If LVSubFiles.Items(X).Checked = True Then
                 'iterate through opend documents to find the selected file
-                DrawingName = Trim(LVSubFiles.Items(X).Text)
-                DrawSource = Strings.Left(SubFiles.Item(X).Value, Len(SubFiles.Item(X).Value) - 3) & "idw"
+                MatchDrawing(DrawSource, DrawingName, X)
                 'open drawing
                 oDoc = _invApp.Documents.Open(DrawSource, False)
-                If My.Settings.DXFRev = True Then
+                If My.Settings(ExportType & "Rev") = True Then
                     RevNo = "-R" & oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
                 Else
                     RevNo = ""
                 End If
-                DXFSource = Destin & "\" & DrawingName
-                DXFSource = DXFSource.Insert(DXFSource.LastIndexOf("."), RevNo)
+                Source = Destin & "\" & DrawingName
+                Source = Source.Insert(Source.LastIndexOf("."), RevNo)
                 'PDFSource = Destin & "\" & DrawingName & "-R" & RevNo
-                DXFSource = Replace(DXFSource, "idw", "dxf")
+                Source = Replace(Source, "idw", ExportType)
                 'DXFSource = DrawSource.Insert(DrawSource.LastIndexOf("\"), "\DWG_DXF")
                 'DXFSource = DXFSource.Insert(DXFSource.LastIndexOf("."), "-R" & RevNo)
                 'DXFSource = Replace(DXFSource, "idw", "dxf")
+                If My.Computer.FileSystem.DirectoryExists(Strings.Left(Source, InStrRev(Source, "\"))) = False Then
+                    MkDir(Strings.Left(Source, InStrRev(Source, "\")))
+                End If
+                If My.Computer.FileSystem.DirectoryExists(Strings.Left(Source, InStrRev(Source, "\")) & "Archived\") = False Then
+                    MkDir(Strings.Left(Source, InStrRev(Source, "\")) & "Archived\")
+                End If
 
+                'if an older revision exists move it into the archive folder
+                'if the archive folder doesn't exist create a new one
+                Dim Filetype As String = "." & ExportType
+                Search_For_Duplicates(Source, DrawingName, Filetype)
                 If My.Computer.FileSystem.FileExists(Strings.Replace(SubFiles.Item(X).Value, "idw", "ipt")) = True Then
                     Archive = Strings.Replace(SubFiles.Item(X).Value, "idw", "ipt")
                     oDoc = _invApp.Documents.Open(Archive, True)
                     SheetMetalTest(Archive, oDoc, sReadableType)
-                    If sReadableType = "P" And chkDWG.Checked = False Then
-                        Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "DXF", RevNo)
-                    ElseIf sReadableType = "S" And chkDWG.Checked = False And chkUseDrawings.Checked = False Then
-                        Call SMDXF(oDoc, DXFSource, True, Replace(DrawingName, ".idw", ".dxf"))
+                    If sReadableType = "P" And ExportType = "dxf" Then
+                        Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, ExportType, RevNo)
+                    ElseIf sReadableType = "S" And ExportType = "dxf" And chkUseDrawings.Checked = False Then
+                        Call SMDXF(oDoc, Source, True, Replace(DrawingName, ".idw", ".dxf"))
                         CloseLater(Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt", oDoc)
-                    ElseIf sReadableType = "S" And chkDWG.Checked = False And chkUseDrawings.Checked = True Then
-                        Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "DXF", RevNo)
-                    ElseIf sReadableType = "P" And chkDWG.Checked = True Then
-                        Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "DWG", RevNo)
+                    ElseIf sReadableType = "S" And ExportType = "dxf" And chkUseDrawings.Checked = True Then
+                        Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "dxf", RevNo)
+                    ElseIf sReadableType <> "" And ExportType = "dwg" Then
+                        Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "dwg", RevNo)
                     ElseIf sReadableType = "" Then
                         CloseLater(Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\")), oDoc)
                     End If
@@ -1216,7 +1226,7 @@ Public Class Main
                 ElseIf My.Computer.FileSystem.FileExists(Strings.Replace(SubFiles.Item(X).Value, "idw", "iam")) = False Then
                     NotMade = DrawingName & vbNewLine
                 ElseIf My.Computer.FileSystem.FileExists(Strings.Replace(SubFiles.Item(X).Value, "idw", "iam")) = True Then
-                    Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "DXF", RevNo)
+                    Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "dxf", RevNo)
                 End If
                 Title = "Saving:  "
                 ProgressBar(Total, Counter, Title, DrawingName)
@@ -1326,14 +1336,14 @@ Public Class Main
         DWGSource = DWGSource.Insert(DWGSource.LastIndexOf("."), RevNo)
         ExportName = Replace(DWGSource, "idw", LCase(Output))
 
-        If My.Computer.FileSystem.DirectoryExists(Strings.Left(ExportName, InStrRev(ExportName, "\"))) = False Then
-            MkDir(Strings.Left(ExportName, InStrRev(ExportName, "\")))
-        End If
-        If My.Computer.FileSystem.DirectoryExists(Strings.Left(ExportName, InStrRev(ExportName, "\")) & "Archived\") = False Then
-            MkDir(Strings.Left(ExportName, InStrRev(ExportName, "\")) & "Archived\")
-        End If
-        Dim Filetype As String = "." & LCase(Output)
-        Search_For_Duplicates(ExportName, DrawingName, Filetype)
+        'If My.Computer.FileSystem.DirectoryExists(Strings.Left(ExportName, InStrRev(ExportName, "\"))) = False Then
+        '    MkDir(Strings.Left(ExportName, InStrRev(ExportName, "\")))
+        'End If
+        'If My.Computer.FileSystem.DirectoryExists(Strings.Left(ExportName, InStrRev(ExportName, "\")) & "Archived\") = False Then
+        '    MkDir(Strings.Left(ExportName, InStrRev(ExportName, "\")) & "Archived\")
+        'End If
+        'Dim Filetype As String = "." & LCase(Output)
+        'Search_For_Duplicates(ExportName, DrawingName, Filetype)
         Dim oNameValueMap As NameValueMap
         oNameValueMap = _invApp.TransientObjects.CreateNameValueMap
         ' Define the type of output by
@@ -1342,13 +1352,13 @@ Public Class Main
         oOutputFile = _invApp.TransientObjects.CreateDataMedium
 
         For i = 1 To _invApp.ApplicationAddIns.Count
-            If Output = "DXF" Then
+            If Output = "dxf" Then
                 If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC4-122E-11D5-8E91-0010B541CD80}" Then
                     oDWGAddIn = _invApp.ApplicationAddIns.Item(i)
                     strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dxf.ini")
                     Exit For
                 End If
-            ElseIf Output = "DWG" Then
+            ElseIf Output = "dwg" Then
                 If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC2-122E-11D5-8E91-0010B541CD80}" Then
                     oDWGAddIn = _invApp.ApplicationAddIns.Item(i)
                     strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dwg.ini")
@@ -2369,7 +2379,7 @@ Public Class Main
             chkDXF.Visible = True
             chkClose.Top = chkClose.Top + 15
             GroupBox4.Height = GroupBox4.Height + 15
-            chkPDF.CheckState = CheckState.Checked
+            chkPDF.CheckState = CheckState.Unchecked
             chkDWG.CheckState = CheckState.Unchecked
             chkDXF.CheckState = CheckState.Unchecked
         Else

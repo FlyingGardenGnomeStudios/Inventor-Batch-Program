@@ -16,10 +16,10 @@
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
     <PublishUrl>\\SERVER02\Company\Employee Folders\Tim Fehr\Programs\Batch Program\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Unc</InstallFrom>
+    <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
@@ -27,10 +27,12 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/</InstallUrl>
+    <UpdateUrl>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/</UpdateUrl>
     <TargetCulture>en-CA</TargetCulture>
     <ProductName>Inventor Batch Program</ProductName>
     <PublisherName>Flying Garden Gnome Studios</PublisherName>
-    <MinimumRequiredVersion>1.1.2.6</MinimumRequiredVersion>
+    <MinimumRequiredVersion>1.1.2.0</MinimumRequiredVersion>
     <AutorunEnabled>true</AutorunEnabled>
     <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>1.2.2.%2a</ApplicationVersion>
@@ -180,12 +182,6 @@
     <Compile Include="Class1.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Export.Designer.vb">
-      <DependentUpon>Export.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Export.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="iPropertySettings.Designer.vb">
       <DependentUpon>iPropertySettings.vb</DependentUpon>
     </Compile>
@@ -232,12 +228,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="Print Size.Designer.vb">
-      <DependentUpon>Print Size.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Print Size.vb">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Print.Designer.vb">
       <DependentUpon>Print.vb</DependentUpon>
@@ -288,9 +278,6 @@
       <DependentUpon>CheckNeeded.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Export.resx">
-      <DependentUpon>Export.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="iPropertySettings.resx">
       <DependentUpon>iPropertySettings.vb</DependentUpon>
     </EmbeddedResource>
@@ -311,9 +298,6 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources2.Designer.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Print Size.resx">
-      <DependentUpon>Print Size.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Print.resx">
       <DependentUpon>Print.vb</DependentUpon>

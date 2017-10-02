@@ -293,7 +293,7 @@ Public Class CheckNeeded
         'Main.chkCheck.CheckState = CheckState.Indeterminate
         ProgressBar1.Visible = False
         Me.Hide()
-        If Main.chkCheck.CheckState = CheckState.Indeterminate Then Main.ExportCheck(Path, odoc:=Nothing, Archive:="", DrawingName:="", DrawSource:="", ExportType:="DXF")
+        If Main.chkCheck.CheckState = CheckState.Indeterminate Then Main.ExportCheck(Path, odoc:=Nothing, Archive:="", DrawingName:="", DrawSource:="", ExportType:="dxf")
     End Sub
     Private Sub lstCheckNeeded_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles lstCheckNeeded.SelectedIndexChanged
         DateTimePicker1.Visible = False
