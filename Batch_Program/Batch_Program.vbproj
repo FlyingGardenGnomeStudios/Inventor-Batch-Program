@@ -32,8 +32,8 @@
     <PublisherName>Flying Garden Gnome Studios</PublisherName>
     <MinimumRequiredVersion>1.1.2.6</MinimumRequiredVersion>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>35</ApplicationRevision>
-    <ApplicationVersion>1.1.2.%2a</ApplicationVersion>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.2.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -48,7 +48,8 @@
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>x86</PlatformTarget>
-    <DefineConstants>TA_BOTH_DLL=TRUE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -272,9 +273,12 @@
       <SubType>Form</SubType>
     </Compile>
     <None Include="Inventor Batch Program.pfx" />
-    <None Include="Resources\List-Blank.xlsm" />
-    <None Include="Resources\Quote-Blank.xlsm" />
-    <None Include="Resources\Rename.xlsm" />
+    <Content Include="Resources\List-Blank.xlsm" />
+    <Content Include="Resources\Quote-Blank.xlsm" />
+    <Content Include="Resources\Rename.xlsm" />
+    <Content Include="TurboActivate.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="About.resx">
@@ -350,21 +354,22 @@
     <Content Include="Batch_Program.Addin" />
     <Content Include="Batch_Runner-Logo_256px.ico" />
     <Content Include="ReadMe.txt" />
-    <Content Include="Resources\TurboActivate.dat">
+    <Content Include="TurboActivate.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\TurboActivate.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TurboActivate.exe">
+    <Content Include="TurboActivate.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\Splash.jpeg" />
     <None Include="Resources\btn_donate_LG.gif" />
     <None Include="Resources\About.JPG" />
     <EmbeddedResource Include="Resources\dwg.ini" />
-    <None Include="Resources\DXF.bmp" />
-    <EmbeddedResource Include="Resources\DXF.ini" />
+    <Content Include="Resources\DXF.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\DXF.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\Get64BitPicture.txt" />
     <None Include="Resources\inverse1.png" />
     <None Include="Resources\inverse.png" />

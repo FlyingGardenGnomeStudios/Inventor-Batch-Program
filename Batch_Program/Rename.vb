@@ -111,6 +111,7 @@ Public Class Rename
         Dim _ExcelApp As Excel.Application = New Excel.Application
         Dim ExcelDocs As Excel.Workbooks = _ExcelApp.Workbooks
         Dim Start As Date = Now()
+         
         If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetTempPath, "Rename.xlsm")) Then
             Kill(IO.Path.Combine(IO.Path.GetTempPath, "Rename.xlsm"))
         End If

@@ -91,72 +91,62 @@ Public Class Main
         writeDebug("Inventor Accessed")
 
         LVSubFiles.Columns(0).Width = LVSubFiles.Width - 10
-        'Try
-        'If Not My.Computer.FileSystem.FileExists(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath) & "\TurboActivate.exe") Then
-        '    IO.File.Copy(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\TurboActivate.exe"), My.Resources.TurboActivate)
-        '    IO.File.WriteAllLines(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\TurboActivate.dll"), My.Resources.TurboActivate1)
-        '        IO.File.WriteAllLines(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\TurboActivate.dat"), My.Resources.TurboActivate2)
-        '    End If
-        'Catch
-        '    msgbox("Could Not load TurboActivate files")
-        '    Exit Sub
-        'End Try
-        'Try
-        '    'TODO: goto the version page at LimeLM and paste this GUID here
-        '    ta = New TurboActivate("3d2a7b7e59bfcc74c5df44.47834669")
+        Try
+            'TODO: goto the version page at LimeLM and paste this GUID here
+            ta = New TurboActivate("3d2a7b7e59bfcc74c5df44.47834669")
 
-        '    ' Check if we're activated, and every 90 days verify it with the activation servers
-        '    ' In this example we won't show an error if the activation was done offline
-        '    ' (see the 3rd parameter of the IsGenuine() function)
-        '    ' https://wyday.com/limelm/help/offline-activation/
-        '    Dim gr As IsGenuineResult = ta.IsGenuine(DaysBetweenChecks, GracePeriodLength, True)
+            ' Check if we're activated, and every 90 days verify it with the activation servers
+            ' In this example we won't show an error if the activation was done offline
+            ' (see the 3rd parameter of the IsGenuine() function)
+            ' https://wyday.com/limelm/help/offline-activation/
+            Dim gr As IsGenuineResult = ta.IsGenuine(DaysBetweenChecks, GracePeriodLength, True)
 
-        '    isGenuine = (gr = IsGenuineResult.Genuine _
-        '                 OrElse gr = IsGenuineResult.GenuineFeaturesChanged _
-        '                 OrElse gr = IsGenuineResult.InternetError)
-        '    ' an internet error means the user is activated but
-        '    ' TurboActivate failed to contact the LimeLM servers
+            isGenuine = (gr = IsGenuineResult.Genuine _
+                         OrElse gr = IsGenuineResult.GenuineFeaturesChanged _
+                         OrElse gr = IsGenuineResult.InternetError)
+            ' an internet error means the user is activated but
+            ' TurboActivate failed to contact the LimeLM servers
 
 
 
-        '    ' If IsGenuineEx() is telling us we're not activated
-        '    ' but the IsActivated() function is telling us that the activation
-        '    ' data on the computer is valid (i.e. the crypto-signed-fingerprint matches the computer)
-        '    ' then that means that the customer has passed the grace period and they must re-verify
-        '    ' with the servers to continue to use your app.
+            ' If IsGenuineEx() is telling us we're not activated
+            ' but the IsActivated() function is telling us that the activation
+            ' data on the computer is valid (i.e. the crypto-signed-fingerprint matches the computer)
+            ' then that means that the customer has passed the grace period and they must re-verify
+            ' with the servers to continue to use your app.
 
-        '    'Note: DO NOT allow the customer to just continue to use your app indefinitely with absolutely
-        '    '      no reverification with the servers. If you want to do that then don't use IsGenuine() or
-        '    '      IsGenuineEx() at all -- just use IsActivated().
-        '    If Not isGenuine AndAlso ta.IsActivated() Then
+            'Note: DO NOT allow the customer to just continue to use your app indefinitely with absolutely
+            '      no reverification with the servers. If you want to do that then don't use IsGenuine() or
+            '      IsGenuineEx() at all -- just use IsActivated().
+            If Not isGenuine AndAlso ta.IsActivated() Then
 
-        '        ' We're treating the customer as is if they aren't activated, so they can't use your app.
+                ' We're treating the customer as is if they aren't activated, so they can't use your app.
 
-        '        ' However, we show them a dialog where they can reverify with the servers immediately.
+                ' However, we show them a dialog where they can reverify with the servers immediately.
 
-        '        Dim frmReverify As ReVerifyNow = New ReVerifyNow(ta, DaysBetweenChecks, GracePeriodLength)
+                Dim frmReverify As ReVerifyNow = New ReVerifyNow(ta, DaysBetweenChecks, GracePeriodLength)
 
-        '        If frmReverify.ShowDialog(Me) = DialogResult.OK Then
-        '            isGenuine = True
-        '        ElseIf Not frmReverify.noLongerActivated Then ' the user clicked cancel and the user is still activated
+                If frmReverify.ShowDialog(Me) = DialogResult.OK Then
+                    isGenuine = True
+                ElseIf Not frmReverify.noLongerActivated Then ' the user clicked cancel and the user is still activated
 
-        '            ' Just bail out of your app
-        '            Close()
-        '            Return
-        '        End If
-        '    End If
+                    ' Just bail out of your app
+                    Close()
+                    Return
+                End If
+            End If
 
-        'Catch ex As TurboActivateException
-        '    ' failed to check if activated, meaning the customer screwed
-        '    ' something up so kill the app immediately
-        '    MessageBox.Show("Failed to check if activated:  " + ex.Message)
-        '    Close()
-        '    Return
-        'End Try
+        Catch ex As TurboActivateException
+            ' failed to check if activated, meaning the customer screwed
+            ' something up so kill the app immediately
+            MessageBox.Show("Failed to check if activated:  " + ex.Message)
+            Close()
+            Return
+        End Try
 
-        ''Show a trial if we're not genuine
-        ''See step 9, below.
-        'ShowTrial(Not isGenuine)
+        'Show a trial if we're not genuine
+        'See step 9, below.
+        ShowTrial(Not isGenuine)
     End Sub
     Public Function PopiProperties(CalledFunction As iProperties)
         iProperties = CalledFunction
@@ -1319,9 +1309,7 @@ Public Class Main
     End Sub
     Private Sub ExportPart(DrawSource As String, Archive As String, FlatPattern As Boolean, Destin As String, DrawingName As String,
              OpenDocs As ArrayList, Output As String, RevNo As String)
-        MsgBox("This current operation has been cancelled" & vbNewLine &
-               "due to a bug. A solution is currently being investigated")
-        Exit Sub
+
         Dim odoc As Document = _invApp.ActiveDocument
         If FlatPattern = False Then
             odoc = _invApp.Documents.Open(DrawSource, True)
@@ -1352,17 +1340,18 @@ Public Class Main
         ' specifying the filename.
         Dim oOutputFile As DataMedium
         oOutputFile = _invApp.TransientObjects.CreateDataMedium
+
         For i = 1 To _invApp.ApplicationAddIns.Count
             If Output = "DXF" Then
                 If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC4-122E-11D5-8E91-0010B541CD80}" Then
                     oDWGAddIn = _invApp.ApplicationAddIns.Item(i)
-                    strIniFile = My.Resources.DXF
+                    strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dxf.ini")
                     Exit For
                 End If
             ElseIf Output = "DWG" Then
                 If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC2-122E-11D5-8E91-0010B541CD80}" Then
                     oDWGAddIn = _invApp.ApplicationAddIns.Item(i)
-                    strIniFile = My.Resources.dwg
+                    strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dwg.ini")
                     Exit For
                 End If
             Else
@@ -2785,11 +2774,15 @@ Public Class Main
 
             'launch TurboActivate.exe to get the product key from the user
             Dim TAProcess As New Process
-            TAProcess.StartInfo.FileName = IO.Path.Combine(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath), "TurboActivate.exe")
+            If My.Application.IsNetworkDeployed Then
+                TAProcess.StartInfo.FileName = IO.Path.Combine(IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase), "TurboActivate.exe")
+            Else
+                TAProcess.StartInfo.FileName = IO.Path.Combine(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath), "debug\TurboActivate.exe")
+            End If
             TAProcess.EnableRaisingEvents = True
-            AddHandler TAProcess.Exited, New EventHandler(AddressOf p_Exited)
-            ' TAProcess.Start()
-        End If
+                AddHandler TAProcess.Exited, New EventHandler(AddressOf p_Exited)
+                TAProcess.Start()
+            End If
     End Sub
     ''' This event handler is called when TurboActivate.exe closes.
     Private Sub p_Exited(ByVal sender As Object, ByVal e As EventArgs)

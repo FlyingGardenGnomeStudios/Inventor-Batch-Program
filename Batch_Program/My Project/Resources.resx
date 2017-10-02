@@ -151,13 +151,4 @@
   <data name="Splash" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Splash.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="TurboActivate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\TurboActivate.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="TurboActivate1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\TurboActivate.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="TurboActivate2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\TurboActivate.dat;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
 </root>

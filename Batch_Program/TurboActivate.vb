@@ -54,7 +54,7 @@ Namespace wyDay.TurboActivate
         ''' <summary>Creates a TurboActivate object instance.</summary>
         ''' <param name="vGUID">The GUID for this product version. This is found on the LimeLM site on the version overview.</param>
         ''' <param name="pdetsFilename">The absolute location to the TurboActivate.dat file on the disk.</param>
-        Public Sub New(vGUID As String, Optional pdetsFilename As String = "C:\Users\tfehr\Google Drive\Programs\Batch Program\Batch_Program\bin\Debug\TurboActivate.dat")
+        Public Sub New(vGUID As String, Optional pdetsFilename As String = Nothing)
             If pdetsFilename <> Nothing Then
 
 #If TA_BOTH_DLL Then
@@ -152,99 +152,99 @@ Namespace wyDay.TurboActivate
                 Public nGraceDaysOnInetErr As UInteger
             End Structure
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_GetHandle(ByVal versionGUID As String) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_Activate(handle As UInteger, ByRef options As ACTIVATE_OPTIONS) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_Activate(handle As UInteger, options As IntPtr) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_ActivationRequestToFile(handle As UInteger, ByVal filename As String, ByRef options As ACTIVATE_OPTIONS) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_ActivationRequestToFile(handle As UInteger, ByVal filename As String, options As IntPtr) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_ActivateFromFile(handle As UInteger, ByVal filename As String) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_CheckAndSavePKey(handle As UInteger, ByVal productKey As String, ByVal flags As TA_Flags) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_Deactivate(handle As UInteger, ByVal erasePkey As Byte) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_DeactivationRequestToFile(handle As UInteger, ByVal filename As String, ByVal erasePkey As Byte) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_GetExtraData(handle As UInteger, ByVal lpValueStr As StringBuilder, ByVal cchValue As Integer) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_GetFeatureValue(handle As UInteger, ByVal featureName As String, ByVal lpValueStr As StringBuilder, ByVal cchValue As Integer) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_GetPKey(handle As UInteger, ByVal lpPKeyStr As StringBuilder, ByVal cchPKey As Integer) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_IsActivated(handle As UInteger) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_IsDateValid(handle As UInteger, ByVal date_time As String, ByVal flags As TA_DateCheckFlags) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_IsGenuine(handle As UInteger) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_IsGenuineEx(handle As UInteger, ByRef options As GENUINE_OPTIONS) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_GenuineDays(handle As UInteger, nDaysBetweenChecks As UInteger, nGraceDaysOnInetErr As UInteger, ByRef DaysRemaining As UInteger, ByRef inGracePeriod As Char) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_IsProductKeyValid(handle As UInteger) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_SetCustomProxy(ByVal proxy As String) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_TrialDaysRemaining(handle As UInteger, useTrialFlags As TA_Flags, ByRef DaysRemaining As UInteger) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_UseTrial(handle As UInteger, flags As TA_Flags, extra_data As String) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_UseTrialVerifiedRequest(handle As UInteger, filename As String, extra_data As String) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_UseTrialVerifiedFromFile(handle As UInteger, filename As String, flags As TA_Flags) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_ExtendTrial(handle As UInteger, flags As TA_Flags, trialExtension As String) As Integer
             End Function
 
@@ -256,7 +256,7 @@ Namespace wyDay.TurboActivate
             Public Shared Function TA_PDetsFromByteArray(pArray As Byte(), nSize As Integer) As Integer
             End Function
 
-            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)> _
+            <DllImport("TurboActivate.dll", CharSet:=CharSet.Unicode, CallingConvention:=CallingConvention.Cdecl)>
             Public Shared Function TA_SetCustomActDataPath(handle As UInteger, directory As String) As Integer
             End Function
         End Class
