@@ -34,7 +34,7 @@
     <PublisherName>Flying Garden Gnome Studios</PublisherName>
     <MinimumRequiredVersion>1.1.2.0</MinimumRequiredVersion>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>3</ApplicationRevision>
     <ApplicationVersion>1.2.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -193,6 +193,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Print Size.designer.vb">
+      <DependentUpon>Print Size.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Print Size.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ReVerifyNow.Designer.vb">
       <DependentUpon>ReVerifyNow.vb</DependentUpon>
     </Compile>
@@ -280,6 +286,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="iPropertySettings.resx">
       <DependentUpon>iPropertySettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Print Size.resx">
+      <DependentUpon>Print Size.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ReVerifyNow.resx">
       <DependentUpon>ReVerifyNow.vb</DependentUpon>

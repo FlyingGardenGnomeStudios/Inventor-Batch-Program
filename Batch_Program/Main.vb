@@ -668,8 +668,19 @@ Public Class Main
             LVSubFiles.Items.Add("No Drawings Found")
             'LVSubFiles.ThreeDCheckBoxes = False
             LVSubFiles.ForeColor = Drawing.Color.Gray
-        ElseIf SubFiles.Count <> 0 And LVSubFiles.Items.Count = 0 Then
+
+        ElseIf SubFiles.Count <> 0 And LVSubFiles.Items.Count = 0 And CMSHeirarchical.Checked = True Then
             For Each pair As KeyValuePair(Of String, String) In SubFiles
+                If InStr(pair.Key, "(DNE)") <> 0 Then
+                    LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(DNE)", ""))
+                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Gray
+                Else
+                    LVSubFiles.Items.Add(pair.Key)
+                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
+                End If
+            Next
+        ElseIf SubFiles.Count <> 0 And LVSubFiles.Items.Count = 0 And CMSalphabetical.Checked = True Then
+            For Each pair As KeyValuePair(Of String, String) In AlphaSub
                 If InStr(pair.Key, "(DNE)") <> 0 Then
                     LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(DNE)", ""))
                     LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Gray
@@ -682,9 +693,10 @@ Public Class Main
         LVSubFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
         MsVistaProgressBar.Visible = False
         Me.Update()
+
     End Sub
     Public Sub btnOK_Click(sender As System.Object, e As System.EventArgs) Handles btnOK.Click
-        MsVistaProgressBar.ProgressBarStyle = MsVistaProgressBar.BarStyle.Continuous
+        MsVistaProgressBar.ProgressBarStyle = MSVistaProgressBar.BarStyle.Continuous
         Dim NoPart, NoDraw As Boolean
         Dim Path As Documents = _invApp.Documents
         Dim oDoc As Document = Nothing
@@ -791,24 +803,26 @@ Public Class Main
             chkClose.Checked = False
         End If
         RunCompleted()
-        OpenDocs.Clear()
-        On Error Resume Next
+        Try
+            For Each oDoc In _invApp.Documents.VisibleDocuments
+                Archive = oDoc.FullFileName
+                'Use the Partsource file to create the drawingsource file
+                DocSource = Strings.Left(Archive, Strings.Len(Archive))
+                DocName = Strings.Right(DocSource, Strings.Len(DocSource) - Strings.InStrRev(DocSource, "\"))
+                OpenDocs.Add(DocName)
+            Next
 
-        For Each oDoc In _invApp.Documents.VisibleDocuments
-            Archive = oDoc.FullFileName
-            'Use the Partsource file to create the drawingsource file
-            DocSource = Strings.Left(Archive, Strings.Len(Archive))
-            DocName = Strings.Right(DocSource, Strings.Len(DocSource) - Strings.InStrRev(DocSource, "\"))
-            OpenDocs.Add(DocName)
-        Next
-
-        If OpenDocs.Count > 0 Then
-        Else
-            _invApp.SilentOperation = True
-            _invApp.Documents.CloseAll()
+            If OpenDocs.Count > 0 Then
+            Else
+                _invApp.SilentOperation = True
+                _invApp.Documents.CloseAll()
+                _invApp.SilentOperation = False
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             _invApp.SilentOperation = False
-        End If
-        Err.Clear()
+        End Try
+
     End Sub
     Public Sub MatchDrawing(ByRef DrawSource As String, ByRef DrawingName As String, Y As Integer)
         If CMSHeirarchical.Checked = True Then
@@ -907,7 +921,11 @@ Public Class Main
                 MatchDrawing(DrawSource, DrawingName, X)
                 'DrawSource = Strings.Left(SubFiles.Item(X).Value, Len(SubFiles.Item(X).Value) - 3) & "idw"
                 ProgressBar(LVSubFiles.CheckedItems.Count, X, "Opening:   ", DrawingName)
-                odoc = _invApp.Documents.Open(DrawSource, True)
+                Try
+                    odoc = _invApp.Documents.Open(DrawSource, True)
+                Catch
+                    MsgBox("Could not open drawing. Ensure the drawing exists")
+                End Try
             End If
         Next
     End Sub
@@ -950,9 +968,9 @@ Public Class Main
                         End Try
                     End If
                 ElseIf My.Settings(ExportType & "SaveNewLoc") = True Then
-                        Destin = My.Settings(ExportType & "SaveLoc")
-                    ElseIf My.Settings(ExportType & "Tag") Then
-                        Destin = Strings.Left(DrawSource, InStrRev(DrawSource, "\") - 1) & My.Settings(ExportType & "Tag")
+                    Destin = My.Settings(ExportType & "SaveLoc")
+                ElseIf My.Settings(ExportType & "Tag") <> "" Then
+                    Destin = Strings.Left(DrawSource, InStrRev(DrawSource, "\") - 1) & My.Settings(ExportType & "Tag")
                 End If
                 'open drawing
                 odoc = _invApp.Documents.Open(DrawSource, False)
@@ -1204,8 +1222,8 @@ Public Class Main
                 'if the archive folder doesn't exist create a new one
                 Dim Filetype As String = "." & ExportType
                 Search_For_Duplicates(Source, DrawingName, Filetype)
-                If My.Computer.FileSystem.FileExists(Strings.Replace(SubFiles.Item(X).Value, "idw", "ipt")) = True Then
-                    Archive = Strings.Replace(SubFiles.Item(X).Value, "idw", "ipt")
+                If My.Computer.FileSystem.FileExists(Strings.Replace(DrawSource, "idw", "ipt")) = True Then
+                    Archive = Strings.Replace(DrawSource, "idw", "ipt")
                     oDoc = _invApp.Documents.Open(Archive, True)
                     SheetMetalTest(Archive, oDoc, sReadableType)
                     If sReadableType = "P" And ExportType = "dxf" Then
@@ -1223,9 +1241,9 @@ Public Class Main
                     If chkCheck.CheckState = CheckState.Indeterminate Then
                         chkCheck.CheckState = CheckState.Unchecked
                     End If
-                ElseIf My.Computer.FileSystem.FileExists(Strings.Replace(SubFiles.Item(X).Value, "idw", "iam")) = False Then
+                ElseIf My.Computer.FileSystem.FileExists(Strings.Replace(DrawSource, "idw", "iam")) = False Then
                     NotMade = DrawingName & vbNewLine
-                ElseIf My.Computer.FileSystem.FileExists(Strings.Replace(SubFiles.Item(X).Value, "idw", "iam")) = True Then
+                ElseIf My.Computer.FileSystem.FileExists(Strings.Replace(DrawSource, "idw", "iam")) = True Then
                     Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "dxf", RevNo)
                 End If
                 Title = "Saving:  "
@@ -1501,10 +1519,13 @@ Public Class Main
                 If Strings.Right(item.FullFileName, Len(item.FullFileName) - InStrRev(item.FullFileName, "\")) = Trim(LVSubFiles.CheckedItems(x).Text) Then
                     'save document if user selected save
                     If Checkin = True Then
-                        item.Save()
-                        item.Close(True)
-                        Exit For
-                        ' otherwise close without save
+                        Try
+                            item.Save()
+                            item.Close(True)
+                            Exit For
+                            ' otherwise close without save
+                        Catch
+                        End Try
                     Else
                         item.Close(True)
                         Exit For
@@ -2416,14 +2437,17 @@ Public Class Main
         End If
     End Sub
     Private Sub LVSubFiles_MouseUp(sender As Object, e As MouseEventArgs) Handles LVSubFiles.MouseUp
-        If e.Button = Windows.Forms.MouseButtons.Right Then
-            CMSSubFiles.Show(Cursor.Position)
-            If LVSubFiles.Items(LVSubFiles.FocusedItem.Index).Checked = True Then
-                LVSubFiles.Items(LVSubFiles.FocusedItem.Index).Checked = False
-            Else
-                LVSubFiles.Items(LVSubFiles.FocusedItem.Index).Checked = True
+        Try
+            If e.Button = Windows.Forms.MouseButtons.Right Then
+                CMSSubFiles.Show(Cursor.Position)
+                If LVSubFiles.Items(LVSubFiles.FocusedItem.Index).Checked = True Then
+                    LVSubFiles.Items(LVSubFiles.FocusedItem.Index).Checked = False
+                Else
+                    LVSubFiles.Items(LVSubFiles.FocusedItem.Index).Checked = True
+                End If
             End If
-        End If
+        Catch
+        End Try
     End Sub
     Private Sub CMSAlphabetical_Click(sender As Object, e As EventArgs) Handles CMSAlphabetical.Click
         LVSubFiles.Items.Clear()

@@ -3,7 +3,7 @@ Imports System.Windows.Forms
 Imports Inventor
 Public Class Print
     Dim Main As Main
-    'Dim Print_Size As New Print_Size
+    Dim Print_Size As New Print_Size
     Dim _invApp As Inventor.Application
     Dim PPath, PoDoc As Documents
     Dim PArchive, PDrawingName, PDrawSource As String
@@ -69,7 +69,7 @@ Public Class Print
     End Sub
 
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
-        'Print_Size.PopPrint(Me)
+        Print_Size.PopPrint(Me)
         Me.Hide()
         Dim dDoc As Inventor.DrawingDocument
         Dim Range, Direction As Integer : Range = 0 : Direction = 0
@@ -120,80 +120,80 @@ Public Class Print
                     PDrawingName = Strings.Right(dDoc.FullDocumentName, Len(dDoc.FullDocumentName) - InStrRev(dDoc.FullDocumentName, "\"))
                     Main.ProgressBar(PEnd + 1 * Y, Z, "Printing: ", PDrawingName)
                     Z += 1
-                    'PrintSheets(PDrawingName, ScaleSelect, Range, dDoc, Colour)
+                    PrintSheets(PDrawingName, ScaleSelect, Range, dDoc, Colour)
                     Main.CloseLater(PDrawingName, dDoc)
                 End If
             Next
         Next
-        'Print_Size.rdoAsk.Checked = True
-        'Print_Size.rdoDontAsk.Checked = False
-        'Print_Size.chkQuesiton.Checked = False
-        'Print_Size.chkScale.Checked = False
+        Print_Size.rdoAsk.Checked = True
+        Print_Size.rdoDontAsk.Checked = False
+        Print_Size.chkQuesiton.Checked = False
+        Print_Size.chkScale.Checked = False
         Me.Close()
     End Sub
-    'Public Sub PrintSheets(DrawingName As String, ScaleSelect As Boolean, Range As Integer, dDoc As Document, Colour As Boolean)
-    '    Dim Size As Double
-    '    'Set up print manager according to generic standards
-    '    Dim oDoc As Inventor.DrawingDocument
-    '    oDoc = _invApp.ActiveDocument
-    '    Dim oSheet As Inventor.Sheet
-    '    oSheet = oDoc.ActiveSheet
-    '    Dim oPM As Inventor.PrintManager
-    '    Dim odef As ControlDefinition
-    '    oPM = oDoc.PrintManager
-    '    oPM.scalemode = Inventor.PrintScaleModeEnum.kPrintBestFitScale
-    '    oPM.printrange = Inventor.PrintRangeEnum.kPrintCurrentSheet
-    '    If Range <> 2 Then
-    '        dDoc.Sheets.Item(1).Activate()
-    '    End If
+    Public Sub PrintSheets(DrawingName As String, ScaleSelect As Boolean, Range As Integer, dDoc As Document, Colour As Boolean)
+        Dim Size As Double
+        'Set up print manager according to generic standards
+        Dim oDoc As Inventor.DrawingDocument
+        oDoc = _invApp.ActiveDocument
+        Dim oSheet As Inventor.Sheet
+        oSheet = oDoc.ActiveSheet
+        Dim oPM As Inventor.PrintManager
+        Dim odef As ControlDefinition
+        oPM = oDoc.PrintManager
+        oPM.scalemode = Inventor.PrintScaleModeEnum.kPrintBestFitScale
+        oPM.printrange = Inventor.PrintRangeEnum.kPrintCurrentSheet
+        If Range <> 2 Then
+            dDoc.Sheets.Item(1).Activate()
+        End If
 
-    '    If Colour = True Then
-    '        oPM.ColorMode = PrintColorModeEnum.kPrintDefaultColorMode
-    '    Else
-    '        oPM.ColorMode = PrintColorModeEnum.kPrintGrayScale
-    '    End If
-    '    'Scale drawings to the same size if chosen by the user
-    '    If Print_Size.lblDWGSize.Text = "Cancel" Then Exit Sub
-    '    For X = 1 To dDoc.sheets.count
-    '        If Range = 3 Then dDoc.sheets.item(X).activate
-    '        Size = dDoc.activesheet.size
-    '        If ScaleSelect = True Then
-    '            If Size = 9987 Or Size = 9988 Then
-    '                oPM.PaperSize = PaperSizeEnum.kPaperSizeLetter
-    '            Else
-    '                oPM.PaperSize = PaperSizeEnum.kPaperSize11x17
-    '            End If
-    '        Else
-    '            'Scale the drawings individually if chosen by the user
-    '            If Size = 9987 Then
-    '                oPM.PaperSize = PaperSizeEnum.kPaperSizeLetter
-    '            ElseIf Size = 9988 Then
-    '                oPM.PaperSize = PaperSizeEnum.kPaperSize11x17
-    '            ElseIf Size <> 9987 And Size <> 9988 And Print_Size.chkScale.Checked = False And Print_Size.rdoAsk.Checked = True Then
+        If Colour = True Then
+            oPM.ColorMode = PrintColorModeEnum.kPrintDefaultColorMode
+        Else
+            oPM.ColorMode = PrintColorModeEnum.kPrintGrayScale
+        End If
+        'Scale drawings to the same size if chosen by the user
+        If Print_Size.lblDWGSize.Text = "Cancel" Then Exit Sub
+        For X = 1 To dDoc.sheets.count
+            If Range = 3 Then dDoc.sheets.item(X).activate
+            Size = dDoc.activesheet.size
+            If ScaleSelect = True Then
+                If Size = 9987 Or Size = 9988 Then
+                    oPM.PaperSize = PaperSizeEnum.kPaperSizeLetter
+                Else
+                    oPM.PaperSize = PaperSizeEnum.kPaperSize11x17
+                End If
+            Else
+                'Scale the drawings individually if chosen by the user
+                If Size = 9987 Then
+                    oPM.PaperSize = PaperSizeEnum.kPaperSizeLetter
+                ElseIf Size = 9988 Then
+                    oPM.PaperSize = PaperSizeEnum.kPaperSize11x17
+                ElseIf Size <> 9987 And Size <> 9988 And Print_Size.chkScale.Checked = False And Print_Size.rdoAsk.Checked = True Then
 
-    '                Print_Size.lblDWGSize.Text = "Drawing " & DrawingName & " Sht " & X & " is larger than 11x17" & vbNewLine &
-    '                "Do you still wish to print this drawing at full size?"
-    '                Print_Size.ShowDialog()
-    '                'notify if the drawing is larger than 11x17 and open Inventor print dialogue.
+                    Print_Size.lblDWGSize.Text = "Drawing " & DrawingName & " Sht " & X & " is larger than 11x17" & vbNewLine &
+                    "Do you still wish to print this drawing at full size?"
+                    Print_Size.ShowDialog()
+                    'notify if the drawing is larger than 11x17 and open Inventor print dialogue.
 
-    '                If Print_Size.chkScale.Checked = True Then
-    '                    odef = _invApp.CommandManager.ControlDefinitions("AppFilePrintCmd")
-    '                    odef.Execute()
-    '                Else
-    '                    oPM.PaperSize = PaperSizeEnum.kPaperSize11x17
-    '                End If
-    '            ElseIf Size <> 9987 And Size <> 9988 And Print_Size.chkScale.Checked = True Then
-    '                odef = _invApp.CommandManager.ControlDefinitions("AppFilePrintCmd")
-    '                odef.Execute()
-    '            ElseIf Size <> 9987 And Size <> 9988 And Print_Size.rdoDontAsk.Checked = True Then
-    '                oPM.PaperSize = PaperSizeEnum.kPaperSize11x17
-    '            End If
-    '        End If
-    '        If Print_Size.lblDWGSize.Text = "Cancel" Then Exit Sub
-    '        oPM.SubmitPrint()
+                    If Print_Size.chkScale.Checked = True Then
+                        odef = _invApp.CommandManager.ControlDefinitions("AppFilePrintCmd")
+                        odef.Execute()
+                    Else
+                        oPM.PaperSize = PaperSizeEnum.kPaperSize11x17
+                    End If
+                ElseIf Size <> 9987 And Size <> 9988 And Print_Size.chkScale.Checked = True Then
+                    odef = _invApp.CommandManager.ControlDefinitions("AppFilePrintCmd")
+                    odef.Execute()
+                ElseIf Size <> 9987 And Size <> 9988 And Print_Size.rdoDontAsk.Checked = True Then
+                    oPM.PaperSize = PaperSizeEnum.kPaperSize11x17
+                End If
+            End If
+            If Print_Size.lblDWGSize.Text = "Cancel" Then Exit Sub
+            oPM.SubmitPrint()
 
-    '        If Range <> 3 Then Exit For
-    '    Next
-    '    'oPM.PaperSize = PaperSizeEnum.kPaperSizeLetter
-    'End Sub
+            If Range <> 3 Then Exit For
+        Next
+        'oPM.PaperSize = PaperSizeEnum.kPaperSizeLetter
+    End Sub
 End Class
