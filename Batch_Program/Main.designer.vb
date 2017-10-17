@@ -69,8 +69,8 @@ Partial Class Main
         Me.CMSAlphabetical = New System.Windows.Forms.ToolStripMenuItem()
         Me.CMSHeirarchical = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowHideToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CMSShow = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CMSHide = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CMSMissing = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CMSReference = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportToToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CMSSubSpreadsheet = New System.Windows.Forms.ToolStripMenuItem()
         Me.CMSSubText = New System.Windows.Forms.ToolStripMenuItem()
@@ -542,13 +542,13 @@ Partial Class Main
         '
         Me.CMSSubFiles.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SortToolStripMenuItem, Me.ShowHideToolStripMenuItem, Me.ExportToToolStripMenuItem})
         Me.CMSSubFiles.Name = "ContextMenuStrip1"
-        Me.CMSSubFiles.Size = New System.Drawing.Size(134, 70)
+        Me.CMSSubFiles.Size = New System.Drawing.Size(153, 92)
         '
         'SortToolStripMenuItem
         '
         Me.SortToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSAlphabetical, Me.CMSHeirarchical})
         Me.SortToolStripMenuItem.Name = "SortToolStripMenuItem"
-        Me.SortToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.SortToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.SortToolStripMenuItem.Text = "Sort"
         '
         'CMSAlphabetical
@@ -567,30 +567,28 @@ Partial Class Main
         '
         'ShowHideToolStripMenuItem
         '
-        Me.ShowHideToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSShow, Me.CMSHide})
+        Me.ShowHideToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSMissing, Me.CMSReference})
         Me.ShowHideToolStripMenuItem.Name = "ShowHideToolStripMenuItem"
-        Me.ShowHideToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.ShowHideToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ShowHideToolStripMenuItem.Text = "Show/Hide"
         '
-        'CMSShow
+        'CMSMissing
         '
-        Me.CMSShow.Checked = True
-        Me.CMSShow.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.CMSShow.Name = "CMSShow"
-        Me.CMSShow.Size = New System.Drawing.Size(199, 22)
-        Me.CMSShow.Text = "Show Missing Drawings"
+        Me.CMSMissing.Name = "CMSMissing"
+        Me.CMSMissing.Size = New System.Drawing.Size(206, 22)
+        Me.CMSMissing.Text = "Hide Missing Drawings"
         '
-        'CMSHide
+        'CMSReference
         '
-        Me.CMSHide.Name = "CMSHide"
-        Me.CMSHide.Size = New System.Drawing.Size(199, 22)
-        Me.CMSHide.Text = "Hide Missing Drawings"
+        Me.CMSReference.Name = "CMSReference"
+        Me.CMSReference.Size = New System.Drawing.Size(206, 22)
+        Me.CMSReference.Text = "Hide Reference Drawings"
         '
         'ExportToToolStripMenuItem
         '
         Me.ExportToToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSSubSpreadsheet, Me.CMSSubText})
         Me.ExportToToolStripMenuItem.Name = "ExportToToolStripMenuItem"
-        Me.ExportToToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.ExportToToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ExportToToolStripMenuItem.Text = "Export To"
         '
         'CMSSubSpreadsheet
@@ -806,8 +804,7 @@ Partial Class Main
     Friend WithEvents CMSSpreadsheet As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSTextFile As Windows.Forms.ToolStripMenuItem
     Friend WithEvents ShowHideToolStripMenuItem As Windows.Forms.ToolStripMenuItem
-    Friend WithEvents CMSShow As Windows.Forms.ToolStripMenuItem
-    Friend WithEvents CMSHide As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents CMSMissing As Windows.Forms.ToolStripMenuItem
     Friend WithEvents MenuStrip1 As Windows.Forms.MenuStrip
     Friend WithEvents FileToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents DefaultSettingsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
@@ -822,4 +819,5 @@ Partial Class Main
     Friend WithEvents IPropertySettingsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents ColumnHeader1 As Windows.Forms.ColumnHeader
     Friend WithEvents HowToToolStripMenuItem1 As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents CMSReference As Windows.Forms.ToolStripMenuItem
 End Class

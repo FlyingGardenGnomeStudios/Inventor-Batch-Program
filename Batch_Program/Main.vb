@@ -308,15 +308,17 @@ Public Class Main
                     oDoc = Path.Item(J)
                     'get the source path of the targeted file
                     PartSource = oDoc.FullFileName
+
                     'If the targeted document is the checked document, identify its type
                     If lstOpenfiles.CheckedItems.Item(X) = Strings.Right(PartSource, Strings.Len(PartSource) - InStrRev(PartSource, "\")) Then
                         'Drawing documents can be directly sent to the subfiles list
                         If oDoc.DocumentType = DocumentTypeEnum.kDrawingDocumentObject Then
-                            TestForDrawing(PartSource, 0, Total, Counter, OpenDocs, Elog)
+                            TestForDrawing(PartSource, 0, Total, Counter, OpenDocs, Elog, False)
                             'Part/Presentation documents require a search for the associated drawings
                         ElseIf oDoc.DocumentType = DocumentTypeEnum.kPartDocumentObject Or oDoc.DocumentType = DocumentTypeEnum.kPresentationDocumentObject Then
+
                             'Test to see if assumed drawing name exists
-                            TestForDrawing(PartSource, 0, Total, Counter, OpenDocs, Elog)
+                            TestForDrawing(PartSource, 0, Total, Counter, OpenDocs, Elog, False)
                             CheckForDev(PartSource, Total, Counter, OpenDocs, Elog, Level + 1)
                             'Assembly documents require a search for subfiles
                         ElseIf oDoc.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
@@ -332,7 +334,7 @@ Public Class Main
         RunCompleted()
     End Sub
     Private Sub TestForDrawing(Partsource As String, ByVal Level As Integer, ByRef Total As Integer,
-                               ByRef Counter As Integer, OpenDocs As ArrayList, ByRef Elog As String)
+                               ByRef Counter As Integer, OpenDocs As ArrayList, ByRef Elog As String, Ref As Boolean)
         Dim Dup As Boolean = False
         Dim strFile, DrawingName As String
         'Extract the file name from the full file path
@@ -343,7 +345,10 @@ Public Class Main
         'Test to see if the file exists in the expected
         If Not My.Computer.FileSystem.FileExists(Strings.Left(Partsource, (Strings.Len(Partsource) - 3)) & "idw") Then
             DrawingName = DrawingName & "(DNE)"
+        ElseIf Ref = True Then
+            DrawingName = DrawingName & "(REF)"
         End If
+
         Counter += 1
         Elog = Elog & DrawingName & ": "
         'Check to see if the part has already been added to the list
@@ -402,7 +407,7 @@ Public Class Main
 
                     TraverseAssembly(oAsmDoc.ComponentDefinition.Occurrences, PartSource, Level, Total, Counter, OpenDocs, Elog, True)
                 Else
-                    TestForDrawing(PartSource, Level, Total, Counter, OpenDocs, Elog)
+                    TestForDrawing(PartSource, Level, Total, Counter, OpenDocs, Elog, False)
                 End If
             Next
         End If
@@ -448,7 +453,7 @@ Public Class Main
         AddtoRenameTable(PartSource, DrawingName, strFile, Add, ID)
         'End If
         'Check to see if the drawing exists and add to the list
-        TestForDrawing(PartSource, Level, Total, Counter, Opendocs, Elog)
+        TestForDrawing(PartSource, Level, Total, Counter, Opendocs, Elog, False)
         'If the part is an assembly, go through recursively and retrieve the sub-components
         TraverseAssembly(oAsmDoc.ComponentDefinition.Occurrences, PartSource, Level + 1, Total, Counter, Opendocs, Elog, Dev)
         CloseLater(strFile, oAsmDoc)
@@ -459,10 +464,16 @@ Public Class Main
         Dim Add As Boolean = True
         Dim strFile, DrawingName, ID As String
         Dim oOcc As ComponentOccurrence
+        Dim Ref As Boolean
         'iterate through each occurrence in the assembly
         Total = Total + Occurrences.Count
         For Each oOcc In Occurrences
             Try
+                If oOcc.BOMStructure = BOMStructureEnum.kReferenceBOMStructure Then
+                    Ref = True
+                Else
+                    Ref = False
+                End If
                 PartSource = oOcc.Definition.Document.fullfilename
                 'setting the mass to something updates the mass property in the drawing
                 'create drawing name
@@ -471,7 +482,7 @@ Public Class Main
                 ProgressBar(Total, Counter, "Found:  ", DrawingName)
                 'FindWorker.ReportProgress(CInt((Counter / Total) * 100))
                 'Add to list if the drawing exists
-                TestForDrawing(PartSource, Level, Total, Counter, OpenDocs, Elog)
+                TestForDrawing(PartSource, Level, Total, Counter, OpenDocs, Elog, Ref)
                 'iterate through again for each sub-assembly found 
                 Counter += 1
                 'Create a list of sub parts for use in the renaming section. this saves time having to recreate it again later.
@@ -674,6 +685,10 @@ Public Class Main
                 If InStr(pair.Key, "(DNE)") <> 0 Then
                     LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(DNE)", ""))
                     LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Gray
+                ElseIf InStr(pair.Key, "(REF)") <> 0 Then
+                    LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(REF)", ""))
+                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Blue
+                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
                 Else
                     LVSubFiles.Items.Add(pair.Key)
                     LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
@@ -684,6 +699,10 @@ Public Class Main
                 If InStr(pair.Key, "(DNE)") <> 0 Then
                     LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(DNE)", ""))
                     LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Gray
+                ElseIf InStr(pair.Key, "(REF)") <> 0 Then
+                    LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(REF)", ""))
+                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Blue
+                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
                 Else
                     LVSubFiles.Items.Add(pair.Key)
                     LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
@@ -2386,12 +2405,61 @@ Public Class Main
     Private Sub txtSearch_TextChanged(sender As Object, e As System.EventArgs) Handles txtSearch.TextChanged
         If txtSearch.ForeColor = Drawing.Color.Gray Or txtSearch.Text = "Search" Then Exit Sub
         LVSubFiles.Items.Clear()
+        FilterSubFiles()
+    End Sub
+    Private Sub FilterSubFiles()
+        LVSubFiles.Items.Clear()
+        Dim search As String = txtSearch.Text
+        If txtSearch.Text = """Search""" Then
+            search = ""
+        End If
+        If CMSHeirarchical.Checked = True Then
+            For Each pair As KeyValuePair(Of String, String) In SubFiles
 
-        For Each item As KeyValuePair(Of String, String) In SubFiles
-            If InStr(UCase(item.Key), UCase(txtSearch.Text)) <> 0 Then
-                LVSubFiles.Items.Add(item.Key)
-            End If
-        Next
+                If Strings.InStr(pair.Key, search) <> 0 Then
+
+                    If Strings.InStr(pair.Key, "(DNE)") <> 0 Then
+                        If CMSMissing.Text = "Hide Missing Drawings" Then
+                            LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(DNE)", ""))
+                            LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = False
+                            LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Gray
+                        End If
+                    ElseIf Strings.InStr(pair.Key, "(REF)") <> 0 Then
+                        If CMSReference.Text = "Hide Reference Drawings" Then
+                            LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(REF)", ""))
+                            LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = False
+                            LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Blue
+                        End If
+                    Else
+                        LVSubFiles.Items.Add(pair.Key)
+                        LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
+                    End If
+                End If
+
+            Next
+
+        Else
+            For Each pair As KeyValuePair(Of String, String) In AlphaSub
+                If Strings.InStr(pair.Key, search) <> 0 Then
+                    If Strings.InStr(pair.Key, "(DNE)") <> 0 Then
+                        If CMSMissing.Text = "Hide Missing Drawings" Then
+                            LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(DNE)", ""))
+                            LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = False
+                            LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Gray
+                        End If
+                    ElseIf Strings.InStr(pair.Key, "(REF)") <> 0 Then
+                        If CMSReference.Text = "Hide Reference Drawings" Then
+                            LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(REF)", ""))
+                            LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = False
+                            LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Blue
+                        End If
+                    Else
+                        LVSubFiles.Items.Add(pair.Key)
+                        LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
+                    End If
+                End If
+            Next
+        End If
     End Sub
     Private Sub chkExport_CheckedChanged(sender As Object, e As EventArgs) Handles chkExport.CheckedChanged
         If chkExport.CheckState = CheckState.Checked Then
@@ -2451,22 +2519,22 @@ Public Class Main
     End Sub
     Private Sub CMSAlphabetical_Click(sender As Object, e As EventArgs) Handles CMSAlphabetical.Click
         LVSubFiles.Items.Clear()
-
         For Each pair As KeyValuePair(Of String, String) In AlphaSub
-
-            If CMSShow.Checked = True Then
-                If InStr(pair.Key, "(DNE)") <> 0 Then
+            If Strings.InStr(pair.Key, "(DNE)") <> 0 Then
+                If CMSMissing.Text = "Hide Missing Drawings" Then
                     LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(DNE)", ""))
+                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = False
                     LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Gray
+                End If
+            ElseIf Strings.InStr(pair.Key, "(REF)") <> 0 Then
+                    If CMSReference.Text = "Hide Reference Drawings" Then
+                        LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(REF)", ""))
+                        LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = False
+                        LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Blue
+                    End If
                 Else
-                    LVSubFiles.Items.Add(Strings.Trim(pair.Key))
-                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
-                End If
-            Else
-                If InStr(pair.Key, "(DNE)") = 0 Then
-                    LVSubFiles.Items.Add(Strings.Trim(pair.Key))
-                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
-                End If
+                    LVSubFiles.Items.Add(pair.Key)
+                LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
             End If
         Next
         CMSAlphabetical.Checked = True
@@ -2475,27 +2543,28 @@ Public Class Main
     Private Sub CMSHeirarchical_Click(sender As Object, e As EventArgs) Handles CMSHeirarchical.Click
         LVSubFiles.Items.Clear()
         For Each pair As KeyValuePair(Of String, String) In SubFiles
-
-            If CMSShow.Checked = True Then
-                If InStr(pair.Key, "(DNE)") <> 0 Then
+            If Strings.InStr(pair.Key, "(DNE)") <> 0 Then
+                If CMSMissing.Text = "Hide Missing Drawings" Then
                     LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(DNE)", ""))
+                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = False
                     LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Gray
-                Else
-                    LVSubFiles.Items.Add(pair.Key)
-                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
+                End If
+            ElseIf Strings.InStr(pair.Key, "(REF)") <> 0 Then
+                If CMSReference.Text = "Hide Reference Drawings" Then
+                    LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(REF)", ""))
+                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = False
+                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Blue
                 End If
             Else
-                If InStr(pair.Key, "(DNE)") = 0 Then
-                    LVSubFiles.Items.Add(pair.Key)
-                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
-                End If
+                LVSubFiles.Items.Add(pair.Key)
+                LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
             End If
         Next
         CMSAlphabetical.Checked = False
         CMSHeirarchical.Checked = True
     End Sub
     Private Sub CMSSpreadsheet_Click(sender As Object, e As EventArgs) Handles CMSSpreadsheet.Click
-        ExportText(CMSHeirarchical.Checked, CMSShow.Checked, False, True)
+        ExportText(CMSHeirarchical.Checked, CMSMissing.Checked, False, True)
     End Sub
     Private Sub ExportList(ByRef oDoc As Inventor.Document, ByVal Occurrences As ComponentOccurrences,
                            ByRef Properties As Double, ByRef Counter As Integer, ExcelDoc As Excel.Workbook, Total As Integer)
@@ -2528,66 +2597,16 @@ Public Class Main
             End If
         Next
     End Sub
-    Private Sub CMSTextFile_Click(sender As Object, e As EventArgs) Handles CMSTextFile.Click
-        ExportText(CMSHeirarchical.Checked, CMSHide.Checked, True, True)
-    End Sub
     Private Sub DefaultSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DefaultSettingsToolStripMenuItem.Click
         Settings.ShowDialog()
     End Sub
-    Private Sub HideMissingDrawingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CMSHide.Click
-        LVSubFiles.Items.Clear()
-
-        If CMSHeirarchical.Checked = True Then
-            For Each pair As KeyValuePair(Of String, String) In SubFiles
-                If InStr(pair.Key, "(DNE)") = 0 Then
-                    LVSubFiles.Items.Add(pair.Key)
-                End If
-            Next
-            For X = 0 To LVSubFiles.Items.Count - 1
-                LVSubFiles.Items(X).Checked = True
-            Next
+    Private Sub ShowMissingDrawingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CMSMissing.Click
+        If CMSMissing.Text = "Show Missing Drawings" Then
+            CMSMissing.Text = "Hide Missing Drawings"
         Else
-            For Each pair As KeyValuePair(Of String, String) In AlphaSub
-                If InStr(pair.Key, "(DNE)") = 0 Then
-                    LVSubFiles.Items.Add(Strings.Trim(pair.Key))
-                End If
-            Next
-            For X = 0 To LVSubFiles.Items.Count - 1
-                LVSubFiles.Items(X).Checked = True
-            Next
+            CMSMissing.Text = "Show Missing Drawings"
         End If
-        CMSShow.Checked = False
-        CMSHide.Checked = True
-
-    End Sub
-    Private Sub ShowMissingDrawingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CMSShow.Click
-        LVSubFiles.Items.Clear()
-
-        If CMSHeirarchical.Checked = True Then
-            For Each pair As KeyValuePair(Of String, String) In SubFiles
-                If Strings.InStr(pair.Key, "(DNE)") <> 0 Then
-                    LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(DNE)", ""))
-                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = False
-                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Gray
-                Else
-                    LVSubFiles.Items.Add(pair.Key)
-                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
-                End If
-            Next
-        Else
-            For Each pair As KeyValuePair(Of String, String) In AlphaSub
-                If Strings.InStr(pair.Key, "(DNE)") <> 0 Then
-                    LVSubFiles.Items.Add(Strings.Replace(Strings.Trim(pair.Key), "(DNE)", ""))
-                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = False
-                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Gray
-                Else
-                    LVSubFiles.Items.Add(Strings.Trim(pair.Key))
-                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
-                End If
-            Next
-        End If
-        CMSShow.Checked = True
-        CMSHide.Checked = False
+        FilterSubFiles()
     End Sub
     Private Sub ExportText(Heirarchical As Boolean, Hidden As Boolean, Text As Boolean, OpenFiles As Boolean)
         Dim filetype As String = ""
@@ -2612,7 +2631,7 @@ Public Class Main
                                 "Filename:" & vbTab & vbTab & "Location:" & vbNewLine)
                 If CMSHeirarchical.Checked = True Then
                     For Each pair As KeyValuePair(Of String, String) In SubFiles
-                        If CMSShow.Checked = True Then
+                        If CMSMissing.Checked = True Then
                             If InStr(pair.Key, "(DNE)") <> 0 Then
                                 File.WriteLine(Strings.Replace(pair.Key, "(DNE)", "") & ":" & vbTab & pair.Value)
                             Else
@@ -2626,7 +2645,7 @@ Public Class Main
                     Next
                 ElseIf CMSHeirarchical.Checked = False Then
                     For Each pair As KeyValuePair(Of String, String) In AlphaSub
-                        If CMSShow.Checked = True Then
+                        If CMSMissing.Checked = True Then
                             If InStr(pair.Key, "(DNE)") <> 0 Then
                                 File.WriteLine(Strings.Replace(pair.Key, "(DNE)", "") & ":" & vbTab & pair.Value)
                             Else
@@ -2665,7 +2684,7 @@ Public Class Main
             Next
             If CMSHeirarchical.Checked = True Then
                 For Each pair As KeyValuePair(Of String, String) In SubFiles
-                    If CMSShow.Checked = True Then
+                    If CMSMissing.Checked = True Then
                         If InStr(pair.Key, "(DNE)") <> 0 Then
                             'xlWorkSheet.Cells(InStrRev(pair.Key, " "), X + 2) = Strings.Replace(pair.Key, "(DNE)", "") & ":" & vbTab & pair.Value
                             xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(DNE)", "")
@@ -2684,7 +2703,7 @@ Public Class Main
                 Next
             ElseIf CMSHeirarchical.Checked = False Then
                 For Each pair As KeyValuePair(Of String, String) In AlphaSub
-                    If CMSShow.Checked = True Then
+                    If CMSMissing.Checked = True Then
                         If InStr(pair.Key, "(DNE)") <> 0 Then
                             xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(DNE)", "")
                             xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
@@ -2723,10 +2742,10 @@ Public Class Main
         End Try
     End Sub
     Private Sub CMSSubSpreadsheet_Click(sender As Object, e As EventArgs) Handles CMSSubSpreadsheet.Click
-        ExportText(CMSHeirarchical.Checked, CMSShow.Checked, False, False)
+        ExportText(CMSHeirarchical.Checked, CMSMissing.Checked, False, False)
     End Sub
     Private Sub CMSSubText_Click(sender As Object, e As EventArgs) Handles CMSSubText.Click
-        ExportText(CMSHeirarchical.Checked, CMSShow.Checked, True, False)
+        ExportText(CMSHeirarchical.Checked, CMSMissing.Checked, True, False)
     End Sub
     Private Sub LVSubFiles_Click(sender As Object, e As EventArgs) Handles LVSubFiles.Click
         If LVSubFiles.Items(LVSubFiles.FocusedItem.Index).ForeColor <> Drawing.Color.Gray Then
@@ -2766,29 +2785,17 @@ Public Class Main
         MsVistaProgressBar.Location = New Drawing.Point(12, Me.Height - 67)
         MsVistaProgressBar.Width = Me.Width - 226
         GroupBox5.Location = New Drawing.Point(12, Me.Height - 187)
-        If LVSubFiles.Items.Count > 10 Then
+        If LVSubFiles.Items.Count < LVSubFiles.Height / 18 And txtSearch.ForeColor = Drawing.Color.Gray Or LVSubFiles.Items.Count = 0 Then
+            txtSearch.Visible = False
             LVSubFiles.Height = GroupBox2.Height - 24
         Else
+            txtSearch.Visible = True
             LVSubFiles.Height = GroupBox2.Height - 49
             txtSearch.Width = LVSubFiles.Width
             txtSearch.Location = New Drawing.Point(LVSubFiles.Location.X, Me.Height - 122)
+
         End If
         PictureBox2.Location = New Drawing.Point(GroupBox3.Location.X + 21, 27)
-    End Sub
-    Private Sub LVSubFiles_Resize(sender As Object, e As EventArgs) Handles LVSubFiles.Resize
-        If Not txtSearch.IsHandleCreated Then
-            If LVSubFiles.Height / LVSubFiles.Items.Count < 19 Then
-                LVSubFiles.Height = Me.Height - 122 - 25
-                txtSearch.Visible = True
-                txtSearch.Location = New Drawing.Point(LVSubFiles.Location.X, Me.Height - 122)
-                txtSearch.Visible = True
-                txtSearch.Text = "Search"
-                txtSearch.ForeColor = Drawing.Color.Gray
-            Else
-                LVSubFiles.Height = lstOpenfiles.Height
-                txtSearch.Visible = False
-            End If
-        End If
     End Sub
     Private Sub mnuActDeact_Click(sender As Object, e As EventArgs) Handles mnuActDeact.Click
         If isGenuine Then
@@ -2814,9 +2821,9 @@ Public Class Main
                 TAProcess.StartInfo.FileName = IO.Path.Combine(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath), "debug\TurboActivate.exe")
             End If
             TAProcess.EnableRaisingEvents = True
-                AddHandler TAProcess.Exited, New EventHandler(AddressOf p_Exited)
-                TAProcess.Start()
-            End If
+            AddHandler TAProcess.Exited, New EventHandler(AddressOf p_Exited)
+            TAProcess.Start()
+        End If
     End Sub
     ''' This event handler is called when TurboActivate.exe closes.
     Private Sub p_Exited(ByVal sender As Object, ByVal e As EventArgs)
@@ -2878,5 +2885,13 @@ Public Class Main
     End Sub
     Private Sub ReEnableAppFeatures()
         'TODO: re-enable all the features of the program
+    End Sub
+    Private Sub HideReferenceDrawingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CMSReference.Click
+        If CMSReference.Text = "Show Reference Drawings" Then
+            CMSReference.Text = "Hide Reference Drawings"
+        Else
+            CMSReference.Text = "Show Reference Drawings"
+        End If
+        FilterSubFiles()
     End Sub
 End Class
