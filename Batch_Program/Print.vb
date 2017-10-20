@@ -9,6 +9,7 @@ Public Class Print
     Dim PArchive, PDrawingName, PDrawSource As String
     Dim POpenDocs As ArrayList
     Dim PSubfiles As List(Of KeyValuePair(Of String, String))
+    Dim ASubfiles As SortedList(Of String, String)
     Public Function PopMain(CalledFunction As Main)
         Main = CalledFunction
         Return Nothing
@@ -21,7 +22,7 @@ Public Class Print
     End Sub
     Public Sub PopulatePrint(Path As Documents, ByRef odoc As Document, ByRef Archive As String _
                              , ByRef DrawingName As String, ByRef DrawSource As String, OpenDocs As ArrayList _
-                             , ByRef SubFiles As List(Of KeyValuePair(Of String, String)))
+                             , ByRef SubFiles As List(Of KeyValuePair(Of String, String)), ByRef AlphaSub As SortedList(Of String, String))
         PPath = Path
         PoDoc = odoc
         PArchive = Archive
@@ -29,6 +30,7 @@ Public Class Print
         PDrawSource = DrawSource
         POpenDocs = OpenDocs
         PSubfiles = SubFiles
+        ASubfiles = AlphaSub
     End Sub
 
     Private Sub rdoAllPages_CheckedChanged(sender As Object, e As EventArgs) Handles rdoAllPages.CheckedChanged
@@ -107,7 +109,13 @@ Public Class Print
             End If
             For X = PStart To PEnd Step Direction
                 If Main.LVSubFiles.Items(X).Checked = True Then
-                    PDrawSource = Strings.Left(PSubfiles.Item(X).Value, Len(PSubfiles.Item(X).Value) - 3) & "idw"
+                    If Main.CMSAlphabetical.Checked = True Then
+                        PDrawSource = Strings.Left(ASubfiles.Values(X).ToString, Len(ASubfiles.Values(X).ToString) - 3) & "idw"
+                        PDrawingName = ASubfiles.Keys(X).ToString
+                    Else
+                        PDrawSource = Strings.Left(PSubfiles.Item(X).Value, Len(PSubfiles.Item(X).Value) - 3) & "idw"
+                        PDrawingName = PSubfiles.Item(X).Key
+                    End If
                     dDoc = _invApp.Documents.Open(PDrawSource, True)
                     'For Each oDoc In dDoc.ReferencedFiles
                     'Mass = oDoc.ComponentDefinition.MassProperties.mass
@@ -117,10 +125,11 @@ Public Class Print
                         Call dDoc.Update()
                     Catch
                     End Try
-                    PDrawingName = Strings.Right(dDoc.FullDocumentName, Len(dDoc.FullDocumentName) - InStrRev(dDoc.FullDocumentName, "\"))
+                    'PDrawingName = Strings.Right(dDoc.FullDocumentName, Len(dDoc.FullDocumentName) - InStrRev(dDoc.FullDocumentName, "\"))
                     Main.ProgressBar(PEnd + 1 * Y, Z, "Printing: ", PDrawingName)
                     Z += 1
-                    PrintSheets(PDrawingName, ScaleSelect, Range, dDoc, Colour)
+                    Debug.Print(PDrawingName)
+                    'PrintSheets(PDrawingName, ScaleSelect, Range, dDoc, Colour)
                     Main.CloseLater(PDrawingName, dDoc)
                 End If
             Next

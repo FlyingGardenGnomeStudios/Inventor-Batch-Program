@@ -809,7 +809,7 @@ Public Class Main
         End If
         If chkPrint.Checked = True Then
             Print.PopMain(Me)
-            Print.PopulatePrint(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs, SubFiles)
+            Print.PopulatePrint(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs, SubFiles, AlphaSub)
             Print.ShowDialog()
             'PrintDrawings(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs)
             chkPrint.Checked = False

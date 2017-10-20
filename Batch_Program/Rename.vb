@@ -492,7 +492,7 @@ Public Class Rename
                 End If
             Next
             If oCompOcc.DefinitionDocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
-                ProgressBar(Y, DGVRename.RowCount - 1, "Fixing Reference: ", oCompOcc.Definition.Document.displayName, Start)
+                ProgressBar(Y, oCompOccs.Count, "Fixing Reference: ", oCompOcc.Definition.Document.displayName, Start)
                 TraverseAssembly(oAssDoc, oCompOcc.SubOccurrences, SaveLoc, Start, Y + 1)
             End If
             Y += 1
