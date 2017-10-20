@@ -294,6 +294,7 @@ Public Class Main
         CreateOpenDocs(OpenDocs)
         Dim Elog As String = ""
         'iterate through the open files and display the available drawings in the Subfiles window
+
         Dim X As Integer
         For X = 0 To lstOpenfiles.CheckedItems.Count - 1
             'for drawing documents add name and location from openfiles list
@@ -322,7 +323,7 @@ Public Class Main
                             CheckForDev(PartSource, Total, Counter, OpenDocs, Elog, Level + 1)
                             'Assembly documents require a search for subfiles
                         ElseIf oDoc.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
-                            Total = Total + oDoc.ReferencedDocuments.Count
+                            'Total = Total + oDoc.ReferencedDocuments.Count 
                             TraverseAssemblyLoad(PartSource, 0, Total, Counter, OpenDocs, Elog, Dev:=False)
                         End If
                     End If
@@ -349,7 +350,7 @@ Public Class Main
             DrawingName = DrawingName & "(REF)"
         End If
 
-        Counter += 1
+
         Elog = Elog & DrawingName & ": "
         'Check to see if the part has already been added to the list
         If SubFiles.Count = 0 Then
@@ -357,6 +358,7 @@ Public Class Main
             AlphaSub.Add((DrawingName).ToString, Partsource)
             Elog = Elog & "Added to Open File list" & vbNewLine
             AddtoRenameTable(Partsource, DrawingName, strFile, True, "")
+            Counter += 1
         Else
             For x = 0 To SubFiles.Count - 1
                 If Trim(SubFiles.Item(x).Key) = DrawingName Then
@@ -368,6 +370,7 @@ Public Class Main
             SubFiles.Add(New KeyValuePair(Of String, String)((Space(Level * 3) & DrawingName).ToString, Partsource))
             AlphaSub.Add((DrawingName).ToString, Partsource)
             Elog = Elog & "Added to Open File list" & vbNewLine
+            Counter += 1
         End If
         ProgressBar(Total, Counter, "Found: ", DrawingName)
         'End If
@@ -455,6 +458,15 @@ Public Class Main
         'Check to see if the drawing exists and add to the list
         TestForDrawing(PartSource, Level, Total, Counter, Opendocs, Elog, False)
         'If the part is an assembly, go through recursively and retrieve the sub-components
+        ' Get all of the referenced documents. 
+        Dim oRefDocs As DocumentsEnumerator
+        oRefDocs = oAsmDoc.AllReferencedDocuments
+
+        ' Iterate through the list of documents. 
+        Dim oRefDoc As Document
+        For Each oRefDoc In oRefDocs
+            Total = Total + 1
+        Next
         TraverseAssembly(oAsmDoc.ComponentDefinition.Occurrences, PartSource, Level + 1, Total, Counter, Opendocs, Elog, Dev)
         CloseLater(strFile, oAsmDoc)
     End Sub
@@ -466,7 +478,7 @@ Public Class Main
         Dim oOcc As ComponentOccurrence
         Dim Ref As Boolean
         'iterate through each occurrence in the assembly
-        Total = Total + Occurrences.Count
+        'Total = Total + Occurrences.Count
         For Each oOcc In Occurrences
             Try
                 If oOcc.BOMStructure = BOMStructureEnum.kReferenceBOMStructure Then
@@ -484,7 +496,7 @@ Public Class Main
                 'Add to list if the drawing exists
                 TestForDrawing(PartSource, Level, Total, Counter, OpenDocs, Elog, Ref)
                 'iterate through again for each sub-assembly found 
-                Counter += 1
+                'Counter += 1
                 'Create a list of sub parts for use in the renaming section. this saves time having to recreate it again later.
                 'If VBAFlag <> "NA" And Strings.InStr(PartSource, "Content Center") = 0 Then 
                 If Dev = False Then
@@ -846,9 +858,9 @@ Public Class Main
     Public Sub MatchDrawing(ByRef DrawSource As String, ByRef DrawingName As String, Y As Integer)
         If CMSHeirarchical.Checked = True Then
             For Each item In SubFiles
-                If item.Key = LVSubFiles.Items(Y).Text Then
+                If Strings.Replace(item.Key, "(REF)", "") = LVSubFiles.Items(Y).Text Then
                     DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "idw"
-                    DrawingName = Trim(item.Key)
+                    DrawingName = Trim(Strings.Replace(item.Key, "(REF)", ""))
                     Exit For
                 End If
             Next
@@ -1263,7 +1275,7 @@ Public Class Main
                 ElseIf My.Computer.FileSystem.FileExists(Strings.Replace(DrawSource, "idw", "iam")) = False Then
                     NotMade = DrawingName & vbNewLine
                 ElseIf My.Computer.FileSystem.FileExists(Strings.Replace(DrawSource, "idw", "iam")) = True Then
-                    Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "dxf", RevNo)
+                    Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, ExportType, RevNo)
                 End If
                 Title = "Saving:  "
                 ProgressBar(Total, Counter, Title, DrawingName)
@@ -1432,7 +1444,7 @@ Public Class Main
         Me.Focus()
     End Sub
 
-       Private Sub SMDXF(oDoc As Document, DXFSource As String, Flatpattern As Boolean, DrawingName As String)
+    Private Sub SMDXF(oDoc As Document, DXFSource As String, Flatpattern As Boolean, DrawingName As String)
         'Dim oPartDoc As Document = _invApp.ActiveDocument
         _invApp.SilentOperation = True
         Dim oCompDef As ComponentDefinition = oDoc.ComponentDefinition
@@ -2410,7 +2422,7 @@ Public Class Main
     Private Sub FilterSubFiles()
         LVSubFiles.Items.Clear()
         Dim search As String = txtSearch.Text
-        If txtSearch.Text = """Search""" Then
+        If txtSearch.Text = "Search" Then
             search = ""
         End If
         If CMSHeirarchical.Checked = True Then

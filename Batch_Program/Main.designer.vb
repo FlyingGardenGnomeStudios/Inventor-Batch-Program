@@ -542,13 +542,13 @@ Partial Class Main
         '
         Me.CMSSubFiles.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SortToolStripMenuItem, Me.ShowHideToolStripMenuItem, Me.ExportToToolStripMenuItem})
         Me.CMSSubFiles.Name = "ContextMenuStrip1"
-        Me.CMSSubFiles.Size = New System.Drawing.Size(153, 92)
+        Me.CMSSubFiles.Size = New System.Drawing.Size(134, 70)
         '
         'SortToolStripMenuItem
         '
         Me.SortToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSAlphabetical, Me.CMSHeirarchical})
         Me.SortToolStripMenuItem.Name = "SortToolStripMenuItem"
-        Me.SortToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.SortToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
         Me.SortToolStripMenuItem.Text = "Sort"
         '
         'CMSAlphabetical
@@ -569,7 +569,7 @@ Partial Class Main
         '
         Me.ShowHideToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSMissing, Me.CMSReference})
         Me.ShowHideToolStripMenuItem.Name = "ShowHideToolStripMenuItem"
-        Me.ShowHideToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ShowHideToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
         Me.ShowHideToolStripMenuItem.Text = "Show/Hide"
         '
         'CMSMissing
@@ -588,7 +588,7 @@ Partial Class Main
         '
         Me.ExportToToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSSubSpreadsheet, Me.CMSSubText})
         Me.ExportToToolStripMenuItem.Name = "ExportToToolStripMenuItem"
-        Me.ExportToToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ExportToToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
         Me.ExportToToolStripMenuItem.Text = "Export To"
         '
         'CMSSubSpreadsheet

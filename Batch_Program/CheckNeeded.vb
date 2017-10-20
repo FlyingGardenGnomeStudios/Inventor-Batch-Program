@@ -227,7 +227,7 @@ Public Class CheckNeeded
             DrawingName = lstCheckNeeded.Items(X).Text
             For J As Integer = 1 To _invApp.Documents.Count
                 oDoc = Path.Item(J)
-                Archive = oDoc.FullDocumentName
+                Archive = oDoc.FullFileName
                 DrawSource = Strings.Left(Archive, Strings.Len(Archive) - 3) & "idw"
                 If InStr(DrawSource, DrawingName) <> 0 Then
                     'Open the related drawing in the background
@@ -376,6 +376,7 @@ Public Class CheckNeeded
                     lstCheckNeeded.Items.Add(result)
                 End If
                 Main.CloseLater(DrawingName, odoc)
+                Dim int As Integer = lstCheckNeeded.Items.Count
                 'Exit For
 Skip:
                 ' End If
