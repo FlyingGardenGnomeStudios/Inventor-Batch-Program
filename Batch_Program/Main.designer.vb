@@ -41,7 +41,6 @@ Partial Class Main
         Me.chkDrawings = New System.Windows.Forms.CheckBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.chkPartSelect = New System.Windows.Forms.CheckBox()
         Me.lstOpenfiles = New System.Windows.Forms.CheckedListBox()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
@@ -90,7 +89,6 @@ Partial Class Main
         Me.MsVistaProgressBar = New MSVistaProgressBar()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox4.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -282,7 +280,6 @@ Partial Class Main
         'GroupBox2
         '
         Me.GroupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.GroupBox2.Controls.Add(Me.PictureBox1)
         Me.GroupBox2.Controls.Add(Me.chkPartSelect)
         Me.GroupBox2.Controls.Add(Me.lstOpenfiles)
         Me.GroupBox2.Location = New System.Drawing.Point(160, 27)
@@ -291,18 +288,7 @@ Partial Class Main
         Me.GroupBox2.Size = New System.Drawing.Size(191, 214)
         Me.GroupBox2.TabIndex = 51
         Me.GroupBox2.TabStop = False
-        Me.GroupBox2.Text = "           Open Parts"
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-        Me.PictureBox1.Image = Global.My.Resources.Resources.inverse1
-        Me.PictureBox1.InitialImage = Nothing
-        Me.PictureBox1.Location = New System.Drawing.Point(25, -1)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(15, 15)
-        Me.PictureBox1.TabIndex = 57
-        Me.PictureBox1.TabStop = False
+        Me.GroupBox2.Text = "      Open Parts"
         '
         'chkPartSelect
         '
@@ -731,7 +717,6 @@ Partial Class Main
         Me.GroupBox1.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox4.ResumeLayout(False)
         Me.GroupBox4.PerformLayout()
         Me.GroupBox3.ResumeLayout(False)
@@ -776,7 +761,6 @@ Partial Class Main
     Friend WithEvents txtSearch As System.Windows.Forms.TextBox
     Friend WithEvents chkDWG As Windows.Forms.CheckBox
     Friend WithEvents chkPDF As Windows.Forms.CheckBox
-    Friend WithEvents PictureBox1 As Windows.Forms.PictureBox
     Friend WithEvents chkPartSelect As Windows.Forms.CheckBox
     Friend WithEvents PictureBox2 As Windows.Forms.PictureBox
     Friend WithEvents chkDWGSelect As Windows.Forms.CheckBox

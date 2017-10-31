@@ -78,6 +78,8 @@ Public Class Print
         Dim PEnd, PStart, Z As Integer
         Dim Colour As Boolean
         Dim Mass As Double
+        Dim DrawSource As String = ""
+        Dim DrawingName As String = ""
         Z = 1
         Dim ScaleSelect As Boolean
         If rdoFull.Checked = True Then
@@ -109,14 +111,8 @@ Public Class Print
             End If
             For X = PStart To PEnd Step Direction
                 If Main.LVSubFiles.Items(X).Checked = True Then
-                    If Main.CMSAlphabetical.Checked = True Then
-                        PDrawSource = Strings.Left(ASubfiles.Values(X).ToString, Len(ASubfiles.Values(X).ToString) - 3) & "idw"
-                        PDrawingName = ASubfiles.Keys(X).ToString
-                    Else
-                        PDrawSource = Strings.Left(PSubfiles.Item(X).Value, Len(PSubfiles.Item(X).Value) - 3) & "idw"
-                        PDrawingName = PSubfiles.Item(X).Key
-                    End If
-                    dDoc = _invApp.Documents.Open(PDrawSource, True)
+                    Main.MatchDrawing(DrawSource, DrawingName, X)
+                    dDoc = _invApp.Documents.Open(DrawSource, True)
                     'For Each oDoc In dDoc.ReferencedFiles
                     'Mass = oDoc.ComponentDefinition.MassProperties.mass
                     Try
@@ -128,8 +124,7 @@ Public Class Print
                     'PDrawingName = Strings.Right(dDoc.FullDocumentName, Len(dDoc.FullDocumentName) - InStrRev(dDoc.FullDocumentName, "\"))
                     Main.ProgressBar(PEnd + 1 * Y, Z, "Printing: ", PDrawingName)
                     Z += 1
-                    Debug.Print(PDrawingName)
-                    'PrintSheets(PDrawingName, ScaleSelect, Range, dDoc, Colour)
+                    PrintSheets(PDrawingName, ScaleSelect, Range, dDoc, Colour)
                     Main.CloseLater(PDrawingName, dDoc)
                 End If
             Next

@@ -210,8 +210,9 @@ Public Class Main
                 InStr(lstOpenfiles.Items(0), "iam") > 0 Or
                 InStr(lstOpenfiles.Items(0), "ipn") > 0 Then
             Else
-                MsgBox("This program needs to access the file extensions to operate properly" & vbNewLine &
-                   "Open file explorer and enable file name extensions")
+                MsgBox("Some parts are not listed as they either have an unknown extension" & vbNewLine &
+                       "or the file extensions are invisible." & vbNewLine &
+                   "(You can enable file name extension visibility through the file explorer)")
                 End
             End If
         End If
@@ -361,7 +362,7 @@ Public Class Main
             Counter += 1
         Else
             For x = 0 To SubFiles.Count - 1
-                If Trim(SubFiles.Item(x).Key) = DrawingName Then
+                If Trim(SubFiles.Item(x).Key).Contains(DrawingName) Then
                     Elog = Elog & "Skipped in Open File list" & vbNewLine
                     Exit Sub
                 End If
@@ -537,7 +538,7 @@ Public Class Main
         End If
         RenameList.Add(strFile)
         For X = 0 To RenameTable.Count - 1
-            If RenameTable(X).Item(2).ToString = strFile Then
+            If Trim(RenameTable(X).Item(2).ToString) = Trim(strFile) Then
                 add = False
                 Exit For
             Else
@@ -612,6 +613,7 @@ Public Class Main
             For X = 0 To LVSubFiles.Items.Count - 1
                 LVSubFiles.Items(X).Checked = True
             Next
+
         Else
             For X = 0 To LVSubFiles.Items.Count - 1
                 LVSubFiles.Items(X).Checked = False
@@ -627,15 +629,7 @@ Public Class Main
             End If
         Next
     End Sub
-    Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
-        For X = 0 To lstOpenfiles.Items.Count - 1
-            If LVSubFiles.Items(X).Checked = True Then
-                LVSubFiles.Items(X).Checked = False
-            Else
-                LVSubFiles.Items(X).Checked = True
-            End If
-        Next
-    End Sub
+
     Private Sub chkNoDrawing_CheckedChanged(sender As System.Object, e As System.EventArgs)
         'If lstOpenfiles.Items.Count > 0 Then
         'If lstOpenfiles.GetItemChecked(0) = True Then
@@ -875,40 +869,72 @@ Public Class Main
         End If
     End Sub
     Public Sub MatchPart(ByRef DrawSource As String, ByRef DrawingName As String, Y As Integer)
-        'Path As Documents, ByRef oDoc As Document, ByRef Archive As String _
-        ' , ByRef PartName As String, ByRef CheckedFile As String,
-        'ByRef PartSource As String, X As Integer)
 
-        'If SubFiles.Count > LVSubFiles.Items.Count Then
-        For Each item In SubFiles
-            If item.Key.Contains(LVSubFiles.Items(Y).Text) Then
+        If CMSHeirarchical.Checked = True Then
 
-                If System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "ipt") And
-                        System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "iam") Then
-                    If My.Settings.DupName = "Model" Then
-                        DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "ipt"
-                        DrawingName = Strings.Left(item.Key, Len(item.Key) - 3) & "ipt"
+            'If SubFiles.Count > LVSubFiles.Items.Count Then
+            For Each item In SubFiles
+                If item.Key.Contains(LVSubFiles.Items(Y).Text) Then
+                    DrawingName = item.Key.ToString
+                    DrawSource = item.Value.ToString
+                    If System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") And
+                            System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") Then
+                        If My.Settings.DupName = "Model" Then
+                            DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt"
+                            DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt"
+                        Else
+                            DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam"
+                            DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "iam"
+                        End If
+                        Exit For
+                    ElseIf System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") And
+                            Not System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") Then
+                        DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt"
+                        DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt"
+                        Exit For
+                    ElseIf System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") And
+                            Not System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") Then
+                        DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam"
+                        DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "iam"
+                        Exit For
                     Else
-                        DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "iam"
-                        DrawingName = Strings.Left(item.Key, Len(item.Key) - 3) & "iam"
+                        MsgBox("Couldn't locate model data for " & DrawingName)
+                        Exit Sub
                     End If
-                    Exit For
-                ElseIf System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "ipt") And
-                        Not System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "iam") Then
-                    DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "ipt"
-                    DrawingName = Strings.Left(item.Key, Len(item.Key) - 3) & "ipt"
-                    Exit For
-                ElseIf System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "iam") And
-                        Not System.IO.File.Exists(Strings.Left(item.Value, Len(item.Value) - 3) & "ipt") Then
-                    DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "iam"
-                    DrawingName = Strings.Left(item.Key, Len(item.Key) - 3) & "iam"
-                    Exit For
-                Else
-                    MsgBox("Couldn't locate model data for " & DrawingName)
-                    Exit Sub
                 End If
-            End If
-        Next
+            Next
+        Else
+            For Each item In AlphaSub
+                If item.Key.Contains(LVSubFiles.Items(Y).Text) Then
+                    DrawingName = item.Key(Y).ToString
+                    DrawSource = item.Value(Y).ToString
+                    If System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") And
+                            System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") Then
+                        If My.Settings.DupName = "Model" Then
+                            DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt"
+                            DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt"
+                        Else
+                            DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam"
+                            DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "iam"
+                        End If
+                        Exit For
+                    ElseIf System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") And
+                            Not System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") Then
+                        DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt"
+                        DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt"
+                        Exit For
+                    ElseIf System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") And
+                            Not System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") Then
+                        DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam"
+                        DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "iam"
+                        Exit For
+                    Else
+                        MsgBox("Couldn't locate model data for " & DrawingName)
+                        Exit Sub
+                    End If
+                End If
+            Next
+        End If
         'End If
         'Look for selected item
         'Dim CheckedFile As String = Trim(lstSubfiles.Items.Item(X))
