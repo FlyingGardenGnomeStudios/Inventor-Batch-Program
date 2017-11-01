@@ -174,12 +174,12 @@ Public Class RevTable
                 'Add items corresponding to which table form is being populated
                 Y = lstCheckFiles.Items.Count
                 S += 1
-            Next sheet
+            Next Sheet
             If oRevtable.RevisionTableRows.Count < Y Then
-                    Do Until oRevtable.RevisionTableRows.Count = Y
-                        oRevtable.RevisionTableRows.Add()
-                    Loop
-                End If
+                Do Until oRevtable.RevisionTableRows.Count = Y
+                    oRevtable.RevisionTableRows.Add()
+                Loop
+            End If
         End If
 
 
@@ -466,6 +466,6 @@ Public Class RevTable
                     ' Exit for un-editable items
                     Exit Sub
             End Select
-            End If
+        End If
     End Sub
 End Class

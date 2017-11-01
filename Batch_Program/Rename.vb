@@ -111,7 +111,7 @@ Public Class Rename
         Dim _ExcelApp As Excel.Application = New Excel.Application
         Dim ExcelDocs As Excel.Workbooks = _ExcelApp.Workbooks
         Dim Start As Date = Now()
-         
+
         If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetTempPath, "Rename.xlsm")) Then
             Kill(IO.Path.Combine(IO.Path.GetTempPath, "Rename.xlsm"))
         End If
@@ -249,8 +249,8 @@ Public Class Rename
             '    DGVRename.Rows(X).Cells(4).Value = Thumbnail
             'End If
             Main.writeDebug("Imported :" & DGVRename.Rows(X).Cells(2).Value)
-            Next
-            RenameProgress.Visible = False
+        Next
+        RenameProgress.Visible = False
         Label2.Visible = False
         Remaining.Visible = False
         'If _ExcelApp.Application.Workbooks.Count < 1 Then
@@ -318,7 +318,7 @@ Public Class Rename
         Dim Document As Document
 
         For Each Document In _invapp.Documents
-            Main.CloseLater(Strings.Right(Document.FullDocumentName, len(Document.FullDocumentName) - InStrRev(Document.FullDocumentName, "\")), Document)
+            Main.CloseLater(Strings.Right(Document.FullDocumentName, Len(Document.FullDocumentName) - InStrRev(Document.FullDocumentName, "\")), Document)
         Next
         Try
             If My.Computer.FileSystem.DirectoryExists(TempLoc) Then
@@ -435,7 +435,7 @@ Public Class Rename
 
         Try
             Dim atts As System.IO.FileAttributes = System.IO.File.GetAttributes(oDoc.FullFileName)
-            If atts <> 1 and atts <> 33 Then
+            If atts <> 1 And atts <> 33 Then
                 oDoc.Save()
             End If
         Catch ex As Exception

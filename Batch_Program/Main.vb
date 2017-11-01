@@ -11,11 +11,9 @@ Imports System.Text.RegularExpressions
 
 Public Class Main
     Dim _invApp As Inventor.Application
-    'Dim _ExcelApp As New Excel.Application 'Microsoft.Office.Interop.Excel.Application
     Dim _started As Boolean = False
     Public iProperties As iProperties
-    Public Shared RevTable As New RevTable
-    'Public Print_Size As New Print_Size
+    Public Shared RevTable As RevTable
     Public CheckNeeded As CheckNeeded
     Public Settings As New Settings
     Dim RenameTable As New List(Of List(Of String))
@@ -54,7 +52,6 @@ Public Class Main
     Public Sub writeDebug(ByVal x As String)
         Dim path As String = My.Computer.FileSystem.SpecialDirectories.Temp
         Dim FILE_NAME As String = path & "\Debug.txt"
-        'MsgBox(FILE_NAME)
         If System.IO.File.Exists(FILE_NAME) = False Then
             System.IO.File.Create(FILE_NAME).Dispose()
         End If
@@ -64,12 +61,9 @@ Public Class Main
 
     End Sub
     Public Sub New()
-        If My.Computer.FileSystem.FileExists(My.Computer.FileSystem.SpecialDirectories.Temp & "\Debug.txt") Then
-            Kill(My.Computer.FileSystem.SpecialDirectories.Temp & "\Debug.txt")
-        End If
-        ' This call is required by the designer.
+        ' This call Is required by the designer.
         InitializeComponent()
-        ' Add any initialization after the InitializeComponent() call.
+        'Add any initialization after the InitializeComponent() call.
         Try
             _invApp = Marshal.GetActiveObject("Inventor.Application")
         Catch ex As Exception
@@ -78,16 +72,19 @@ Public Class Main
                   GetTypeFromProgID("Inventor.Application")
                 _invApp = CreateInstance(invAppType)
                 _invApp.Visible = True
-                'Note: if you shut down the Inventor session that was started
-                'this(way) there is still an Inventor.exe running. We will use
-                'this Boolean to test whether or not the Inventor App  will
-                'need to be shut down.
+                'Note:           If you Then shut down the Inventor session that was started
+                '                this(way) there Is still an Inventor.exe running. We will use
+                '                this Boolean to test whether Or Not the Inventor App  will
+                '                need to be shut down.
                 _started = True
             Catch ex2 As Exception
                 MsgBox(ex2.ToString())
                 MsgBox("Unable to get or start Inventor")
             End Try
         End Try
+        If My.Computer.FileSystem.FileExists(My.Computer.FileSystem.SpecialDirectories.Temp & "\Debug.txt") Then
+            Kill(My.Computer.FileSystem.SpecialDirectories.Temp & "\Debug.txt")
+        End If
         writeDebug("Inventor Accessed")
 
         LVSubFiles.Columns(0).Width = LVSubFiles.Width - 10
@@ -147,6 +144,7 @@ Public Class Main
         'Show a trial if we're not genuine
         'See step 9, below.
         ShowTrial(Not isGenuine)
+        CreateOpenDocs(OpenDocs)
     End Sub
     Public Function PopiProperties(CalledFunction As iProperties)
         iProperties = CalledFunction
@@ -700,7 +698,7 @@ Public Class Main
                     LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
                 End If
             Next
-        ElseIf SubFiles.Count <> 0 And LVSubFiles.Items.Count = 0 And CMSalphabetical.Checked = True Then
+        ElseIf SubFiles.Count <> 0 And LVSubFiles.Items.Count = 0 And CMSAlphabetical.Checked = True Then
             For Each pair As KeyValuePair(Of String, String) In AlphaSub
                 If InStr(pair.Key, "(DNE)") <> 0 Then
                     LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(DNE)", ""))
@@ -1615,7 +1613,8 @@ Public Class Main
         Next
         'If the drawing wasn't found close it. This keeps the system from having too many open documents in memory.
         If CloseLater = True Then
-            oDoc.Close(True)
+            _invApp.Documents.ItemByName(oDoc.FullDocumentName).Close()
+            'oDoc.Close(True)
         End If
     End Sub
     Private Sub btnSpreadsheet_Click(sender As System.Object, e As System.EventArgs) Handles btnSpreadsheet.Click
@@ -2565,13 +2564,13 @@ Public Class Main
                     LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Gray
                 End If
             ElseIf Strings.InStr(pair.Key, "(REF)") <> 0 Then
-                    If CMSReference.Text = "Hide Reference Drawings" Then
-                        LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(REF)", ""))
-                        LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = False
-                        LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Blue
-                    End If
-                Else
-                    LVSubFiles.Items.Add(pair.Key)
+                If CMSReference.Text = "Hide Reference Drawings" Then
+                    LVSubFiles.Items.Add(Strings.Replace(pair.Key, "(REF)", ""))
+                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = False
+                    LVSubFiles.Items(LVSubFiles.Items.Count - 1).ForeColor = Drawing.Color.Blue
+                End If
+            Else
+                LVSubFiles.Items.Add(pair.Key)
                 LVSubFiles.Items(LVSubFiles.Items.Count - 1).Checked = True
             End If
         Next
@@ -2931,5 +2930,17 @@ Public Class Main
             CMSReference.Text = "Show Reference Drawings"
         End If
         FilterSubFiles()
+    End Sub
+
+    Private Sub Main_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
+        For Each odoc As Document In _invApp.Documents
+            CloseLater(odoc.DisplayName, odoc)
+        Next
+        If OpenDocs.Count = 0 Then
+            _invApp.Documents.CloseAll()
+        End If
+        If _started = True Then
+            _invApp.Quit()
+        End If
     End Sub
 End Class

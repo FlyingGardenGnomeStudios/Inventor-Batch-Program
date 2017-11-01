@@ -142,6 +142,7 @@ Public Class iProperties
                     Call WriteRevTable(oDoc, OpenDocs)
                     _invApp.ActiveDocument.Update()
                 End If
+                Main.CloseLater(oDoc.DisplayName, oDoc)
                 X += 1
             End If
 
@@ -165,7 +166,7 @@ Public Class iProperties
             End Try
 
         End If
-            ProgressBar2.Visible = False
+        ProgressBar2.Visible = False
         RevTable.Close()
         If List <> "" Then
             MsgBox("The following drawings are missing revision tables:" & vbNewLine & List & vbNewLine _
