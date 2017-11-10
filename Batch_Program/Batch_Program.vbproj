@@ -269,6 +269,7 @@
       <SubType>Form</SubType>
     </Compile>
     <None Include="Inventor Batch Program.pfx" />
+    <None Include="Resources\Changelog.txt" />
     <Content Include="Resources\List-Blank.xlsm" />
     <Content Include="Resources\Quote-Blank.xlsm" />
     <Content Include="Resources\Rename.xlsm" />

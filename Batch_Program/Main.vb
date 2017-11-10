@@ -36,6 +36,8 @@ Public Class Main
     Dim ReVerifyNow As ReVerifyNow
     Private ta As TurboActivate
     Private isGenuine As Boolean
+    Dim myProcess As Process
+    Dim InventorExited As Boolean = False
     Private Delegate Sub IsActivatedDelegate()
     ' Set the trial flags you want to use. Here we've selected that the
     ' trial data should be stored system-wide (TA_SYSTEM) and that we should
@@ -60,23 +62,36 @@ Public Class Main
         objWriter.Close()
 
     End Sub
+    Public Sub ProcessStarted()
+        myProcess = Process.GetProcessesByName("Inventor").First
+        myProcess.EnableRaisingEvents = True
+        AddHandler myProcess.Exited, AddressOf ProcessExited
+    End Sub
+    Public Sub ProcessExited(ByVal sender As Object, ByVal e As System.EventArgs)
+        InventorExited = True
+    End Sub
     Public Sub New()
         ' This call Is required by the designer.
         InitializeComponent()
+
         'Add any initialization after the InitializeComponent() call.
         Try
             _invApp = Marshal.GetActiveObject("Inventor.Application")
+            ProcessStarted()
         Catch ex As Exception
             Try
-                Dim invAppType As Type =
-                  GetTypeFromProgID("Inventor.Application")
-                _invApp = CreateInstance(invAppType)
-                _invApp.Visible = True
-                'Note:           If you Then shut down the Inventor session that was started
-                '                this(way) there Is still an Inventor.exe running. We will use
-                '                this Boolean to test whether Or Not the Inventor App  will
-                '                need to be shut down.
+                Dim Inv As New ProcessStartInfo("Inventor.exe")
+                Dim p As New Process
+                p.StartInfo = Inv
+                p.Start()
+                'p.WaitForInputIdle()
+                While p.MainWindowTitle = Nothing
+                    System.Threading.Thread.Sleep(1000)
+                    p.Refresh()
+                End While
+                _invApp = Marshal.GetActiveObject("Inventor.Application")
                 _started = True
+                ProcessStarted()
             Catch ex2 As Exception
                 MsgBox(ex2.ToString())
                 MsgBox("Unable to get or start Inventor")
@@ -441,7 +456,7 @@ Public Class Main
         DrawingName = Strings.Left(strFile, (Strings.Len(strFile) - 3)) & "idw"
         'If Strings.InStr(PartSource, "Content Center") = 0 Then
         If Dev = False Then
-            If Strings.InStr(oAsmDoc.File.FullFileName, "Purchased Parts") > 0 Then
+            If Strings.InStr(oAsmDoc.File.FullFileName, "Purchased Parts") > 0 Or oAsmDoc.ComponentDefinition.BOMStructure = BOMStructureEnum.kPurchasedBOMStructure Then
                 ID = "PP"
             ElseIf Strings.InStr(oAsmDoc.File.FullFileName, "Content Center") > 0 Then
                 ID = "CC"
@@ -499,7 +514,7 @@ Public Class Main
                 'Create a list of sub parts for use in the renaming section. this saves time having to recreate it again later.
                 'If VBAFlag <> "NA" And Strings.InStr(PartSource, "Content Center") = 0 Then 
                 If Dev = False Then
-                    If Strings.InStr(PartSource, "Purchased Parts") > 0 Then
+                    If Strings.InStr(PartSource, "Purchased Parts") > 0 Or oOcc.BOMStructure = BOMStructureEnum.kPurchasedBOMStructure Then
                         ID = "PP"
                     ElseIf Strings.InStr(PartSource, "Content Center") > 0 Then
                         ID = "CC"
@@ -1895,6 +1910,7 @@ Public Class Main
         ExcelDoc.Worksheets("Saw Cut").activate()
     End Sub
     Private Sub btnRename_Click(sender As System.Object, e As System.EventArgs) Handles btnRename.Click
+
         If lstOpenfiles.CheckedItems.Count = 0 Then
             MsgBox("Please select an item to rename")
             Exit Sub
@@ -2933,6 +2949,11 @@ Public Class Main
     End Sub
 
     Private Sub Main_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
+        Try
+            _invApp = Marshal.GetActiveObject("Inventor.Application")
+        Catch ex As Exception
+            Exit Sub
+        End Try
         For Each odoc As Document In _invApp.Documents
             CloseLater(odoc.DisplayName, odoc)
         Next
@@ -2940,7 +2961,47 @@ Public Class Main
             _invApp.Documents.CloseAll()
         End If
         If _started = True Then
-            _invApp.Quit()
+            Dim ans As Boolean = MsgBox("Do you wish to close Inventor as well?", vbYesNo, "Application Closed")
+            If ans = vbYes Then
+                _invApp.Quit()
+            End If
         End If
+    End Sub
+
+    Private Sub Main_MouseEnter(sender As Object, e As EventArgs) Handles Me.MouseEnter
+        If InventorExited = True Then
+            If MsgBox("Connection to Inventor was lost" & vbNewLine & "Do you wish to try to restart it?", vbYesNo, "Unexpected Error") = vbYes Then
+                Try
+                    Dim Inv As New ProcessStartInfo("Inventor.exe")
+                    Dim p As New Process
+                    p.StartInfo = Inv
+                    p.Start()
+                    'p.WaitForInputIdle()
+                    While p.MainWindowTitle = Nothing
+                        System.Threading.Thread.Sleep(1000)
+                        p.Refresh()
+                    End While
+                    _invApp = Marshal.GetActiveObject("Inventor.Application")
+                    _started = True
+                    ProcessStarted()
+                Catch ex2 As Exception
+                    MsgBox(ex2.ToString())
+                    MsgBox("Unable to get or start Inventor")
+                End Try
+
+            End If
+            Me.Close()
+        End If
+        InventorExited = False
+
+    End Sub
+
+    Private Sub HowToToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles HowToToolStripMenuItem1.Click
+        System.IO.File.WriteAllText(My.Computer.FileSystem.SpecialDirectories.Temp & "\changelog.txt", My.Resources.Changelog)
+        Process.Start(My.Computer.FileSystem.SpecialDirectories.Temp & "\changelog.txt")
+    End Sub
+
+    Private Sub IFoundABugToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles IFoundABugToolStripMenuItem.Click
+        MessageBox.Show("Issues with the program can be sent to flyinggardengnomestudios@gmail.com. Please include a description of the problem and how to re-create it. You can attach the error-log which is located in: " & My.Computer.FileSystem.SpecialDirectories.Temp & "\errorlog.txt " & "If possible, it is always helpful to include a pack-and-go of the assembly/part that created the error.")
     End Sub
 End Class

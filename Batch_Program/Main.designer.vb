@@ -87,6 +87,7 @@ Partial Class Main
         Me.HowToToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.MsVistaProgressBar = New MSVistaProgressBar()
+        Me.IFoundABugToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
@@ -644,7 +645,7 @@ Partial Class Main
         '
         'AboutToolStripMenuItem
         '
-        Me.AboutToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutBatchProgramToolStripMenuItem, Me.mnuActDeact, Me.HowToToolStripMenuItem1})
+        Me.AboutToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutBatchProgramToolStripMenuItem, Me.mnuActDeact, Me.HowToToolStripMenuItem1, Me.IFoundABugToolStripMenuItem})
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
         Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.AboutToolStripMenuItem.Text = "Help"
@@ -665,7 +666,7 @@ Partial Class Main
         '
         Me.HowToToolStripMenuItem1.Name = "HowToToolStripMenuItem1"
         Me.HowToToolStripMenuItem1.Size = New System.Drawing.Size(189, 22)
-        Me.HowToToolStripMenuItem1.Text = "How to..."
+        Me.HowToToolStripMenuItem1.Text = "Changelog"
         '
         'ContextMenuStrip1
         '
@@ -687,6 +688,12 @@ Partial Class Main
         Me.MsVistaProgressBar.Size = New System.Drawing.Size(536, 23)
         Me.MsVistaProgressBar.TabIndex = 62
         Me.MsVistaProgressBar.Visible = False
+        '
+        'IFoundABugToolStripMenuItem
+        '
+        Me.IFoundABugToolStripMenuItem.Name = "IFoundABugToolStripMenuItem"
+        Me.IFoundABugToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
+        Me.IFoundABugToolStripMenuItem.Text = "I found a bug"
         '
         'Main
         '
@@ -804,4 +811,5 @@ Partial Class Main
     Friend WithEvents ColumnHeader1 As Windows.Forms.ColumnHeader
     Friend WithEvents HowToToolStripMenuItem1 As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSReference As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents IFoundABugToolStripMenuItem As Windows.Forms.ToolStripMenuItem
 End Class

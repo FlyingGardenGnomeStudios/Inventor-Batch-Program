@@ -81,6 +81,23 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to Version 1.2.2.10
+        '''- Changed how the program initializes and finds Inventor (Starts Inventor if not yet open)
+        '''- Cleans up invisible drawings upon program exit.
+        '''- Closes invisible drawings when opened through iProperties command
+        '''
+        '''Version 1.2.2.11
+        '''- Skip Assembly checkbox now actually skips creation of assemblies
+        '''- Fixed incorrect thumbnails when opening rename window 2nd time
+        '''- Enabled communication between Inventor and Batch Program in regards to programs shutting down/restarting.
+        '''</summary>
+        Friend ReadOnly Property Changelog() As String
+            Get
+                Return ResourceManager.GetString("Changelog", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to [EXPORT SELECT OPTIONS]
         '''AUTOCAD VERSION=AutoCAD 2010
         '''CREATE AUTOCAD MECHANICAL=No
