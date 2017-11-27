@@ -38,7 +38,6 @@ Partial Class About
         Me.PicDonate.Size = New System.Drawing.Size(96, 31)
         Me.PicDonate.TabIndex = 0
         Me.PicDonate.TabStop = False
-        Me.PicDonate.Visible = False
         '
         'LblDonate
         '
@@ -48,7 +47,6 @@ Partial Class About
         Me.LblDonate.Size = New System.Drawing.Size(166, 26)
         Me.LblDonate.TabIndex = 1
         Me.LblDonate.Text = "Has this program saved you time?" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Consider saying thanks."
-        Me.LblDonate.Visible = False
         '
         'lblName
         '

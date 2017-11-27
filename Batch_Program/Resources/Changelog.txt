@@ -8,3 +8,7 @@ Version 1.2.2.11
 - Fixed incorrect thumbnails when opening rename window 2nd time
 - Enabled communication between Inventor and Batch Program in regards to programs shutting down/restarting
 - Fixed error with some purchased parts not being recognized in rename operation
+- Fixed incorrect Rev Type change
+
+Version 1.2.2.12
+-Fixed various issues when creating a spreadsheet with the spreadsheet button

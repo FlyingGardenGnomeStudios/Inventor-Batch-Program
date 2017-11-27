@@ -126,7 +126,7 @@ Public Class Rename
             Dim Y As Integer = 4
             For X = 0 To DGVRename.RowCount - 1
                 ProgressBar(X + 1, DGVRename.RowCount, "Exporting: ", DGVRename.Rows(X).Cells(2).Value, Start)
-                If DGVRename.Rows(X).ReadOnly = False Then
+                If DGVRename.Rows(X).ReadOnly = False And DGVRename.Rows(X).Cells("Reuse").Value = False Then
                     With ExcelDoc.ActiveSheet
                         .range("A" & Y).value = DGVRename.Rows(X).Cells(0).Value
                         .Range("B" & Y).value = DGVRename.Rows(X).Cells(1).Value
@@ -191,7 +191,7 @@ Public Class Rename
             End If
             Marshal.ReleaseComObject(ExcelDocs)
             Marshal.ReleaseComObject(_ExcelApp)
-            KillAllExcels(Time)
+            Main.KillAllExcels(Time)
         Finally
             ExcelDoc.Application.EnableEvents = True
             'KillAllExcels(Time)
@@ -222,7 +222,7 @@ Public Class Rename
             Else
                 _ExcelApp.ThisWorkbook.Close()
             End If
-            KillAllExcels(Time)
+            Main.KillAllExcels(Time)
             Exit Sub
         End Try
         Dim Lastrow As Integer = ExcelDoc.ActiveSheet.Cells(ExcelDoc.ActiveSheet.Rows.Count, 1).End(Excel.XlDirection.xlUp).Row
@@ -261,7 +261,7 @@ Public Class Rename
         'End If
         Marshal.ReleaseComObject(ExcelDoc)
         Marshal.ReleaseComObject(_ExcelApp)
-        KillAllExcels(Time)
+        Main.KillAllExcels(Time)
 
         If My.Computer.FileSystem.FileExists(My.Computer.FileSystem.SpecialDirectories.Temp & "\Rename.xlsm") Then
             Try
@@ -272,13 +272,6 @@ Public Class Rename
         _ExcelApp = Nothing
         ExcelDoc = Nothing
         btnImport.Enabled = False
-    End Sub
-    Sub KillAllExcels(Time As System.DateTime)
-        Dim proc As System.Diagnostics.Process
-        For Each proc In System.Diagnostics.Process.GetProcessesByName("EXCEL")
-            If proc.StartTime > Time Then proc.Kill()
-            Main.writeDebug("Killed Excel Process")
-        Next
     End Sub
     Private Sub btnRename_Click(sender As Object, e As EventArgs) Handles btnRename.Click
         Dim SaveLoc As String = ""
@@ -426,6 +419,9 @@ Public Class Rename
                             End If
                         End Try
                     End If
+                Else
+                    Source = DGVRename.Rows.Item(X).Cells(0).Value & DGVRename.Rows(X).Cells(2).Value
+                    oDoc = _invapp.Documents.Open(Source, False)
                 End If
             Next
         Catch ex As Exception
@@ -450,8 +446,13 @@ Public Class Rename
         Dim Start As Date = Now()
         For Row As Integer = 0 To DGVRename.Rows.Count - 1
             If DGVRename.Rows(Row).Cells(2).Value = txtParent.Text Then
-                Source = SaveLoc & DGVRename.Rows(Row).Cells(3).Value
-                Exit For
+                If DGVRename.Rows(Row).Cells("Reuse").Value = False Then
+                    Source = SaveLoc & DGVRename.Rows(Row).Cells(3).Value
+                    Exit For
+                Else
+                    Source = DGVRename.Rows(Row).Cells(0).Value & DGVRename.Rows(Row).Cells(2).Value
+                    Exit For
+                End If
             End If
         Next
         Dim oAssDoc As AssemblyDocument = _invapp.Documents.Open(Source, False)
@@ -582,4 +583,5 @@ Public Class Rename
             End If
         Next
     End Sub
+
 End Class
