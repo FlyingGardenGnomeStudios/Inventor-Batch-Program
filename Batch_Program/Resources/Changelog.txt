@@ -1,14 +1,17 @@
-﻿Version 1.2.2.10
+﻿Version 1.2.2.10 (10/10/17)
 - Changed how the program initializes and finds Inventor (Starts Inventor if not yet open)
 - Cleans up invisible drawings upon program exit.
 - Closes invisible drawings when opened through iProperties command
 
-Version 1.2.2.11
+Version 1.2.2.11 (10/30/17)
 - Skip Assembly checkbox now actually skips creation of assemblies
 - Fixed incorrect thumbnails when opening rename window 2nd time
 - Enabled communication between Inventor and Batch Program in regards to programs shutting down/restarting
 - Fixed error with some purchased parts not being recognized in rename operation
 - Fixed incorrect Rev Type change
 
-Version 1.2.2.12
--Fixed various issues when creating a spreadsheet with the spreadsheet button
+Version 1.2.2.12 (11/22/17)
+- Fixed various issues when creating a spreadsheet with the spreadsheet button
+
+Version 1.2.2.13 (11/29/17)
+- Created workaround for when errors discovered when retrieving iProperties

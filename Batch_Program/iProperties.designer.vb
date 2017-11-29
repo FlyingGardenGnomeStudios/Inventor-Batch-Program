@@ -66,7 +66,7 @@ Partial Class iProperties
         Me.txtSubType = New System.Windows.Forms.TextBox()
         Me.txtLocation = New System.Windows.Forms.TextBox()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
-        Me.txtDrawing = New System.Windows.Forms.TextBox()
+        Me.txtDrawingBy = New System.Windows.Forms.TextBox()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.dtCheckDate = New System.Windows.Forms.DateTimePicker()
         Me.txtStatus = New System.Windows.Forms.TextBox()
@@ -617,7 +617,7 @@ Partial Class iProperties
         '
         'TabPage3
         '
-        Me.TabPage3.Controls.Add(Me.txtDrawing)
+        Me.TabPage3.Controls.Add(Me.txtDrawingBy)
         Me.TabPage3.Controls.Add(Me.Label19)
         Me.TabPage3.Controls.Add(Me.dtCheckDate)
         Me.TabPage3.Controls.Add(Me.txtStatus)
@@ -643,12 +643,12 @@ Partial Class iProperties
         Me.TabPage3.Text = "Status"
         Me.TabPage3.UseVisualStyleBackColor = True
         '
-        'txtDrawing
+        'txtDrawingBy
         '
-        Me.txtDrawing.Location = New System.Drawing.Point(103, 133)
-        Me.txtDrawing.Name = "txtDrawing"
-        Me.txtDrawing.Size = New System.Drawing.Size(230, 20)
-        Me.txtDrawing.TabIndex = 60
+        Me.txtDrawingBy.Location = New System.Drawing.Point(103, 133)
+        Me.txtDrawingBy.Name = "txtDrawingBy"
+        Me.txtDrawingBy.Size = New System.Drawing.Size(230, 20)
+        Me.txtDrawingBy.TabIndex = 60
         '
         'Label19
         '
@@ -2310,7 +2310,7 @@ Partial Class iProperties
     Friend WithEvents chkRev7AddRev As Windows.Forms.CheckBox
     Friend WithEvents chkRev8AddRev As Windows.Forms.CheckBox
     Public WithEvents chkRev2AddRev As Windows.Forms.CheckBox
-    Friend WithEvents txtDrawing As Windows.Forms.TextBox
+    Friend WithEvents txtDrawingBy As Windows.Forms.TextBox
     Friend WithEvents Label19 As Windows.Forms.Label
     Friend WithEvents Label45 As Windows.Forms.Label
     Friend WithEvents Label51 As Windows.Forms.Label

@@ -4,6 +4,9 @@ Imports System.Runtime.InteropServices
 Imports System.Globalization
 Public Class iProperties
     Dim _invApp As Inventor.Application
+    Dim InvStringDic As New Dictionary(Of String, String)
+    Dim InvDateDic As New Dictionary(Of String, Date)
+
     Dim InvTitle, InvSubject, InvManager, InvCategory, InvKeywords, InvAuthor, InvCompany, Invcomments, InvDescription, InvPartNumber, InvStockNumber _
                  , InvProject, InvDesigner, InvVendor, InvModDate, InvDrawDate, InvDrawBy As Inventor.Property
     Dim InvDesignState As String
@@ -176,58 +179,66 @@ Public Class iProperties
     Private Sub SetModelProps(invModelDoc As Document)
         'Set the identifiers for the model properties
 
-        If My.Settings.Title = "Model" Then InvTitle = invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("2")
-        If My.Settings.Subject = "Model" Then InvSubject = invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("3")
-        If My.Settings.Manager = "Model" Then InvManager = invModelDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("14")
-        If My.Settings.Category = "Model" Then InvCategory = invModelDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("2")
-        If My.Settings.Keywords = "Model" Then InvKeywords = invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("5")
-        If My.Settings.Author = "Model" Then InvAuthor = invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("4")
-        If My.Settings.Company = "Model" Then InvCompany = invModelDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("15")
-        If My.Settings.Comments = "Model" Then Invcomments = invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("6")
-        If My.Settings.Description = "Model" Then InvDescription = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("29")
-        If My.Settings.PPartNumber = "Model" Then InvPartNumber = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("5")
-        If My.Settings.PStockNumber = "Model" Then InvStockNumber = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("55")
-        If My.Settings.Project = "Model" Then InvProject = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("7")
-        If My.Settings.Designer = "Model" Then InvDesigner = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("41")
-        If My.Settings.Vendor = "Model" Then InvVendor = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("30")
-        If My.Settings.ModelDate = "Model" Then InvModDate = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4")
+        If My.Settings.Title = "Model" Then InvStringDic.Add("InvTitle", invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("2").Value)
+        If My.Settings.Subject = "Model" Then InvStringDic.Add("InvSubject", invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("3").Value)
+        If My.Settings.Manager = "Model" Then InvStringDic.Add("InvManager", invModelDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("14").Value)
+        If My.Settings.Category = "Model" Then InvStringDic.Add("InvCategory", invModelDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("2").Value)
+        If My.Settings.Keywords = "Model" Then InvStringDic.Add("InvKeywords", invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("5").Value)
+        If My.Settings.Author = "Model" Then InvStringDic.Add("InvAuthor", invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("4").Value)
+        If My.Settings.Company = "Model" Then InvStringDic.Add("InvCompany", invModelDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("15").Value)
+        If My.Settings.Comments = "Model" Then InvStringDic.Add("InvComments", invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("6").Value)
+        If My.Settings.Description = "Model" Then InvStringDic.Add("InvDescription", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("29").Value)
+        If My.Settings.Location = "Model" Then InvStringDic.Add("InvLocation", invModelDoc.FullFileName)
+        If My.Settings.Subtype = "Model" Then InvStringDic.Add("InvSubType", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("32").Value)
+        If My.Settings.PPartNumber = "Model" Then InvStringDic.Add("InvPNumber", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("5").Value)
+        If My.Settings.PPartNumber = "Model" Then InvStringDic.Add("InvPartNumber", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("5").Value)
+        If My.Settings.PStockNumber = "Model" Then InvStringDic.Add("InvSNumber", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("55").Value)
+        If My.Settings.PStockNumber = "Model" Then InvStringDic.Add("InvStockNumber", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("55").Value)
+        If My.Settings.Project = "Model" Then InvStringDic.Add("InvProject", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("7").Value)
+        If My.Settings.Designer = "Model" Then InvStringDic.Add("InvDesigner", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("41").Value)
+        If My.Settings.Vendor = "Model" Then InvStringDic.Add("InvVendor", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("30").Value)
+        If My.Settings.ModelDate = "Model" Then InvDateDic.Add("InvModelDate", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4").Value)
         If My.Settings.Custom = "Model" Then CustomPropSet = invModelDoc.PropertySets.Item("{D5CDD505-2E9C-101B-9397-08002B2CF9AE}")
-        If My.Settings.Engineer = "Model" Then InvEngineer = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("42")
-        If My.Settings.Status = "Model" Then InvStatus = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("17")
-        If My.Settings.Revision = "Model" Then InvRevision = invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9")
-        If My.Settings.DesignState = "Model" Then InvDesignState = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("40").Value
-        If My.Settings.CheckedBy = "Model" Then InvCheckedBy = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10")
-        If My.Settings.CheckedDate = "Model" Then InvCheckDate = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11")
-        If My.Settings.DrawingBy = "Model" Then InvDrawDate = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4")
-        If My.Settings.DrawingDate = "Model" Then InvDrawBy = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("41")
+        If My.Settings.Engineer = "Model" Then InvStringDic.Add("InvEngineer", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("42").Value)
+        If My.Settings.Status = "Model" Then InvStringDic.Add("InvStatus", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("17").Value)
+        If My.Settings.Revision = "Model" Then InvStringDic.Add("InvRevision", invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value)
+        If My.Settings.DesignState = "Model" Then InvStringDic.Add("InvDesignState", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("40").Value)
+        If My.Settings.CheckedBy = "Model" Then InvStringDic.Add("InvCheckedBy", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10").Value)
+        If My.Settings.CheckedDate = "Model" Then InvDateDic.Add("InvCheckDate", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value)
+        If My.Settings.DrawingBy = "Model" Then InvStringDic.Add("InvDrawingBy", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("41").Value)
+        If My.Settings.DrawingDate = "Model" Then InvDateDic.Add("InvDrawingDate", invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4").Value)
     End Sub
     Private Sub SetDrawingProps(ByRef invDrawingDoc As Document, ByRef Warning As Boolean)
 
         'Set the identifiers for the drawing properties
-        If My.Settings.Title = "Drawing" Then InvTitle = invDrawingDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("2")
-        If My.Settings.Subject = "Drawing" Then InvSubject = invDrawingDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("3")
-        If My.Settings.Manager = "Drawing" Then InvManager = invDrawingDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("14")
-        If My.Settings.Category = "Drawing" Then InvCategory = invDrawingDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("2")
-        If My.Settings.Keywords = "Drawing" Then InvKeywords = invDrawingDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("5")
-        If My.Settings.Author = "Drawing" Then InvAuthor = invDrawingDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("4")
-        If My.Settings.Company = "Drawing" Then InvCompany = invDrawingDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("15")
-        If My.Settings.Comments = "Drawing" Then Invcomments = invDrawingDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("6")
-        If My.Settings.Description = "Drawing" Then InvDescription = invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("29")
-        If My.Settings.PPartNumber = "Drawing" Then InvPartNumber = invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("5")
-        If My.Settings.PStockNumber = "Drawing" Then InvStockNumber = invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("55")
-        If My.Settings.Project = "Drawing" Then InvProject = invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("7")
-        If My.Settings.Designer = "Drawing" Then InvDesigner = invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("41")
-        If My.Settings.Vendor = "Drawing" Then InvVendor = invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("30")
-        If My.Settings.ModelDate = "Drawing" Then InvModDate = invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4")
+        If My.Settings.Title = "Drawing" Then InvStringDic.Add("InvTitle", invDrawingDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("2").Value)
+        If My.Settings.Subject = "Drawing" Then InvStringDic.Add("InvSubject", invDrawingDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("3").Value)
+        If My.Settings.Manager = "Drawing" Then InvStringDic.Add("InvManager", invDrawingDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("14").Value)
+        If My.Settings.Category = "Drawing" Then InvStringDic.Add("InvCategory", invDrawingDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("2").Value)
+        If My.Settings.Keywords = "Drawing" Then InvStringDic.Add("InvKeywords", invDrawingDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("5").Value)
+        If My.Settings.Author = "Drawing" Then InvStringDic.Add("InvAuthor", invDrawingDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("4").Value)
+        If My.Settings.Company = "Drawing" Then InvStringDic.Add("InvCompany", invDrawingDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("15").Value)
+        If My.Settings.Comments = "Drawing" Then InvStringDic.Add("InvComments", invDrawingDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("6").Value)
+        If My.Settings.Subtype = "Drawing" Then InvStringDic.Add("InvSubType", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("32").Value)
+        If My.Settings.Location = "Drawing" Then InvStringDic.Add("InvLocation", invDrawingDoc.FullFileName)
+        If My.Settings.Description = "Drawing" Then InvStringDic.Add("InvDescription", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("29").Value)
+        If My.Settings.PPartNumber = "Drawing" Then InvStringDic.Add("InvPNumber", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("5").Value)
+        If My.Settings.PPartNumber = "Drawing" Then InvStringDic.Add("InvPartNumber", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("5").Value)
+        If My.Settings.PStockNumber = "Drawing" Then InvStringDic.Add("InvSNumber", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("55").Value)
+        If My.Settings.PStockNumber = "Drawing" Then InvStringDic.Add("InvStockNumber", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("55").Value)
+        If My.Settings.Project = "Drawing" Then InvStringDic.Add("InvProject", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("7").Value)
+        If My.Settings.Designer = "Drawing" Then InvStringDic.Add("InvDesigner", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("41").Value)
+        If My.Settings.Vendor = "Drawing" Then InvStringDic.Add("InvVendor", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("30").Value)
+        If My.Settings.ModelDate = "Drawing" Then InvDateDic.Add("InvModelDate", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4").Value)
         If My.Settings.Custom = "Drawing" Then CustomPropSet = invDrawingDoc.PropertySets.Item("{D5CDD505-2E9C-101B-9397-08002B2CF9AE}")
-        If My.Settings.Engineer = "Drawing" Then InvEngineer = invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("42")
-        If My.Settings.Status = "Drawing" Then InvStatus = invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("17")
-        If My.Settings.Revision = "Drawing" Then InvRevision = invDrawingDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9")
-        If My.Settings.DesignState = "Drawing" Then InvDesignState = invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("40").Value
-        If My.Settings.CheckedBy = "Drawing" Then InvCheckedBy = invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10")
-        If My.Settings.CheckedDate = "Drawing" Then InvCheckDate = invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11")
-        If My.Settings.DrawingBy = "Drawing" Then InvDrawDate = invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4")
-        If My.Settings.DrawingDate = "Drawing" Then InvDrawBy = invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("41")
+        If My.Settings.Engineer = "Drawing" Then InvStringDic.Add("InvEngineer", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("42").Value)
+        If My.Settings.Status = "Drawing" Then InvStringDic.Add("InvStatus", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("17").Value)
+        If My.Settings.Revision = "Drawing" Then InvStringDic.Add("InvRevision", invDrawingDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value)
+        If My.Settings.DesignState = "Drawing" Then InvStringDic.Add("InvDesignState", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("40").Value)
+        If My.Settings.CheckedBy = "Drawing" Then InvStringDic.Add("InvCheckedBy", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10").Value)
+        If My.Settings.CheckedDate = "Drawing" Then InvDateDic.Add("InvCheckDate", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value)
+        If My.Settings.DrawingBy = "Drawing" Then InvStringDic.Add("InvDrawingBy", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("41").Value)
+        If My.Settings.DrawingDate = "Drawing" Then InvDateDic.Add("InvDrawingDate", invDrawingDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4").Value)
         'For A = 1 To CustomPropSet.Count
         '    If InStr(CustomPropSet.Item(A).Name, "Reference") = 0 Then
         '        CustomPropSet.Item(A).Delete()
@@ -539,203 +550,127 @@ Public Class iProperties
     Private Sub InitializeiProperties(ByRef X As Integer, DrawSource As String)
         'Go through each iProperty in both the part and drawing and assign them to their respective output strings
         'When the values between documents are different, display *Varies* as the output.
+        Dim errorlog As String = ""
         Dim TempState As String = ""
-        If X = 0 And txtTitle.Text = "" Then
-            txtTitle.Text = CStr(InvTitle.Value)
-        ElseIf X <> 0 And UCase(txtTitle.Text) <> UCase(CStr(InvTitle.Value)) Then
-            txtTitle.Text = "*Varies*"
-        End If
+        Dim Placeholder As String
+        For Each Textbox As Windows.Forms.TextBox In Me.TabPage1.Controls.OfType(Of Windows.Forms.TextBox)()
+            Try
+                Placeholder = Replace(Textbox.Name, "txt", "Inv")
+                If Textbox.Text = "" Then
+                    Textbox.Text = InvStringDic.Item(Placeholder)
+                Else
+                    Textbox.Text = "*Varies*"
+                End If
+            Catch
+                MsgBox("Error retrieving " & Replace(Textbox.Name, "txt", "", " data for" & vbNewLine & DrawSource))
+            End Try
+        Next
+        For Each Textbox As Windows.Forms.TextBox In Me.TabPage2.Controls.OfType(Of Windows.Forms.TextBox)()
+            Try
+                Placeholder = Replace(Textbox.Name, "txt", "Inv")
+                If Textbox.Text = "" Then
+                    Textbox.Text = InvStringDic.Item(Placeholder)
+                Else
+                    Textbox.Text = "*Varies*"
+                End If
+            Catch
+                MsgBox("Error retrieving " & Replace(Textbox.Name, "txt", "", " data for" & DrawSource))
+            End Try
+        Next
+        For Each Textbox As Windows.Forms.TextBox In Me.TabPage3.Controls.OfType(Of Windows.Forms.TextBox)()
+            Try
+                Placeholder = Replace(Textbox.Name, "txt", "Inv")
+                If Textbox.Text = "" Then
+                    Textbox.Text = InvStringDic.Item(Placeholder)
+                Else
+                    Textbox.Text = "*Varies*"
+                End If
+            Catch
+                MsgBox("Error retrieving " & Replace(Textbox.Name, "txt", "", " data for" & DrawSource))
+            End Try
+        Next
+        For Each dtPicker As DateTimePicker In Me.TabPage3.Controls.OfType(Of DateTimePicker)()
+            Try
+                Placeholder = Replace(dtPicker.Name, "dt", "Inv")
+                If InvDateDic.Item(Placeholder) <> #1/1/1601 12:00:00 AM# Then
+                    If X = 0 Then
+                        dtPicker.Checked = True
+                        dtPicker.Value = InvDateDic.Item(Placeholder)
+                    ElseIf X <> 0 And dtPicker.Value <> InvDateDic.Item(Placeholder) Then
+                        dtPicker.Checked = False
+                    End If
+                Else
+                    dtPicker.Checked = False
+                End If
+            Catch
+                MsgBox("Error retrieving " & Replace(dtPicker.Name, "txt", "", " data for" & DrawSource))
+            End Try
+        Next
 
-        If X = 0 And txtSubject.Text = "" Then
-            txtSubject.Text = CStr(InvSubject.Value)
-        ElseIf X <> 0 And UCase(txtSubject.Text) <> UCase(CStr(InvSubject.Value)) Then
-            txtSubject.Text = "*Varies*"
-        End If
-        If X = 0 And txtAuthor.Text = "" Then
-            txtAuthor.Text = CStr(InvAuthor.Value)
-        ElseIf X <> 0 And UCase(txtAuthor.Text) <> UCase(CStr(InvAuthor.Value)) Then
-            txtAuthor.Text = "*Varies*"
-        End If
+        'If CStr(InvModDate.Value) = DateTime.MinValue Then
+        '    If X = 0 Then
+        '        dtModelDate.Checked = True
+        '        dtModelDate.Value = InvModDate.Value
+        '    ElseIf X <> 0 And dtModelDate.Value <> InvModDate.Value Then
+        '        dtModelDate.Checked = False
+        '    End If
+        'Else
+        '    dtModelDate.Checked = False
+        'End If
 
-        If X = 0 And txtManager.Text = "" Then
-            txtManager.Text = CStr(InvManager.Value)
-        ElseIf X <> 0 And UCase(txtManager.Text) <> UCase(CStr(InvManager.Value)) Then
-            txtManager.Text = "*Varies*"
-        End If
+        'If CStr(InvDrawDate.Value) = DateTime.MinValue Then
+        '    If X = 0 Then
+        '        dtDrawingDate.Checked = True
+        '        dtDrawingDate.Value = InvDrawDate.Value
+        '    ElseIf X <> 0 And dtDrawingDate.Value <> InvDrawDate.Value Then
+        '        dtDrawingDate.Checked = False
+        '    End If
+        'Else
+        '    dtDrawingDate.Checked = False
+        'End If
 
-        If X = 0 And txtCompany.Text = "" Then
-            txtCompany.Text = CStr(InvCompany.Value)
-        ElseIf X <> 0 And UCase(txtCompany.Text) <> UCase(CStr(InvCompany.Value)) Then
-            txtCompany.Text = "*Varies*"
-        End If
 
-        If X = 0 And txtCategory.Text = "" Then
-            txtCategory.Text = CStr(InvCategory.Value)
-        ElseIf X <> 0 And UCase(txtCategory.Text) <> UCase(CStr(InvCategory.Value)) Then
-            txtCategory.Text = "*Varies*"
-        End If
+        'If CStr(InvModDate.Value) = DateTime.MinValue Then
+        '    If X = 0 Then
+        '        dtModelDate.Checked = True
+        '        dtModelDate.Value = InvModDate.Value
+        '    ElseIf X <> 0 And dtModelDate.Value <> InvModDate.Value Then
+        '        dtModelDate.Checked = False
+        '    End If
+        'Else
+        '    dtModelDate.Checked = False
+        'End If
 
-        If X = 0 And txtKeywords.Text = "" Then
-            txtKeywords.Text = CStr(InvKeywords.Value)
-        ElseIf X <> 0 And UCase(txtKeywords.Text) <> UCase(CStr(InvKeywords.Value)) Then
-            txtKeywords.Text = "*Varies*"
-        End If
 
-        If X = 0 And txtComments.Text = "" Then
-            txtComments.Text = CStr(Invcomments.Value)
-        ElseIf X <> 0 And UCase(txtComments.Text) <> UCase(CStr(Invcomments.Value)) Then
-            txtComments.Text = "*Varies*"
-        End If
-
-        If X = 0 And txtLocation.Text = "" Then
-            txtLocation.Text = DrawSource
-        ElseIf X <> 0 And UCase(txtLocation.Text) <> UCase(DrawSource) Then
-            txtLocation.Text = "*Varies*"
-        End If
-
-        If X = 0 And txtPNumber.Text = "" Then
-            txtPNumber.Text = CStr(InvPartNumber.Value)
-        ElseIf X <> 0 And UCase(txtPNumber.Text) <> UCase(CStr(InvPartNumber.Value)) Then
-            txtPNumber.Text = "*Varies*"
-        End If
-
-        If X = 0 And txtDescription.Text = "" Then
-            txtDescription.Text = CStr(InvDescription.Value)
-        ElseIf X <> 0 And UCase(txtDescription.Text) <> UCase(CStr(InvDescription.Value)) Then
-            txtDescription.Text = "*Varies*"
-        End If
-
-        If X = 0 And txtRevision.Text = "" Then
-            txtRevision.Text = CStr(InvRevision.Value)
-        ElseIf X <> 0 And UCase(txtRevision.Text) <> UCase(CStr(InvRevision.Value)) Then
-            txtRevision.Text = "*Varies*"
-        End If
-
-        If X = 0 And txtProject.Text = "" Then
-            txtProject.Text = CStr(InvProject.Value)
-        ElseIf X <> 0 And UCase(txtProject.Text) <> UCase(CStr(InvProject.Value)) Then
-            txtProject.Text = "*Varies*"
-        End If
-
-        If X = 0 And txtDesigner.Text = "" Then
-            txtDesigner.Text = CStr(InvDesigner.Value)
-        ElseIf X <> 0 And UCase(txtDesigner.Text) <> UCase(CStr(InvDesigner.Value)) Then
-            txtDesigner.Text = "*Varies*"
-        End If
-
-        If X = 0 And txtPartNumber.Text = "" Then
-            txtPartNumber.Text = CStr(InvPartNumber.Value)
-        ElseIf X <> 0 And UCase(txtPartNumber.Text) <> UCase(CStr(InvPartNumber.Value)) Then
-            txtPartNumber.Text = "*Varies*"
-        End If
-
-        If X = 0 And txtSNumber.Text = "" Then
-            txtSNumber.Text = CStr(InvStockNumber.Value)
-        ElseIf X <> 0 And UCase(txtSNumber.Text) <> UCase(CStr(InvStockNumber.Value)) Then
-            txtSNumber.Text = "*Varies*"
-        End If
-
-        If X = 0 And txtEngineer.Text = "" Then
-            txtEngineer.Text = CStr(InvEngineer.Value)
-        ElseIf X <> 0 And UCase(txtEngineer.Text) <> UCase(CStr(InvEngineer.Value)) Then
-            txtEngineer.Text = "*Varies*"
-        End If
-
-        If X = 0 And txtVendor.Text = "" Then
-            txtVendor.Text = CStr(InvVendor.Value)
-        ElseIf X <> 0 And UCase(txtVendor.Text) <> UCase(CStr(InvVendor.Value)) Then
-            txtVendor.Text = "*Varies*"
-        End If
-
-        If CStr(InvModDate.Value) = DateTime.MinValue Then
-            If X = 0 Then
-                dtModelDate.Checked = True
-                dtModelDate.Value = InvModDate.Value
-            ElseIf X <> 0 And dtModelDate.Value <> InvModDate.Value Then
-                dtModelDate.Checked = False
-            End If
-        Else
-            dtModelDate.Checked = False
-        End If
-
-        If CStr(InvDrawDate.Value) = DateTime.MinValue Then
-            If X = 0 Then
-                dtDrawingDate.Checked = True
-                dtDrawingDate.Value = InvDrawDate.Value
-            ElseIf X <> 0 And dtDrawingDate.Value <> InvDrawDate.Value Then
-                dtDrawingDate.Checked = False
-            End If
-        Else
-            dtDrawingDate.Checked = False
-        End If
-
-        If X = 0 And txtStockNumber.Text = "" Then
-            txtStockNumber.Text = CStr(InvStockNumber.Value)
-        ElseIf X <> 0 And UCase(txtStockNumber.Text) <> UCase(CStr(InvStockNumber.Value)) Then
-            txtStockNumber.Text = "*Varies*"
-        End If
-
-        If X = 0 And txtStatus.Text = "" Then
-            txtStatus.Text = CStr(InvStatus.Value)
-        ElseIf X <> 0 And UCase(txtStatus.Text) <> UCase(CStr(InvStatus.Value)) Then
-            txtStatus.Text = "*Varies*"
-        End If
-
-        If CStr(InvModDate.Value) = DateTime.MinValue Then
-            If X = 0 Then
-                dtModelDate.Checked = True
-                dtModelDate.Value = InvModDate.Value
-            ElseIf X <> 0 And dtModelDate.Value <> InvModDate.Value Then
-                dtModelDate.Checked = False
-            End If
-        Else
-            dtModelDate.Checked = False
-        End If
-
-        If X = 0 And txtDrawing.Text = "" Then
-            txtDrawing.Text = CStr(InvDrawBy.Value)
-        ElseIf X <> 0 And UCase(txtDrawing.Text) <> UCase(CStr(InvDrawBy.Value)) Then
-            txtDrawing.Text = "*Varies*"
-        End If
-
-        If X = 0 Then
-            If InvDesignState = 3 Then
-                cmbDesignState.Text = "Released"
-            ElseIf InvDesignState = 2 Then
-                cmbDesignState.Text = "Pending"
-            ElseIf InvDesignState = 1 Then
-                cmbDesignState.Text = "Work In Progress"
-            End If
-        Else
-            If cmbDesignState.Text = "Released" Then
-                TempState = 3
-            ElseIf cmbDesignState.Text = "Pending" Then
-                TempState = 2
-            ElseIf cmbDesignState.Text = "Work In Progress" Then
-                TempState = 1
-            Else
-                TempState = "*Varies*"
-            End If
-        End If
-        If X <> 0 And TempState <> InvDesignState Then
-            cmbDesignState.Text = "*Varies*"
-        End If
-
-        If X = 0 And txtCheckedBy.Text = "" Then
-            txtCheckedBy.Text = CStr(InvCheckedBy.Value)
-        ElseIf X <> 0 And UCase(txtCheckedBy.Text) <> UCase(CStr(InvCheckedBy.Value)) Then
-            txtCheckedBy.Text = "*Varies*"
-        End If
-        If CStr(InvCheckDate.Value) = DateTime.MinValue Then
-            If X = 0 Then
-                dtCheckDate.Value = InvCheckDate.Value
-                dtCheckDate.Checked = True
-            ElseIf X <> 0 And dtCheckDate.Value <> InvCheckDate.Value Then
-                dtCheckDate.Checked = False
-            End If
-        Else
-            dtCheckDate.Checked = False
-        End If
+        'If X = 0 Then
+        '    If InvDesignState = 3 Then
+        '        cmbDesignState.Text = "Released"
+        '    ElseIf InvDesignState = 2 Then
+        '        cmbDesignState.Text = "Pending"
+        '    ElseIf InvDesignState = 1 Then
+        '        cmbDesignState.Text = "Work In Progress"
+        '    End If
+        'Else
+        '    If cmbDesignState.Text = "Released" Then
+        '        TempState = 3
+        '    ElseIf cmbDesignState.Text = "Pending" Then
+        '        TempState = 2
+        '    ElseIf cmbDesignState.Text = "Work In Progress" Then
+        '        TempState = 1
+        '    Else
+        '        TempState = "*Varies*"
+        '    End If
+        'End If
+        'If CStr(InvCheckDate.Value) = DateTime.MinValue Then
+        '    If X = 0 Then
+        '        dtCheckDate.Value = InvCheckDate.Value
+        '        dtCheckDate.Checked = True
+        '    ElseIf X <> 0 And dtCheckDate.Value <> InvCheckDate.Value Then
+        '        dtCheckDate.Checked = False
+        '    End If
+        'Else
+        '    dtCheckDate.Checked = False
+        'End If
         If X = 0 And txtRef0.Text = "" Then
             Me.txtRef0.Text = CStr(InvRef(0).Value)
         ElseIf X <> 0 And UCase(txtRef0.Text) <> UCase(CStr(InvRef(0).Value)) Then
@@ -863,8 +798,8 @@ Public Class iProperties
         If txtRevision.Text <> "*Varies*" And My.Settings.Revision = "Model" Then
             oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value = txtRevision.Text
         End If
-        If txtDrawing.Text <> "*Varies*" And My.Settings.DrawingBy = "Model" Then
-            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("41").Value = txtDrawing.Text
+        If txtDrawingBy.Text <> "*Varies*" And My.Settings.DrawingBy = "Model" Then
+            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("41").Value = txtDrawingBy.Text
         End If
         If cmbDesignState.Text = "Released" And My.Settings.DesignState = "Model" Then
             oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("40").Value = 3
@@ -972,8 +907,8 @@ Public Class iProperties
         If txtRevision.Text <> "*Varies*" And My.Settings.Revision = "Drawing" Then
             oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value = txtRevision.Text
         End If
-        If txtDrawing.Text <> "*Varies*" And My.Settings.DrawingBy = "Drawing" Then
-            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("41").Value = txtDrawing.Text
+        If txtDrawingBy.Text <> "*Varies*" And My.Settings.DrawingBy = "Drawing" Then
+            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("41").Value = txtDrawingBy.Text
         End If
         If cmbDesignState.Text = "Released" And My.Settings.DesignState = "Drawing" Then
             oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("40").Value = 3
