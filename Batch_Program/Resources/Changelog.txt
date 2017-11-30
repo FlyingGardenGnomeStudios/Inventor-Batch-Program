@@ -14,4 +14,4 @@ Version 1.2.2.12 (11/22/17)
 - Fixed various issues when creating a spreadsheet with the spreadsheet button
 
 Version 1.2.2.13 (11/29/17)
-- Created workaround for when errors discovered when retrieving iProperties
+- Changed method of retrieving iProperties. Created workaround if error occurs.

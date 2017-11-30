@@ -12,7 +12,8 @@ Public Class iProperties
     Dim InvDesignState As String
     Dim CustomPropSet As PropertySet
     Dim InvEngineer, InvStatus, InvRevision, InvDesignerState, InvCheckedBy, InvCheckDate
-    Dim InvRef(0 To 9) As Inventor.Property
+    Dim InvRef As New Dictionary(Of String, String)
+    Dim InvRefProp(0 To 9) As Inventor.Property
 
     Private Sub chkRev2AddRev_CheckedChanged(sender As Object, e As EventArgs) Handles chkRev2AddRev.CheckedChanged
         If chkRev2AddRev.CheckState = CheckState.Checked Then
@@ -246,10 +247,10 @@ Public Class iProperties
         'Next
         For P = 0 To 9
             Try
-                InvRef(P) = CustomPropSet.Item("Reference" & P)
+                InvRef.Add("InvRef" & P.ToString, CustomPropSet.Item("Reference" & P).Value)
             Catch
-                SetiProp(InvRef(P), "Reference" & P)
-                InvRef(P) = CustomPropSet.Item("Reference" & P)
+                SetiProp(InvRefProp(P), "Reference" & P)
+                InvRef.Add("InvRef" & P.ToString, CustomPropSet.Item("Reference" & P).Value)
                 'If Warning = False Then
                 '    MsgBox("Some drawings are missing reference keys, the references will be updated." & vbNewLine &
                 '        "The data will be saved, but a new Titleblock is required to display the values." & vbNewLine &
@@ -258,51 +259,7 @@ Public Class iProperties
                 'End If
             End Try
         Next
-        'Try
-        '    InvRef(1) = CustomPropSet.Item("Reference1")
-        'Catch
-        '    SetiProp(InvRef(1), "Reference1")
-        'End Try
-        'Try
-        '    InvRef(2) = CustomPropSet.Item("Reference2")
-        'Catch
-        '    SetiProp(InvRef(2), "Reference2")
-        'End Try
-        'Try
-        '    InvRef(3) = CustomPropSet.Item("Reference3")
-        'Catch
-        '    SetiProp(InvRef(3), "Reference3")
-        'End Try
-        'Try
-        '    InvRef(4) = CustomPropSet.Item("Reference4")
-        'Catch
-        '    SetiProp(InvRef(4), "Reference4")
-        'End Try
-        'Try
-        '    InvRef(5) = CustomPropSet.Item("Reference5")
-        'Catch
-        '    SetiProp(InvRef(5), "Reference5")
-        'End Try
-        'Try
-        '    InvRef(6) = CustomPropSet.Item("Reference6")
-        'Catch
-        '    SetiProp(InvRef(6), "Reference6")
-        'End Try
-        'Try
-        '    InvRef(7) = CustomPropSet.Item("Reference7")
-        'Catch
-        '    SetiProp(InvRef(7), "Reference7")
-        'End Try
-        'Try
-        '    InvRef(8) = CustomPropSet.Item("Reference8")
-        'Catch
-        '    SetiProp(InvRef(8), "Reference8")
-        'End Try
-        'Try
-        '    InvRef(9) = CustomPropSet.Item("Referenc.9")
-        'Catch
-        '    SetiProp(InvRef(9), "Reference9")
-        'End Try
+
 
     End Sub
     Private Sub SetiProp(InvRef As Inventor.Property, Ref As String)
@@ -553,17 +510,20 @@ Public Class iProperties
         Dim errorlog As String = ""
         Dim TempState As String = ""
         Dim Placeholder As String
+
         For Each Textbox As Windows.Forms.TextBox In Me.TabPage1.Controls.OfType(Of Windows.Forms.TextBox)()
-            Try
-                Placeholder = Replace(Textbox.Name, "txt", "Inv")
-                If Textbox.Text = "" Then
-                    Textbox.Text = InvStringDic.Item(Placeholder)
+                Try
+                Placeholder = Replace(TextBox.Name, "txt", "Inv")
+                If TextBox.Text = "" Then
+                    TextBox.Text = InvStringDic.Item(Placeholder)
                 Else
-                    Textbox.Text = "*Varies*"
+                    TextBox.Text = "*Varies*"
                 End If
             Catch
-                MsgBox("Error retrieving " & Replace(Textbox.Name, "txt", "", " data for" & vbNewLine & DrawSource))
+                MsgBox("Error retrieving " & Replace(TextBox.Name, "txt", "") & " data for" & vbNewLine & DrawSource)
+                errorlog = errorlog & vbNewLine & "Error retrieving " & Replace(TextBox.Name, "txt", "") & " data for" & vbNewLine & DrawSource
             End Try
+
         Next
         For Each Textbox As Windows.Forms.TextBox In Me.TabPage2.Controls.OfType(Of Windows.Forms.TextBox)()
             Try
@@ -574,7 +534,8 @@ Public Class iProperties
                     Textbox.Text = "*Varies*"
                 End If
             Catch
-                MsgBox("Error retrieving " & Replace(Textbox.Name, "txt", "", " data for" & DrawSource))
+                MsgBox("Error retrieving " & Replace(Textbox.Name, "txt", "") & " data for" & vbNewLine & DrawSource)
+                errorlog = errorlog & vbNewLine & "Error retrieving " & Replace(Textbox.Name, "txt", "") & " data for" & vbNewLine & DrawSource
             End Try
         Next
         For Each Textbox As Windows.Forms.TextBox In Me.TabPage3.Controls.OfType(Of Windows.Forms.TextBox)()
@@ -586,7 +547,8 @@ Public Class iProperties
                     Textbox.Text = "*Varies*"
                 End If
             Catch
-                MsgBox("Error retrieving " & Replace(Textbox.Name, "txt", "", " data for" & DrawSource))
+                MsgBox("Error retrieving " & Replace(Textbox.Name, "txt", "") & " data for" & vbNewLine & DrawSource)
+                errorlog = errorlog & vbNewLine & "Error retrieving " & Replace(Textbox.Name, "txt", "") & " data for" & vbNewLine & DrawSource
             End Try
         Next
         For Each dtPicker As DateTimePicker In Me.TabPage3.Controls.OfType(Of DateTimePicker)()
@@ -603,126 +565,24 @@ Public Class iProperties
                     dtPicker.Checked = False
                 End If
             Catch
-                MsgBox("Error retrieving " & Replace(dtPicker.Name, "txt", "", " data for" & DrawSource))
+                MsgBox("Error retrieving " & Replace(dtPicker.Name, "txt", "") & " data for" & vbNewLine & DrawSource)
+                errorlog = errorlog & vbNewLine & "Error retrieving " & Replace(dtPicker.Name, "txt", "") & " data for" & vbNewLine & DrawSource
             End Try
         Next
 
-        'If CStr(InvModDate.Value) = DateTime.MinValue Then
-        '    If X = 0 Then
-        '        dtModelDate.Checked = True
-        '        dtModelDate.Value = InvModDate.Value
-        '    ElseIf X <> 0 And dtModelDate.Value <> InvModDate.Value Then
-        '        dtModelDate.Checked = False
-        '    End If
-        'Else
-        '    dtModelDate.Checked = False
-        'End If
+        If Len(errorlog) > 0 Then Main.writeDebug(errorlog)
 
-        'If CStr(InvDrawDate.Value) = DateTime.MinValue Then
-        '    If X = 0 Then
-        '        dtDrawingDate.Checked = True
-        '        dtDrawingDate.Value = InvDrawDate.Value
-        '    ElseIf X <> 0 And dtDrawingDate.Value <> InvDrawDate.Value Then
-        '        dtDrawingDate.Checked = False
-        '    End If
-        'Else
-        '    dtDrawingDate.Checked = False
-        'End If
+        For Each Textbox As Windows.Forms.TextBox In Me.TabPage4.Controls.OfType(Of Windows.Forms.TextBox)()
+                Placeholder = Replace(Textbox.Name, "txt", "Inv")
 
-
-        'If CStr(InvModDate.Value) = DateTime.MinValue Then
-        '    If X = 0 Then
-        '        dtModelDate.Checked = True
-        '        dtModelDate.Value = InvModDate.Value
-        '    ElseIf X <> 0 And dtModelDate.Value <> InvModDate.Value Then
-        '        dtModelDate.Checked = False
-        '    End If
-        'Else
-        '    dtModelDate.Checked = False
-        'End If
-
-
-        'If X = 0 Then
-        '    If InvDesignState = 3 Then
-        '        cmbDesignState.Text = "Released"
-        '    ElseIf InvDesignState = 2 Then
-        '        cmbDesignState.Text = "Pending"
-        '    ElseIf InvDesignState = 1 Then
-        '        cmbDesignState.Text = "Work In Progress"
-        '    End If
-        'Else
-        '    If cmbDesignState.Text = "Released" Then
-        '        TempState = 3
-        '    ElseIf cmbDesignState.Text = "Pending" Then
-        '        TempState = 2
-        '    ElseIf cmbDesignState.Text = "Work In Progress" Then
-        '        TempState = 1
-        '    Else
-        '        TempState = "*Varies*"
-        '    End If
-        'End If
-        'If CStr(InvCheckDate.Value) = DateTime.MinValue Then
-        '    If X = 0 Then
-        '        dtCheckDate.Value = InvCheckDate.Value
-        '        dtCheckDate.Checked = True
-        '    ElseIf X <> 0 And dtCheckDate.Value <> InvCheckDate.Value Then
-        '        dtCheckDate.Checked = False
-        '    End If
-        'Else
-        '    dtCheckDate.Checked = False
-        'End If
-        If X = 0 And txtRef0.Text = "" Then
-            Me.txtRef0.Text = CStr(InvRef(0).Value)
-        ElseIf X <> 0 And UCase(txtRef0.Text) <> UCase(CStr(InvRef(0).Value)) Then
-            Me.txtRef0.Text = "*Varies*"
-        End If
-        If X = 0 And txtRef1.Text = "" Then
-            Me.txtRef1.Text = CStr(InvRef(1).Value)
-        ElseIf X <> 0 And UCase(txtRef1.Text) <> UCase(CStr(InvRef(1).Value)) Then
-            Me.txtRef1.Text = "*Varies*"
-        End If
-        If X = 0 And txtRef2.Text = "" Then
-            Me.txtRef2.Text = CStr(InvRef(2).Value)
-        ElseIf X <> 0 And UCase(txtRef2.Text) <> UCase(CStr(InvRef(2).Value)) Then
-            Me.txtRef2.Text = "*Varies*"
-        End If
-        If X = 0 And txtRef3.Text = "" Then
-            Me.txtRef2.Text = CStr(InvRef(3).Value)
-        ElseIf X <> 0 And UCase(txtRef3.Text) <> UCase(CStr(InvRef(3).Value)) Then
-            Me.txtRef3.Text = "*Varies*"
-        End If
-        If X = 0 And txtRef4.Text = "" Then
-            Me.txtRef4.Text = CStr(InvRef(4).Value)
-        ElseIf X <> 0 And UCase(txtRef4.Text) <> UCase(CStr(InvRef(4).Value)) Then
-            Me.txtRef4.Text = "*Varies*"
-        End If
-        If X = 0 And txtRef5.Text = "" Then
-            Me.txtRef5.Text = CStr(InvRef(5).Value)
-        ElseIf X <> 0 And UCase(txtRef5.Text) <> UCase(CStr(InvRef(5).Value)) Then
-            Me.txtRef5.Text = "*Varies*"
-        End If
-        If X = 0 And txtRef6.Text = "" Then
-            Me.txtRef6.Text = CStr(InvRef(6).Value)
-        ElseIf X <> 0 And UCase(txtRef6.Text) <> UCase(CStr(InvRef(6).Value)) Then
-            Me.txtRef6.Text = "*Varies*"
-        End If
-        If X = 0 And txtRef7.Text = "" Then
-            Me.txtRef7.Text = CStr(InvRef(7).Value)
-        ElseIf X <> 0 And UCase(txtRef7.Text) <> UCase(CStr(InvRef(7).Value)) Then
-            Me.txtRef7.Text = "*Varies*"
-        End If
-        If X = 0 And txtRef8.Text = "" Then
-            Me.txtRef8.Text = CStr(InvRef(8).Value)
-        ElseIf X <> 0 And UCase(txtRef8.Text) <> UCase(CStr(InvRef(8).Value)) Then
-            Me.txtRef8.Text = "*Varies*"
-        End If
-        If X = 0 And txtRef9.Text = "" Then
-            Me.txtRef9.Text = CStr(InvRef(9).Value)
-        ElseIf X <> 0 And UCase(txtRef9.Text) <> UCase(CStr(InvRef(9).Value)) Then
-            Me.txtRef9.Text = "*Varies*"
-        End If
+            If X = 0 And Textbox.Text = "" Then
+                Textbox.Text = CStr(InvRef.Item(Placeholder))
+            ElseIf X <> 0 And UCase(Textbox.Text) <> UCase(InvRef.Item(Placeholder)) Then
+                Textbox.Text = "*Varies*"
+            End If
+        Next
         'Increase counter to require comparison to the last ipropertiy collected
-        ' X = X + 1
+        X = X + 1
 
     End Sub
     Private Sub btnCancel_Click(sender As System.Object, e As System.EventArgs) Handles btnCancel.Click

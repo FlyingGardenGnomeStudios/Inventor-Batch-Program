@@ -1988,9 +1988,6 @@ Public Class Main
         CreateOpenDocs(OpenDocs)
         Dim ErrList As String = ""
         Dim Elog As String = ""
-        For Each Document In _invApp.Documents
-            CloseLater(Strings.Right(Document.FullFileName, Len(Document.FullFileName) - InStrRev(Document.FullFileName, "\")), Document)
-        Next
         If VBAFlag = "False" Then CreateVBA()
         Dim Rename As New Rename
         Dim X As Integer = 0
