@@ -124,6 +124,9 @@ Public Class iProperties
                 End If
                 oDoc = _invApp.Documents.Open(DrawSource, False)
                 If Read = True Then
+                    InvDateDic.Clear()
+                    InvStringDic.Clear()
+                    InvRef.Clear()
                     Call SetModelProps(oDoc)
                 Else
                     Call WriteModelProps(oDoc)
@@ -146,7 +149,11 @@ Public Class iProperties
                     Call WriteRevTable(oDoc, OpenDocs)
                     _invApp.ActiveDocument.Update()
                 End If
-                Main.CloseLater(oDoc.DisplayName, oDoc)
+                Try
+                    Main.CloseLater(oDoc.DisplayName, oDoc)
+                Catch
+                    Main.writeDebug("Couldn't close " & DrawingName & ". Could already be closed")
+                End Try
                 X += 1
             End If
 
@@ -510,78 +517,48 @@ Public Class iProperties
         Dim errorlog As String = ""
         Dim TempState As String = ""
         Dim Placeholder As String
-
-        For Each Textbox As Windows.Forms.TextBox In Me.TabPage1.Controls.OfType(Of Windows.Forms.TextBox)()
+        For T = 0 To Me.iProp.TabPages.Count - 1
+            For Each Textbox As Windows.Forms.TextBox In Me.iProp.TabPages.Item(T).Controls.OfType(Of Windows.Forms.TextBox)() 'Me.TabPage1.Controls.OfType(Of Windows.Forms.TextBox)()
                 Try
-                Placeholder = Replace(TextBox.Name, "txt", "Inv")
-                If TextBox.Text = "" Then
-                    TextBox.Text = InvStringDic.Item(Placeholder)
-                Else
-                    TextBox.Text = "*Varies*"
-                End If
-            Catch
-                MsgBox("Error retrieving " & Replace(TextBox.Name, "txt", "") & " data for" & vbNewLine & DrawSource)
-                errorlog = errorlog & vbNewLine & "Error retrieving " & Replace(TextBox.Name, "txt", "") & " data for" & vbNewLine & DrawSource
-            End Try
-
-        Next
-        For Each Textbox As Windows.Forms.TextBox In Me.TabPage2.Controls.OfType(Of Windows.Forms.TextBox)()
-            Try
-                Placeholder = Replace(Textbox.Name, "txt", "Inv")
-                If Textbox.Text = "" Then
-                    Textbox.Text = InvStringDic.Item(Placeholder)
-                Else
-                    Textbox.Text = "*Varies*"
-                End If
-            Catch
-                MsgBox("Error retrieving " & Replace(Textbox.Name, "txt", "") & " data for" & vbNewLine & DrawSource)
-                errorlog = errorlog & vbNewLine & "Error retrieving " & Replace(Textbox.Name, "txt", "") & " data for" & vbNewLine & DrawSource
-            End Try
-        Next
-        For Each Textbox As Windows.Forms.TextBox In Me.TabPage3.Controls.OfType(Of Windows.Forms.TextBox)()
-            Try
-                Placeholder = Replace(Textbox.Name, "txt", "Inv")
-                If Textbox.Text = "" Then
-                    Textbox.Text = InvStringDic.Item(Placeholder)
-                Else
-                    Textbox.Text = "*Varies*"
-                End If
-            Catch
-                MsgBox("Error retrieving " & Replace(Textbox.Name, "txt", "") & " data for" & vbNewLine & DrawSource)
-                errorlog = errorlog & vbNewLine & "Error retrieving " & Replace(Textbox.Name, "txt", "") & " data for" & vbNewLine & DrawSource
-            End Try
-        Next
-        For Each dtPicker As DateTimePicker In Me.TabPage3.Controls.OfType(Of DateTimePicker)()
-            Try
-                Placeholder = Replace(dtPicker.Name, "dt", "Inv")
-                If InvDateDic.Item(Placeholder) <> #1/1/1601 12:00:00 AM# Then
-                    If X = 0 Then
-                        dtPicker.Checked = True
-                        dtPicker.Value = InvDateDic.Item(Placeholder)
-                    ElseIf X <> 0 And dtPicker.Value <> InvDateDic.Item(Placeholder) Then
+                    Placeholder = Replace(Textbox.Name, "txt", "Inv")
+                    If T <> 3 Then
+                        If Textbox.Text = "" Then
+                            Textbox.Text = InvStringDic.Item(Placeholder)
+                        ElseIf Ucase(Textbox.Text) <> ucase(InvStringDic.Item(placeholder)) Then
+                            Textbox.Text = "*Varies*"
+                        End If
+                    Else
+                        If X = 0 And Textbox.Text = "" Then
+                            Textbox.Text = CStr(InvRef.Item(Placeholder))
+                        ElseIf X <> 0 And UCase(Textbox.Text) <> UCase(InvRef.Item(Placeholder)) Then
+                            Textbox.Text = "*Varies*"
+                        End If
+                    End If
+                Catch
+                    MsgBox("Error retrieving " & Replace(Textbox.Name, "txt", "") & " data for" & vbNewLine & DrawSource)
+                    errorlog = errorlog & vbNewLine & "Error retrieving " & Replace(Textbox.Name, "txt", "") & " data for" & vbNewLine & DrawSource
+                End Try
+            Next
+            For Each dtPicker As DateTimePicker In Me.iProp.TabPages.Item(T).Controls.OfType(Of DateTimePicker)()
+                Try
+                    Placeholder = Replace(dtPicker.Name, "dt", "Inv")
+                    If InvDateDic.Item(Placeholder) <> #1/1/1601 12:00:00 AM# Then
+                        If X = 0 Then
+                            dtPicker.Checked = True
+                            dtPicker.Value = InvDateDic.Item(Placeholder)
+                        ElseIf X <> 0 And dtPicker.Value <> InvDateDic.Item(Placeholder) Then
+                            dtPicker.Checked = False
+                        End If
+                    Else
                         dtPicker.Checked = False
                     End If
-                Else
-                    dtPicker.Checked = False
-                End If
-            Catch
-                MsgBox("Error retrieving " & Replace(dtPicker.Name, "txt", "") & " data for" & vbNewLine & DrawSource)
-                errorlog = errorlog & vbNewLine & "Error retrieving " & Replace(dtPicker.Name, "txt", "") & " data for" & vbNewLine & DrawSource
-            End Try
+                Catch
+                    MsgBox("Error retrieving " & Replace(dtPicker.Name, "txt", "") & " data for" & vbNewLine & DrawSource)
+                    errorlog = errorlog & vbNewLine & "Error retrieving " & Replace(dtPicker.Name, "txt", "") & " data for" & vbNewLine & DrawSource
+                End Try
+            Next
         Next
-
         If Len(errorlog) > 0 Then Main.writeDebug(errorlog)
-
-        For Each Textbox As Windows.Forms.TextBox In Me.TabPage4.Controls.OfType(Of Windows.Forms.TextBox)()
-                Placeholder = Replace(Textbox.Name, "txt", "Inv")
-
-            If X = 0 And Textbox.Text = "" Then
-                Textbox.Text = CStr(InvRef.Item(Placeholder))
-            ElseIf X <> 0 And UCase(Textbox.Text) <> UCase(InvRef.Item(Placeholder)) Then
-                Textbox.Text = "*Varies*"
-            End If
-        Next
-        'Increase counter to require comparison to the last ipropertiy collected
         X = X + 1
 
     End Sub

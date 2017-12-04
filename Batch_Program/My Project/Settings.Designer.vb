@@ -581,6 +581,66 @@ Namespace My
                 Me("Custom") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property RenameShowMe() As Boolean
+            Get
+                Return CType(Me("RenameShowMe"),Boolean)
+            End Get
+            Set
+                Me("RenameShowMe") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property DonateShowMe() As Boolean
+            Get
+                Return CType(Me("DonateShowMe"),Boolean)
+            End Get
+            Set
+                Me("DonateShowMe") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property Donated() As Boolean
+            Get
+                Return CType(Me("Donated"),Boolean)
+            End Get
+            Set
+                Me("Donated") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property DonateCount() As Integer
+            Get
+                Return CType(Me("DonateCount"),Integer)
+            End Get
+            Set
+                Me("DonateCount") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property FirstRun() As Boolean
+            Get
+                Return CType(Me("FirstRun"),Boolean)
+            End Get
+            Set
+                Me("FirstRun") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

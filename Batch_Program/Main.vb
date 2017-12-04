@@ -73,7 +73,19 @@ Public Class Main
     Public Sub New()
         ' This call Is required by the designer.
         InitializeComponent()
-
+        Dim Warning As New Warning
+        If My.Settings.DonateShowMe = True Then
+            If My.Settings.DonateCount < 4 Then
+                My.Settings.DonateCount = My.Settings.DonateCount + 1
+            Else
+                My.Settings.DonateCount = 0
+                Warning.Donate()
+            End If
+        End If
+        If My.Settings.FirstRun = True Then
+            Warning.FirstRun()
+            Warning.ShowDialog()
+        End If
         'Add any initialization after the InitializeComponent() call.
         Try
             _invApp = Marshal.GetActiveObject("Inventor.Application")
@@ -1984,12 +1996,16 @@ Public Class Main
             MsgBox("Only select only one item to be renamed")
             Exit Sub
         End If
-
+        Dim Infoform As New Warning
+        If My.Settings.RenameShowMe = True Then
+            Infoform.ShowDialog()
+        End If
         CreateOpenDocs(OpenDocs)
         Dim ErrList As String = ""
         Dim Elog As String = ""
         If VBAFlag = "False" Then CreateVBA()
         Dim Rename As New Rename
+
         Dim X As Integer = 0
         Rename.PopMain(Me)
         Try
@@ -2012,9 +2028,11 @@ Public Class Main
             writeDebug(Elog)
         End Try
         Rename.chkCCParts.Checked = False
+
         Rename.Show()
         'RenameTable.Clear()
     End Sub
+
     Public Sub ExtractThumb(ByRef PartName As String, ByRef Thumbnail As Image)
         Dim X As Integer = 0
         For Each entry As List(Of String) In RenameTable

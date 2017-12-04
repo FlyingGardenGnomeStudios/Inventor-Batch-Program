@@ -182,6 +182,12 @@
     <Compile Include="Class1.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Warning.Designer.vb">
+      <DependentUpon>Warning.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Warning.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="iPropertySettings.Designer.vb">
       <DependentUpon>iPropertySettings.vb</DependentUpon>
     </Compile>
@@ -284,6 +290,9 @@
     <EmbeddedResource Include="CheckNeeded.resx">
       <DependentUpon>CheckNeeded.vb</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Warning.resx">
+      <DependentUpon>Warning.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="iPropertySettings.resx">
       <DependentUpon>iPropertySettings.vb</DependentUpon>

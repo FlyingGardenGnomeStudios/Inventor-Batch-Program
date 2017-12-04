@@ -15,3 +15,4 @@ Version 1.2.2.12 (11/22/17)
 
 Version 1.2.2.13 (11/29/17)
 - Changed method of retrieving iProperties. Created workaround if error occurs.
+- Added warning to rename operation
