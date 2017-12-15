@@ -138,10 +138,10 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="DonateShowMe" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="Donated" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="DonateCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>

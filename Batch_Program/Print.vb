@@ -122,10 +122,10 @@ Public Class Print
                     Catch
                     End Try
                     'PDrawingName = Strings.Right(dDoc.FullDocumentName, Len(dDoc.FullDocumentName) - InStrRev(dDoc.FullDocumentName, "\"))
-                    Main.ProgressBar(PEnd + 1 * Y, Z, "Printing: ", PDrawingName)
+                    Main.ProgressBar(PEnd + 1 * Y, Z, "Printing: ", DrawingName)
                     Z += 1
-                    PrintSheets(PDrawingName, ScaleSelect, Range, dDoc, Colour)
-                    Main.CloseLater(PDrawingName, dDoc)
+                    PrintSheets(DrawingName, ScaleSelect, Range, dDoc, Colour)
+                    Main.CloseLater(DrawingName, dDoc)
                 End If
             Next
         Next

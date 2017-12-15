@@ -68,15 +68,12 @@ Partial Class Main
         Me.CMSAlphabetical = New System.Windows.Forms.ToolStripMenuItem()
         Me.CMSHeirarchical = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowHideToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CMSMissing = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CMSMissingDWG = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CMSMissingParts = New System.Windows.Forms.ToolStripMenuItem()
         Me.CMSReference = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportToToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CMSSubSpreadsheet = New System.Windows.Forms.ToolStripMenuItem()
         Me.CMSSubText = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CMSOpenFiles = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.ExportToToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CMSSpreadsheet = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CMSTextFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DefaultSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -85,9 +82,9 @@ Partial Class Main
         Me.AboutBatchProgramToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuActDeact = New System.Windows.Forms.ToolStripMenuItem()
         Me.HowToToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.IFoundABugToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.MsVistaProgressBar = New MSVistaProgressBar()
-        Me.IFoundABugToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
@@ -95,7 +92,6 @@ Partial Class Main
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox5.SuspendLayout()
         Me.CMSSubFiles.SuspendLayout()
-        Me.CMSOpenFiles.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -113,7 +109,7 @@ Partial Class Main
         'chkDerived
         '
         Me.chkDerived.AutoSize = True
-        Me.chkDerived.Location = New System.Drawing.Point(17, 44)
+        Me.chkDerived.Location = New System.Drawing.Point(24, 45)
         Me.chkDerived.Name = "chkDerived"
         Me.chkDerived.Size = New System.Drawing.Size(101, 17)
         Me.chkDerived.TabIndex = 47
@@ -234,7 +230,7 @@ Partial Class Main
         'chkAssy
         '
         Me.chkAssy.AutoSize = True
-        Me.chkAssy.Location = New System.Drawing.Point(6, 44)
+        Me.chkAssy.Location = New System.Drawing.Point(6, 45)
         Me.chkAssy.Name = "chkAssy"
         Me.chkAssy.Size = New System.Drawing.Size(78, 17)
         Me.chkAssy.TabIndex = 36
@@ -245,7 +241,7 @@ Partial Class Main
         'chkParts
         '
         Me.chkParts.AutoSize = True
-        Me.chkParts.Location = New System.Drawing.Point(6, 29)
+        Me.chkParts.Location = New System.Drawing.Point(6, 30)
         Me.chkParts.Name = "chkParts"
         Me.chkParts.Size = New System.Drawing.Size(50, 17)
         Me.chkParts.TabIndex = 35
@@ -256,7 +252,7 @@ Partial Class Main
         'chkDrawings
         '
         Me.chkDrawings.AutoSize = True
-        Me.chkDrawings.Location = New System.Drawing.Point(6, 13)
+        Me.chkDrawings.Location = New System.Drawing.Point(6, 15)
         Me.chkDrawings.Name = "chkDrawings"
         Me.chkDrawings.Size = New System.Drawing.Size(70, 17)
         Me.chkDrawings.TabIndex = 34
@@ -266,11 +262,11 @@ Partial Class Main
         '
         'GroupBox1
         '
-        Me.GroupBox1.Controls.Add(Me.chkAssy)
         Me.GroupBox1.Controls.Add(Me.chkDerived)
-        Me.GroupBox1.Controls.Add(Me.chkDrawings)
-        Me.GroupBox1.Controls.Add(Me.chkParts)
         Me.GroupBox1.Controls.Add(Me.chkPres)
+        Me.GroupBox1.Controls.Add(Me.chkAssy)
+        Me.GroupBox1.Controls.Add(Me.chkParts)
+        Me.GroupBox1.Controls.Add(Me.chkDrawings)
         Me.GroupBox1.Location = New System.Drawing.Point(12, 27)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(142, 79)
@@ -529,13 +525,13 @@ Partial Class Main
         '
         Me.CMSSubFiles.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SortToolStripMenuItem, Me.ShowHideToolStripMenuItem, Me.ExportToToolStripMenuItem})
         Me.CMSSubFiles.Name = "ContextMenuStrip1"
-        Me.CMSSubFiles.Size = New System.Drawing.Size(134, 70)
+        Me.CMSSubFiles.Size = New System.Drawing.Size(153, 92)
         '
         'SortToolStripMenuItem
         '
         Me.SortToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSAlphabetical, Me.CMSHeirarchical})
         Me.SortToolStripMenuItem.Name = "SortToolStripMenuItem"
-        Me.SortToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.SortToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.SortToolStripMenuItem.Text = "Sort"
         '
         'CMSAlphabetical
@@ -554,16 +550,22 @@ Partial Class Main
         '
         'ShowHideToolStripMenuItem
         '
-        Me.ShowHideToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSMissing, Me.CMSReference})
+        Me.ShowHideToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSMissingDWG, Me.CMSMissingParts, Me.CMSReference})
         Me.ShowHideToolStripMenuItem.Name = "ShowHideToolStripMenuItem"
-        Me.ShowHideToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.ShowHideToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ShowHideToolStripMenuItem.Text = "Show/Hide"
         '
-        'CMSMissing
+        'CMSMissingDWG
         '
-        Me.CMSMissing.Name = "CMSMissing"
-        Me.CMSMissing.Size = New System.Drawing.Size(206, 22)
-        Me.CMSMissing.Text = "Hide Missing Drawings"
+        Me.CMSMissingDWG.Name = "CMSMissingDWG"
+        Me.CMSMissingDWG.Size = New System.Drawing.Size(206, 22)
+        Me.CMSMissingDWG.Text = "Hide Missing Drawings"
+        '
+        'CMSMissingParts
+        '
+        Me.CMSMissingParts.Name = "CMSMissingParts"
+        Me.CMSMissingParts.Size = New System.Drawing.Size(206, 22)
+        Me.CMSMissingParts.Text = "Hide Missing Parts"
         '
         'CMSReference
         '
@@ -575,7 +577,7 @@ Partial Class Main
         '
         Me.ExportToToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSSubSpreadsheet, Me.CMSSubText})
         Me.ExportToToolStripMenuItem.Name = "ExportToToolStripMenuItem"
-        Me.ExportToToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.ExportToToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ExportToToolStripMenuItem.Text = "Export To"
         '
         'CMSSubSpreadsheet
@@ -589,31 +591,6 @@ Partial Class Main
         Me.CMSSubText.Name = "CMSSubText"
         Me.CMSSubText.Size = New System.Drawing.Size(138, 22)
         Me.CMSSubText.Text = "Text File"
-        '
-        'CMSOpenFiles
-        '
-        Me.CMSOpenFiles.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExportToToolStripMenuItem1})
-        Me.CMSOpenFiles.Name = "CMSOpenFiles"
-        Me.CMSOpenFiles.Size = New System.Drawing.Size(122, 26)
-        '
-        'ExportToToolStripMenuItem1
-        '
-        Me.ExportToToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSSpreadsheet, Me.CMSTextFile})
-        Me.ExportToToolStripMenuItem1.Name = "ExportToToolStripMenuItem1"
-        Me.ExportToToolStripMenuItem1.Size = New System.Drawing.Size(121, 22)
-        Me.ExportToToolStripMenuItem1.Text = "Export to"
-        '
-        'CMSSpreadsheet
-        '
-        Me.CMSSpreadsheet.Name = "CMSSpreadsheet"
-        Me.CMSSpreadsheet.Size = New System.Drawing.Size(138, 22)
-        Me.CMSSpreadsheet.Text = "Spreadsheet"
-        '
-        'CMSTextFile
-        '
-        Me.CMSTextFile.Name = "CMSTextFile"
-        Me.CMSTextFile.Size = New System.Drawing.Size(138, 22)
-        Me.CMSTextFile.Text = "Text File"
         '
         'MenuStrip1
         '
@@ -668,6 +645,12 @@ Partial Class Main
         Me.HowToToolStripMenuItem1.Size = New System.Drawing.Size(189, 22)
         Me.HowToToolStripMenuItem1.Text = "Changelog"
         '
+        'IFoundABugToolStripMenuItem
+        '
+        Me.IFoundABugToolStripMenuItem.Name = "IFoundABugToolStripMenuItem"
+        Me.IFoundABugToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
+        Me.IFoundABugToolStripMenuItem.Text = "I found a bug"
+        '
         'ContextMenuStrip1
         '
         Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
@@ -688,12 +671,6 @@ Partial Class Main
         Me.MsVistaProgressBar.Size = New System.Drawing.Size(536, 23)
         Me.MsVistaProgressBar.TabIndex = 62
         Me.MsVistaProgressBar.Visible = False
-        '
-        'IFoundABugToolStripMenuItem
-        '
-        Me.IFoundABugToolStripMenuItem.Name = "IFoundABugToolStripMenuItem"
-        Me.IFoundABugToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
-        Me.IFoundABugToolStripMenuItem.Text = "I found a bug"
         '
         'Main
         '
@@ -731,7 +708,6 @@ Partial Class Main
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox5.ResumeLayout(False)
         Me.CMSSubFiles.ResumeLayout(False)
-        Me.CMSOpenFiles.ResumeLayout(False)
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         Me.ResumeLayout(False)
@@ -790,12 +766,8 @@ Partial Class Main
     Friend WithEvents TextFileToolStripMenuItem1 As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSAlphabetical As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSHeirarchical As Windows.Forms.ToolStripMenuItem
-    Friend WithEvents CMSOpenFiles As Windows.Forms.ContextMenuStrip
-    Friend WithEvents ExportToToolStripMenuItem1 As Windows.Forms.ToolStripMenuItem
-    Friend WithEvents CMSSpreadsheet As Windows.Forms.ToolStripMenuItem
-    Friend WithEvents CMSTextFile As Windows.Forms.ToolStripMenuItem
     Friend WithEvents ShowHideToolStripMenuItem As Windows.Forms.ToolStripMenuItem
-    Friend WithEvents CMSMissing As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents CMSMissingDWG As Windows.Forms.ToolStripMenuItem
     Friend WithEvents MenuStrip1 As Windows.Forms.MenuStrip
     Friend WithEvents FileToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents DefaultSettingsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
@@ -812,4 +784,5 @@ Partial Class Main
     Friend WithEvents HowToToolStripMenuItem1 As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSReference As Windows.Forms.ToolStripMenuItem
     Friend WithEvents IFoundABugToolStripMenuItem As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents CMSMissingParts As Windows.Forms.ToolStripMenuItem
 End Class

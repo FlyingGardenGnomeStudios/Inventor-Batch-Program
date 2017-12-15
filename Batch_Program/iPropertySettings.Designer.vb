@@ -22,6 +22,7 @@ Partial Class iPropertySettings
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(iPropertySettings))
         Me.iPropertiesTab = New System.Windows.Forms.TabControl()
         Me.SummaryTab = New System.Windows.Forms.TabPage()
         Me.DGVSummary = New System.Windows.Forms.DataGridView()
@@ -304,6 +305,7 @@ Partial Class iPropertySettings
         Me.Controls.Add(Me.cmbDefault)
         Me.Controls.Add(Me.iPropertiesTab)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "iPropertySettings"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "iPropertySettings"

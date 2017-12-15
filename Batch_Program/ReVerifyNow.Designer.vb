@@ -22,6 +22,7 @@ Partial Class ReVerifyNow
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ReVerifyNow))
         Me.lblDescr = New System.Windows.Forms.Label()
         Me.btnExit = New System.Windows.Forms.Button()
         Me.btnReverify = New System.Windows.Forms.Button()
@@ -65,6 +66,7 @@ Partial Class ReVerifyNow
         Me.Controls.Add(Me.lblDescr)
         Me.Controls.Add(Me.btnExit)
         Me.Controls.Add(Me.btnReverify)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "ReVerifyNow"
         Me.Text = "ReVerifyNow"
         Me.ResumeLayout(False)

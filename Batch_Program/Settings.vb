@@ -7,7 +7,9 @@ Public Class Settings
 
     Public Sub New()
         InitializeComponent()
-
+        LoadFormValues()
+    End Sub
+    Private Sub LoadFormValues()
         If My.Settings.PDFSaveNewLoc = True Then
             txtPDFSaveLoc.Text = My.Settings.PDFSaveLoc
             txtPDFSaveLoc.Enabled = True
@@ -16,6 +18,8 @@ Public Class Settings
             txtPDFTag.Enabled = True
             rdoPDFTag.Checked = True
             txtPDFTag.Text = My.Settings.PDFTag
+        Else
+            rdoPDFChoose.Checked = True
         End If
         If My.Settings.DXFSaveNewLoc = True Then
             txtDXFSaveLoc.Text = My.Settings.DXFSaveLoc
@@ -25,15 +29,19 @@ Public Class Settings
             txtDXFTag.Enabled = True
             rdoDXFTag.Checked = True
             txtDXFTag.Text = My.Settings.DXFTag
+        Else
+            rdoDXFChoose.Checked = True
         End If
         If My.Settings.DWGSaveNewLoc = True Then
             txtDWGSaveLoc.Text = My.Settings.DWGSaveLoc
             txtDWGSaveLoc.Enabled = True
             rdoDWGSaveLoc.Checked = True
-        ElseIf My.Settings.DWGsavetag = True Then
+        ElseIf My.Settings.DWGSaveTag = True Then
             txtDWGTag.Enabled = True
             rdoDWGTag.Checked = True
             txtDWGTag.Text = My.Settings.DWGTag
+        Else
+            rdoDWGChoose.Checked = True
         End If
         If My.Settings.PDFRev = False Then chkPDFRev.Checked = False
         If My.Settings.DXFRev = False Then chkDXFRev.Checked = False
@@ -127,6 +135,7 @@ Public Class Settings
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        LoadFormValues()
         Me.Close()
     End Sub
 
@@ -215,7 +224,7 @@ Public Class Settings
         Else
             My.Settings.DWGRev = False
         End If
-
+        My.Settings.Save()
         Me.Close()
     End Sub
 

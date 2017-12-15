@@ -22,6 +22,7 @@ Partial Class Print
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Print))
         Me.rdoAllPages = New System.Windows.Forms.RadioButton()
         Me.rdoCurrentPage = New System.Windows.Forms.RadioButton()
         Me.rdoFirstPage = New System.Windows.Forms.RadioButton()
@@ -211,6 +212,7 @@ Partial Class Print
         Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.GroupBox1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Print"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Print"

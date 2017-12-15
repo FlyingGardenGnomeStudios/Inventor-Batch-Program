@@ -6,6 +6,8 @@ Public Class Warning
         InitializeComponent()
     End Sub
     Public Sub Donate()
+        Me.Height = 111
+        Label1.Height = 30
         Label1.Text = "Developing takes time and money. " & vbNewLine & "If this program has saved you either, consider saying thanks."
         PicDonate.Visible = True
         If My.Settings.Donated = True Then
@@ -24,15 +26,17 @@ Public Class Warning
         Me.ShowDialog()
     End Sub
     Public Sub FirstRun()
+        btnOK.Text = "OK"
+        PicDonate.Visible = False
         Me.Text = "First time information"
         Me.Height = 150
+        chkDontShow.Location = New Drawing.Point(chkDontShow.Location.X, chkDontShow.Location.Y + 40)
         Label2.Text = "FirstRun"
+        Label1.Height = 65
         btnOK.Location = New Drawing.Point(btnOK.Location.X, btnOK.Location.Y + 40)
         Label1.Text = "Batch Program is a program created to automate many tasks in Inventor. The program is in a constant state of developement so bugs are likely. If you find any errors/bugs let me know by emailing a description of how to replicate the error to flyinggardengnomestudios@gmail.com. Please include the error log which is saved in: " & My.Computer.FileSystem.SpecialDirectories.Temp & "\debug.txt"
     End Sub
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
-
-
         Select Case Label2.Text
             Case "Rename"
                 If chkDontShow.Checked = True Then
@@ -45,7 +49,9 @@ Public Class Warning
                     My.Settings.DonateShowMe = False
                 End If
             Case "FirstRun"
-                My.Settings.FirstRun = False
+                If chkDontShow.Checked = True Then
+                    My.Settings.FirstRun = False
+                End If
         End Select
         Me.Close()
     End Sub
@@ -60,7 +66,11 @@ Public Class Warning
     End Sub
 
     Private Sub chkDontShow_CheckedChanged(sender As Object, e As EventArgs) Handles chkDontShow.CheckedChanged
-        PicDonate.Visible = False
-        btnOK.Text = "My bad, carry on and disregard"
+        If Label2.Text = "FirstRun" Then
+            My.Settings.FirstRun = False
+        ElseIf Label2.Text = "Donate" Then
+            PicDonate.Visible = False
+            btnOK.Text = "My bad, carry on and disregard"
+        End If
     End Sub
 End Class

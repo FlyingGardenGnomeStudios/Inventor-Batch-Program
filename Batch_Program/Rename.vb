@@ -134,7 +134,7 @@ Public Class Rename
                         .Range("D" & Y).value = DGVRename.Rows(X).Cells(3).Value
                         .range("F" & Y).value = DGVRename.Rows(X).Cells(5).Value
                     End With
-                    Dim Img As Image = DGVRename.Rows(Y - 4).Cells(4).Value
+                    Dim Img As Image = DGVRename.Rows(X).Cells(4).Value
                     If Img Is Nothing Then
                     Else
                         Img.Save(My.Computer.FileSystem.SpecialDirectories.Temp & "\Thumbnail.jpg")
@@ -157,7 +157,7 @@ Public Class Rename
                     Else
                         ExcelDoc.ActiveSheet.Range("E" & Y).value = "No Thumbnail"
                     End If
-                    Main.writeDebug("Exported: " & DGVRename.Rows(Y - 4).Cells(2).Value)
+                    Main.writeDebug("Exported: " & DGVRename.Rows(X).Cells(2).Value)
                     Y += 1
                 End If
             Next
@@ -457,11 +457,10 @@ Public Class Rename
         Next
         Dim oAssDoc As AssemblyDocument = _invapp.Documents.Open(Source, False)
         Dim oAssDef As AssemblyComponentDefinition = oAssDoc.ComponentDefinition
-        Dim oCompOccs As ComponentOccurrences = oAssDef.Occurrences
-        TraverseAssembly(oAssDoc, oCompOccs, SaveLoc, Start, 0)
-        oAssDoc.Save()
-        Main.CloseLater(Source, oAssDoc)
-
+            Dim oCompOccs As ComponentOccurrences = oAssDef.Occurrences
+            TraverseAssembly(oAssDoc, oCompOccs, SaveLoc, Start, 0)
+            oAssDoc.Save()
+            Main.CloseLater(Source, oAssDoc)
         ProgressBar(1, 1, "Cleaning Up", "", Start)
     End Sub
     Private Sub TraverseAssembly(ByVal oAssDoc As Document, ByVal oCompOccs As ComponentOccurrences, ByVal SaveLoc As String, ByVal Start As Date,

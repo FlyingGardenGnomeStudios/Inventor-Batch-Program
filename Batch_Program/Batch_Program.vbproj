@@ -34,7 +34,7 @@
     <PublisherName>Flying Garden Gnome Studios</PublisherName>
     <MinimumRequiredVersion>1.1.2.0</MinimumRequiredVersion>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>13</ApplicationRevision>
+    <ApplicationRevision>16</ApplicationRevision>
     <ApplicationVersion>1.2.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -124,7 +124,7 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Batch_Runner-Logo_256px.ico</ApplicationIcon>
+    <ApplicationIcon>Batch Program.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -276,6 +276,7 @@
     </Compile>
     <None Include="Inventor Batch Program.pfx" />
     <None Include="Resources\Changelog.txt" />
+    <Content Include="Batch Program.ico" />
     <Content Include="Resources\List-Blank.xlsm" />
     <Content Include="Resources\Quote-Blank.xlsm" />
     <Content Include="Resources\Rename.xlsm" />
@@ -355,7 +356,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Batch_Program.Addin" />
-    <Content Include="Batch_Runner-Logo_256px.ico" />
     <Content Include="ReadMe.txt" />
     <Content Include="TurboActivate.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
