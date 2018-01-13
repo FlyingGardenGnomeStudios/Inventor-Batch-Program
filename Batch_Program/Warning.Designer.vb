@@ -43,8 +43,8 @@ Partial Class Warning
         '
         'Label1
         '
-        Me.Label1.Anchor = System.Windows.Forms.AnchorStyles.Top
-        Me.Label1.Location = New System.Drawing.Point(4, 3)
+        Me.Label1.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.Label1.Location = New System.Drawing.Point(2, 6)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(433, 30)
         Me.Label1.TabIndex = 1

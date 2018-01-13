@@ -658,36 +658,39 @@ Public Class iProperties
         Else
             ' oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4").Expression = "1601, 1, 1"
         End If
-        If txtRef0.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference0").Value = txtRef0.Text
-        End If
-        If txtRef1.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference1").Value = txtRef1.Text
-        End If
-        If txtRef2.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference2").Value = txtRef2.Text
-        End If
-        If txtRef3.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference3").Value = txtRef3.Text
-        End If
-        If txtRef4.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference4").Value = txtRef4.Text
-        End If
-        If txtRef5.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference5").Value = txtRef5.Text
-        End If
-        If txtRef6.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference6").Value = txtRef6.Text
-        End If
-        If txtRef7.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference7").Value = txtRef7.Text
-        End If
-        If txtRef8.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference8").Value = txtRef8.Text
-        End If
-        If txtRef9.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference9").Value = txtRef9.Text
-        End If
+        Try
+            If txtRef0.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference0").Value = txtRef0.Text
+            End If
+            If txtRef1.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference1").Value = txtRef1.Text
+            End If
+            If txtRef2.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference2").Value = txtRef2.Text
+            End If
+            If txtRef3.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference3").Value = txtRef3.Text
+            End If
+            If txtRef4.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference4").Value = txtRef4.Text
+            End If
+            If txtRef5.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference5").Value = txtRef5.Text
+            End If
+            If txtRef6.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference6").Value = txtRef6.Text
+            End If
+            If txtRef7.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference7").Value = txtRef7.Text
+            End If
+            If txtRef8.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference8").Value = txtRef8.Text
+            End If
+            If txtRef9.Text <> "*Varies*" And My.Settings.Custom = "Model" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference9").Value = txtRef9.Text
+            End If
+        Catch
+        End Try
     End Sub
     Private Sub WriteDrawingProps(ByRef oDoc As Document)
         If txtTitle.Text <> "*Varies*" And My.Settings.Title = "Drawing" Then
@@ -767,36 +770,39 @@ Public Class iProperties
         Else
             ' oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4").Expression = "1601, 1, 1"
         End If
-        If txtRef0.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference0").Value = txtRef0.Text
-        End If
-        If txtRef1.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference1").Value = txtRef1.Text
-        End If
-        If txtRef2.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference2").Value = txtRef2.Text
-        End If
-        If txtRef3.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference3").Value = txtRef3.Text
-        End If
-        If txtRef4.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference4").Value = txtRef4.Text
-        End If
-        If txtRef5.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference5").Value = txtRef5.Text
-        End If
-        If txtRef6.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference6").Value = txtRef6.Text
-        End If
-        If txtRef7.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference7").Value = txtRef7.Text
-        End If
-        If txtRef8.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference8").Value = txtRef8.Text
-        End If
-        If txtRef9.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
-            oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference9").Value = txtRef9.Text
-        End If
+        Try
+            If txtRef0.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference0").Value = txtRef0.Text
+            End If
+            If txtRef1.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference1").Value = txtRef1.Text
+            End If
+            If txtRef2.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference2").Value = txtRef2.Text
+            End If
+            If txtRef3.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference3").Value = txtRef3.Text
+            End If
+            If txtRef4.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference4").Value = txtRef4.Text
+            End If
+            If txtRef5.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference5").Value = txtRef5.Text
+            End If
+            If txtRef6.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference6").Value = txtRef6.Text
+            End If
+            If txtRef7.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference7").Value = txtRef7.Text
+            End If
+            If txtRef8.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference8").Value = txtRef8.Text
+            End If
+            If txtRef9.Text <> "*Varies*" And My.Settings.Custom = "Drawing" Then
+                oDoc.PropertySets.Item("Inventor User Defined Properties").Item("Reference9").Value = txtRef9.Text
+            End If
+        Catch
+        End Try
     End Sub
     Private Sub WriteRevTable(ByRef oDoc As Document, Opendocs As ArrayList)
         Dim shtRevTable As RevisionTable

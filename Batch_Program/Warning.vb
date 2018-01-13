@@ -53,9 +53,32 @@ Public Class Warning
                 If chkDontShow.Checked = True Then
                     My.Settings.FirstRun = False
                 End If
+            Case "Bad File Type"
+                If chkDontShow.Checked = True Then
+                    My.Settings.BadFileTypeWarning = False
+                End If
         End Select
         My.Settings.Save()
         Me.Close()
+    End Sub
+    Public Sub BadFileType()
+        If My.Settings.BadFileTypeWarning = True Then
+            Label2.Text = "Bad File Type"
+            Label1.Height = 60
+            Label1.Top = Label1.Top - 10
+            Label1.Text = "Some items were found that have an unsupported extension or the file extensions are invisible." &
+                       " These files may Not work correctly With the program. " &
+                       "Currently only the native Inventor extensions are supported (.ipt, .idw, .iam, & .ipn)" & vbNewLine &
+                       "(You can enable file name extension visibility through the file explorer)"
+            btnOK.Text = "OK"
+            Me.Height = 150
+            btnOK.Top = btnOK.Top + 35
+            chkDontShow.Visible = True
+            chkDontShow.Top = chkDontShow.Top + 35
+            chkDontShow.Checked = False
+            PicDonate.Visible = False
+        End If
+
     End Sub
     Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PicDonate.Click
         Try

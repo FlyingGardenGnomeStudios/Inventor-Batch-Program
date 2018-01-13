@@ -240,18 +240,21 @@ Public Class Main
                 LVSubFiles.Items(x).Checked = False
             Next
         End If
-        If lstOpenfiles.Items.Count > 0 Then
-            If InStr(lstOpenfiles.Items(0), "ipt") > 0 Or
-                InStr(lstOpenfiles.Items(0), "idw") > 0 Or
-                InStr(lstOpenfiles.Items(0), "iam") > 0 Or
-                InStr(lstOpenfiles.Items(0), "ipn") > 0 Then
+        For Each item In lstOpenfiles.Items
+            If InStr(item, "ipt") > 0 Or
+                InStr(item, "idw") > 0 Or
+                InStr(item, "iam") > 0 Or
+                InStr(item, "ipn") > 0 Then
             Else
-                MsgBox("Some parts are not listed as they either have an unknown extension" & vbNewLine &
-                       "or the file extensions are invisible." & vbNewLine &
-                   "(You can enable file name extension visibility through the file explorer)")
-                End
+                Dim Warning As New Warning
+                If My.Settings.BadFileTypeWarning = True Then
+                    Warning.BadFileType()
+                    Warning.ShowDialog()
+                End If
+                Exit For
             End If
-        End If
+
+        Next
         LVSubFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
     End Sub
     Private Sub CheckboxReorder()
