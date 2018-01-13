@@ -6,7 +6,6 @@ Imports System.Windows.Forms
 Imports Microsoft.Office.Interop
 Imports System.Drawing
 Imports System.Text.RegularExpressions
-Imports System.Net.Mail
 
 
 Public Class Main
@@ -1394,6 +1393,7 @@ Public Class Main
         'Create drawing name for search purposes
         DrawingName = Strings.Left(strFile, (Strings.Len(strFile) - 3)) & "idw"
         'Test to see if the file exists in the expected
+        ProgressBar(Total, Counter, "Found: ", DrawingName)
         If Not My.Computer.FileSystem.FileExists(Partsource) Then
             DrawingName = DrawingName & "(PPM)"
         ElseIf Not My.Computer.FileSystem.FileExists(Strings.Left(Partsource, (Strings.Len(Partsource) - 3)) & "idw") Then
@@ -1424,7 +1424,7 @@ Public Class Main
             Elog = Elog & "Added to Open File list" & vbNewLine
             Counter += 1
         End If
-        ProgressBar(Total, Counter, "Found: ", DrawingName)
+
         'End If
 
         'For Each pair As KeyValuePair(Of String, String) In AlphaSub
@@ -1491,7 +1491,7 @@ Public Class Main
         Rename.PopMain(Me)
         'Create a drawing name assuming the name/location is the same as the part
         strFile = Strings.Right(PartSource, Strings.Len(PartSource) - InStrRev(PartSource, "\"))
-        DrawingName = Strings.Left(strFile, (Strings.Len(strFile) - 3)) & "idw"
+        'DrawingName = Strings.Left(strFile, (Strings.Len(strFile) - 3)) & "idw"
         'If Strings.InStr(PartSource, "Content Center") = 0 Then
         If Dev = False Then
             If Strings.InStr(oAsmDoc.File.FullFileName, "Purchased Parts") > 0 Then
@@ -1772,7 +1772,8 @@ Public Class Main
                         DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "iam"
                         Exit For
                     Else
-                        MsgBox("Couldn't locate model data for " & DrawingName)
+                        MsgBox("There is a discrepancy between the drawing name and model name." & vbNewLine &
+                               "Model data could not be located for drawing: " & DrawingName)
                         Exit Sub
                     End If
                 End If
@@ -2206,13 +2207,14 @@ Public Class Main
             Exit Sub
         End If
         'Go through drawings to see which ones are selected
+
         For x = 0 To LVSubFiles.CheckedItems.Count - 1
             'iterate through all open documents in inventor to find selected document
 
             'For Each item As Document In _invApp.Documents
             ' If Strings.Right(item.FullFileName, Len(item.FullFileName) - InStrRev(item.FullFileName, "\")) = Trim(LVSubFiles.CheckedItems(x).Text) Then
             'save document if user selected save
-            MatchDrawing(DrawSource, DrawingName, x)
+            MatchDrawing(DrawSource, DrawingName, LVSubFiles.SelectedItems(x).Index)
             If Checkin = True Then
                 Try
                     _invApp.Documents.ItemByName(DrawSource).Save()
@@ -2225,7 +2227,7 @@ Public Class Main
                 writeDebug("Drawing " & DrawingName & " closed without save")
             End If
         Next
-        UpdateForm()
+        'UpdateForm()
     End Sub
     Private Sub ToolTip1_Popup(sender As System.Object, e As System.Windows.Forms.PopupEventArgs) Handles ToolTip1.Popup
         Dim ctrl As Control = GetChildAtPoint(Me.PointToClient(MousePosition))
@@ -2783,7 +2785,7 @@ Public Class Main
         End If
     End Sub
     Private Sub LVSubFiles_ItemChecked(sender As Object, e As ItemCheckedEventArgs) Handles LVSubFiles.ItemChecked
-        If LVSubFiles.Items(e.Item.Index).ForeColor = Drawing.Color.Gray And
+        If LVSubFiles.Items(e.Item.Index).ForeColor = Drawing.Color.Gray OrElse
             LVSubFiles.Items(e.Item.Index).ForeColor = Drawing.Color.Red Then
             e.Item.Checked = False
         End If
@@ -3057,7 +3059,9 @@ Public Class Main
     Private Sub DefaultSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DefaultSettingsToolStripMenuItem.Click
         Settings.ShowDialog()
     End Sub
-
+    Private Sub TutorialsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TutorialsToolStripMenuItem.Click
+        Process.Start("https://www.youtube.com/playlist?list=PL5Jsz3IKLQ40-UCC4Fkm6WmQ9hINzAzEw")
+    End Sub
 #End Region
     Private Sub btnExit_Click(sender As System.Object, e As System.EventArgs) Handles btnExit.Click
         If btnExit.Text = "Exit" Then
@@ -3196,4 +3200,6 @@ Public Class Main
         End Try
 
     End Sub
+
+
 End Class

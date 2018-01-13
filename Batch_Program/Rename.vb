@@ -458,9 +458,12 @@ Public Class Rename
         Dim oAssDoc As AssemblyDocument = _invapp.Documents.Open(Source, False)
         Dim oAssDef As AssemblyComponentDefinition = oAssDoc.ComponentDefinition
             Dim oCompOccs As ComponentOccurrences = oAssDef.Occurrences
-            TraverseAssembly(oAssDoc, oCompOccs, SaveLoc, Start, 0)
+        TraverseAssembly(oAssDoc, oCompOccs, SaveLoc, Start, 0)
+        Try
             oAssDoc.Save()
-            Main.CloseLater(Source, oAssDoc)
+        Catch
+        End Try
+        Main.CloseLater(Source, oAssDoc)
         ProgressBar(1, 1, "Cleaning Up", "", Start)
     End Sub
     Private Sub TraverseAssembly(ByVal oAssDoc As Document, ByVal oCompOccs As ComponentOccurrences, ByVal SaveLoc As String, ByVal Start As Date,

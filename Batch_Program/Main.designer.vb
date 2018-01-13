@@ -85,6 +85,7 @@ Partial Class Main
         Me.IFoundABugToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.MsVistaProgressBar = New MSVistaProgressBar()
+        Me.TutorialsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
@@ -525,13 +526,13 @@ Partial Class Main
         '
         Me.CMSSubFiles.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SortToolStripMenuItem, Me.ShowHideToolStripMenuItem, Me.ExportToToolStripMenuItem})
         Me.CMSSubFiles.Name = "ContextMenuStrip1"
-        Me.CMSSubFiles.Size = New System.Drawing.Size(153, 92)
+        Me.CMSSubFiles.Size = New System.Drawing.Size(134, 70)
         '
         'SortToolStripMenuItem
         '
         Me.SortToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSAlphabetical, Me.CMSHeirarchical})
         Me.SortToolStripMenuItem.Name = "SortToolStripMenuItem"
-        Me.SortToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.SortToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
         Me.SortToolStripMenuItem.Text = "Sort"
         '
         'CMSAlphabetical
@@ -552,7 +553,7 @@ Partial Class Main
         '
         Me.ShowHideToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSMissingDWG, Me.CMSMissingParts, Me.CMSReference})
         Me.ShowHideToolStripMenuItem.Name = "ShowHideToolStripMenuItem"
-        Me.ShowHideToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ShowHideToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
         Me.ShowHideToolStripMenuItem.Text = "Show/Hide"
         '
         'CMSMissingDWG
@@ -577,7 +578,7 @@ Partial Class Main
         '
         Me.ExportToToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSSubSpreadsheet, Me.CMSSubText})
         Me.ExportToToolStripMenuItem.Name = "ExportToToolStripMenuItem"
-        Me.ExportToToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ExportToToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
         Me.ExportToToolStripMenuItem.Text = "Export To"
         '
         'CMSSubSpreadsheet
@@ -622,7 +623,7 @@ Partial Class Main
         '
         'AboutToolStripMenuItem
         '
-        Me.AboutToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutBatchProgramToolStripMenuItem, Me.mnuActDeact, Me.HowToToolStripMenuItem1, Me.IFoundABugToolStripMenuItem})
+        Me.AboutToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutBatchProgramToolStripMenuItem, Me.mnuActDeact, Me.HowToToolStripMenuItem1, Me.IFoundABugToolStripMenuItem, Me.TutorialsToolStripMenuItem})
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
         Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.AboutToolStripMenuItem.Text = "Help"
@@ -671,6 +672,12 @@ Partial Class Main
         Me.MsVistaProgressBar.Size = New System.Drawing.Size(536, 23)
         Me.MsVistaProgressBar.TabIndex = 62
         Me.MsVistaProgressBar.Visible = False
+        '
+        'TutorialsToolStripMenuItem
+        '
+        Me.TutorialsToolStripMenuItem.Name = "TutorialsToolStripMenuItem"
+        Me.TutorialsToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
+        Me.TutorialsToolStripMenuItem.Text = "Tutorials"
         '
         'Main
         '
@@ -785,4 +792,5 @@ Partial Class Main
     Friend WithEvents CMSReference As Windows.Forms.ToolStripMenuItem
     Friend WithEvents IFoundABugToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSMissingParts As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents TutorialsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
 End Class
