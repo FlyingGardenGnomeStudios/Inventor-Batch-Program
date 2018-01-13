@@ -260,7 +260,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="TurboActivate.vb" />
-    <None Include="Batch Program Signature.pfx" />
     <None Include="ClassDiagram2.cd" />
     <Compile Include="Rev Switch.Designer.vb">
       <DependentUpon>Rev Switch.vb</DependentUpon>
@@ -338,7 +337,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Batch_Program.X.manifest" />
-    <None Include="Batch_Program_TemporaryKey.pfx" />
     <None Include="ClassDiagram1.cd" />
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">

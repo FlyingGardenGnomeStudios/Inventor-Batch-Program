@@ -22,6 +22,7 @@ Public Class Warning
         Label2.Text = "Donate"
         btnOK.Left = btnOK.Left - 120
         btnOK.Text = "I'll just keep using it for free thanks"
+        My.Settings.Save()
         ' Add any initialization after the InitializeComponent() call.
         Me.ShowDialog()
     End Sub
@@ -53,6 +54,7 @@ Public Class Warning
                     My.Settings.FirstRun = False
                 End If
         End Select
+        My.Settings.Save()
         Me.Close()
     End Sub
     Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PicDonate.Click
@@ -63,6 +65,7 @@ Public Class Warning
         End Try
         Me.Close()
         My.Settings.Donated = True
+        My.Settings.Save()
     End Sub
 
     Private Sub chkDontShow_CheckedChanged(sender As Object, e As EventArgs) Handles chkDontShow.CheckedChanged
@@ -72,5 +75,6 @@ Public Class Warning
             PicDonate.Visible = False
             btnOK.Text = "My bad, carry on and disregard"
         End If
+        My.Settings.Save()
     End Sub
 End Class

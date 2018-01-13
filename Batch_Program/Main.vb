@@ -83,9 +83,13 @@ Public Class Main
             Warning.FirstRun()
             Warning.ShowDialog()
             Warning.btnOK.Location = New Drawing.Point(Warning.btnOK.Location.X, Warning.btnOK.Location.Y - 40)
+            If Warning.chkDontShow.Checked = True Then
+                My.Settings.FirstRun = False
+                My.Settings.Save()
+            End If
         End If
 
-        If My.Settings.DonateShowMe = True Then
+            If My.Settings.DonateShowMe = True Then
             If My.Settings.DonateCount = 0 Then
                 Warning.Donate()
             ElseIf My.Settings.DonateCount < 4 Then
@@ -124,62 +128,62 @@ Public Class Main
         writeDebug("Inventor Accessed")
 
         LVSubFiles.Columns(0).Width = LVSubFiles.Width - 10
-        Try
-            'TODO: goto the version page at LimeLM and paste this GUID here
-            ta = New TurboActivate("3d2a7b7e59bfcc74c5df44.47834669")
+        'Try
+        '    'TODO: goto the version page at LimeLM and paste this GUID here
+        '    ta = New TurboActivate("3d2a7b7e59bfcc74c5df44.47834669")
 
-            ' Check if we're activated, and every 90 days verify it with the activation servers
-            ' In this example we won't show an error if the activation was done offline
-            ' (see the 3rd parameter of the IsGenuine() function)
-            ' https://wyday.com/limelm/help/offline-activation/
-            Dim gr As IsGenuineResult = ta.IsGenuine(DaysBetweenChecks, GracePeriodLength, True)
+        '    ' Check if we're activated, and every 90 days verify it with the activation servers
+        '    ' In this example we won't show an error if the activation was done offline
+        '    ' (see the 3rd parameter of the IsGenuine() function)
+        '    ' https://wyday.com/limelm/help/offline-activation/
+        '    Dim gr As IsGenuineResult = ta.IsGenuine(DaysBetweenChecks, GracePeriodLength, True)
 
-            isGenuine = (gr = IsGenuineResult.Genuine _
-                         OrElse gr = IsGenuineResult.GenuineFeaturesChanged _
-                         OrElse gr = IsGenuineResult.InternetError)
-            ' an internet error means the user is activated but
-            ' TurboActivate failed to contact the LimeLM servers
+        '    isGenuine = (gr = IsGenuineResult.Genuine _
+        '                 OrElse gr = IsGenuineResult.GenuineFeaturesChanged _
+        '                 OrElse gr = IsGenuineResult.InternetError)
+        '    ' an internet error means the user is activated but
+        '    ' TurboActivate failed to contact the LimeLM servers
 
 
 
-            ' If IsGenuineEx() is telling us we're not activated
-            ' but the IsActivated() function is telling us that the activation
-            ' data on the computer is valid (i.e. the crypto-signed-fingerprint matches the computer)
-            ' then that means that the customer has passed the grace period and they must re-verify
-            ' with the servers to continue to use your app.
+        '    ' If IsGenuineEx() is telling us we're not activated
+        '    ' but the IsActivated() function is telling us that the activation
+        '    ' data on the computer is valid (i.e. the crypto-signed-fingerprint matches the computer)
+        '    ' then that means that the customer has passed the grace period and they must re-verify
+        '    ' with the servers to continue to use your app.
 
-            'Note: DO NOT allow the customer to just continue to use your app indefinitely with absolutely
-            '      no reverification with the servers. If you want to do that then don't use IsGenuine() or
-            '      IsGenuineEx() at all -- just use IsActivated().
-            If Not isGenuine AndAlso ta.IsActivated() Then
+        '    'Note: DO NOT allow the customer to just continue to use your app indefinitely with absolutely
+        '    '      no reverification with the servers. If you want to do that then don't use IsGenuine() or
+        '    '      IsGenuineEx() at all -- just use IsActivated().
+        '    If Not isGenuine AndAlso ta.IsActivated() Then
 
-                ' We're treating the customer as is if they aren't activated, so they can't use your app.
+        '        ' We're treating the customer as is if they aren't activated, so they can't use your app.
 
-                ' However, we show them a dialog where they can reverify with the servers immediately.
+        '        ' However, we show them a dialog where they can reverify with the servers immediately.
 
-                Dim frmReverify As ReVerifyNow = New ReVerifyNow(ta, DaysBetweenChecks, GracePeriodLength)
+        '        Dim frmReverify As ReVerifyNow = New ReVerifyNow(ta, DaysBetweenChecks, GracePeriodLength)
 
-                If frmReverify.ShowDialog(Me) = DialogResult.OK Then
-                    isGenuine = True
-                ElseIf Not frmReverify.noLongerActivated Then ' the user clicked cancel and the user is still activated
+        '        If frmReverify.ShowDialog(Me) = DialogResult.OK Then
+        '            isGenuine = True
+        '        ElseIf Not frmReverify.noLongerActivated Then ' the user clicked cancel and the user is still activated
 
-                    ' Just bail out of your app
-                    Close()
-                    Return
-                End If
-            End If
+        '            ' Just bail out of your app
+        '            Close()
+        '            Return
+        '        End If
+        '    End If
 
-        Catch ex As TurboActivateException
-            ' failed to check if activated, meaning the customer screwed
-            ' something up so kill the app immediately
-            MessageBox.Show("Failed to check if activated:  " + ex.Message)
-            Close()
-            Return
-        End Try
+        'Catch ex As TurboActivateException
+        '    ' failed to check if activated, meaning the customer screwed
+        '    ' something up so kill the app immediately
+        '    MessageBox.Show("Failed to check if activated:  " + ex.Message)
+        '    Close()
+        '    Return
+        'End Try
 
-        'Show a trial if we're not genuine
-        'See step 9, below.
-        ShowTrial(Not isGenuine)
+        ''Show a trial if we're not genuine
+        ''See step 9, below.
+        'ShowTrial(Not isGenuine)
         CreateOpenDocs(OpenDocs)
     End Sub
 #End Region
