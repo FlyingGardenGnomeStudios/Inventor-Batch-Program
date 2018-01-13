@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\InventorNetAddinWizardPRO\Bin\mt.exe" -manifest "$(ProjectDir)Batch_Program.X.manifest" -outputresource:"$(TargetPath)";#5

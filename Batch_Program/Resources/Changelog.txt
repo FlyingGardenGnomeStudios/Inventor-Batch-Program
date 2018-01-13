@@ -31,3 +31,7 @@ Version 1.2.2.15 (12/13/17)
 - Fixed crash during some create flat-pattern commands
 - Fixed drawings not closing after print job
 - Fixed issue with export settings not saving
+
+Version 1.2.2.16
+- Removed WyDay validation
+- Forced setings save on startup dialogs
