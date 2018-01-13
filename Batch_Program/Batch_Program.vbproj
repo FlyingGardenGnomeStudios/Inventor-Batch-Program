@@ -17,7 +17,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <PublishUrl>\\SERVER02\Company\Employee Folders\Tim Fehr\Programs\Batch Program\</PublishUrl>
+    <PublishUrl>C:\Users\Luther\Documents\Visual Studio 2015\Projects\Batch Program\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -27,14 +27,15 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/</InstallUrl>
+    <InstallUrl>https://github.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/blob/master/Batch_Program/Publish/</InstallUrl>
     <UpdateUrl>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/</UpdateUrl>
     <TargetCulture>en-CA</TargetCulture>
     <ProductName>Inventor Batch Program</ProductName>
     <PublisherName>Flying Garden Gnome Studios</PublisherName>
     <MinimumRequiredVersion>1.1.2.0</MinimumRequiredVersion>
-    <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>16</ApplicationRevision>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>17</ApplicationRevision>
     <ApplicationVersion>1.2.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -121,13 +122,13 @@
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Batch Program.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>Inventor Batch Program.pfx</AssemblyOriginatorKeyFile>
@@ -260,7 +261,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="TurboActivate.vb" />
-    <None Include="Batch Program Signature.pfx" />
     <None Include="ClassDiagram2.cd" />
     <Compile Include="Rev Switch.Designer.vb">
       <DependentUpon>Rev Switch.vb</DependentUpon>
@@ -338,7 +338,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Batch_Program.X.manifest" />
-    <None Include="Batch_Program_TemporaryKey.pfx" />
     <None Include="ClassDiagram1.cd" />
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">
@@ -436,7 +435,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"C:\Program Files (x86)\InventorNetAddinWizardPRO\Bin\mt.exe" -manifest "$(ProjectDir)Batch_Program.X.manifest" -outputresource:"$(TargetPath)";#5</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

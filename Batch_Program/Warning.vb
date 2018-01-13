@@ -22,6 +22,7 @@ Public Class Warning
         Label2.Text = "Donate"
         btnOK.Left = btnOK.Left - 120
         btnOK.Text = "I'll just keep using it for free thanks"
+        My.Settings.Save()
         ' Add any initialization after the InitializeComponent() call.
         Me.ShowDialog()
     End Sub
@@ -52,8 +53,32 @@ Public Class Warning
                 If chkDontShow.Checked = True Then
                     My.Settings.FirstRun = False
                 End If
+            Case "Bad File Type"
+                If chkDontShow.Checked = True Then
+                    My.Settings.BadFileTypeWarning = False
+                End If
         End Select
+        My.Settings.Save()
         Me.Close()
+    End Sub
+    Public Sub BadFileType()
+        If My.Settings.BadFileTypeWarning = True Then
+            Label2.Text = "Bad File Type"
+            Label1.Height = 60
+            Label1.Top = Label1.Top - 10
+            Label1.Text = "Some items were found that have an unsupported extension or the file extensions are invisible." &
+                       " These files may Not work correctly With the program. " &
+                       "Currently only the native Inventor extensions are supported (.ipt, .idw, .iam, & .ipn)" & vbNewLine &
+                       "(You can enable file name extension visibility through the file explorer)"
+            btnOK.Text = "OK"
+            Me.Height = 150
+            btnOK.Top = btnOK.Top + 35
+            chkDontShow.Visible = True
+            chkDontShow.Top = chkDontShow.Top + 35
+            chkDontShow.Checked = False
+            PicDonate.Visible = False
+        End If
+
     End Sub
     Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PicDonate.Click
         Try
@@ -63,6 +88,7 @@ Public Class Warning
         End Try
         Me.Close()
         My.Settings.Donated = True
+        My.Settings.Save()
     End Sub
 
     Private Sub chkDontShow_CheckedChanged(sender As Object, e As EventArgs) Handles chkDontShow.CheckedChanged
@@ -72,5 +98,6 @@ Public Class Warning
             PicDonate.Visible = False
             btnOK.Text = "My bad, carry on and disregard"
         End If
+        My.Settings.Save()
     End Sub
 End Class
