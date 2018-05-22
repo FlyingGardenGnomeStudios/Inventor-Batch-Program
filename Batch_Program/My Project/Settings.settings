@@ -48,7 +48,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="DupName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Model</Value>
+      <Value Profile="(Default)">.iam</Value>
     </Setting>
     <Setting Name="Title" Type="System.String" Scope="User">
       <Value Profile="(Default)">Model</Value>
@@ -151,6 +151,108 @@
     </Setting>
     <Setting Name="BadFileTypeWarning" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RTSRev" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RTSDate" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RTSDesc" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RTSName" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RTSApproved" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RTS1" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RTS1Value" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTS2" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RTS2Value" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTS3" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RTS3Value" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTS4" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RTS4Value" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTS5" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RTS5Value" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTS1Item" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTS1Col" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTS2Item" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTS2Col" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTS3Item" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTS3Col" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTS4Item" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTS4Col" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTS5Item" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTS5Col" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTSRevCol" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Rev</Value>
+    </Setting>
+    <Setting Name="RTSDateCol" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Date</Value>
+    </Setting>
+    <Setting Name="RTSDescCol" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Description</Value>
+    </Setting>
+    <Setting Name="RTSNameCol" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Name</Value>
+    </Setting>
+    <Setting Name="RTSApprovedCol" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Approved</Value>
+    </Setting>
+    <Setting Name="RTSCheckedBy" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RTSCheckedDate" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AlphaRev" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ISSUED FOR REVIEW</Value>
+    </Setting>
+    <Setting Name="NumRev" Type="System.String" Scope="User">
+      <Value Profile="(Default)">APPROVED FOR MANUFACTURING</Value>
     </Setting>
   </Settings>
 </SettingsFile>

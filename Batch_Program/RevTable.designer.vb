@@ -23,23 +23,17 @@ Partial Class RevTable
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(RevTable))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.btnOK = New System.Windows.Forms.Button()
         Me.btnIgnore = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
-        Me.RevTxtBox = New System.Windows.Forms.TextBox()
-        Me.RevDtPicker = New System.Windows.Forms.DateTimePicker()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
-        Me.lstCheckFiles = New System.Windows.Forms.ListView()
-        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.dgvRevTable = New System.Windows.Forms.DataGridView()
+        CType(Me.dgvRevTable, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label1
@@ -91,25 +85,6 @@ Partial Class RevTable
         Me.ToolTip1.SetToolTip(Me.btnCancel, "Exit without making any changes")
         Me.btnCancel.UseVisualStyleBackColor = True
         '
-        'RevTxtBox
-        '
-        Me.RevTxtBox.Location = New System.Drawing.Point(276, 8)
-        Me.RevTxtBox.Name = "RevTxtBox"
-        Me.RevTxtBox.Size = New System.Drawing.Size(100, 20)
-        Me.RevTxtBox.TabIndex = 8
-        Me.RevTxtBox.Visible = False
-        '
-        'RevDtPicker
-        '
-        Me.RevDtPicker.AllowDrop = True
-        Me.RevDtPicker.Checked = False
-        Me.RevDtPicker.Location = New System.Drawing.Point(390, 9)
-        Me.RevDtPicker.Name = "RevDtPicker"
-        Me.RevDtPicker.ShowCheckBox = True
-        Me.RevDtPicker.Size = New System.Drawing.Size(200, 20)
-        Me.RevDtPicker.TabIndex = 9
-        Me.RevDtPicker.Visible = False
-        '
         'ProgressBar1
         '
         Me.ProgressBar1.Location = New System.Drawing.Point(255, 183)
@@ -118,58 +93,33 @@ Partial Class RevTable
         Me.ProgressBar1.TabIndex = 10
         Me.ProgressBar1.Visible = False
         '
-        'lstCheckFiles
+        'dgvRevTable
         '
-        Me.lstCheckFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3, Me.ColumnHeader4, Me.ColumnHeader5, Me.ColumnHeader6})
-        Me.lstCheckFiles.FullRowSelect = True
-        Me.lstCheckFiles.GridLines = True
-        Me.lstCheckFiles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable
-        Me.lstCheckFiles.Location = New System.Drawing.Point(15, 42)
-        Me.lstCheckFiles.Name = "lstCheckFiles"
-        Me.lstCheckFiles.Size = New System.Drawing.Size(597, 135)
-        Me.lstCheckFiles.Sorting = System.Windows.Forms.SortOrder.Ascending
-        Me.lstCheckFiles.TabIndex = 14
-        Me.lstCheckFiles.UseCompatibleStateImageBehavior = False
-        Me.lstCheckFiles.View = System.Windows.Forms.View.Details
-        '
-        'ColumnHeader1
-        '
-        Me.ColumnHeader1.Text = "Rev:"
-        Me.ColumnHeader1.Width = 50
-        '
-        'ColumnHeader2
-        '
-        Me.ColumnHeader2.Text = "Revision Date:"
-        Me.ColumnHeader2.Width = 100
-        '
-        'ColumnHeader3
-        '
-        Me.ColumnHeader3.Text = "Description:"
-        Me.ColumnHeader3.Width = 200
-        '
-        'ColumnHeader4
-        '
-        Me.ColumnHeader4.Text = "Initials:"
-        Me.ColumnHeader4.Width = 50
-        '
-        'ColumnHeader5
-        '
-        Me.ColumnHeader5.Text = "Approved By:"
-        Me.ColumnHeader5.Width = 100
-        '
-        'ColumnHeader6
-        '
-        Me.ColumnHeader6.Text = "Visible:"
-        Me.ColumnHeader6.Width = 70
+        Me.dgvRevTable.AllowUserToAddRows = False
+        Me.dgvRevTable.AllowUserToDeleteRows = False
+        Me.dgvRevTable.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.dgvRevTable.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvRevTable.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        Me.dgvRevTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvRevTable.Location = New System.Drawing.Point(12, 42)
+        Me.dgvRevTable.MultiSelect = False
+        Me.dgvRevTable.Name = "dgvRevTable"
+        Me.dgvRevTable.Size = New System.Drawing.Size(596, 135)
+        Me.dgvRevTable.TabIndex = 23
         '
         'RevTable
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(620, 218)
-        Me.Controls.Add(Me.RevDtPicker)
-        Me.Controls.Add(Me.RevTxtBox)
-        Me.Controls.Add(Me.lstCheckFiles)
+        Me.Controls.Add(Me.dgvRevTable)
         Me.Controls.Add(Me.ProgressBar1)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnIgnore)
@@ -183,6 +133,7 @@ Partial Class RevTable
         Me.Name = "RevTable"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "RevTable"
+        CType(Me.dgvRevTable, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -192,15 +143,7 @@ Partial Class RevTable
     Friend WithEvents btnOK As System.Windows.Forms.Button
     Friend WithEvents btnIgnore As System.Windows.Forms.Button
     Friend WithEvents btnCancel As System.Windows.Forms.Button
-    Friend WithEvents RevTxtBox As System.Windows.Forms.TextBox
-    Friend WithEvents RevDtPicker As System.Windows.Forms.DateTimePicker
     Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
     Friend WithEvents ProgressBar1 As System.Windows.Forms.ProgressBar
-    Friend WithEvents lstCheckFiles As System.Windows.Forms.ListView
-    Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader2 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader3 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader5 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader6 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents dgvRevTable As Windows.Forms.DataGridView
 End Class
