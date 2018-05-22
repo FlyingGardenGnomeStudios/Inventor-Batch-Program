@@ -35,7 +35,7 @@ Public Class Warning
         Label2.Text = "FirstRun"
         Label1.Height = 65
         btnOK.Location = New Drawing.Point(btnOK.Location.X, btnOK.Location.Y + 40)
-        Label1.Text = "Batch Program is a program created to automate many tasks in Inventor. This beta version of the program is in a constant state of developement so bugs are likely. If you find any errors/bugs let me know by emailing a description of how to replicate the error to flyinggardengnomestudios@gmail.com. Please include a pack and go if possible and the error log which is saved in: " & My.Computer.FileSystem.SpecialDirectories.Temp & "\debug.txt"
+        Label1.Text = "Batch Program is a program created to automate many tasks in Inventor. The program is in a constant state of developement so bugs are likely. If you find any errors/bugs let me know by emailing a description of how to replicate the error to flyinggardengnomestudios@gmail.com. Please include the error log which is saved in: " & My.Computer.FileSystem.SpecialDirectories.Temp & "\debug.txt"
     End Sub
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
         Select Case Label2.Text
@@ -67,7 +67,7 @@ Public Class Warning
             Label1.Height = 60
             Label1.Top = Label1.Top - 10
             Label1.Text = "Some items were found that have an unsupported extension or the file extensions are invisible." &
-                       " These files may not work correctly With the program. " &
+                       " These files may Not work correctly With the program. " &
                        "Currently only the native Inventor extensions are supported (.ipt, .idw, .iam, & .ipn)" & vbNewLine &
                        "(You can enable file name extension visibility through the file explorer)"
             btnOK.Text = "OK"

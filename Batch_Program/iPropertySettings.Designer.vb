@@ -26,20 +26,20 @@ Partial Class iPropertySettings
         Me.iPropertiesTab = New System.Windows.Forms.TabControl()
         Me.SummaryTab = New System.Windows.Forms.TabPage()
         Me.DGVSummary = New System.Windows.Forms.DataGridView()
-        Me.SumiProperty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SumReference = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.iProperty = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Reference = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.ProjectTab = New System.Windows.Forms.TabPage()
         Me.DGVProject = New System.Windows.Forms.DataGridView()
-        Me.ProjiProperty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ProjReference = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PReference = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.StatusTab = New System.Windows.Forms.TabPage()
         Me.DGVStatus = New System.Windows.Forms.DataGridView()
-        Me.StatusiProperty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.StatusReference = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.SiProperty = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SReference = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.CustomTab = New System.Windows.Forms.TabPage()
         Me.DGVCustom = New System.Windows.Forms.DataGridView()
-        Me.CustomiProperty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CustomReference = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CReference = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.cmbDefault = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.btnOK = New System.Windows.Forms.Button()
@@ -88,7 +88,7 @@ Partial Class iPropertySettings
         Me.DGVSummary.AllowUserToResizeColumns = False
         Me.DGVSummary.AllowUserToResizeRows = False
         Me.DGVSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DGVSummary.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.SumiProperty, Me.SumReference})
+        Me.DGVSummary.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.iProperty, Me.Reference})
         Me.DGVSummary.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.DGVSummary.Location = New System.Drawing.Point(6, 6)
         Me.DGVSummary.MultiSelect = False
@@ -98,19 +98,19 @@ Partial Class iPropertySettings
         Me.DGVSummary.Size = New System.Drawing.Size(359, 271)
         Me.DGVSummary.TabIndex = 0
         '
-        'SumiProperty
+        'iProperty
         '
-        Me.SumiProperty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.SumiProperty.HeaderText = "iProperty"
-        Me.SumiProperty.Name = "SumiProperty"
-        Me.SumiProperty.ReadOnly = True
+        Me.iProperty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.iProperty.HeaderText = "iProperty"
+        Me.iProperty.Name = "iProperty"
+        Me.iProperty.ReadOnly = True
         '
-        'SumReference
+        'Reference
         '
-        Me.SumReference.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.SumReference.HeaderText = "Reference"
-        Me.SumReference.Items.AddRange(New Object() {"Drawing", "Model"})
-        Me.SumReference.Name = "SumReference"
+        Me.Reference.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.Reference.HeaderText = "Reference"
+        Me.Reference.Items.AddRange(New Object() {"Drawing", "Model"})
+        Me.Reference.Name = "Reference"
         '
         'ProjectTab
         '
@@ -131,7 +131,7 @@ Partial Class iPropertySettings
         Me.DGVProject.AllowUserToResizeColumns = False
         Me.DGVProject.AllowUserToResizeRows = False
         Me.DGVProject.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DGVProject.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ProjiProperty, Me.ProjReference})
+        Me.DGVProject.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn1, Me.PReference})
         Me.DGVProject.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.DGVProject.Location = New System.Drawing.Point(6, 6)
         Me.DGVProject.MultiSelect = False
@@ -140,19 +140,19 @@ Partial Class iPropertySettings
         Me.DGVProject.Size = New System.Drawing.Size(359, 271)
         Me.DGVProject.TabIndex = 1
         '
-        'ProjiProperty
+        'DataGridViewTextBoxColumn1
         '
-        Me.ProjiProperty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.ProjiProperty.HeaderText = "iProperty"
-        Me.ProjiProperty.Name = "ProjiProperty"
-        Me.ProjiProperty.ReadOnly = True
+        Me.DataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.DataGridViewTextBoxColumn1.HeaderText = "iProperty"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
         '
-        'ProjReference
+        'PReference
         '
-        Me.ProjReference.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.ProjReference.HeaderText = "Reference"
-        Me.ProjReference.Items.AddRange(New Object() {"Drawing", "Model"})
-        Me.ProjReference.Name = "ProjReference"
+        Me.PReference.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.PReference.HeaderText = "Reference"
+        Me.PReference.Items.AddRange(New Object() {"Drawing", "Model"})
+        Me.PReference.Name = "PReference"
         '
         'StatusTab
         '
@@ -173,7 +173,7 @@ Partial Class iPropertySettings
         Me.DGVStatus.AllowUserToResizeColumns = False
         Me.DGVStatus.AllowUserToResizeRows = False
         Me.DGVStatus.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DGVStatus.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.StatusiProperty, Me.StatusReference})
+        Me.DGVStatus.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.SiProperty, Me.SReference})
         Me.DGVStatus.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.DGVStatus.Location = New System.Drawing.Point(6, 6)
         Me.DGVStatus.MultiSelect = False
@@ -182,19 +182,19 @@ Partial Class iPropertySettings
         Me.DGVStatus.Size = New System.Drawing.Size(359, 271)
         Me.DGVStatus.TabIndex = 1
         '
-        'StatusiProperty
+        'SiProperty
         '
-        Me.StatusiProperty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.StatusiProperty.HeaderText = "iProperty"
-        Me.StatusiProperty.Name = "StatusiProperty"
-        Me.StatusiProperty.ReadOnly = True
+        Me.SiProperty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.SiProperty.HeaderText = "iProperty"
+        Me.SiProperty.Name = "SiProperty"
+        Me.SiProperty.ReadOnly = True
         '
-        'StatusReference
+        'SReference
         '
-        Me.StatusReference.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.StatusReference.HeaderText = "Reference"
-        Me.StatusReference.Items.AddRange(New Object() {"Drawing", "Model"})
-        Me.StatusReference.Name = "StatusReference"
+        Me.SReference.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.SReference.HeaderText = "Reference"
+        Me.SReference.Items.AddRange(New Object() {"Drawing", "Model"})
+        Me.SReference.Name = "SReference"
         '
         'CustomTab
         '
@@ -215,7 +215,7 @@ Partial Class iPropertySettings
         Me.DGVCustom.AllowUserToResizeColumns = False
         Me.DGVCustom.AllowUserToResizeRows = False
         Me.DGVCustom.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DGVCustom.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.CustomiProperty, Me.CustomReference})
+        Me.DGVCustom.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn2, Me.CReference})
         Me.DGVCustom.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.DGVCustom.Location = New System.Drawing.Point(6, 6)
         Me.DGVCustom.MultiSelect = False
@@ -224,19 +224,19 @@ Partial Class iPropertySettings
         Me.DGVCustom.Size = New System.Drawing.Size(359, 271)
         Me.DGVCustom.TabIndex = 2
         '
-        'CustomiProperty
+        'DataGridViewTextBoxColumn2
         '
-        Me.CustomiProperty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.CustomiProperty.HeaderText = "iProperty"
-        Me.CustomiProperty.Name = "CustomiProperty"
-        Me.CustomiProperty.ReadOnly = True
+        Me.DataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.DataGridViewTextBoxColumn2.HeaderText = "iProperty"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
         '
-        'CustomReference
+        'CReference
         '
-        Me.CustomReference.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.CustomReference.HeaderText = "Reference"
-        Me.CustomReference.Items.AddRange(New Object() {"Drawing", "Model"})
-        Me.CustomReference.Name = "CustomReference"
+        Me.CReference.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.CReference.HeaderText = "Reference"
+        Me.CReference.Items.AddRange(New Object() {"Drawing", "Model"})
+        Me.CReference.Name = "CReference"
         '
         'cmbDefault
         '
@@ -333,17 +333,17 @@ Partial Class iPropertySettings
     Friend WithEvents btnCancel As Windows.Forms.Button
     Friend WithEvents btnApply As Windows.Forms.Button
     Friend WithEvents DGVSummary As Windows.Forms.DataGridView
+    Friend WithEvents iProperty As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Reference As Windows.Forms.DataGridViewComboBoxColumn
     Friend WithEvents DGVProject As Windows.Forms.DataGridView
     Friend WithEvents DGVStatus As Windows.Forms.DataGridView
     Friend WithEvents btnDefaults As Windows.Forms.Button
+    Friend WithEvents DataGridViewTextBoxColumn1 As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents PReference As Windows.Forms.DataGridViewComboBoxColumn
+    Friend WithEvents SiProperty As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents SReference As Windows.Forms.DataGridViewComboBoxColumn
     Friend WithEvents CustomTab As Windows.Forms.TabPage
     Friend WithEvents DGVCustom As Windows.Forms.DataGridView
-    Friend WithEvents SumiProperty As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents SumReference As Windows.Forms.DataGridViewComboBoxColumn
-    Friend WithEvents ProjiProperty As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ProjReference As Windows.Forms.DataGridViewComboBoxColumn
-    Friend WithEvents StatusiProperty As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents StatusReference As Windows.Forms.DataGridViewComboBoxColumn
-    Friend WithEvents CustomiProperty As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents CustomReference As Windows.Forms.DataGridViewComboBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn2 As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents CReference As Windows.Forms.DataGridViewComboBoxColumn
 End Class

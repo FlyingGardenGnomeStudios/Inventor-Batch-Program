@@ -23,22 +23,14 @@ Partial Class Main
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
         Me.chkPres = New System.Windows.Forms.CheckBox()
         Me.chkDerived = New System.Windows.Forms.CheckBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.btnExit = New System.Windows.Forms.Button()
         Me.btnOK = New System.Windows.Forms.Button()
-        Me.chkDwgClose = New System.Windows.Forms.CheckBox()
-        Me.chkDwgExport = New System.Windows.Forms.CheckBox()
+        Me.chkClose = New System.Windows.Forms.CheckBox()
+        Me.chkExport = New System.Windows.Forms.CheckBox()
         Me.chkDXF = New System.Windows.Forms.CheckBox()
         Me.chkPrint = New System.Windows.Forms.CheckBox()
         Me.chkCheck = New System.Windows.Forms.CheckBox()
@@ -47,16 +39,11 @@ Partial Class Main
         Me.chkAssy = New System.Windows.Forms.CheckBox()
         Me.chkParts = New System.Windows.Forms.CheckBox()
         Me.chkDrawings = New System.Windows.Forms.CheckBox()
-        Me.gbxSelection = New System.Windows.Forms.GroupBox()
-        Me.gbxOpen = New System.Windows.Forms.GroupBox()
-        Me.dgvOpenFiles = New System.Windows.Forms.DataGridView()
-        Me.chkOpenFiles = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.PartName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PartSource = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PartLocation = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PartOrder = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.chkPartSelect = New System.Windows.Forms.CheckBox()
-        Me.gbxDrawings = New System.Windows.Forms.GroupBox()
+        Me.lstOpenfiles = New System.Windows.Forms.CheckedListBox()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.chkUseDrawings = New System.Windows.Forms.CheckBox()
         Me.chkSkipAssy = New System.Windows.Forms.CheckBox()
         Me.chkRRev = New System.Windows.Forms.CheckBox()
@@ -66,17 +53,16 @@ Partial Class Main
         Me.btnRename = New System.Windows.Forms.Button()
         Me.btnFlatPattern = New System.Windows.Forms.Button()
         Me.btnSpreadsheet = New System.Windows.Forms.Button()
-        Me.gbxSub = New System.Windows.Forms.GroupBox()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.LVSubFiles = New System.Windows.Forms.ListView()
+        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.txtSearch = New System.Windows.Forms.TextBox()
         Me.chkDWGSelect = New System.Windows.Forms.CheckBox()
-        Me.dgvSubFiles = New System.Windows.Forms.DataGridView()
-        Me.chkSubFiles = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.DrawingName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DrawingNameAlpha = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DrawingSource = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DrawingLocation = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Comments = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Order = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.tmr = New System.Windows.Forms.Timer(Me.components)
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.btnRef = New System.Windows.Forms.Button()
+        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
         Me.CMSSubFiles = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.SortToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CMSAlphabetical = New System.Windows.Forms.ToolStripMenuItem()
@@ -88,56 +74,26 @@ Partial Class Main
         Me.ExportToToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CMSSubSpreadsheet = New System.Windows.Forms.ToolStripMenuItem()
         Me.CMSSubText = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tmr = New System.Windows.Forms.Timer(Me.components)
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.btnRef = New System.Windows.Forms.Button()
-        Me.chkPartClose = New System.Windows.Forms.CheckBox()
-        Me.chkPartUseDwg = New System.Windows.Forms.CheckBox()
-        Me.chkPartSkip = New System.Windows.Forms.CheckBox()
-        Me.chkPartExport = New System.Windows.Forms.CheckBox()
-        Me.chkPartDXF = New System.Windows.Forms.CheckBox()
-        Me.chkPartOpen = New System.Windows.Forms.CheckBox()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        Me.gbxUtilities = New System.Windows.Forms.GroupBox()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DefaultSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.IPropertySettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RevTableSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutBatchProgramToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuActDeact = New System.Windows.Forms.ToolStripMenuItem()
         Me.HowToToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.IFoundABugToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TutorialsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.gbxParts = New System.Windows.Forms.GroupBox()
-        Me.chkPartDWG = New System.Windows.Forms.CheckBox()
-        Me.bgwUpdateSub = New System.ComponentModel.BackgroundWorker()
-        Me.bgwUpdateOpen = New System.ComponentModel.BackgroundWorker()
-        Me.bgwRun = New System.ComponentModel.BackgroundWorker()
-        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.pgbMain = New MSVistaProgressBar()
-        Me.gbxSelection.SuspendLayout()
-        Me.gbxOpen.SuspendLayout()
-        CType(Me.dgvOpenFiles, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.gbxDrawings.SuspendLayout()
-        Me.gbxSub.SuspendLayout()
-        CType(Me.dgvSubFiles, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.CMSSubFiles.SuspendLayout()
+        Me.MsVistaProgressBar = New MSVistaProgressBar()
+        Me.TutorialsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GroupBox1.SuspendLayout()
+        Me.GroupBox2.SuspendLayout()
+        Me.GroupBox4.SuspendLayout()
+        Me.GroupBox3.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.gbxUtilities.SuspendLayout()
+        Me.GroupBox5.SuspendLayout()
+        Me.CMSSubFiles.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
-        Me.gbxParts.SuspendLayout()
         Me.SuspendLayout()
         '
         'chkPres
@@ -168,7 +124,7 @@ Partial Class Main
         Me.Label3.AutoSize = True
         Me.Label3.Enabled = False
         Me.Label3.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.Label3.Location = New System.Drawing.Point(53, 64)
+        Me.Label3.Location = New System.Drawing.Point(57, 79)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(63, 13)
         Me.Label3.TabIndex = 46
@@ -177,7 +133,7 @@ Partial Class Main
         'btnExit
         '
         Me.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.btnExit.Location = New System.Drawing.Point(567, 246)
+        Me.btnExit.Location = New System.Drawing.Point(566, 240)
         Me.btnExit.Name = "btnExit"
         Me.btnExit.Size = New System.Drawing.Size(75, 23)
         Me.btnExit.TabIndex = 45
@@ -187,39 +143,39 @@ Partial Class Main
         'btnOK
         '
         Me.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.btnOK.Location = New System.Drawing.Point(648, 246)
+        Me.btnOK.Location = New System.Drawing.Point(647, 240)
         Me.btnOK.Name = "btnOK"
         Me.btnOK.Size = New System.Drawing.Size(75, 23)
         Me.btnOK.TabIndex = 44
         Me.btnOK.Text = "OK"
         Me.btnOK.UseVisualStyleBackColor = True
         '
-        'chkDwgClose
+        'chkClose
         '
-        Me.chkDwgClose.AutoSize = True
-        Me.chkDwgClose.Location = New System.Drawing.Point(6, 106)
-        Me.chkDwgClose.Name = "chkDwgClose"
-        Me.chkDwgClose.Size = New System.Drawing.Size(128, 17)
-        Me.chkDwgClose.TabIndex = 43
-        Me.chkDwgClose.Text = "Close Open Drawings"
-        Me.ToolTip1.SetToolTip(Me.chkDwgClose, "Close all the drawings selected")
-        Me.chkDwgClose.UseVisualStyleBackColor = True
+        Me.chkClose.AutoSize = True
+        Me.chkClose.Location = New System.Drawing.Point(10, 121)
+        Me.chkClose.Name = "chkClose"
+        Me.chkClose.Size = New System.Drawing.Size(138, 17)
+        Me.chkClose.TabIndex = 43
+        Me.chkClose.Text = "Close Open Documents"
+        Me.ToolTip1.SetToolTip(Me.chkClose, "Close all the drawings selected")
+        Me.chkClose.UseVisualStyleBackColor = True
         '
-        'chkDwgExport
+        'chkExport
         '
-        Me.chkDwgExport.AutoSize = True
-        Me.chkDwgExport.Location = New System.Drawing.Point(6, 90)
-        Me.chkDwgExport.Name = "chkDwgExport"
-        Me.chkDwgExport.Size = New System.Drawing.Size(98, 17)
-        Me.chkDwgExport.TabIndex = 42
-        Me.chkDwgExport.Text = "Export Drawing"
-        Me.ToolTip1.SetToolTip(Me.chkDwgExport, "Create PDF's of the drawings selected")
-        Me.chkDwgExport.UseVisualStyleBackColor = True
+        Me.chkExport.AutoSize = True
+        Me.chkExport.Location = New System.Drawing.Point(10, 105)
+        Me.chkExport.Name = "chkExport"
+        Me.chkExport.Size = New System.Drawing.Size(98, 17)
+        Me.chkExport.TabIndex = 42
+        Me.chkExport.Text = "Export Drawing"
+        Me.ToolTip1.SetToolTip(Me.chkExport, "Create PDF's of the drawings selected")
+        Me.chkExport.UseVisualStyleBackColor = True
         '
         'chkDXF
         '
         Me.chkDXF.AutoSize = True
-        Me.chkDXF.Location = New System.Drawing.Point(109, 106)
+        Me.chkDXF.Location = New System.Drawing.Point(113, 121)
         Me.chkDXF.Name = "chkDXF"
         Me.chkDXF.Size = New System.Drawing.Size(47, 17)
         Me.chkDXF.TabIndex = 41
@@ -231,7 +187,7 @@ Partial Class Main
         'chkPrint
         '
         Me.chkPrint.AutoSize = True
-        Me.chkPrint.Location = New System.Drawing.Point(6, 45)
+        Me.chkPrint.Location = New System.Drawing.Point(10, 60)
         Me.chkPrint.Name = "chkPrint"
         Me.chkPrint.Size = New System.Drawing.Size(94, 17)
         Me.chkPrint.TabIndex = 40
@@ -242,7 +198,7 @@ Partial Class Main
         'chkCheck
         '
         Me.chkCheck.AutoSize = True
-        Me.chkCheck.Location = New System.Drawing.Point(6, 30)
+        Me.chkCheck.Location = New System.Drawing.Point(10, 45)
         Me.chkCheck.Name = "chkCheck"
         Me.chkCheck.Size = New System.Drawing.Size(104, 17)
         Me.chkCheck.TabIndex = 39
@@ -253,18 +209,18 @@ Partial Class Main
         'chkOpen
         '
         Me.chkOpen.AutoSize = True
-        Me.chkOpen.Location = New System.Drawing.Point(6, 15)
+        Me.chkOpen.Location = New System.Drawing.Point(10, 30)
         Me.chkOpen.Name = "chkOpen"
-        Me.chkOpen.Size = New System.Drawing.Size(94, 17)
+        Me.chkOpen.Size = New System.Drawing.Size(76, 17)
         Me.chkOpen.TabIndex = 38
-        Me.chkOpen.Text = "Open Drawing"
+        Me.chkOpen.Text = "Open Only"
         Me.ToolTip1.SetToolTip(Me.chkOpen, "Open all the drawings selected")
         Me.chkOpen.UseVisualStyleBackColor = True
         '
         'chkiProp
         '
         Me.chkiProp.AutoSize = True
-        Me.chkiProp.Location = New System.Drawing.Point(564, 27)
+        Me.chkiProp.Location = New System.Drawing.Point(10, 15)
         Me.chkiProp.Name = "chkiProp"
         Me.chkiProp.Size = New System.Drawing.Size(115, 17)
         Me.chkiProp.TabIndex = 37
@@ -305,139 +261,32 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.chkDrawings, "Show the drawings that are currently open")
         Me.chkDrawings.UseVisualStyleBackColor = True
         '
-        'gbxSelection
+        'GroupBox1
         '
-        Me.gbxSelection.Controls.Add(Me.chkDerived)
-        Me.gbxSelection.Controls.Add(Me.chkPres)
-        Me.gbxSelection.Controls.Add(Me.chkAssy)
-        Me.gbxSelection.Controls.Add(Me.chkParts)
-        Me.gbxSelection.Controls.Add(Me.chkDrawings)
-        Me.gbxSelection.Location = New System.Drawing.Point(12, 27)
-        Me.gbxSelection.Name = "gbxSelection"
-        Me.gbxSelection.Size = New System.Drawing.Size(142, 79)
-        Me.gbxSelection.TabIndex = 50
-        Me.gbxSelection.TabStop = False
-        Me.gbxSelection.Text = "Selection"
+        Me.GroupBox1.Controls.Add(Me.chkDerived)
+        Me.GroupBox1.Controls.Add(Me.chkPres)
+        Me.GroupBox1.Controls.Add(Me.chkAssy)
+        Me.GroupBox1.Controls.Add(Me.chkParts)
+        Me.GroupBox1.Controls.Add(Me.chkDrawings)
+        Me.GroupBox1.Location = New System.Drawing.Point(12, 27)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(142, 79)
+        Me.GroupBox1.TabIndex = 50
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Selection"
         '
-        'gbxOpen
+        'GroupBox2
         '
-        Me.gbxOpen.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.gbxOpen.Controls.Add(Me.dgvOpenFiles)
-        Me.gbxOpen.Controls.Add(Me.chkPartSelect)
-        Me.gbxOpen.Location = New System.Drawing.Point(160, 27)
-        Me.gbxOpen.MinimumSize = New System.Drawing.Size(191, 214)
-        Me.gbxOpen.Name = "gbxOpen"
-        Me.gbxOpen.Size = New System.Drawing.Size(191, 214)
-        Me.gbxOpen.TabIndex = 51
-        Me.gbxOpen.TabStop = False
-        Me.gbxOpen.Text = "      Open Parts"
-        '
-        'dgvOpenFiles
-        '
-        Me.dgvOpenFiles.AllowUserToAddRows = False
-        Me.dgvOpenFiles.AllowUserToDeleteRows = False
-        Me.dgvOpenFiles.AllowUserToResizeColumns = False
-        Me.dgvOpenFiles.AllowUserToResizeRows = False
-        Me.dgvOpenFiles.BackgroundColor = System.Drawing.SystemColors.Window
-        Me.dgvOpenFiles.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.dgvOpenFiles.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        Me.dgvOpenFiles.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
-        Me.dgvOpenFiles.ColumnHeadersHeight = 17
-        Me.dgvOpenFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvOpenFiles.ColumnHeadersVisible = False
-        Me.dgvOpenFiles.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.chkOpenFiles, Me.PartName, Me.PartSource, Me.PartLocation, Me.PartOrder})
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvOpenFiles.DefaultCellStyle = DataGridViewCellStyle2
-        Me.dgvOpenFiles.EnableHeadersVisualStyles = False
-        Me.dgvOpenFiles.GridColor = System.Drawing.SystemColors.Window
-        Me.dgvOpenFiles.Location = New System.Drawing.Point(10, 15)
-        Me.dgvOpenFiles.Name = "dgvOpenFiles"
-        Me.dgvOpenFiles.ReadOnly = True
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        Me.dgvOpenFiles.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
-        Me.dgvOpenFiles.RowHeadersVisible = False
-        Me.dgvOpenFiles.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        Me.dgvOpenFiles.RowsDefaultCellStyle = DataGridViewCellStyle4
-        Me.dgvOpenFiles.RowTemplate.Height = 17
-        Me.dgvOpenFiles.RowTemplate.ReadOnly = True
-        Me.dgvOpenFiles.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvOpenFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvOpenFiles.ShowCellToolTips = False
-        Me.dgvOpenFiles.ShowEditingIcon = False
-        Me.dgvOpenFiles.ShowRowErrors = False
-        Me.dgvOpenFiles.Size = New System.Drawing.Size(175, 192)
-        Me.dgvOpenFiles.TabIndex = 66
-        '
-        'chkOpenFiles
-        '
-        Me.chkOpenFiles.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.chkOpenFiles.FalseValue = "0"
-        Me.chkOpenFiles.FillWeight = 12.69036!
-        Me.chkOpenFiles.HeaderText = "chkOpenFiles"
-        Me.chkOpenFiles.MinimumWidth = 17
-        Me.chkOpenFiles.Name = "chkOpenFiles"
-        Me.chkOpenFiles.ReadOnly = True
-        Me.chkOpenFiles.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.chkOpenFiles.TrueValue = "1"
-        '
-        'PartName
-        '
-        Me.PartName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.PartName.FillWeight = 121.8274!
-        Me.PartName.HeaderText = "Part Name"
-        Me.PartName.MinimumWidth = 15
-        Me.PartName.Name = "PartName"
-        Me.PartName.ReadOnly = True
-        Me.PartName.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        '
-        'PartSource
-        '
-        Me.PartSource.FillWeight = 121.8274!
-        Me.PartSource.HeaderText = "Part Source"
-        Me.PartSource.Name = "PartSource"
-        Me.PartSource.ReadOnly = True
-        Me.PartSource.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.PartSource.Visible = False
-        Me.PartSource.Width = 43
-        '
-        'PartLocation
-        '
-        Me.PartLocation.FillWeight = 121.8274!
-        Me.PartLocation.HeaderText = "Part Location"
-        Me.PartLocation.Name = "PartLocation"
-        Me.PartLocation.ReadOnly = True
-        Me.PartLocation.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.PartLocation.Visible = False
-        Me.PartLocation.Width = 42
-        '
-        'PartOrder
-        '
-        Me.PartOrder.HeaderText = "Order"
-        Me.PartOrder.Name = "PartOrder"
-        Me.PartOrder.ReadOnly = True
-        Me.PartOrder.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.PartOrder.Visible = False
+        Me.GroupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.GroupBox2.Controls.Add(Me.chkPartSelect)
+        Me.GroupBox2.Controls.Add(Me.lstOpenfiles)
+        Me.GroupBox2.Location = New System.Drawing.Point(160, 27)
+        Me.GroupBox2.MinimumSize = New System.Drawing.Size(191, 214)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Size = New System.Drawing.Size(191, 214)
+        Me.GroupBox2.TabIndex = 51
+        Me.GroupBox2.TabStop = False
+        Me.GroupBox2.Text = "      Open Parts"
         '
         'chkPartSelect
         '
@@ -448,32 +297,47 @@ Partial Class Main
         Me.chkPartSelect.TabIndex = 1
         Me.chkPartSelect.UseVisualStyleBackColor = True
         '
-        'gbxDrawings
+        'lstOpenfiles
         '
-        Me.gbxDrawings.Controls.Add(Me.chkDwgClose)
-        Me.gbxDrawings.Controls.Add(Me.chkUseDrawings)
-        Me.gbxDrawings.Controls.Add(Me.chkSkipAssy)
-        Me.gbxDrawings.Controls.Add(Me.chkDwgExport)
-        Me.gbxDrawings.Controls.Add(Me.chkDXF)
-        Me.gbxDrawings.Controls.Add(Me.chkRRev)
-        Me.gbxDrawings.Controls.Add(Me.ChkRevType)
-        Me.gbxDrawings.Controls.Add(Me.chkDWG)
-        Me.gbxDrawings.Controls.Add(Me.chkPDF)
-        Me.gbxDrawings.Controls.Add(Me.Label3)
-        Me.gbxDrawings.Controls.Add(Me.chkPrint)
-        Me.gbxDrawings.Controls.Add(Me.chkCheck)
-        Me.gbxDrawings.Controls.Add(Me.chkOpen)
-        Me.gbxDrawings.Location = New System.Drawing.Point(554, 117)
-        Me.gbxDrawings.Name = "gbxDrawings"
-        Me.gbxDrawings.Size = New System.Drawing.Size(176, 125)
-        Me.gbxDrawings.TabIndex = 53
-        Me.gbxDrawings.TabStop = False
-        Me.gbxDrawings.Text = "Drawing Action"
+        Me.lstOpenfiles.BackColor = System.Drawing.Color.White
+        Me.lstOpenfiles.CheckOnClick = True
+        Me.lstOpenfiles.FormattingEnabled = True
+        Me.lstOpenfiles.IntegralHeight = False
+        Me.lstOpenfiles.Location = New System.Drawing.Point(7, 18)
+        Me.lstOpenfiles.MinimumSize = New System.Drawing.Size(180, 190)
+        Me.lstOpenfiles.Name = "lstOpenfiles"
+        Me.lstOpenfiles.Size = New System.Drawing.Size(180, 190)
+        Me.lstOpenfiles.TabIndex = 0
+        Me.lstOpenfiles.ThreeDCheckBoxes = True
+        Me.ToolTip1.SetToolTip(Me.lstOpenfiles, "Documents that are currently open")
+        '
+        'GroupBox4
+        '
+        Me.GroupBox4.Controls.Add(Me.chkClose)
+        Me.GroupBox4.Controls.Add(Me.chkUseDrawings)
+        Me.GroupBox4.Controls.Add(Me.chkSkipAssy)
+        Me.GroupBox4.Controls.Add(Me.chkExport)
+        Me.GroupBox4.Controls.Add(Me.chkDXF)
+        Me.GroupBox4.Controls.Add(Me.chkRRev)
+        Me.GroupBox4.Controls.Add(Me.ChkRevType)
+        Me.GroupBox4.Controls.Add(Me.chkDWG)
+        Me.GroupBox4.Controls.Add(Me.chkPDF)
+        Me.GroupBox4.Controls.Add(Me.Label3)
+        Me.GroupBox4.Controls.Add(Me.chkPrint)
+        Me.GroupBox4.Controls.Add(Me.chkCheck)
+        Me.GroupBox4.Controls.Add(Me.chkOpen)
+        Me.GroupBox4.Controls.Add(Me.chkiProp)
+        Me.GroupBox4.Location = New System.Drawing.Point(554, 27)
+        Me.GroupBox4.Name = "GroupBox4"
+        Me.GroupBox4.Size = New System.Drawing.Size(176, 144)
+        Me.GroupBox4.TabIndex = 53
+        Me.GroupBox4.TabStop = False
+        Me.GroupBox4.Text = "Drawing Action"
         '
         'chkUseDrawings
         '
         Me.chkUseDrawings.AutoSize = True
-        Me.chkUseDrawings.Location = New System.Drawing.Point(21, 136)
+        Me.chkUseDrawings.Location = New System.Drawing.Point(25, 151)
         Me.chkUseDrawings.Name = "chkUseDrawings"
         Me.chkUseDrawings.Size = New System.Drawing.Size(92, 17)
         Me.chkUseDrawings.TabIndex = 62
@@ -485,7 +349,7 @@ Partial Class Main
         'chkSkipAssy
         '
         Me.chkSkipAssy.AutoSize = True
-        Me.chkSkipAssy.Location = New System.Drawing.Point(21, 121)
+        Me.chkSkipAssy.Location = New System.Drawing.Point(25, 136)
         Me.chkSkipAssy.Name = "chkSkipAssy"
         Me.chkSkipAssy.Size = New System.Drawing.Size(102, 17)
         Me.chkSkipAssy.TabIndex = 36
@@ -497,7 +361,7 @@ Partial Class Main
         'chkRRev
         '
         Me.chkRRev.AutoSize = True
-        Me.chkRRev.Location = New System.Drawing.Point(6, 75)
+        Me.chkRRev.Location = New System.Drawing.Point(10, 90)
         Me.chkRRev.Name = "chkRRev"
         Me.chkRRev.Size = New System.Drawing.Size(110, 17)
         Me.chkRRev.TabIndex = 60
@@ -507,7 +371,7 @@ Partial Class Main
         'ChkRevType
         '
         Me.ChkRevType.AutoSize = True
-        Me.ChkRevType.Location = New System.Drawing.Point(6, 60)
+        Me.ChkRevType.Location = New System.Drawing.Point(10, 75)
         Me.ChkRevType.Name = "ChkRevType"
         Me.ChkRevType.Size = New System.Drawing.Size(113, 17)
         Me.ChkRevType.TabIndex = 59
@@ -517,7 +381,7 @@ Partial Class Main
         'chkDWG
         '
         Me.chkDWG.AutoSize = True
-        Me.chkDWG.Location = New System.Drawing.Point(58, 106)
+        Me.chkDWG.Location = New System.Drawing.Point(62, 121)
         Me.chkDWG.Name = "chkDWG"
         Me.chkDWG.Size = New System.Drawing.Size(53, 17)
         Me.chkDWG.TabIndex = 58
@@ -528,7 +392,7 @@ Partial Class Main
         'chkPDF
         '
         Me.chkPDF.AutoSize = True
-        Me.chkPDF.Location = New System.Drawing.Point(13, 106)
+        Me.chkPDF.Location = New System.Drawing.Point(17, 121)
         Me.chkPDF.Name = "chkPDF"
         Me.chkPDF.Size = New System.Drawing.Size(47, 17)
         Me.chkPDF.TabIndex = 57
@@ -566,23 +430,41 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnSpreadsheet, "Create a spreadsheet of all the components of a selected assembly")
         Me.btnSpreadsheet.UseVisualStyleBackColor = True
         '
-        'gbxSub
+        'GroupBox3
         '
-        Me.gbxSub.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.gbxSub.Controls.Add(Me.txtSearch)
-        Me.gbxSub.Controls.Add(Me.chkDWGSelect)
-        Me.gbxSub.Controls.Add(Me.dgvSubFiles)
-        Me.gbxSub.Cursor = System.Windows.Forms.Cursors.Default
-        Me.gbxSub.Location = New System.Drawing.Point(357, 27)
-        Me.gbxSub.Name = "gbxSub"
-        Me.gbxSub.Size = New System.Drawing.Size(191, 214)
-        Me.gbxSub.TabIndex = 52
-        Me.gbxSub.TabStop = False
-        Me.gbxSub.Text = "          Referenced Documents"
+        Me.GroupBox3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.GroupBox3.Controls.Add(Me.LVSubFiles)
+        Me.GroupBox3.Controls.Add(Me.txtSearch)
+        Me.GroupBox3.Controls.Add(Me.chkDWGSelect)
+        Me.GroupBox3.Cursor = System.Windows.Forms.Cursors.Default
+        Me.GroupBox3.Location = New System.Drawing.Point(357, 27)
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.Size = New System.Drawing.Size(191, 214)
+        Me.GroupBox3.TabIndex = 52
+        Me.GroupBox3.TabStop = False
+        Me.GroupBox3.Text = "          Referenced Drawings"
+        '
+        'LVSubFiles
+        '
+        Me.LVSubFiles.Activation = System.Windows.Forms.ItemActivation.OneClick
+        Me.LVSubFiles.AutoArrange = False
+        Me.LVSubFiles.CheckBoxes = True
+        Me.LVSubFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1})
+        Me.LVSubFiles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None
+        Me.LVSubFiles.Location = New System.Drawing.Point(6, 18)
+        Me.LVSubFiles.Name = "LVSubFiles"
+        Me.LVSubFiles.Size = New System.Drawing.Size(180, 190)
+        Me.LVSubFiles.TabIndex = 62
+        Me.LVSubFiles.UseCompatibleStateImageBehavior = False
+        Me.LVSubFiles.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader1
+        '
+        Me.ColumnHeader1.Width = 170
         '
         'txtSearch
         '
-        Me.txtSearch.Location = New System.Drawing.Point(7, 187)
+        Me.txtSearch.Location = New System.Drawing.Point(6, 188)
         Me.txtSearch.Name = "txtSearch"
         Me.txtSearch.Size = New System.Drawing.Size(178, 20)
         Me.txtSearch.TabIndex = 1
@@ -599,134 +481,46 @@ Partial Class Main
         Me.chkDWGSelect.TabIndex = 58
         Me.chkDWGSelect.UseVisualStyleBackColor = True
         '
-        'dgvSubFiles
+        'tmr
         '
-        Me.dgvSubFiles.AllowUserToAddRows = False
-        Me.dgvSubFiles.AllowUserToDeleteRows = False
-        Me.dgvSubFiles.AllowUserToResizeColumns = False
-        Me.dgvSubFiles.AllowUserToResizeRows = False
-        Me.dgvSubFiles.BackgroundColor = System.Drawing.SystemColors.Window
-        Me.dgvSubFiles.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.dgvSubFiles.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        Me.dgvSubFiles.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle5
-        Me.dgvSubFiles.ColumnHeadersHeight = 17
-        Me.dgvSubFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvSubFiles.ColumnHeadersVisible = False
-        Me.dgvSubFiles.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.chkSubFiles, Me.DrawingName, Me.DrawingNameAlpha, Me.DrawingSource, Me.DrawingLocation, Me.Comments, Me.Order})
-        Me.dgvSubFiles.ContextMenuStrip = Me.CMSSubFiles
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvSubFiles.DefaultCellStyle = DataGridViewCellStyle6
-        Me.dgvSubFiles.EnableHeadersVisualStyles = False
-        Me.dgvSubFiles.GridColor = System.Drawing.SystemColors.Window
-        Me.dgvSubFiles.Location = New System.Drawing.Point(6, 15)
-        Me.dgvSubFiles.MultiSelect = False
-        Me.dgvSubFiles.Name = "dgvSubFiles"
-        Me.dgvSubFiles.ReadOnly = True
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        Me.dgvSubFiles.RowHeadersDefaultCellStyle = DataGridViewCellStyle7
-        Me.dgvSubFiles.RowHeadersVisible = False
-        Me.dgvSubFiles.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        Me.dgvSubFiles.RowsDefaultCellStyle = DataGridViewCellStyle8
-        Me.dgvSubFiles.RowTemplate.Height = 17
-        Me.dgvSubFiles.RowTemplate.ReadOnly = True
-        Me.dgvSubFiles.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvSubFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvSubFiles.ShowCellToolTips = False
-        Me.dgvSubFiles.ShowEditingIcon = False
-        Me.dgvSubFiles.ShowRowErrors = False
-        Me.dgvSubFiles.Size = New System.Drawing.Size(178, 167)
-        Me.dgvSubFiles.TabIndex = 63
         '
-        'chkSubFiles
+        'ToolTip1
         '
-        Me.chkSubFiles.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.chkSubFiles.FalseValue = "0"
-        Me.chkSubFiles.FillWeight = 12.69036!
-        Me.chkSubFiles.HeaderText = "chkSubFiles"
-        Me.chkSubFiles.MinimumWidth = 17
-        Me.chkSubFiles.Name = "chkSubFiles"
-        Me.chkSubFiles.ReadOnly = True
-        Me.chkSubFiles.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.chkSubFiles.TrueValue = "1"
         '
-        'DrawingName
+        'btnRef
         '
-        Me.DrawingName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.DrawingName.FillWeight = 121.8274!
-        Me.DrawingName.HeaderText = "Drawing Name"
-        Me.DrawingName.MinimumWidth = 15
-        Me.DrawingName.Name = "DrawingName"
-        Me.DrawingName.ReadOnly = True
-        Me.DrawingName.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.btnRef.Location = New System.Drawing.Point(6, 40)
+        Me.btnRef.Name = "btnRef"
+        Me.btnRef.Size = New System.Drawing.Size(130, 23)
+        Me.btnRef.TabIndex = 3
+        Me.btnRef.Text = "Update Ref Table"
+        Me.ToolTip1.SetToolTip(Me.btnRef, "Add the parent drawing name to the Reference table in each drawing")
+        Me.btnRef.UseVisualStyleBackColor = True
         '
-        'DrawingNameAlpha
+        'PictureBox2
         '
-        Me.DrawingNameAlpha.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.DrawingNameAlpha.HeaderText = "Drawing Name Alpha"
-        Me.DrawingNameAlpha.Name = "DrawingNameAlpha"
-        Me.DrawingNameAlpha.ReadOnly = True
-        Me.DrawingNameAlpha.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DrawingNameAlpha.Visible = False
+        Me.PictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.PictureBox2.Image = Global.My.Resources.Resources.inverse1
+        Me.PictureBox2.InitialImage = Nothing
+        Me.PictureBox2.Location = New System.Drawing.Point(378, 27)
+        Me.PictureBox2.Name = "PictureBox2"
+        Me.PictureBox2.Size = New System.Drawing.Size(15, 15)
+        Me.PictureBox2.TabIndex = 59
+        Me.PictureBox2.TabStop = False
         '
-        'DrawingSource
+        'GroupBox5
         '
-        Me.DrawingSource.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
-        Me.DrawingSource.FillWeight = 121.8274!
-        Me.DrawingSource.HeaderText = "Drawing Source"
-        Me.DrawingSource.Name = "DrawingSource"
-        Me.DrawingSource.ReadOnly = True
-        Me.DrawingSource.Visible = False
-        Me.DrawingSource.Width = 5
-        '
-        'DrawingLocation
-        '
-        Me.DrawingLocation.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
-        Me.DrawingLocation.FillWeight = 121.8274!
-        Me.DrawingLocation.HeaderText = "Drawing Location"
-        Me.DrawingLocation.Name = "DrawingLocation"
-        Me.DrawingLocation.ReadOnly = True
-        Me.DrawingLocation.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DrawingLocation.Visible = False
-        Me.DrawingLocation.Width = 5
-        '
-        'Comments
-        '
-        Me.Comments.FillWeight = 121.8274!
-        Me.Comments.HeaderText = "Comments"
-        Me.Comments.Name = "Comments"
-        Me.Comments.ReadOnly = True
-        Me.Comments.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.Comments.Visible = False
-        Me.Comments.Width = 43
-        '
-        'Order
-        '
-        Me.Order.HeaderText = "Order"
-        Me.Order.Name = "Order"
-        Me.Order.ReadOnly = True
-        Me.Order.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.Order.Visible = False
+        Me.GroupBox5.Controls.Add(Me.btnRef)
+        Me.GroupBox5.Controls.Add(Me.btnRename)
+        Me.GroupBox5.Controls.Add(Me.btnSpreadsheet)
+        Me.GroupBox5.Controls.Add(Me.btnFlatPattern)
+        Me.GroupBox5.Cursor = System.Windows.Forms.Cursors.Default
+        Me.GroupBox5.Location = New System.Drawing.Point(12, 123)
+        Me.GroupBox5.Name = "GroupBox5"
+        Me.GroupBox5.Size = New System.Drawing.Size(142, 118)
+        Me.GroupBox5.TabIndex = 60
+        Me.GroupBox5.TabStop = False
+        Me.GroupBox5.Text = "Part Actions"
         '
         'CMSSubFiles
         '
@@ -799,113 +593,6 @@ Partial Class Main
         Me.CMSSubText.Size = New System.Drawing.Size(138, 22)
         Me.CMSSubText.Text = "Text File"
         '
-        'ToolTip1
-        '
-        '
-        'btnRef
-        '
-        Me.btnRef.Location = New System.Drawing.Point(6, 40)
-        Me.btnRef.Name = "btnRef"
-        Me.btnRef.Size = New System.Drawing.Size(130, 23)
-        Me.btnRef.TabIndex = 3
-        Me.btnRef.Text = "Update Ref Table"
-        Me.ToolTip1.SetToolTip(Me.btnRef, "Add the parent drawing name to the Reference table in each drawing")
-        Me.btnRef.UseVisualStyleBackColor = True
-        '
-        'chkPartClose
-        '
-        Me.chkPartClose.AutoSize = True
-        Me.chkPartClose.Location = New System.Drawing.Point(10, 46)
-        Me.chkPartClose.Name = "chkPartClose"
-        Me.chkPartClose.Size = New System.Drawing.Size(138, 17)
-        Me.chkPartClose.TabIndex = 43
-        Me.chkPartClose.Text = "Close Open Documents"
-        Me.ToolTip1.SetToolTip(Me.chkPartClose, "Close all the drawings selected")
-        Me.chkPartClose.UseVisualStyleBackColor = True
-        '
-        'chkPartUseDwg
-        '
-        Me.chkPartUseDwg.AutoSize = True
-        Me.chkPartUseDwg.Location = New System.Drawing.Point(23, 78)
-        Me.chkPartUseDwg.Name = "chkPartUseDwg"
-        Me.chkPartUseDwg.Size = New System.Drawing.Size(92, 17)
-        Me.chkPartUseDwg.TabIndex = 62
-        Me.chkPartUseDwg.Text = "Use Drawings"
-        Me.ToolTip1.SetToolTip(Me.chkPartUseDwg, "Create DXF's from the drawing.")
-        Me.chkPartUseDwg.UseVisualStyleBackColor = True
-        Me.chkPartUseDwg.Visible = False
-        '
-        'chkPartSkip
-        '
-        Me.chkPartSkip.AutoSize = True
-        Me.chkPartSkip.Location = New System.Drawing.Point(23, 62)
-        Me.chkPartSkip.Name = "chkPartSkip"
-        Me.chkPartSkip.Size = New System.Drawing.Size(102, 17)
-        Me.chkPartSkip.TabIndex = 36
-        Me.chkPartSkip.Text = "Skip Assemblies"
-        Me.ToolTip1.SetToolTip(Me.chkPartSkip, "Do not make a DXF of the assemby")
-        Me.chkPartSkip.UseVisualStyleBackColor = True
-        Me.chkPartSkip.Visible = False
-        '
-        'chkPartExport
-        '
-        Me.chkPartExport.AutoSize = True
-        Me.chkPartExport.Location = New System.Drawing.Point(10, 30)
-        Me.chkPartExport.Name = "chkPartExport"
-        Me.chkPartExport.Size = New System.Drawing.Size(78, 17)
-        Me.chkPartExport.TabIndex = 42
-        Me.chkPartExport.Text = "Export Part"
-        Me.ToolTip1.SetToolTip(Me.chkPartExport, "Create PDF's of the drawings selected")
-        Me.chkPartExport.UseVisualStyleBackColor = True
-        '
-        'chkPartDXF
-        '
-        Me.chkPartDXF.AutoSize = True
-        Me.chkPartDXF.Location = New System.Drawing.Point(77, 46)
-        Me.chkPartDXF.Name = "chkPartDXF"
-        Me.chkPartDXF.Size = New System.Drawing.Size(47, 17)
-        Me.chkPartDXF.TabIndex = 41
-        Me.chkPartDXF.Text = "DXF"
-        Me.ToolTip1.SetToolTip(Me.chkPartDXF, "Create DXF's of the drawings selected")
-        Me.chkPartDXF.UseVisualStyleBackColor = True
-        Me.chkPartDXF.Visible = False
-        '
-        'chkPartOpen
-        '
-        Me.chkPartOpen.AutoSize = True
-        Me.chkPartOpen.Location = New System.Drawing.Point(10, 15)
-        Me.chkPartOpen.Name = "chkPartOpen"
-        Me.chkPartOpen.Size = New System.Drawing.Size(74, 17)
-        Me.chkPartOpen.TabIndex = 38
-        Me.chkPartOpen.Text = "Open Part"
-        Me.ToolTip1.SetToolTip(Me.chkPartOpen, "Open all the drawings selected")
-        Me.chkPartOpen.UseVisualStyleBackColor = True
-        '
-        'PictureBox2
-        '
-        Me.PictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-        Me.PictureBox2.Image = Global.My.Resources.Resources.inverse1
-        Me.PictureBox2.InitialImage = Nothing
-        Me.PictureBox2.Location = New System.Drawing.Point(378, 27)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(15, 15)
-        Me.PictureBox2.TabIndex = 59
-        Me.PictureBox2.TabStop = False
-        '
-        'gbxUtilities
-        '
-        Me.gbxUtilities.Controls.Add(Me.btnRef)
-        Me.gbxUtilities.Controls.Add(Me.btnRename)
-        Me.gbxUtilities.Controls.Add(Me.btnSpreadsheet)
-        Me.gbxUtilities.Controls.Add(Me.btnFlatPattern)
-        Me.gbxUtilities.Cursor = System.Windows.Forms.Cursors.Default
-        Me.gbxUtilities.Location = New System.Drawing.Point(12, 123)
-        Me.gbxUtilities.Name = "gbxUtilities"
-        Me.gbxUtilities.Size = New System.Drawing.Size(142, 118)
-        Me.gbxUtilities.TabIndex = 60
-        Me.gbxUtilities.TabStop = False
-        Me.gbxUtilities.Text = "Utilities"
-        '
         'MenuStrip1
         '
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.AboutToolStripMenuItem})
@@ -917,7 +604,7 @@ Partial Class Main
         '
         'FileToolStripMenuItem
         '
-        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DefaultSettingsToolStripMenuItem, Me.IPropertySettingsToolStripMenuItem, Me.RevTableSettingsToolStripMenuItem})
+        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DefaultSettingsToolStripMenuItem, Me.IPropertySettingsToolStripMenuItem})
         Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
         Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
         Me.FileToolStripMenuItem.Text = "File"
@@ -925,20 +612,14 @@ Partial Class Main
         'DefaultSettingsToolStripMenuItem
         '
         Me.DefaultSettingsToolStripMenuItem.Name = "DefaultSettingsToolStripMenuItem"
-        Me.DefaultSettingsToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+        Me.DefaultSettingsToolStripMenuItem.Size = New System.Drawing.Size(167, 22)
         Me.DefaultSettingsToolStripMenuItem.Text = "Export Settings"
         '
         'IPropertySettingsToolStripMenuItem
         '
         Me.IPropertySettingsToolStripMenuItem.Name = "IPropertySettingsToolStripMenuItem"
-        Me.IPropertySettingsToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+        Me.IPropertySettingsToolStripMenuItem.Size = New System.Drawing.Size(167, 22)
         Me.IPropertySettingsToolStripMenuItem.Text = "iProperty Settings"
-        '
-        'RevTableSettingsToolStripMenuItem
-        '
-        Me.RevTableSettingsToolStripMenuItem.Name = "RevTableSettingsToolStripMenuItem"
-        Me.RevTableSettingsToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
-        Me.RevTableSettingsToolStripMenuItem.Text = "Rev Table Settings"
         '
         'AboutToolStripMenuItem
         '
@@ -971,207 +652,71 @@ Partial Class Main
         Me.IFoundABugToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
         Me.IFoundABugToolStripMenuItem.Text = "I found a bug"
         '
+        'ContextMenuStrip1
+        '
+        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(61, 4)
+        '
+        'MsVistaProgressBar
+        '
+        Me.MsVistaProgressBar.BackColor = System.Drawing.Color.Transparent
+        Me.MsVistaProgressBar.BlockSize = 10
+        Me.MsVistaProgressBar.BlockSpacing = 10
+        Me.MsVistaProgressBar.DisplayText = "%P%"
+        Me.MsVistaProgressBar.DisplayTextColor = System.Drawing.SystemColors.ControlText
+        Me.MsVistaProgressBar.DisplayTextFont = New System.Drawing.Font("Arial", 8.0!)
+        Me.MsVistaProgressBar.GradiantStyle = MSVistaProgressBar.BackGradiant.None
+        Me.MsVistaProgressBar.Location = New System.Drawing.Point(12, 242)
+        Me.MsVistaProgressBar.Name = "MsVistaProgressBar"
+        Me.MsVistaProgressBar.ShowText = True
+        Me.MsVistaProgressBar.Size = New System.Drawing.Size(536, 23)
+        Me.MsVistaProgressBar.TabIndex = 62
+        Me.MsVistaProgressBar.Visible = False
+        '
         'TutorialsToolStripMenuItem
         '
         Me.TutorialsToolStripMenuItem.Name = "TutorialsToolStripMenuItem"
         Me.TutorialsToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
         Me.TutorialsToolStripMenuItem.Text = "Tutorials"
         '
-        'ContextMenuStrip1
-        '
-        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(61, 4)
-        '
-        'gbxParts
-        '
-        Me.gbxParts.Controls.Add(Me.chkPartClose)
-        Me.gbxParts.Controls.Add(Me.chkPartUseDwg)
-        Me.gbxParts.Controls.Add(Me.chkPartSkip)
-        Me.gbxParts.Controls.Add(Me.chkPartExport)
-        Me.gbxParts.Controls.Add(Me.chkPartDXF)
-        Me.gbxParts.Controls.Add(Me.chkPartDWG)
-        Me.gbxParts.Controls.Add(Me.chkPartOpen)
-        Me.gbxParts.Location = New System.Drawing.Point(554, 48)
-        Me.gbxParts.Name = "gbxParts"
-        Me.gbxParts.Size = New System.Drawing.Size(176, 67)
-        Me.gbxParts.TabIndex = 63
-        Me.gbxParts.TabStop = False
-        Me.gbxParts.Text = "Part Actions"
-        '
-        'chkPartDWG
-        '
-        Me.chkPartDWG.AutoSize = True
-        Me.chkPartDWG.Location = New System.Drawing.Point(23, 46)
-        Me.chkPartDWG.Name = "chkPartDWG"
-        Me.chkPartDWG.Size = New System.Drawing.Size(53, 17)
-        Me.chkPartDWG.TabIndex = 58
-        Me.chkPartDWG.Text = "DWG"
-        Me.chkPartDWG.UseVisualStyleBackColor = True
-        Me.chkPartDWG.Visible = False
-        '
-        'bgwUpdateSub
-        '
-        Me.bgwUpdateSub.WorkerReportsProgress = True
-        Me.bgwUpdateSub.WorkerSupportsCancellation = True
-        '
-        'bgwRun
-        '
-        '
-        'DataGridViewTextBoxColumn1
-        '
-        Me.DataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.DataGridViewTextBoxColumn1.FillWeight = 121.8274!
-        Me.DataGridViewTextBoxColumn1.HeaderText = "Part Name"
-        Me.DataGridViewTextBoxColumn1.MinimumWidth = 15
-        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
-        Me.DataGridViewTextBoxColumn1.ReadOnly = True
-        Me.DataGridViewTextBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        '
-        'DataGridViewTextBoxColumn2
-        '
-        Me.DataGridViewTextBoxColumn2.FillWeight = 121.8274!
-        Me.DataGridViewTextBoxColumn2.HeaderText = "Part Source"
-        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
-        Me.DataGridViewTextBoxColumn2.ReadOnly = True
-        Me.DataGridViewTextBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridViewTextBoxColumn2.Visible = False
-        Me.DataGridViewTextBoxColumn2.Width = 43
-        '
-        'DataGridViewTextBoxColumn3
-        '
-        Me.DataGridViewTextBoxColumn3.FillWeight = 121.8274!
-        Me.DataGridViewTextBoxColumn3.HeaderText = "Part Location"
-        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
-        Me.DataGridViewTextBoxColumn3.ReadOnly = True
-        Me.DataGridViewTextBoxColumn3.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridViewTextBoxColumn3.Visible = False
-        Me.DataGridViewTextBoxColumn3.Width = 42
-        '
-        'DataGridViewTextBoxColumn4
-        '
-        Me.DataGridViewTextBoxColumn4.HeaderText = "Order"
-        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
-        Me.DataGridViewTextBoxColumn4.ReadOnly = True
-        Me.DataGridViewTextBoxColumn4.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridViewTextBoxColumn4.Visible = False
-        '
-        'DataGridViewTextBoxColumn5
-        '
-        Me.DataGridViewTextBoxColumn5.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.DataGridViewTextBoxColumn5.FillWeight = 121.8274!
-        Me.DataGridViewTextBoxColumn5.HeaderText = "Drawing Name"
-        Me.DataGridViewTextBoxColumn5.MinimumWidth = 15
-        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
-        Me.DataGridViewTextBoxColumn5.ReadOnly = True
-        Me.DataGridViewTextBoxColumn5.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        '
-        'DataGridViewTextBoxColumn6
-        '
-        Me.DataGridViewTextBoxColumn6.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.DataGridViewTextBoxColumn6.HeaderText = "Drawing Name Alpha"
-        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
-        Me.DataGridViewTextBoxColumn6.ReadOnly = True
-        Me.DataGridViewTextBoxColumn6.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridViewTextBoxColumn6.Visible = False
-        '
-        'DataGridViewTextBoxColumn7
-        '
-        Me.DataGridViewTextBoxColumn7.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
-        Me.DataGridViewTextBoxColumn7.FillWeight = 121.8274!
-        Me.DataGridViewTextBoxColumn7.HeaderText = "Drawing Source"
-        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
-        Me.DataGridViewTextBoxColumn7.ReadOnly = True
-        Me.DataGridViewTextBoxColumn7.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridViewTextBoxColumn7.Visible = False
-        '
-        'DataGridViewTextBoxColumn8
-        '
-        Me.DataGridViewTextBoxColumn8.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
-        Me.DataGridViewTextBoxColumn8.FillWeight = 121.8274!
-        Me.DataGridViewTextBoxColumn8.HeaderText = "Drawing Location"
-        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
-        Me.DataGridViewTextBoxColumn8.ReadOnly = True
-        Me.DataGridViewTextBoxColumn8.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridViewTextBoxColumn8.Visible = False
-        '
-        'DataGridViewTextBoxColumn9
-        '
-        Me.DataGridViewTextBoxColumn9.FillWeight = 121.8274!
-        Me.DataGridViewTextBoxColumn9.HeaderText = "Comments"
-        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
-        Me.DataGridViewTextBoxColumn9.ReadOnly = True
-        Me.DataGridViewTextBoxColumn9.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridViewTextBoxColumn9.Visible = False
-        Me.DataGridViewTextBoxColumn9.Width = 43
-        '
-        'DataGridViewTextBoxColumn10
-        '
-        Me.DataGridViewTextBoxColumn10.HeaderText = "Order"
-        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
-        Me.DataGridViewTextBoxColumn10.ReadOnly = True
-        Me.DataGridViewTextBoxColumn10.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridViewTextBoxColumn10.Visible = False
-        '
-        'pgbMain
-        '
-        Me.pgbMain.BackColor = System.Drawing.Color.Transparent
-        Me.pgbMain.BlockSize = 10
-        Me.pgbMain.BlockSpacing = 10
-        Me.pgbMain.DisplayText = "%P%"
-        Me.pgbMain.DisplayTextColor = System.Drawing.SystemColors.ControlText
-        Me.pgbMain.DisplayTextFont = New System.Drawing.Font("Arial", 8.0!)
-        Me.pgbMain.GradiantStyle = MSVistaProgressBar.BackGradiant.None
-        Me.pgbMain.Location = New System.Drawing.Point(12, 247)
-        Me.pgbMain.Name = "pgbMain"
-        Me.pgbMain.ShowText = True
-        Me.pgbMain.Size = New System.Drawing.Size(536, 23)
-        Me.pgbMain.TabIndex = 62
-        Me.pgbMain.Visible = False
-        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Control
-        Me.ClientSize = New System.Drawing.Size(746, 277)
-        Me.Controls.Add(Me.gbxParts)
-        Me.Controls.Add(Me.pgbMain)
+        Me.ClientSize = New System.Drawing.Size(746, 272)
+        Me.Controls.Add(Me.MsVistaProgressBar)
         Me.Controls.Add(Me.MenuStrip1)
         Me.Controls.Add(Me.PictureBox2)
-        Me.Controls.Add(Me.gbxDrawings)
+        Me.Controls.Add(Me.GroupBox4)
         Me.Controls.Add(Me.btnExit)
         Me.Controls.Add(Me.btnOK)
-        Me.Controls.Add(Me.gbxSub)
-        Me.Controls.Add(Me.gbxOpen)
-        Me.Controls.Add(Me.gbxSelection)
-        Me.Controls.Add(Me.gbxUtilities)
-        Me.Controls.Add(Me.chkiProp)
+        Me.Controls.Add(Me.GroupBox3)
+        Me.Controls.Add(Me.GroupBox2)
+        Me.Controls.Add(Me.GroupBox1)
+        Me.Controls.Add(Me.GroupBox5)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.MinimumSize = New System.Drawing.Size(762, 315)
+        Me.MinimumSize = New System.Drawing.Size(762, 310)
         Me.Name = "Main"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Batch Program - Beta"
+        Me.Text = "Batch Program"
         Me.TransparencyKey = System.Drawing.Color.Maroon
-        Me.gbxSelection.ResumeLayout(False)
-        Me.gbxSelection.PerformLayout()
-        Me.gbxOpen.ResumeLayout(False)
-        Me.gbxOpen.PerformLayout()
-        CType(Me.dgvOpenFiles, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.gbxDrawings.ResumeLayout(False)
-        Me.gbxDrawings.PerformLayout()
-        Me.gbxSub.ResumeLayout(False)
-        Me.gbxSub.PerformLayout()
-        CType(Me.dgvSubFiles, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.CMSSubFiles.ResumeLayout(False)
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
+        Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout()
+        Me.GroupBox4.ResumeLayout(False)
+        Me.GroupBox4.PerformLayout()
+        Me.GroupBox3.ResumeLayout(False)
+        Me.GroupBox3.PerformLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.gbxUtilities.ResumeLayout(False)
+        Me.GroupBox5.ResumeLayout(False)
+        Me.CMSSubFiles.ResumeLayout(False)
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
-        Me.gbxParts.ResumeLayout(False)
-        Me.gbxParts.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1181,8 +726,8 @@ Partial Class Main
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents btnExit As System.Windows.Forms.Button
     Friend WithEvents btnOK As System.Windows.Forms.Button
-    Friend WithEvents chkDwgClose As System.Windows.Forms.CheckBox
-    Friend WithEvents chkDwgExport As System.Windows.Forms.CheckBox
+    Friend WithEvents chkClose As System.Windows.Forms.CheckBox
+    Friend WithEvents chkExport As System.Windows.Forms.CheckBox
     Friend WithEvents chkDXF As System.Windows.Forms.CheckBox
     Friend WithEvents chkPrint As System.Windows.Forms.CheckBox
     Friend WithEvents chkCheck As System.Windows.Forms.CheckBox
@@ -1191,17 +736,18 @@ Partial Class Main
     Friend WithEvents chkAssy As System.Windows.Forms.CheckBox
     Friend WithEvents chkParts As System.Windows.Forms.CheckBox
     Friend WithEvents chkDrawings As System.Windows.Forms.CheckBox
-    Friend WithEvents gbxSelection As System.Windows.Forms.GroupBox
-    Friend WithEvents gbxOpen As System.Windows.Forms.GroupBox
-    Friend WithEvents gbxDrawings As System.Windows.Forms.GroupBox
+    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+    Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
+    Friend WithEvents lstOpenfiles As System.Windows.Forms.CheckedListBox
+    Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
     Friend WithEvents chkSkipAssy As System.Windows.Forms.CheckBox
     Friend WithEvents btnRename As System.Windows.Forms.Button
     Friend WithEvents btnFlatPattern As System.Windows.Forms.Button
     Friend WithEvents btnSpreadsheet As System.Windows.Forms.Button
-    Friend WithEvents gbxSub As System.Windows.Forms.GroupBox
+    Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
     Friend WithEvents tmr As System.Windows.Forms.Timer
     Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
-    Friend WithEvents pgbMain As MSVistaProgressBar
+    Friend WithEvents MsVistaProgressBar As MSVistaProgressBar
     Friend WithEvents txtSearch As System.Windows.Forms.TextBox
     Friend WithEvents chkDWG As Windows.Forms.CheckBox
     Friend WithEvents chkPDF As Windows.Forms.CheckBox
@@ -1210,7 +756,7 @@ Partial Class Main
     Friend WithEvents chkDWGSelect As Windows.Forms.CheckBox
     Friend WithEvents chkRRev As Windows.Forms.CheckBox
     Friend WithEvents ChkRevType As Windows.Forms.CheckBox
-    Friend WithEvents gbxUtilities As Windows.Forms.GroupBox
+    Friend WithEvents GroupBox5 As Windows.Forms.GroupBox
     Friend WithEvents chkUseDrawings As Windows.Forms.CheckBox
     Friend WithEvents btnRef As Windows.Forms.Button
     Friend WithEvents CMSSubFiles As Windows.Forms.ContextMenuStrip
@@ -1236,49 +782,15 @@ Partial Class Main
     Friend WithEvents AboutBatchProgramToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents ContextMenuStrip1 As Windows.Forms.ContextMenuStrip
     Friend WithEvents mnuActDeact As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents LVSubFiles As Windows.Forms.ListView
     Friend WithEvents ExportToToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSSubSpreadsheet As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSSubText As Windows.Forms.ToolStripMenuItem
     Friend WithEvents IPropertySettingsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ColumnHeader1 As Windows.Forms.ColumnHeader
     Friend WithEvents HowToToolStripMenuItem1 As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSReference As Windows.Forms.ToolStripMenuItem
     Friend WithEvents IFoundABugToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSMissingParts As Windows.Forms.ToolStripMenuItem
     Friend WithEvents TutorialsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
-    Friend WithEvents RevTableSettingsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
-    Friend WithEvents dgvSubFiles As Windows.Forms.DataGridView
-    Friend WithEvents dgvOpenFiles As Windows.Forms.DataGridView
-    Friend WithEvents chkOpenFiles As Windows.Forms.DataGridViewCheckBoxColumn
-    Friend WithEvents PartName As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PartSource As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PartLocation As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PartOrder As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn1 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn2 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn3 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn4 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn5 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn6 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn7 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn8 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn9 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn10 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents gbxParts As Windows.Forms.GroupBox
-    Friend WithEvents chkPartClose As Windows.Forms.CheckBox
-    Friend WithEvents chkPartUseDwg As Windows.Forms.CheckBox
-    Friend WithEvents chkPartSkip As Windows.Forms.CheckBox
-    Friend WithEvents chkPartExport As Windows.Forms.CheckBox
-    Friend WithEvents chkPartDXF As Windows.Forms.CheckBox
-    Friend WithEvents chkPartDWG As Windows.Forms.CheckBox
-    Friend WithEvents chkPartOpen As Windows.Forms.CheckBox
-    Friend WithEvents bgwUpdateSub As ComponentModel.BackgroundWorker
-    Friend WithEvents chkSubFiles As Windows.Forms.DataGridViewCheckBoxColumn
-    Friend WithEvents DrawingName As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DrawingNameAlpha As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DrawingSource As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DrawingLocation As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Comments As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Order As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bgwUpdateOpen As ComponentModel.BackgroundWorker
-    Friend WithEvents bgwRun As ComponentModel.BackgroundWorker
 End Class

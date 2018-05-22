@@ -102,15 +102,15 @@ Public Class Print
         For Y = 1 To txtCopies.Value
             If chkReverse.Checked = False Then
                 Direction = 1
-                PEnd = Main.dgvSubFiles.RowCount - 1
+                PEnd = Main.LVSubFiles.Items.Count - 1
                 PStart = 0
             Else
                 Direction = -1
-                PStart = Main.dgvSubFiles.RowCount - 1
+                PStart = Main.LVSubFiles.Items.Count - 1
                 PEnd = 0
             End If
             For X = PStart To PEnd Step Direction
-                If Main.dgvSubFiles(Main.dgvSubFiles.Columns("chkSubFiles").Index, X).Value = True Then
+                If Main.LVSubFiles.Items(X).Checked = True Then
                     Main.MatchDrawing(DrawSource, DrawingName, X)
                     dDoc = _invApp.Documents.Open(DrawSource, True)
                     'For Each oDoc In dDoc.ReferencedFiles
@@ -122,8 +122,7 @@ Public Class Print
                     Catch
                     End Try
                     'PDrawingName = Strings.Right(dDoc.FullDocumentName, Len(dDoc.FullDocumentName) - InStrRev(dDoc.FullDocumentName, "\"))
-                    'Main.ProgressBar(PEnd + 1 * Y, Z, "Printing: ", DrawingName)
-                    Main.bgwRun.ReportProgress((Z / (PEnd + 1 * Y)) * 100, "Printing: " & DrawingName)
+                    Main.ProgressBar(PEnd + 1 * Y, Z, "Printing: ", DrawingName)
                     Z += 1
                     PrintSheets(DrawingName, ScaleSelect, Range, dDoc, Colour)
                     Main.CloseLater(DrawingName, dDoc)

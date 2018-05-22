@@ -33,39 +33,35 @@ Public Class iPropertySettings
         DGVStatus.Rows.Add("Checked By")
         DGVStatus.Rows.Add("Checked Date")
         DGVCustom.Rows.Add("Custom")
-        DGVSummary.Rows(0).Cells("SumReference").Value = My.Settings.Title
-        DGVSummary.Rows(1).Cells("SumReference").Value = My.Settings.Subject
-        DGVSummary.Rows(2).Cells("SumReference").Value = My.Settings.Author
-        DGVSummary.Rows(3).Cells("SumReference").Value = My.Settings.Manager
-        DGVSummary.Rows(4).Cells("SumReference").Value = My.Settings.Company
-        DGVSummary.Rows(5).Cells("SumReference").Value = My.Settings.Category
-        DGVSummary.Rows(6).Cells("SumReference").Value = My.Settings.Keywords
-        DGVSummary.Rows(7).Cells("SumReference").Value = My.Settings.Comments
-        DGVProject.Rows(0).Cells("ProjReference").Value = My.Settings.Location
-        DGVProject.Rows(1).Cells("ProjReference").Value = My.Settings.Subtype
-        DGVProject.Rows(2).Cells("ProjReference").Value = My.Settings.PPartNumber
-        DGVProject.Rows(3).Cells("ProjReference").Value = My.Settings.PStockNumber
-        DGVProject.Rows(4).Cells("ProjReference").Value = My.Settings.Description
-        DGVProject.Rows(5).Cells("ProjReference").Value = My.Settings.Revision
-        DGVProject.Rows(6).Cells("ProjReference").Value = My.Settings.Project
-        DGVProject.Rows(7).Cells("ProjReference").Value = My.Settings.Designer
-        DGVProject.Rows(8).Cells("ProjReference").Value = My.Settings.Engineer
-        DGVProject.Rows(9).Cells("ProjReference").Value = My.Settings.Vendor
-        DGVStatus.Rows(0).Cells("StatusReference").Value = My.Settings.SPartNumber
-        DGVStatus.Rows(1).Cells("StatusReference").Value = My.Settings.SStockNumber
-        DGVStatus.Rows(2).Cells("StatusReference").Value = My.Settings.Status
-        DGVStatus.Rows(3).Cells("StatusReference").Value = My.Settings.ModelDate
-        DGVStatus.Rows(4).Cells("StatusReference").Value = My.Settings.DrawingDate
-        DGVStatus.Rows(5).Cells("StatusReference").Value = My.Settings.DrawingBy
-        DGVStatus.Rows(6).Cells("StatusReference").Value = My.Settings.DesignState
-        DGVStatus.Rows(7).Cells("StatusReference").Value = My.Settings.CheckedBy
-        DGVStatus.Rows(8).Cells("StatusReference").Value = My.Settings.CheckedDate
+        DGVSummary.Rows(0).Cells("Reference").Value = My.Settings.Title
+        DGVSummary.Rows(1).Cells("Reference").Value = My.Settings.Subject
+        DGVSummary.Rows(2).Cells("Reference").Value = My.Settings.Author
+        DGVSummary.Rows(3).Cells("Reference").Value = My.Settings.Manager
+        DGVSummary.Rows(4).Cells("Reference").Value = My.Settings.Company
+        DGVSummary.Rows(5).Cells("Reference").Value = My.Settings.Category
+        DGVSummary.Rows(6).Cells("Reference").Value = My.Settings.Keywords
+        DGVSummary.Rows(7).Cells("Reference").Value = My.Settings.Comments
+        DGVProject.Rows(0).Cells("PReference").Value = My.Settings.Location
+        DGVProject.Rows(1).Cells("PReference").Value = My.Settings.Subtype
+        DGVProject.Rows(2).Cells("PReference").Value = My.Settings.PPartNumber
+        DGVProject.Rows(3).Cells("PReference").Value = My.Settings.PStockNumber
+        DGVProject.Rows(4).Cells("PReference").Value = My.Settings.Description
+        DGVProject.Rows(5).Cells("PReference").Value = My.Settings.Revision
+        DGVProject.Rows(6).Cells("PReference").Value = My.Settings.Project
+        DGVProject.Rows(7).Cells("PReference").Value = My.Settings.Designer
+        DGVProject.Rows(8).Cells("PReference").Value = My.Settings.Engineer
+        DGVProject.Rows(9).Cells("PReference").Value = My.Settings.Vendor
+        DGVStatus.Rows(0).Cells("SReference").Value = My.Settings.SPartNumber
+        DGVStatus.Rows(1).Cells("SReference").Value = My.Settings.SStockNumber
+        DGVStatus.Rows(2).Cells("SReference").Value = My.Settings.Status
+        DGVStatus.Rows(3).Cells("SReference").Value = My.Settings.ModelDate
+        DGVStatus.Rows(4).Cells("SReference").Value = My.Settings.DrawingDate
+        DGVStatus.Rows(5).Cells("SReference").Value = My.Settings.DrawingBy
+        DGVStatus.Rows(6).Cells("SReference").Value = My.Settings.DesignState
+        DGVStatus.Rows(7).Cells("SReference").Value = My.Settings.CheckedBy
+        DGVStatus.Rows(8).Cells("SReference").Value = My.Settings.CheckedDate
         DGVCustom.Rows(0).Cells("CReference").Value = My.Settings.Custom
-        If cmbDefault.Text = "Model" Then
-            My.Settings.DupName = ".ipt"
-        Else
-            My.Settings.DupName = ".iam"
-        End If
+        cmbDefault.Text = My.Settings.DupName
 
         ' Add any initialization after the InitializeComponent() call.
 
@@ -74,40 +70,35 @@ Public Class iPropertySettings
         SaveSettings()
     End Sub
     Private Sub SaveSettings()
-        My.Settings.Title = DGVSummary.Rows(0).Cells("SumReference").Value
-        My.Settings.Subject = DGVSummary.Rows(1).Cells("SumReference").Value
-        My.Settings.Author = DGVSummary.Rows(2).Cells("SumReference").Value
-        My.Settings.Manager = DGVSummary.Rows(3).Cells("SumReference").Value
-        My.Settings.Company = DGVSummary.Rows(4).Cells("SumReference").Value
-        My.Settings.Category = DGVSummary.Rows(5).Cells("SumReference").Value
-        My.Settings.Keywords = DGVSummary.Rows(6).Cells("SumReference").Value
-        My.Settings.Comments = DGVSummary.Rows(7).Cells("SumReference").Value
-        My.Settings.Location = DGVProject.Rows(0).Cells("ProjReference").Value
-        My.Settings.Subtype = DGVProject.Rows(1).Cells("ProjReference").Value
-        My.Settings.PPartNumber = DGVProject.Rows(2).Cells("ProjReference").Value
-        My.Settings.PStockNumber = DGVProject.Rows(3).Cells("ProjReference").Value
-        My.Settings.Description = DGVProject.Rows(4).Cells("ProjReference").Value
-        My.Settings.Revision = DGVProject.Rows(5).Cells("ProjReference").Value
-        My.Settings.Project = DGVProject.Rows(6).Cells("ProjReference").Value
-        My.Settings.Designer = DGVProject.Rows(7).Cells("ProjReference").Value
-        My.Settings.Engineer = DGVProject.Rows(8).Cells("ProjReference").Value
-        My.Settings.Vendor = DGVProject.Rows(9).Cells("ProjReference").Value
-        My.Settings.SPartNumber = DGVStatus.Rows(0).Cells("SumReference").Value
-        My.Settings.SStockNumber = DGVStatus.Rows(1).Cells("SumReference").Value
-        My.Settings.Status = DGVStatus.Rows(2).Cells("SumReference").Value
-        My.Settings.ModelDate = DGVStatus.Rows(3).Cells("SumReference").Value
-        My.Settings.DrawingDate = DGVStatus.Rows(4).Cells("SumReference").Value
-        My.Settings.DrawingBy = DGVStatus.Rows(5).Cells("SumReference").Value
-        My.Settings.DesignState = DGVStatus.Rows(6).Cells("SumReference").Value
-        My.Settings.CheckedBy = DGVStatus.Rows(7).Cells("SumReference").Value
-        My.Settings.CheckedDate = DGVStatus.Rows(8).Cells("SumReference").Value
-        My.Settings.Custom = DGVCustom.Rows(0).Cells("CustomReference").Value
-        If cmbDefault.Text = "Model" Then
-            My.Settings.DupName = ".ipt"
-        Else
-            My.Settings.DupName = ".iam"
-        End If
-
+        My.Settings.Title = DGVSummary.Rows(0).Cells("Reference").Value
+        My.Settings.Subject = DGVSummary.Rows(1).Cells("Reference").Value
+        My.Settings.Author = DGVSummary.Rows(2).Cells("Reference").Value
+        My.Settings.Manager = DGVSummary.Rows(3).Cells("Reference").Value
+        My.Settings.Company = DGVSummary.Rows(4).Cells("Reference").Value
+        My.Settings.Category = DGVSummary.Rows(5).Cells("Reference").Value
+        My.Settings.Keywords = DGVSummary.Rows(6).Cells("Reference").Value
+        My.Settings.Comments = DGVSummary.Rows(7).Cells("Reference").Value
+        My.Settings.Location = DGVProject.Rows(0).Cells("PReference").Value
+        My.Settings.Subtype = DGVProject.Rows(1).Cells("PReference").Value
+        My.Settings.PPartNumber = DGVProject.Rows(2).Cells("PReference").Value
+        My.Settings.PStockNumber = DGVProject.Rows(3).Cells("PReference").Value
+        My.Settings.Description = DGVProject.Rows(4).Cells("PReference").Value
+        My.Settings.Revision = DGVProject.Rows(5).Cells("PReference").Value
+        My.Settings.Project = DGVProject.Rows(6).Cells("PReference").Value
+        My.Settings.Designer = DGVProject.Rows(7).Cells("PReference").Value
+        My.Settings.Engineer = DGVProject.Rows(8).Cells("PReference").Value
+        My.Settings.Vendor = DGVProject.Rows(9).Cells("PReference").Value
+        My.Settings.SPartNumber = DGVStatus.Rows(0).Cells("SReference").Value
+        My.Settings.SStockNumber = DGVStatus.Rows(1).Cells("SReference").Value
+        My.Settings.Status = DGVStatus.Rows(2).Cells("SReference").Value
+        My.Settings.ModelDate = DGVStatus.Rows(3).Cells("SReference").Value
+        My.Settings.DrawingDate = DGVStatus.Rows(4).Cells("SReference").Value
+        My.Settings.DrawingBy = DGVStatus.Rows(5).Cells("SReference").Value
+        My.Settings.DesignState = DGVStatus.Rows(6).Cells("SReference").Value
+        My.Settings.CheckedBy = DGVStatus.Rows(7).Cells("SReference").Value
+        My.Settings.CheckedDate = DGVStatus.Rows(8).Cells("SReference").Value
+        My.Settings.Custom = DGVCustom.Rows(0).Cells("CReference").Value
+        My.Settings.DupName = cmbDefault.Text
 
     End Sub
 
@@ -131,34 +122,34 @@ Public Class iPropertySettings
     End Sub
 
     Private Sub btnDefaults_Click(sender As Object, e As EventArgs) Handles btnDefaults.Click
-        DGVSummary.Rows(0).Cells("SumReference").Value = My.Settings.PropertyValues("Title").Property.DefaultValue
-        DGVSummary.Rows(1).Cells("SumReference").Value = My.Settings.PropertyValues("Subject").Property.DefaultValue
-        DGVSummary.Rows(2).Cells("SumReference").Value = My.Settings.PropertyValues("Author").Property.DefaultValue
-        DGVSummary.Rows(3).Cells("SumReference").Value = My.Settings.PropertyValues("Manager").Property.DefaultValue
-        DGVSummary.Rows(4).Cells("SumReference").Value = My.Settings.PropertyValues("Company").Property.DefaultValue
-        DGVSummary.Rows(5).Cells("SumReference").Value = My.Settings.PropertyValues("Category").Property.DefaultValue
-        DGVSummary.Rows(6).Cells("SumReference").Value = My.Settings.PropertyValues("Keywords").Property.DefaultValue
-        DGVSummary.Rows(7).Cells("SumReference").Value = My.Settings.PropertyValues("Comments").Property.DefaultValue
-        DGVProject.Rows(0).Cells("ProjReference").Value = My.Settings.PropertyValues("Location").Property.DefaultValue
-        DGVProject.Rows(1).Cells("ProjReference").Value = My.Settings.PropertyValues("Subtype").Property.DefaultValue
-        DGVProject.Rows(2).Cells("ProjReference").Value = My.Settings.PropertyValues("PPartNumber").Property.DefaultValue
-        DGVProject.Rows(3).Cells("ProjReference").Value = My.Settings.PropertyValues("PStockNumber").Property.DefaultValue
-        DGVProject.Rows(4).Cells("ProjReference").Value = My.Settings.PropertyValues("Description").Property.DefaultValue
-        DGVProject.Rows(5).Cells("ProjReference").Value = My.Settings.PropertyValues("Revision").Property.DefaultValue
-        DGVProject.Rows(6).Cells("ProjReference").Value = My.Settings.PropertyValues("Project").Property.DefaultValue
-        DGVProject.Rows(7).Cells("ProjReference").Value = My.Settings.PropertyValues("Designer").Property.DefaultValue
-        DGVProject.Rows(8).Cells("ProjReference").Value = My.Settings.PropertyValues("Engineer").Property.DefaultValue
-        DGVProject.Rows(9).Cells("ProjReference").Value = My.Settings.PropertyValues("Vendor").Property.DefaultValue
-        DGVStatus.Rows(0).Cells("StatusReference").Value = My.Settings.PropertyValues("SPartNumber").Property.DefaultValue
-        DGVStatus.Rows(1).Cells("StatusReference").Value = My.Settings.PropertyValues("SStockNumber").Property.DefaultValue
-        DGVStatus.Rows(2).Cells("StatusReference").Value = My.Settings.PropertyValues("Status").Property.DefaultValue
-        DGVStatus.Rows(3).Cells("StatusReference").Value = My.Settings.PropertyValues("ModelDate").Property.DefaultValue
-        DGVStatus.Rows(4).Cells("StatusReference").Value = My.Settings.PropertyValues("DrawingDate").Property.DefaultValue
-        DGVStatus.Rows(5).Cells("StatusReference").Value = My.Settings.PropertyValues("DrawingBy").Property.DefaultValue
-        DGVStatus.Rows(6).Cells("StatusReference").Value = My.Settings.PropertyValues("DesignState").Property.DefaultValue
-        DGVStatus.Rows(7).Cells("StatusReference").Value = My.Settings.PropertyValues("CheckedBy").Property.DefaultValue
-        DGVStatus.Rows(8).Cells("StatusReference").Value = My.Settings.PropertyValues("CheckedDate").Property.DefaultValue
-        DGVCustom.Rows(0).Cells("CustomReference").Value = My.Settings.PropertyValues("Custom").Property.DefaultValue
+        DGVSummary.Rows(0).Cells("Reference").Value = My.Settings.PropertyValues("Title").Property.DefaultValue
+        DGVSummary.Rows(1).Cells("Reference").Value = My.Settings.PropertyValues("Subject").Property.DefaultValue
+        DGVSummary.Rows(2).Cells("Reference").Value = My.Settings.PropertyValues("Author").Property.DefaultValue
+        DGVSummary.Rows(3).Cells("Reference").Value = My.Settings.PropertyValues("Manager").Property.DefaultValue
+        DGVSummary.Rows(4).Cells("Reference").Value = My.Settings.PropertyValues("Company").Property.DefaultValue
+        DGVSummary.Rows(5).Cells("Reference").Value = My.Settings.PropertyValues("Category").Property.DefaultValue
+        DGVSummary.Rows(6).Cells("Reference").Value = My.Settings.PropertyValues("Keywords").Property.DefaultValue
+        DGVSummary.Rows(7).Cells("Reference").Value = My.Settings.PropertyValues("Comments").Property.DefaultValue
+        DGVProject.Rows(0).Cells("PReference").Value = My.Settings.PropertyValues("Location").Property.DefaultValue
+        DGVProject.Rows(1).Cells("PReference").Value = My.Settings.PropertyValues("Subtype").Property.DefaultValue
+        DGVProject.Rows(2).Cells("PReference").Value = My.Settings.PropertyValues("PPartNumber").Property.DefaultValue
+        DGVProject.Rows(3).Cells("PReference").Value = My.Settings.PropertyValues("PStockNumber").Property.DefaultValue
+        DGVProject.Rows(4).Cells("PReference").Value = My.Settings.PropertyValues("Description").Property.DefaultValue
+        DGVProject.Rows(5).Cells("PReference").Value = My.Settings.PropertyValues("Revision").Property.DefaultValue
+        DGVProject.Rows(6).Cells("PReference").Value = My.Settings.PropertyValues("Project").Property.DefaultValue
+        DGVProject.Rows(7).Cells("PReference").Value = My.Settings.PropertyValues("Designer").Property.DefaultValue
+        DGVProject.Rows(8).Cells("PReference").Value = My.Settings.PropertyValues("Engineer").Property.DefaultValue
+        DGVProject.Rows(9).Cells("PReference").Value = My.Settings.PropertyValues("Vendor").Property.DefaultValue
+        DGVStatus.Rows(0).Cells("SReference").Value = My.Settings.PropertyValues("SPartNumber").Property.DefaultValue
+        DGVStatus.Rows(1).Cells("SReference").Value = My.Settings.PropertyValues("SStockNumber").Property.DefaultValue
+        DGVStatus.Rows(2).Cells("SReference").Value = My.Settings.PropertyValues("Status").Property.DefaultValue
+        DGVStatus.Rows(3).Cells("SReference").Value = My.Settings.PropertyValues("ModelDate").Property.DefaultValue
+        DGVStatus.Rows(4).Cells("SReference").Value = My.Settings.PropertyValues("DrawingDate").Property.DefaultValue
+        DGVStatus.Rows(5).Cells("SReference").Value = My.Settings.PropertyValues("DrawingBy").Property.DefaultValue
+        DGVStatus.Rows(6).Cells("SReference").Value = My.Settings.PropertyValues("DesignState").Property.DefaultValue
+        DGVStatus.Rows(7).Cells("SReference").Value = My.Settings.PropertyValues("CheckedBy").Property.DefaultValue
+        DGVStatus.Rows(8).Cells("SReference").Value = My.Settings.PropertyValues("CheckedDate").Property.DefaultValue
+        DGVCustom.Rows(0).Cells("CReference").Value = My.Settings.PropertyValues("Custom").Property.DefaultValue
         cmbDefault.Text = My.Settings.PropertyValues("DupName").Property.DefaultValue
     End Sub
 End Class

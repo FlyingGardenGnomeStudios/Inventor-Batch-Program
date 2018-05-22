@@ -26,7 +26,6 @@ Partial Class Rev_Switch
         Me.btnNumeric = New System.Windows.Forms.Button()
         Me.btnAlpha = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.chkResetRev = New System.Windows.Forms.CheckBox()
         Me.SuspendLayout()
         '
         'btnNumeric
@@ -56,22 +55,11 @@ Partial Class Rev_Switch
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "Select what format you would like"
         '
-        'chkResetRev
-        '
-        Me.chkResetRev.AutoSize = True
-        Me.chkResetRev.Location = New System.Drawing.Point(16, 59)
-        Me.chkResetRev.Name = "chkResetRev"
-        Me.chkResetRev.Size = New System.Drawing.Size(123, 17)
-        Me.chkResetRev.TabIndex = 3
-        Me.chkResetRev.Text = "Keep revision history"
-        Me.chkResetRev.UseVisualStyleBackColor = True
-        '
         'Rev_Switch
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(195, 82)
-        Me.Controls.Add(Me.chkResetRev)
+        Me.ClientSize = New System.Drawing.Size(195, 63)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.btnAlpha)
         Me.Controls.Add(Me.btnNumeric)
@@ -89,5 +77,4 @@ Partial Class Rev_Switch
     Friend WithEvents btnNumeric As System.Windows.Forms.Button
     Friend WithEvents btnAlpha As System.Windows.Forms.Button
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents chkResetRev As Windows.Forms.CheckBox
 End Class

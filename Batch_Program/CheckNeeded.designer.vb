@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class CheckNeeded
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()>
+    <System.Diagnostics.DebuggerNonUserCode()> _
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,34 +20,40 @@ Partial Class CheckNeeded
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()>
+    <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(CheckNeeded))
+        Me.DateTimePicker1 = New System.Windows.Forms.DateTimePicker()
         Me.btnCancel = New System.Windows.Forms.Button()
-        Me.btnHide = New System.Windows.Forms.Button()
+        Me.btnIgnore = New System.Windows.Forms.Button()
         Me.btnOK = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.lstCheckNeeded = New System.Windows.Forms.ListView()
+        Me.DrawingNumber = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.CheckedBy = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.DateChecked = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.Initials = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.RevCheck = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.RevDate = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.More = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.btnApplytoall = New System.Windows.Forms.Button()
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
-        Me.cmsApplyValues = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.ApplyRowValuesToAllRowsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ApplyCellValueToEntireColumnToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ClearCellToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tgvCheckNeeded = New AdvancedDataGridView.TreeGridView()
-        Me.DrawingName = New AdvancedDataGridView.TreeGridColumn()
-        Me.Splitter1 = New System.Windows.Forms.Splitter()
-        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.GridDateControl1 = New GridDateControl()
-        Me.GridDateControl2 = New GridDateControl()
-        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cmsApplyValues.SuspendLayout()
-        CType(Me.tgvCheckNeeded, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
+        '
+        'DateTimePicker1
+        '
+        Me.DateTimePicker1.AllowDrop = True
+        Me.DateTimePicker1.Checked = False
+        Me.DateTimePicker1.Location = New System.Drawing.Point(390, 9)
+        Me.DateTimePicker1.Name = "DateTimePicker1"
+        Me.DateTimePicker1.ShowCheckBox = True
+        Me.DateTimePicker1.Size = New System.Drawing.Size(170, 20)
+        Me.DateTimePicker1.TabIndex = 17
+        Me.DateTimePicker1.Visible = False
         '
         'btnCancel
         '
@@ -59,17 +65,16 @@ Partial Class CheckNeeded
         Me.ToolTip1.SetToolTip(Me.btnCancel, "Exit without making any changes")
         Me.btnCancel.UseVisualStyleBackColor = True
         '
-        'btnHide
+        'btnIgnore
         '
-        Me.btnHide.Enabled = False
-        Me.btnHide.Location = New System.Drawing.Point(174, 183)
-        Me.btnHide.Name = "btnHide"
-        Me.btnHide.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.btnHide.Size = New System.Drawing.Size(105, 23)
-        Me.btnHide.TabIndex = 13
-        Me.btnHide.Text = "Hide Completed"
-        Me.ToolTip1.SetToolTip(Me.btnHide, "Disregard changes and proceed with operation")
-        Me.btnHide.UseVisualStyleBackColor = True
+        Me.btnIgnore.Location = New System.Drawing.Point(174, 183)
+        Me.btnIgnore.Name = "btnIgnore"
+        Me.btnIgnore.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.btnIgnore.Size = New System.Drawing.Size(75, 23)
+        Me.btnIgnore.TabIndex = 13
+        Me.btnIgnore.Text = "Ignore"
+        Me.ToolTip1.SetToolTip(Me.btnIgnore, "Disregard changes and proceed with operation")
+        Me.btnIgnore.UseVisualStyleBackColor = True
         '
         'btnOK
         '
@@ -84,173 +89,142 @@ Partial Class CheckNeeded
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(12, 9)
+        Me.Label2.Location = New System.Drawing.Point(12, 21)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(221, 13)
+        Me.Label2.Size = New System.Drawing.Size(251, 13)
         Me.Label2.TabIndex = 11
-        Me.Label2.Text = "Click to edit. Right-click for additional options."
+        Me.Label2.Text = "Click to edit. Double-click Drawing Number to open."
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(12, 9)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(211, 13)
+        Me.Label1.TabIndex = 10
+        Me.Label1.Text = "The following files have not been checked:"
+        '
+        'lstCheckNeeded
+        '
+        Me.lstCheckNeeded.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.DrawingNumber, Me.CheckedBy, Me.DateChecked, Me.Initials, Me.RevCheck, Me.RevDate, Me.More})
+        Me.lstCheckNeeded.FullRowSelect = True
+        Me.lstCheckNeeded.GridLines = True
+        Me.lstCheckNeeded.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable
+        Me.lstCheckNeeded.LabelWrap = False
+        Me.lstCheckNeeded.Location = New System.Drawing.Point(12, 42)
+        Me.lstCheckNeeded.MaximumSize = New System.Drawing.Size(600, 135)
+        Me.lstCheckNeeded.MultiSelect = False
+        Me.lstCheckNeeded.Name = "lstCheckNeeded"
+        Me.lstCheckNeeded.Size = New System.Drawing.Size(600, 135)
+        Me.lstCheckNeeded.Sorting = System.Windows.Forms.SortOrder.Ascending
+        Me.lstCheckNeeded.TabIndex = 18
+        Me.lstCheckNeeded.UseCompatibleStateImageBehavior = False
+        Me.lstCheckNeeded.View = System.Windows.Forms.View.Details
+        '
+        'DrawingNumber
+        '
+        Me.DrawingNumber.Text = "Drawing Number:"
+        Me.DrawingNumber.Width = 100
+        '
+        'CheckedBy
+        '
+        Me.CheckedBy.Text = "Checked By:"
+        Me.CheckedBy.Width = 85
+        '
+        'DateChecked
+        '
+        Me.DateChecked.Text = "Date Checked:"
+        Me.DateChecked.Width = 90
+        '
+        'Initials
+        '
+        Me.Initials.Text = "Rev Initials:"
+        Me.Initials.Width = 75
+        '
+        'RevCheck
+        '
+        Me.RevCheck.Text = "Rev Check By:"
+        Me.RevCheck.Width = 90
+        '
+        'RevDate
+        '
+        Me.RevDate.Text = "Rev Date:"
+        Me.RevDate.Width = 90
+        '
+        'More
+        '
+        Me.More.Text = "More:"
+        Me.More.Width = 40
+        '
+        'TextBox1
+        '
+        Me.TextBox1.Location = New System.Drawing.Point(284, 9)
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.Size = New System.Drawing.Size(100, 20)
+        Me.TextBox1.TabIndex = 19
+        Me.TextBox1.Visible = False
+        '
+        'btnApplytoall
+        '
+        Me.btnApplytoall.Location = New System.Drawing.Point(255, 183)
+        Me.btnApplytoall.Name = "btnApplytoall"
+        Me.btnApplytoall.Size = New System.Drawing.Size(75, 23)
+        Me.btnApplytoall.TabIndex = 20
+        Me.btnApplytoall.Text = "Apply To All"
+        Me.ToolTip1.SetToolTip(Me.btnApplytoall, "Apply current information to all items.")
+        Me.btnApplytoall.UseVisualStyleBackColor = True
+        Me.btnApplytoall.Visible = False
         '
         'ProgressBar1
         '
-        Me.ProgressBar1.Location = New System.Drawing.Point(285, 183)
+        Me.ProgressBar1.Location = New System.Drawing.Point(255, 183)
         Me.ProgressBar1.Name = "ProgressBar1"
-        Me.ProgressBar1.Size = New System.Drawing.Size(323, 23)
+        Me.ProgressBar1.Size = New System.Drawing.Size(357, 23)
         Me.ProgressBar1.TabIndex = 21
         Me.ProgressBar1.Visible = False
-        '
-        'cmsApplyValues
-        '
-        Me.cmsApplyValues.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ApplyRowValuesToAllRowsToolStripMenuItem, Me.ApplyCellValueToEntireColumnToolStripMenuItem, Me.ClearCellToolStripMenuItem})
-        Me.cmsApplyValues.Name = "ContextMenuStrip1"
-        Me.cmsApplyValues.Size = New System.Drawing.Size(331, 70)
-        '
-        'ApplyRowValuesToAllRowsToolStripMenuItem
-        '
-        Me.ApplyRowValuesToAllRowsToolStripMenuItem.Name = "ApplyRowValuesToAllRowsToolStripMenuItem"
-        Me.ApplyRowValuesToAllRowsToolStripMenuItem.Size = New System.Drawing.Size(330, 22)
-        Me.ApplyRowValuesToAllRowsToolStripMenuItem.Text = "Apply selected row values to all  visible rows"
-        '
-        'ApplyCellValueToEntireColumnToolStripMenuItem
-        '
-        Me.ApplyCellValueToEntireColumnToolStripMenuItem.Name = "ApplyCellValueToEntireColumnToolStripMenuItem"
-        Me.ApplyCellValueToEntireColumnToolStripMenuItem.Size = New System.Drawing.Size(330, 22)
-        Me.ApplyCellValueToEntireColumnToolStripMenuItem.Text = "Apply selected cell value to entire visible column"
-        '
-        'ClearCellToolStripMenuItem
-        '
-        Me.ClearCellToolStripMenuItem.Name = "ClearCellToolStripMenuItem"
-        Me.ClearCellToolStripMenuItem.Size = New System.Drawing.Size(330, 22)
-        Me.ClearCellToolStripMenuItem.Text = "Clear Cell"
-        '
-        'tgvCheckNeeded
-        '
-        Me.tgvCheckNeeded.AllowUserToAddRows = False
-        Me.tgvCheckNeeded.AllowUserToDeleteRows = False
-        Me.tgvCheckNeeded.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader
-        Me.tgvCheckNeeded.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells
-        Me.tgvCheckNeeded.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DrawingName})
-        Me.tgvCheckNeeded.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
-        Me.tgvCheckNeeded.ImageList = Nothing
-        Me.tgvCheckNeeded.Location = New System.Drawing.Point(12, 25)
-        Me.tgvCheckNeeded.MultiSelect = False
-        Me.tgvCheckNeeded.Name = "tgvCheckNeeded"
-        Me.tgvCheckNeeded.RowHeadersVisible = False
-        Me.tgvCheckNeeded.Size = New System.Drawing.Size(596, 152)
-        Me.tgvCheckNeeded.TabIndex = 23
-        '
-        'DrawingName
-        '
-        Me.DrawingName.DataPropertyName = "Drawing Name"
-        Me.DrawingName.DefaultNodeImage = Nothing
-        Me.DrawingName.HeaderText = "Drawing Name"
-        Me.DrawingName.Name = "DrawingName"
-        Me.DrawingName.ReadOnly = True
-        Me.DrawingName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DrawingName.Width = 83
-        '
-        'Splitter1
-        '
-        Me.Splitter1.Location = New System.Drawing.Point(0, 0)
-        Me.Splitter1.Name = "Splitter1"
-        Me.Splitter1.Size = New System.Drawing.Size(3, 218)
-        Me.Splitter1.TabIndex = 24
-        Me.Splitter1.TabStop = False
-        '
-        'DataGridViewTextBoxColumn1
-        '
-        Me.DataGridViewTextBoxColumn1.HeaderText = "Drawing Number"
-        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
-        Me.DataGridViewTextBoxColumn1.Width = 69
-        '
-        'DataGridViewTextBoxColumn2
-        '
-        Me.DataGridViewTextBoxColumn2.HeaderText = "Revision"
-        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
-        Me.DataGridViewTextBoxColumn2.Visible = False
-        Me.DataGridViewTextBoxColumn2.Width = 69
-        '
-        'GridDateControl1
-        '
-        Me.GridDateControl1.HeaderText = "Check Date"
-        Me.GridDateControl1.Name = "GridDateControl1"
-        Me.GridDateControl1.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.GridDateControl1.Width = 84
-        '
-        'GridDateControl2
-        '
-        Me.GridDateControl2.HeaderText = "Rev Date"
-        Me.GridDateControl2.Name = "GridDateControl2"
-        Me.GridDateControl2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.GridDateControl2.Width = 85
-        '
-        'DataGridViewTextBoxColumn3
-        '
-        Me.DataGridViewTextBoxColumn3.HeaderText = "Description"
-        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
-        Me.DataGridViewTextBoxColumn3.Width = 69
-        '
-        'DataGridViewTextBoxColumn4
-        '
-        Me.DataGridViewTextBoxColumn4.HeaderText = "RevisionBy"
-        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
-        Me.DataGridViewTextBoxColumn4.Width = 69
-        '
-        'DataGridViewTextBoxColumn5
-        '
-        Me.DataGridViewTextBoxColumn5.HeaderText = "Approved By"
-        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
-        Me.DataGridViewTextBoxColumn5.Width = 69
-        '
-        'DataGridViewTextBoxColumn6
-        '
-        Me.DataGridViewTextBoxColumn6.HeaderText = "MoreRevs"
-        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
-        Me.DataGridViewTextBoxColumn6.Width = 69
         '
         'CheckNeeded
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(624, 218)
-        Me.Controls.Add(Me.Splitter1)
-        Me.Controls.Add(Me.tgvCheckNeeded)
+        Me.ClientSize = New System.Drawing.Size(620, 218)
         Me.Controls.Add(Me.ProgressBar1)
+        Me.Controls.Add(Me.btnApplytoall)
+        Me.Controls.Add(Me.TextBox1)
+        Me.Controls.Add(Me.DateTimePicker1)
         Me.Controls.Add(Me.btnCancel)
-        Me.Controls.Add(Me.btnHide)
+        Me.Controls.Add(Me.btnIgnore)
         Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.lstCheckNeeded)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.MinimumSize = New System.Drawing.Size(640, 256)
         Me.Name = "CheckNeeded"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "CheckNeeded"
-        Me.cmsApplyValues.ResumeLayout(False)
-        CType(Me.tgvCheckNeeded, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
+    Friend WithEvents DateTimePicker1 As System.Windows.Forms.DateTimePicker
     Friend WithEvents btnCancel As System.Windows.Forms.Button
-    Friend WithEvents btnHide As System.Windows.Forms.Button
+    Friend WithEvents btnIgnore As System.Windows.Forms.Button
     Friend WithEvents btnOK As System.Windows.Forms.Button
     Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents lstCheckNeeded As System.Windows.Forms.ListView
+    Friend WithEvents CheckedBy As System.Windows.Forms.ColumnHeader
+    Friend WithEvents DateChecked As System.Windows.Forms.ColumnHeader
+    Friend WithEvents Initials As System.Windows.Forms.ColumnHeader
+    Friend WithEvents RevCheck As System.Windows.Forms.ColumnHeader
+    Friend WithEvents RevDate As System.Windows.Forms.ColumnHeader
+    Friend WithEvents More As System.Windows.Forms.ColumnHeader
+    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
+    Protected WithEvents DrawingNumber As System.Windows.Forms.ColumnHeader
     Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
+    Friend WithEvents btnApplytoall As System.Windows.Forms.Button
     Friend WithEvents ProgressBar1 As System.Windows.Forms.ProgressBar
-    Friend WithEvents cmsApplyValues As Windows.Forms.ContextMenuStrip
-    Friend WithEvents ApplyRowValuesToAllRowsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ApplyCellValueToEntireColumnToolStripMenuItem As Windows.Forms.ToolStripMenuItem
-    Friend WithEvents tgvCheckNeeded As AdvancedDataGridView.TreeGridView
-    Friend WithEvents DataGridViewTextBoxColumn1 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn2 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn3 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn4 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn5 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn6 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Splitter1 As Windows.Forms.Splitter
-    Friend WithEvents GridDateControl1 As GridDateControl
-    Friend WithEvents GridDateControl2 As GridDateControl
-    Friend WithEvents DrawingName As AdvancedDataGridView.TreeGridColumn
-    Friend WithEvents ClearCellToolStripMenuItem As Windows.Forms.ToolStripMenuItem
 End Class

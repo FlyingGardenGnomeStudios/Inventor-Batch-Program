@@ -1,10 +1,41 @@
-﻿Version 2.0.0 (4/25/18)
-	Complete Batch Program overhaul
+﻿Version 1.2.2.10 (10/10/17)
+- Changed how the program initializes and finds Inventor (Starts Inventor if not yet open)
+- Cleans up invisible drawings upon program exit.
+- Closes invisible drawings when opened through iProperties command
 
-	Items not currently functioning
-	- Rev table modifications
-	- Custom iProperties
-	- Check drawings
-	- Cannot cancel task after execution
-	- No tutorials yet
-	- iProperty material settings
+Version 1.2.2.11 (10/30/17)
+- Skip Assembly checkbox now actually skips creation of assemblies
+- Fixed incorrect thumbnails when opening rename window 2nd time
+- Enabled communication between Inventor and Batch Program in regards to programs shutting down/restarting
+- Fixed error with some purchased parts not being recognized in rename operation
+- Fixed incorrect Rev Type change
+
+Version 1.2.2.12 (11/22/17)
+- Fixed various issues when creating a spreadsheet with the spreadsheet button
+
+Version 1.2.2.13 (11/29/17)
+- Changed method of retrieving iProperties. Created workaround if error occurs.
+- Added warning to rename operation
+
+Version 1.2.2.14 (12/05/17)
+- Sped up the process of finding drawings when 'close drawings' selected
+- Fixed bug where unsaved part in assembly causes error during drawing search
+- Added option showing parts that have not yet been saved
+- Updated Sub Files output scripts
+- Streamlined close-out process to clean up left-over drawings
+- Added catch for trying to rename parts
+- Fixed thumbnail mismatch and resizing error in exporting rename table to Excel
+- Fixed area calculation on spreadsheet creation
+
+Version 1.2.2.15 (12/13/17)
+- Fixed crash during some create flat-pattern commands
+- Fixed drawings not closing after print job
+- Fixed issue with export settings not saving
+
+Version 1.2.2.16
+- Removed WyDay validation
+- Forced setings save on startup dialogs
+
+Version 1.2.2.17
+- Test for unsupported drawing types
+- Bug fixes for titleblocks without reference blocks
