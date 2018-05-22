@@ -9,12 +9,12 @@
         Me.ShowDialog()
     End Sub
     Private Sub btnNumeric_Click(sender As System.Object, e As System.EventArgs) Handles btnNumeric.Click
-        Main.ChangeRev(1)
+        Main.ChangeRev(1, chkResetRev.Checked)
         Me.Close()
     End Sub
 
     Private Sub btnAlpha_Click(sender As System.Object, e As System.EventArgs) Handles btnAlpha.Click
-        Main.ChangeRev(0)
+        Main.ChangeRev(0, chkResetRev.Checked)
         Me.Close()
     End Sub
 End Class

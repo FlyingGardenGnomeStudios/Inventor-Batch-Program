@@ -16,10 +16,10 @@
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
-    <IsWebBootstrapper>true</IsWebBootstrapper>
-    <PublishUrl>C:\Users\Luther\Documents\Visual Studio 2015\Projects\Batch Program\</PublishUrl>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>C:\Users\tfehr\Google Drive\Programs\Batch Program - Beta\Publish\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Web</InstallFrom>
+    <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
@@ -27,15 +27,13 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://github.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/blob/master/Batch_Program/Publish/</InstallUrl>
-    <UpdateUrl>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/</UpdateUrl>
+    <UpdateUrl>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master---/Batch_Program/Publish/</UpdateUrl>
     <TargetCulture>en-CA</TargetCulture>
     <ProductName>Inventor Batch Program</ProductName>
     <PublisherName>Flying Garden Gnome Studios</PublisherName>
     <MinimumRequiredVersion>1.1.2.0</MinimumRequiredVersion>
-    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>17</ApplicationRevision>
+    <ApplicationRevision>19</ApplicationRevision>
     <ApplicationVersion>1.2.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -122,10 +120,10 @@
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Batch Program.ico</ApplicationIcon>
+    <ApplicationIcon>Batch Program - Beta.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -137,6 +135,7 @@
     <Reference Include="Autodesk.Inventor.Interop, Version=19.0.0.0, Culture=neutral, PublicKeyToken=d84147f8b4276564, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="ExpandableGridView, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -151,6 +150,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="WinControls.ListView">
+      <HintPath>\\server03\users$\tfehr\My Documents\Visual Studio 2015\Projects\TreeListView\bin\WinControls.ListView.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -182,6 +184,13 @@
     </Compile>
     <Compile Include="Class1.vb">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GridDateControl.vb" />
+    <Compile Include="Rev Table Settings.Designer.vb">
+      <DependentUpon>Rev Table Settings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Rev Table Settings.vb">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Warning.Designer.vb">
       <DependentUpon>Warning.vb</DependentUpon>
@@ -276,7 +285,7 @@
     </Compile>
     <None Include="Inventor Batch Program.pfx" />
     <None Include="Resources\Changelog.txt" />
-    <Content Include="Batch Program.ico" />
+    <Content Include="Batch Program - Beta.ico" />
     <Content Include="Resources\List-Blank.xlsm" />
     <Content Include="Resources\Quote-Blank.xlsm" />
     <Content Include="Resources\Rename.xlsm" />
@@ -291,6 +300,9 @@
     <EmbeddedResource Include="CheckNeeded.resx">
       <DependentUpon>CheckNeeded.vb</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Rev Table Settings.resx">
+      <DependentUpon>Rev Table Settings.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Warning.resx">
       <DependentUpon>Warning.vb</DependentUpon>
@@ -312,6 +324,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

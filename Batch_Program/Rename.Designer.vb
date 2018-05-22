@@ -72,7 +72,7 @@ Partial Class Rename
         '
         'Drawing
         '
-        Me.Drawing.HeaderText = "Drawing Number:"
+        Me.Drawing.HeaderText = "Drawing Name:"
         Me.Drawing.MinimumWidth = 50
         Me.Drawing.Name = "Drawing"
         Me.Drawing.ReadOnly = True
@@ -80,7 +80,7 @@ Partial Class Rename
         '
         'Part
         '
-        Me.Part.HeaderText = "Part Number:"
+        Me.Part.HeaderText = "Part Name:"
         Me.Part.MinimumWidth = 50
         Me.Part.Name = "Part"
         Me.Part.ReadOnly = True
@@ -108,7 +108,6 @@ Partial Class Rename
         Me.ID.MinimumWidth = 50
         Me.ID.Name = "ID"
         Me.ID.ReadOnly = True
-        Me.ID.Visible = False
         '
         'Reuse
         '
