@@ -43,24 +43,48 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Batch Program.exe" size="5422080">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Batch Program.exe" size="5474816">
       <assemblyIdentity name="Batch Program" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>3gK94LsYPbiDr+LhO7JOImypMcE=</dsig:DigestValue>
+        <dsig:DigestValue>zmgIjj6gBogFr9NGsWn/95Ep/+c=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="Batch Program.exe.config" size="7993">
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ExpandableGridView.dll" size="45056">
+      <assemblyIdentity name="ExpandableGridView" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>AenMnrGL9IoExbCGf5jGvdLyKKc=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WinControls.ListView.dll" size="978432">
+      <assemblyIdentity name="WinControls.ListView" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>V3JG5bIdHUX9ZRnAy0JnlbZooH4=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="Batch Program.exe.config" size="12005">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>uSCs/VR53GjseohvBQrsLefvaVc=</dsig:DigestValue>
+      <dsig:DigestValue>lXH3KARWo8E8shUcjXIXl18hdCY=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Batch Program.ico" size="370070">
@@ -117,13 +141,13 @@
       <dsig:DigestValue>H7T2jnkD5ZGQSJYW2xbkfOeZgNU=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Resources\Quote-Blank.xlsm" size="193576">
+  <file name="Resources\Quote-Blank.xlsm" size="211050">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>J212o1yhw7RfhYAKLoon4i/2P/U=</dsig:DigestValue>
+      <dsig:DigestValue>LO2cqPD3nYPmQxtAOcWr9EHR1Qw=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Resources\Rename.xlsm" size="21338">
