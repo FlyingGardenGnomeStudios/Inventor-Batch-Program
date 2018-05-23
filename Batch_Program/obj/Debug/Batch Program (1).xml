@@ -1,0 +1,277 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+Batch Program
+</name>
+</assembly>
+<members>
+<member name="T:My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.dwg">
+<summary>
+  Looks up a localized string similar to [EXPORT SELECT OPTIONS]
+AUTOCAD VERSION=AutoCAD 2010
+CREATE AUTOCAD MECHANICAL=No
+USE TRANSMITTAL=No
+USE CUSTOMIZE=No
+CUSTOMIZE FILE=C:\_Vault Working Folder\Designs\Templates\Design Data\DWG-DXF\FlatPattern.xml
+CREATE LAYER GROUP=No
+PARTS ONLY=No
+REPLACE SPLINE=No
+CHORD TOLERANCE=0.001000
+[EXPORT PROPERTIES]
+SELECTED PROPERTIES=
+[EXPORT DESTINATION]
+SPACE=Model
+SCALING=Geometry
+ALL SHEETS=Yes
+MAPPING=MapsBest
+MODEL GEOMETRY ONLY=No
+EXPLODE DIMENSIONS=No
+SYMBOLS ARE BLOCKED=Yes
+AUTOCAD T [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.DXF">
+<summary>
+  Looks up a localized string similar to [EXPORT SELECT OPTIONS]
+AUTOCAD VERSION=AutoCAD 2010
+CREATE AUTOCAD MECHANICAL=No
+USE TRANSMITTAL=No
+USE CUSTOMIZE=No
+CUSTOMIZE FILE=C:\_Vault Working Folder\Designs\Templates\Design Data\DWG-DXF\FlatPattern.xml
+CREATE LAYER GROUP=No
+PARTS ONLY=No
+REPLACE SPLINE=No
+CHORD TOLERANCE=0.001000
+[EXPORT PROPERTIES]
+SELECTED PROPERTIES=
+[EXPORT DESTINATION]
+SPACE=Model
+SCALING=Geometry
+ALL SHEETS=Yes
+MAPPING=MapsBest
+MODEL GEOMETRY ONLY=No
+EXPLODE DIMENSIONS=No
+SYMBOLS ARE BLOCKED=Yes
+AUTOCAD T [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Get64BitPicture">
+<summary>
+  Looks up a localized string similar to Attribute VB_Name = &quot;Get64BitPicture&quot;
+Public Sub Thumbnail()
+Dim FSO As Object, TmpFolder As Object
+Set FSO = CreateObject(&quot;scripting.filesystemobject&quot;)
+Set TmpFolder = FSO.GetSpecialFolder(2)
+Dim strFilename As String: strFilename = TmpFolder &amp; &quot;\PartSource.txt&quot;
+Dim strTextLine As String
+Dim iFile As Integer: iFile = FreeFile
+        Open strFilename For Input As #iFile
+Do Until EOF(1)
+        Line Input #1, strTextLine
+Loop
+        Close #iFile
+&apos; Get the active document.
+Dim doc As Document
+ [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.inverse">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.inverse1">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.List_Blank">
+<summary>
+  Looks up a localized resource of type System.Byte[].
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Quote_Blank">
+<summary>
+  Looks up a localized resource of type System.Byte[].
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Rename">
+<summary>
+  Looks up a localized resource of type System.Byte[].
+</summary>
+</member>
+<member name="P:MSVistaProgressBar.Value">
+ <summary>
+ The value that is displayed on the progress bar.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.MaxValue">
+ <summary>
+ The maximum value for the Value property.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.MinValue">
+ <summary>
+ The minimum value for the Value property.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.BarThresholds">
+ <summary>
+ The minimum value for the Value property.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.MarqueeSpeed">
+ <summary>
+ The color of the glow.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.BackgroundColor">
+ <summary>
+ The color of the background.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.BackgroundColor2">
+ <summary>
+ The color of the background.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.HighlightColor">
+ <summary>
+ The color of the highlights.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.TopHighlightColor">
+ <summary>
+ The color of the highlights.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.Animate">
+ <summary>
+ Whether the glow is animated.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.GlowColor">
+ <summary>
+ The color of the glow.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.GlowTmrInterval">
+ <summary>
+ The color of the glow.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.GlowWhenFinished">
+ <summary>
+ Whether the glow is animated.
+ </summary>
+</member>
+<member name="T:MSVistaProgressBar.ValueChangedHandler">
+ When the Value property is changed.
+</member>
+<member name="E:MSVistaProgressBar.ValueChanged">
+ When the Value property is changed.
+</member>
+<member name="T:MSVistaProgressBar.MinChangedHandler">
+ When the MinValue property is changed.
+</member>
+<member name="E:MSVistaProgressBar.MinChanged">
+ When the MinValue property is changed.
+</member>
+<member name="T:MSVistaProgressBar.MaxChangedHandler">
+ When the MaxValue property is changed.
+</member>
+<member name="E:MSVistaProgressBar.MaxChanged">
+ When the MaxValue property is changed.
+</member>
+<member name="M:InventorAddinServer.Activate(Inventor.ApplicationAddInSite,System.Boolean)">
+ <summary>
+ Do initializations in it such as caching the application object, registering event handlers, and adding ribbon buttons.
+ </summary>
+ <param name="siteObj">The entry object for the addin.</param>
+ <param name="loaded1stTime">Indicating whether the addin is loaded for the 1st time.</param>
+</member>
+<member name="M:InventorAddinServer.Deactivate">
+ <summary>
+ Do cleanups in it such as releasing COM objects or forcing the GC to Collect when necessary.
+ </summary>
+</member>
+<member name="M:InventorAddinServer.ExecuteCommand(System.Int32)">
+ <summary>
+ Deprecated. Use the ControlDefinition instead to execute commands.
+ </summary>
+ <param name="commandID"></param>
+</member>
+<member name="P:InventorAddinServer.Automation">
+ <summary>
+ Implement it if wanting to expose your own automation interface. 
+ </summary>
+</member>
+<member name="T:InventorButton">
+ <summary>
+ The class wrapps up Inventor Button creation stuffs and is easy to use.
+ No need to derive. Create an instance using either constructor and assign the Action.
+ </summary>
+</member>
+<member name="M:InventorButton.#ctor(System.String,System.String,System.String,System.String,System.Drawing.Icon,System.Drawing.Icon,Inventor.CommandTypesEnum,Inventor.ButtonDisplayEnum)">
+ <summary>
+ The most comprehensive signature.
+ </summary>
+</member>
+<member name="M:InventorButton.#ctor(System.String,System.String,System.String,System.String,System.Drawing.Icon,System.Drawing.Icon)">
+ <summary>
+ The signature does not care about Command Type (always editing) and Button Display (always with text).
+ </summary>
+</member>
+<member name="M:InventorButton.#ctor(System.String,System.String,System.String,System.String,Inventor.CommandTypesEnum,Inventor.ButtonDisplayEnum)">
+ <summary>
+ The signature does not care about icons.
+ </summary>
+</member>
+<member name="M:InventorButton.#ctor(System.String,System.Drawing.Icon,System.Drawing.Icon)">
+ <summary>
+ This signature only cares about display name and icons.
+ </summary>
+ <param name="displayName"></param>
+ <param name="standardIcon"></param>
+ <param name="largeIcon"></param>
+</member>
+<member name="M:InventorButton.#ctor(System.String)">
+ <summary>
+ The simplest signature, which can be good for prototyping.
+ </summary>
+</member>
+<member name="M:InventorButton.Create(System.String,System.String,System.String,System.String,System.String,System.Drawing.Icon,System.Drawing.Icon,Inventor.CommandTypesEnum,Inventor.ButtonDisplayEnum)">
+ <summary>
+ The helper method for constructors to call to avoid duplicate code.
+ </summary>
+</member>
+<member name="M:InventorButton.ButtonDefinition_OnExecute(Inventor.NameValueMap)">
+ <summary>
+ The button callback method.
+ </summary>
+ <param name="context"></param>
+</member>
+<member name="F:InventorButton.Execute">
+ <summary>
+ The button action to be assigned from anywhere outside.
+ </summary>
+</member>
+</members>
+</doc>

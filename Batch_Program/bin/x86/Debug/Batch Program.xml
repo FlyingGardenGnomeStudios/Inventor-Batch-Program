@@ -1,0 +1,463 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+Batch Program
+</name>
+</assembly>
+<members>
+<member name="T:My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.About">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.btn_donate_LG">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.dwg">
+<summary>
+  Looks up a localized string similar to [EXPORT SELECT OPTIONS]
+AUTOCAD VERSION=AutoCAD 2010
+CREATE AUTOCAD MECHANICAL=No
+USE TRANSMITTAL=No
+USE CUSTOMIZE=No
+CUSTOMIZE FILE=C:\_Vault Working Folder\Designs\Templates\Design Data\DWG-DXF\FlatPattern.xml
+CREATE LAYER GROUP=No
+PARTS ONLY=No
+REPLACE SPLINE=No
+CHORD TOLERANCE=0.001000
+[EXPORT PROPERTIES]
+SELECTED PROPERTIES=
+[EXPORT DESTINATION]
+SPACE=Model
+SCALING=Geometry
+ALL SHEETS=Yes
+MAPPING=MapsBest
+MODEL GEOMETRY ONLY=No
+EXPLODE DIMENSIONS=No
+SYMBOLS ARE BLOCKED=Yes
+AUTOCAD T [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.DXF">
+<summary>
+  Looks up a localized string similar to [EXPORT SELECT OPTIONS]
+AUTOCAD VERSION=AutoCAD 2010
+CREATE AUTOCAD MECHANICAL=No
+USE TRANSMITTAL=No
+USE CUSTOMIZE=No
+CUSTOMIZE FILE=C:\_Vault Working Folder\Designs\Templates\Design Data\DWG-DXF\FlatPattern.xml
+CREATE LAYER GROUP=No
+PARTS ONLY=No
+REPLACE SPLINE=No
+CHORD TOLERANCE=0.001000
+[EXPORT PROPERTIES]
+SELECTED PROPERTIES=
+[EXPORT DESTINATION]
+SPACE=Model
+SCALING=Geometry
+ALL SHEETS=Yes
+MAPPING=MapsBest
+MODEL GEOMETRY ONLY=No
+EXPLODE DIMENSIONS=No
+SYMBOLS ARE BLOCKED=Yes
+AUTOCAD T [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Get64BitPicture">
+<summary>
+  Looks up a localized string similar to Attribute VB_Name = &quot;Get64BitPicture&quot;
+Public Sub Thumbnail()
+Dim FSO As Object, TmpFolder As Object
+Set FSO = CreateObject(&quot;scripting.filesystemobject&quot;)
+Set TmpFolder = FSO.GetSpecialFolder(2)
+Dim strFilename As String: strFilename = TmpFolder &amp; &quot;\PartSource.txt&quot;
+Dim strTextLine As String
+Dim iFile As Integer: iFile = FreeFile
+        Open strFilename For Input As #iFile
+Do Until EOF(1)
+        Line Input #1, strTextLine
+Loop
+        Close #iFile
+&apos; Get the active document.
+Dim doc As Document
+ [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.inverse">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.inverse1">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.List_Blank">
+<summary>
+  Looks up a localized resource of type System.Byte[].
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Quote_Blank">
+<summary>
+  Looks up a localized resource of type System.Byte[].
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Rename">
+<summary>
+  Looks up a localized resource of type System.Byte[].
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Splash">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:MSVistaProgressBar.Value">
+ <summary>
+ The value that is displayed on the progress bar.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.MaxValue">
+ <summary>
+ The maximum value for the Value property.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.MinValue">
+ <summary>
+ The minimum value for the Value property.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.BarThresholds">
+ <summary>
+ The minimum value for the Value property.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.MarqueeSpeed">
+ <summary>
+ The color of the glow.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.BackgroundColor">
+ <summary>
+ The color of the background.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.BackgroundColor2">
+ <summary>
+ The color of the background.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.HighlightColor">
+ <summary>
+ The color of the highlights.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.TopHighlightColor">
+ <summary>
+ The color of the highlights.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.Animate">
+ <summary>
+ Whether the glow is animated.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.GlowColor">
+ <summary>
+ The color of the glow.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.GlowTmrInterval">
+ <summary>
+ The color of the glow.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.GlowWhenFinished">
+ <summary>
+ Whether the glow is animated.
+ </summary>
+</member>
+<member name="T:MSVistaProgressBar.ValueChangedHandler">
+ When the Value property is changed.
+</member>
+<member name="E:MSVistaProgressBar.ValueChanged">
+ When the Value property is changed.
+</member>
+<member name="T:MSVistaProgressBar.MinChangedHandler">
+ When the MinValue property is changed.
+</member>
+<member name="E:MSVistaProgressBar.MinChanged">
+ When the MinValue property is changed.
+</member>
+<member name="T:MSVistaProgressBar.MaxChangedHandler">
+ When the MaxValue property is changed.
+</member>
+<member name="E:MSVistaProgressBar.MaxChanged">
+ When the MaxValue property is changed.
+</member>
+<member name="M:InventorAddinServer.Activate(Inventor.ApplicationAddInSite,System.Boolean)">
+ <summary>
+ Do initializations in it such as caching the application object, registering event handlers, and adding ribbon buttons.
+ </summary>
+ <param name="siteObj">The entry object for the addin.</param>
+ <param name="loaded1stTime">Indicating whether the addin is loaded for the 1st time.</param>
+</member>
+<member name="M:InventorAddinServer.Deactivate">
+ <summary>
+ Do cleanups in it such as releasing COM objects or forcing the GC to Collect when necessary.
+ </summary>
+</member>
+<member name="M:InventorAddinServer.ExecuteCommand(System.Int32)">
+ <summary>
+ Deprecated. Use the ControlDefinition instead to execute commands.
+ </summary>
+ <param name="commandID"></param>
+</member>
+<member name="P:InventorAddinServer.Automation">
+ <summary>
+ Implement it if wanting to expose your own automation interface. 
+ </summary>
+</member>
+<member name="T:InventorButton">
+ <summary>
+ The class wrapps up Inventor Button creation stuffs and is easy to use.
+ No need to derive. Create an instance using either constructor and assign the Action.
+ </summary>
+</member>
+<member name="M:InventorButton.#ctor(System.String,System.String,System.String,System.String,System.Drawing.Icon,System.Drawing.Icon,Inventor.CommandTypesEnum,Inventor.ButtonDisplayEnum)">
+ <summary>
+ The most comprehensive signature.
+ </summary>
+</member>
+<member name="M:InventorButton.#ctor(System.String,System.String,System.String,System.String,System.Drawing.Icon,System.Drawing.Icon)">
+ <summary>
+ The signature does not care about Command Type (always editing) and Button Display (always with text).
+ </summary>
+</member>
+<member name="M:InventorButton.#ctor(System.String,System.String,System.String,System.String,Inventor.CommandTypesEnum,Inventor.ButtonDisplayEnum)">
+ <summary>
+ The signature does not care about icons.
+ </summary>
+</member>
+<member name="M:InventorButton.#ctor(System.String,System.Drawing.Icon,System.Drawing.Icon)">
+ <summary>
+ This signature only cares about display name and icons.
+ </summary>
+ <param name="displayName"></param>
+ <param name="standardIcon"></param>
+ <param name="largeIcon"></param>
+</member>
+<member name="M:InventorButton.#ctor(System.String)">
+ <summary>
+ The simplest signature, which can be good for prototyping.
+ </summary>
+</member>
+<member name="M:InventorButton.Create(System.String,System.String,System.String,System.String,System.String,System.Drawing.Icon,System.Drawing.Icon,Inventor.CommandTypesEnum,Inventor.ButtonDisplayEnum)">
+ <summary>
+ The helper method for constructors to call to avoid duplicate code.
+ </summary>
+</member>
+<member name="M:InventorButton.ButtonDefinition_OnExecute(Inventor.NameValueMap)">
+ <summary>
+ The button callback method.
+ </summary>
+ <param name="context"></param>
+</member>
+<member name="F:InventorButton.Execute">
+ <summary>
+ The button action to be assigned from anywhere outside.
+ </summary>
+</member>
+<member name="M:MainWindow.p_Exited(System.Object,System.EventArgs)">
+ This event handler is called when TurboActivate.exe closes.
+</member>
+<member name="M:MainWindow.CheckIfActivated">
+ Rechecks if we're activated -- if so enable the app features.
+</member>
+<member name="F:wyDay.TurboActivate.TA_Flags.TA_DISALLOW_VM">
+ <summary>
+ Use the TA_DISALLOW_VM in UseTrial() to disallow trials in virtual machines. 
+ If you use this flag in UseTrial() and the customer's machine is a Virtual
+ Machine, then UseTrial() will throw VirtualMachineException.
+ </summary>
+</member>
+<member name="F:wyDay.TurboActivate.TA_Flags.TA_UNVERIFIED_TRIAL">
+ <summary>
+ Use this flag in TA_UseTrial() to tell TurboActivate to use client-side 
+ unverified trials. For more information about verified vs. unverified trials,
+ see here: https://wyday.com/limelm/help/trials/
+ Note: unverified trials are unsecured and can be reset by malicious customers.
+ </summary>
+</member>
+<member name="F:wyDay.TurboActivate.TA_Flags.TA_VERIFIED_TRIAL">
+ <summary>
+ Use the TA_VERIFIED_TRIAL flag to use verified trials instead 
+ of unverified trials. This means the trial is locked to a particular computer.
+ The customer can't reset the trial.
+ </summary>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.#ctor(System.String,System.String)">
+ <summary>Creates a TurboActivate object instance.</summary>
+ <param name="vGUID">The GUID for this product version. This is found on the LimeLM site on the version overview.</param>
+ <param name="pdetsFilename">The absolute location to the TurboActivate.dat file on the disk.</param>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.Activate(System.String)">
+ <summary>Activates the product on this computer. You must call <see cref="M:wyDay.TurboActivate.TurboActivate.CheckAndSavePKey(System.String,wyDay.TurboActivate.TA_Flags)"/> with a valid product key or have used the TurboActivate wizard sometime before calling this function.</summary>
+ <param name="extraData">Extra data to pass to the LimeLM servers that will be visible for you to see and use. Maximum size is 255 UTF-8 characters.</param>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.ActivationRequestToFile(System.String,System.String)">
+ <summary>Get the "activation request" file for offline activation.  You must call <see cref="M:wyDay.TurboActivate.TurboActivate.CheckAndSavePKey(System.String,wyDay.TurboActivate.TA_Flags)"/> with a valid product key or have used the TurboActivate wizard sometime before calling this function.</summary>
+ <param name="filename">The location where you want to save the activation request file.</param>
+ <param name="extraData">Extra data to pass to the LimeLM servers that will be visible for you to see and use. Maximum size is 255 UTF-8 characters.</param>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.ActivateFromFile(System.String)">
+ <summary>Activate from the "activation response" file for offline activation.</summary>
+ <param name="filename">The location of the activation response file.</param>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.CheckAndSavePKey(System.String,wyDay.TurboActivate.TA_Flags)">
+ <summary>Checks and save the product key.</summary>
+ <param name="productKey">The product key you want to save.</param>
+ <param name="flags">Whether to create the activation either user-wide or system-wide.</param>
+ <returns>True if the product key is valid, false if it's not</returns>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.Deactivate(System.Boolean)">
+ <summary>Deactivates the product on this computer.</summary>
+ <param name="eraseProductKey">Erase the product key so the user will have to enter a new product key if they wish to reactivate.</param>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.DeactivationRequestToFile(System.String,System.Boolean)">
+ <summary>Get the "deactivation request" file for offline deactivation.</summary>
+ <param name="filename">The location where you want to save the deactivation request file.</param>
+ <param name="eraseProductKey">Erase the product key so the user will have to enter a new product key if they wish to reactivate.</param>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.GetExtraData">
+ <summary>Gets the extra data value you passed in when activating.</summary>
+ <returns>Returns the extra data if it exists, otherwise it returns null.</returns>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.GetFeatureValue(System.String)">
+ <summary>Gets the value of a feature.</summary>
+ <param name="featureName">The name of the feature to retrieve the value for.</param>
+ <returns>Returns the feature value.</returns>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.GetFeatureValue(System.String,System.String)">
+ <summary>Gets the value of a feature.</summary>
+ <param name="featureName">The name of the feature to retrieve the value for.</param>
+ <param name="defaultValue">The default value to return if the feature doesn't exist.</param>
+ <returns>Returns the feature value.</returns>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.GetPKey">
+ <summary>Gets the stored product key. NOTE: if you want to check if a product key is valid simply call <see cref="M:wyDay.TurboActivate.TurboActivate.IsProductKeyValid"/>.</summary>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.IsActivated">
+ <summary>Checks whether the computer has been activated.</summary>
+ <returns>True if the computer is activated. False otherwise.</returns>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.IsDateValid(System.String,wyDay.TurboActivate.TA_DateCheckFlags)">
+ <summary>Checks if the string in the form "YYYY-MM-DD HH:mm:ss" is a valid date/time. The date must be in UTC time and "24-hour" format. If your date is in some other time format first convert it to UTC time before passing it into this function.</summary>
+ <param name="date_time">The date time string to check.</param>
+ <param name="flags">The type of date time check. Valid flags are <see cref="F:wyDay.TurboActivate.TA_DateCheckFlags.TA_HAS_NOT_EXPIRED"/>.</param>
+ <returns>True if the date is valid, false if it's not</returns>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.IsGenuine">
+ <summary>Checks whether the computer is genuinely activated by verifying with the LimeLM servers.</summary>
+ <returns>IsGenuineResult</returns>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.IsGenuine(System.UInt32,System.UInt32,System.Boolean,System.Boolean)">
+ <summary>Checks whether the computer is activated, and every "daysBetweenChecks" days it check if the customer is genuinely activated by verifying with the LimeLM servers.</summary>
+ <param name="daysBetweenChecks">How often to contact the LimeLM servers for validation. 90 days recommended.</param>
+ <param name="graceDaysOnInetErr">If the call fails because of an internet error, how long, in days, should the grace period last (before returning deactivating and returning TA_FAIL).
+ 
+ 14 days is recommended.</param>
+ <param name="skipOffline">If the user activated using offline activation 
+ (ActivateRequestToFile(), ActivateFromFile() ), then with this
+ option IsGenuineEx() will still try to validate with the LimeLM
+ servers, however instead of returning <see cref="F:wyDay.TurboActivate.IsGenuineResult.InternetError"/> (when within the
+ grace period) or <see cref="F:wyDay.TurboActivate.IsGenuineResult.NotGenuine"/> (when past the grace period) it will
+ instead only return <see cref="F:wyDay.TurboActivate.IsGenuineResult.Genuine"/> (if IsActivated()).
+ 
+ If the user activated using online activation then this option
+ is ignored.</param>
+ <param name="offlineShowInetErr">If the user activated using offline activation, and you're
+ using this option in tandem with skipOffline, then IsGenuineEx()
+ will return <see cref="F:wyDay.TurboActivate.IsGenuineResult.InternetError"/> on internet failure instead of <see cref="F:wyDay.TurboActivate.IsGenuineResult.Genuine"/>.
+
+ If the user activated using online activation then this flag
+ is ignored.</param>
+ <returns>IsGenuineResult</returns>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.GenuineDays(System.UInt32,System.UInt32,System.Boolean@)">
+ <summary>Get the number of days until the next time that the <see cref="M:wyDay.TurboActivate.TurboActivate.IsGenuine"/> function contacts the LimeLM activation servers to reverify the activation.</summary>
+ <param name="daysBetweenChecks">How often to contact the LimeLM servers for validation. Use the exact same value as used in <see cref="M:wyDay.TurboActivate.TurboActivate.IsGenuine"/>.</param>
+ <param name="graceDaysOnInetErr">If the call fails because of an internet error, how long, in days, should the grace period last (before returning deactivating and returning TA_FAIL). Again, use the exact same value as used in <see cref="M:wyDay.TurboActivate.TurboActivate.IsGenuine"/>.</param>
+ <param name="inGracePeriod">Get whether the user is in the grace period.</param>
+ <returns>The number of days remaining. 0 days if both the days between checks and the grace period have expired. (E.g. 1 day means *at most* 1 day. That is, it could be 30 seconds.)</returns>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.IsProductKeyValid">
+ <summary>Checks if the product key installed for this product is valid. This does NOT check if the product key is activated or genuine. Use <see cref="M:wyDay.TurboActivate.TurboActivate.IsActivated"/> and <see cref="M:wyDay.TurboActivate.TurboActivate.IsGenuine"/> instead.</summary>
+ <returns>True if the product key is valid.</returns>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.SetCustomProxy(System.String)">
+ <summary>Sets the custom proxy to be used by functions that connect to the internet.</summary>
+ <param name="proxy">The proxy to use. Proxy must be in the form "http://username:password@host:port/".</param>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.TrialDaysRemaining(wyDay.TurboActivate.TA_Flags)">
+ <summary>Get the number of trial days remaining. You must call <see cref="M:wyDay.TurboActivate.TurboActivate.UseTrial(wyDay.TurboActivate.TA_Flags,System.String)"/> at least once in the past before calling this function.</summary>
+ <param name="useTrialFlags">The same exact flags you passed to <see cref="M:wyDay.TurboActivate.TurboActivate.UseTrial(wyDay.TurboActivate.TA_Flags,System.String)"/>.</param>
+ <returns>The number of days remaining. 0 days if the trial has expired. (E.g. 1 day means *at most* 1 day. That is it could be 30 seconds.)</returns>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.UseTrial(wyDay.TurboActivate.TA_Flags,System.String)">
+ <summary>Begins the trial the first time it's called. Calling it again will validate the trial data hasn't been tampered with.</summary>
+ <param name="flags">Whether to create the trial (verified or unverified) either user-wide or system-wide and whether to allow trials in virtual machines. Valid flags are <see cref="F:wyDay.TurboActivate.TA_Flags.TA_SYSTEM"/>, <see cref="F:wyDay.TurboActivate.TA_Flags.TA_USER"/>, <see cref="F:wyDay.TurboActivate.TA_Flags.TA_DISALLOW_VM"/>, <see cref="F:wyDay.TurboActivate.TA_Flags.TA_VERIFIED_TRIAL"/>, and <see cref="F:wyDay.TurboActivate.TA_Flags.TA_UNVERIFIED_TRIAL"/>.</param>
+ <param name="extraData">Extra data to pass to the LimeLM servers that will be visible for you to see and use. Maximum size is 255 UTF-8 characters.</param>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.UseTrialVerifiedRequest(System.String,System.String)">
+ <summary>Generate a "verified trial" offline request file. This file will then need to be submitted to LimeLM. You will then need to use the TA_UseTrialVerifiedFromFile() function with the response file from LimeLM to actually start the trial.</summary>
+ <param name="filename">The location where you want to save the trial request file.</param>
+ <param name="extraData">Extra data to pass to the LimeLM servers that will be visible for you to see and use. Maximum size is 255 UTF-8 characters.</param>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.UseTrialVerifiedFromFile(System.String,wyDay.TurboActivate.TA_Flags)">
+ <summary>Use the "verified trial response" from LimeLM to start the verified trial.</summary>
+ <param name="filename">The location of the trial response file.</param>
+ <param name="flags">Whether to create the trial (verified or unverified) either user-wide or system-wide and whether to allow trials in virtual machines. Valid flags are <see cref="F:wyDay.TurboActivate.TA_Flags.TA_SYSTEM"/>, <see cref="F:wyDay.TurboActivate.TA_Flags.TA_USER"/>, <see cref="F:wyDay.TurboActivate.TA_Flags.TA_DISALLOW_VM"/>, <see cref="F:wyDay.TurboActivate.TA_Flags.TA_VERIFIED_TRIAL"/>, and <see cref="F:wyDay.TurboActivate.TA_Flags.TA_UNVERIFIED_TRIAL"/>.</param>
+</member>
+<member name="M:wyDay.TurboActivate.TurboActivate.ExtendTrial(System.String,wyDay.TurboActivate.TA_Flags)">
+ <summary>Extends the trial using a trial extension created in LimeLM.</summary>
+ <param name="trialExtension">The trial extension generated from LimeLM.</param>
+ <param name="useTrialFlags">The same exact flags you passed to <see cref="M:wyDay.TurboActivate.TurboActivate.UseTrial(wyDay.TurboActivate.TA_Flags,System.String)"/>.</param>
+</member>
+<member name="F:wyDay.TurboActivate.IsGenuineResult.Genuine">
+ <summary>Is activated and genuine.</summary>
+</member>
+<member name="F:wyDay.TurboActivate.IsGenuineResult.GenuineFeaturesChanged">
+ <summary>Is activated and genuine and the features changed.</summary>
+</member>
+<member name="F:wyDay.TurboActivate.IsGenuineResult.NotGenuine">
+ <summary>Not genuine (note: use this in tandem with NotGenuineInVM).</summary>
+</member>
+<member name="F:wyDay.TurboActivate.IsGenuineResult.NotGenuineInVM">
+ <summary>Not genuine because you're in a Virtual Machine.</summary>
+</member>
+<member name="F:wyDay.TurboActivate.IsGenuineResult.InternetError">
+ <summary>Treat this error as a warning. That is, tell the user that the activation couldn't be validated with the servers and that they can manually recheck with the servers immediately.</summary>
+</member>
+</members>
+</doc>

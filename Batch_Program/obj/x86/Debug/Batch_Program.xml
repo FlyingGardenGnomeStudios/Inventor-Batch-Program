@@ -1,0 +1,84 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+Batch_Program
+</name>
+</assembly>
+<members>
+<member name="M:InventorAddinServer.Activate(Inventor.ApplicationAddInSite,System.Boolean)">
+	<summary>
+ Do initializations in it such as caching the application object, registering event handlers, and adding ribbon buttons.
+ </summary>
+	<param name="siteObj">The entry object for the addin.</param>
+	<param name="loaded1stTime">Indicating whether the addin is loaded for the 1st time.</param>
+</member><member name="M:InventorAddinServer.Deactivate">
+	<summary>
+ Do cleanups in it such as releasing COM objects or forcing the GC to Collect when necessary.
+ </summary>
+</member><member name="M:InventorAddinServer.ExecuteCommand(System.Int32)">
+	<summary>
+ Deprecated. Use the ControlDefinition instead to execute commands.
+ </summary>
+	<param name="commandID"></param>
+</member><member name="P:InventorAddinServer.Automation">
+	<summary>
+ Implement it if wanting to expose your own automation interface. 
+ </summary>
+</member><member name="M:InventorButton.#ctor(System.String,System.String,System.String,System.String,System.Drawing.Icon,System.Drawing.Icon,Inventor.CommandTypesEnum,Inventor.ButtonDisplayEnum)">
+	<summary>
+ The most comprehensive signature.
+ </summary>
+</member><member name="M:InventorButton.#ctor(System.String,System.String,System.String,System.String,System.Drawing.Icon,System.Drawing.Icon)">
+	<summary>
+ The signature does not care about Command Type (always editing) and Button Display (always with text).
+ </summary>
+</member><member name="M:InventorButton.#ctor(System.String,System.String,System.String,System.String,Inventor.CommandTypesEnum,Inventor.ButtonDisplayEnum)">
+	<summary>
+ The signature does not care about icons.
+ </summary>
+</member><member name="M:InventorButton.#ctor(System.String,System.Drawing.Icon,System.Drawing.Icon)">
+	<summary>
+ This signature only cares about display name and icons.
+ </summary>
+	<param name="displayName"></param>
+	<param name="standardIcon"></param>
+	<param name="largeIcon"></param>
+</member><member name="M:InventorButton.#ctor(System.String)">
+	<summary>
+ The simplest signature, which can be good for prototyping.
+ </summary>
+</member><member name="M:InventorButton.Create(System.String,System.String,System.String,System.String,System.String,System.Drawing.Icon,System.Drawing.Icon,Inventor.CommandTypesEnum,Inventor.ButtonDisplayEnum)">
+	<summary>
+ The helper method for constructors to call to avoid duplicate code.
+ </summary>
+</member><member name="M:InventorButton.ButtonDefinition_OnExecute(Inventor.NameValueMap)">
+	<summary>
+ The button callback method.
+ </summary>
+	<param name="context"></param>
+</member><member name="F:InventorButton.Execute">
+	<summary>
+ The button action to be assigned from anywhere outside.
+ </summary>
+</member><member name="T:InventorButton">
+	<summary>
+ The class wrapps up Inventor Button creation stuffs and is easy to use.
+ No need to derive. Create an instance using either constructor and assign the Action.
+ </summary>
+</member><member name="P:My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+</members>
+</doc>
