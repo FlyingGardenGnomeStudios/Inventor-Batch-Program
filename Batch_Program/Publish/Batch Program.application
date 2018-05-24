@@ -8,7 +8,7 @@
         <beforeApplicationStartup />
       </update>
     </subscription>
-    <deploymentProvider codebase="https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/Batch/Batch%20Program.application" />
+    <deploymentProvider codebase="https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/Batch%20Program.application" />
   </deployment>
   <compatibleFrameworks xmlns="urn:schemas-microsoft-com:clickonce.v2">
     <framework targetVersion="4.0" profile="Full" supportedRuntime="4.0.30319" />
@@ -21,7 +21,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>iUmm/dSIT7khEg4xGC26VUeOANQ=</dsig:DigestValue>
+        <dsig:DigestValue>qjRydxEmcS6Z57PJllFUPDc+6zs=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
