@@ -52,6 +52,7 @@ Partial Class Settings
         Me.btnOK = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
+        Me.chkArchive = New System.Windows.Forms.CheckBox()
         Me.GroupBox1.SuspendLayout()
         Me.tabSaveLoc.SuspendLayout()
         Me.tabPDF.SuspendLayout()
@@ -258,10 +259,17 @@ Partial Class Settings
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.UseVisualStyleBackColor = True
         '
+        'chkArchive
+        '
+        resources.ApplyResources(Me.chkArchive, "chkArchive")
+        Me.chkArchive.Name = "chkArchive"
+        Me.chkArchive.UseVisualStyleBackColor = True
+        '
         'Settings
         '
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.chkArchive)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.GroupBox1)
@@ -276,6 +284,7 @@ Partial Class Settings
         Me.tabDWG.ResumeLayout(False)
         Me.tabDWG.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -308,4 +317,5 @@ Partial Class Settings
     Friend WithEvents chkPDFRev As Windows.Forms.CheckBox
     Friend WithEvents chkDXFRev As Windows.Forms.CheckBox
     Friend WithEvents chkDWGRev As Windows.Forms.CheckBox
+    Friend WithEvents chkArchive As Windows.Forms.CheckBox
 End Class

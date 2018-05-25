@@ -43,10 +43,26 @@ Public Class Settings
         Else
             rdoDWGChoose.Checked = True
         End If
-        If My.Settings.PDFRev = False Then chkPDFRev.Checked = False
-        If My.Settings.DXFRev = False Then chkDXFRev.Checked = False
-        If My.Settings.DWGRev = False Then chkDWGRev.Checked = False
-
+        If My.Settings.PDFRev = False Then
+            chkPDFRev.Checked = False
+        Else
+            chkPDFRev.Checked = True
+        End If
+        If My.Settings.DXFRev = False Then
+            chkDXFRev.Checked = False
+        Else
+            chkDXFRev.Checked = True
+        End If
+        If My.Settings.DWGRev = False Then
+            chkDWGRev.Checked = False
+        Else
+            chkDWGRev.Checked = True
+        End If
+        If My.Settings.ArchiveExport = False Then
+            chkArchive.Checked = False
+        Else
+            chkArchive.Checked = True
+        End If
     End Sub
     Private Sub rdoPDFSaveLoc_CheckedChanged(sender As Object, e As EventArgs) Handles rdoPDFSaveLoc.CheckedChanged
         If rdoPDFSaveLoc.Checked = True Then
@@ -223,6 +239,11 @@ Public Class Settings
             My.Settings.DWGRev = True
         Else
             My.Settings.DWGRev = False
+        End If
+        If chkArchive.Checked = True Then
+            My.Settings.ArchiveExport = True
+        Else
+            My.Settings.ArchiveExport = False
         End If
         My.Settings.Save()
         Me.Close()

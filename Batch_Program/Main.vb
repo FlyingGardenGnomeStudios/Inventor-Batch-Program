@@ -7,6 +7,8 @@ Imports Microsoft.Office.Interop
 Imports System.Drawing
 Imports System.Text.RegularExpressions
 Imports System.ComponentModel
+Imports System.Globalization
+Imports AdvancedDataGridView
 
 Public Class Main
     Dim _invApp As Inventor.Application
@@ -833,20 +835,20 @@ Public Class Main
                 DrawingName = Trim(dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, X).Value)
 
                 'open drawing
-                oDoc = _invApp.Documents.Open(DrawSource, True)
+                odoc = _invApp.Documents.Open(DrawSource, True)
 
                 If oPDFTrans.HasSaveCopyAsOptions(_invApp.ActiveDocument, oContext, oOptions) Then
                     Try
-                        For P = 1 To oDoc.sheets.count
-                            oDoc.sheets.item(P).activate()
+                        For P = 1 To odoc.sheets.count
+                            odoc.sheets.item(P).activate()
 
                             Try
-                                Dim Mass As Double = oDoc.ReferencedFiles.Item(1).componentdefinition.massproperties.mass
+                                Dim Mass As Double = odoc.ReferencedFiles.Item(1).componentdefinition.massproperties.mass
                             Catch
                             End Try
                         Next
                         'Next
-                        Call oDoc.Update()
+                        Call odoc.Update()
                         oOptions.Value("Sheet_Range") = Inventor.PrintRangeEnum.kPrintAllSheets
                         oOptions.Value("All_Color_AS_Black") = False
                         oOptions.Value("Remove_Line_Weights") = True
@@ -857,7 +859,7 @@ Public Class Main
                         oData = _invApp.TransientObjects.CreateDataMedium
                         'create save locations
                         If My.Settings.PDFRev = True Then
-                            RevNo = "-R" & oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
+                            RevNo = "-R" & odoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
                         Else
                             RevNo = ""
                         End If
@@ -885,7 +887,7 @@ Public Class Main
                             writeDebug("Created PDF: " & PDFSource)
                         End If
                         'If the drawingcreation causes an error, save drawing name and inform user when process is complete
-                        CloseLater(DrawingName, oDoc)
+                        CloseLater(DrawingName, odoc)
                     Catch
                         ErrorReport = DrawingName & vbNewLine
                     End Try
@@ -937,7 +939,7 @@ Public Class Main
                             RevNo = "-R" & oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
                         End If
                     Else
-                            RevNo = ""
+                        RevNo = ""
                     End If
                     'Source = Destin & "\" & DrawingName
                     'Source = Source.Insert(Source.LastIndexOf("."), RevNo)
@@ -993,20 +995,7 @@ Public Class Main
         End If
         _invApp.SilentOperation = False
     End Sub
-    Private Sub ChangeRev()
-
-        'Dim Ans As String
-
-        'Ans = MsgBox("This will reset all current revisions" _
-        '             & vbNewLine & "Continue?", MsgBoxStyle.OkCancel, "Change Revision")
-        'If Ans = vbCancel Then Exit Sub
-        Dim Rev_Switch As New Rev_Switch
-        Rev_Switch.ShowDialog(Me)
-        'Dim RevType As Integer = 0
-        'Rev_Switch.PopMain(Me)
-        'Rev_Switch.First(RevType)
-    End Sub
-    Public Sub ChangeRev(ByRef RevType As Integer, ByRef Reset As Boolean)
+    Public Sub ChangeRev(ByRef RevType As Integer, ByRef Reset As String)
         Dim oDoc As Document = Nothing
         Dim dDoc As DrawingDocument = Nothing
         Dim Path As Documents = _invApp.Documents
@@ -1034,7 +1023,7 @@ Public Class Main
                 Dim Point As Point2d
                 Dim oRevTable As RevisionTable
                 Dim oTitleblock As TitleBlock
-                Dim C, R, i As Integer
+                Dim Col, Row As Integer
                 ' MsVistaProgressBar.Visible = True
                 'Check the titleblock to see if it is the IMM TitleBlock, inform user if it is not
                 Dim oTitleBlockDef As TitleBlockDefinition
@@ -1046,8 +1035,8 @@ Public Class Main
                 'End If
                 'Set the point at which the rev table should be inserted
                 Dim Total As Integer = 0
-                For Each row In dgvSubFiles.Rows
-                    If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.index).Value = True Then
+                For Each dgvrow In dgvSubFiles.Rows
+                    If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvrow.index).Value = True Then
                         Total += 1
                     End If
                 Next
@@ -1081,69 +1070,143 @@ Public Class Main
                     CheckNeeded.PopMain(Me)
                     CheckNeeded.PopulateCheckNeeded(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs)
                 End If
+                For Each node As TreeGridNode In CheckNeeded.tgvCheckNeeded.Rows
+                    node.Expand()
+                Next
+
                 For Each Sheet In Sheets
-                        If S = 0 Then
+                    If S = 0 Then
 
-                            Sheet.Activate()
-                            oRevTable = oDoc.activesheet.RevisionTables(1)
-                            oRevTable.RevisionTableRows.Add()
-
-                            For Each oRow As RevisionTableRow In oRevTable.RevisionTableRows
-                                If oRow.IsActiveRow Then
-                                Else
-                                    oRow.Delete()
-                                End If
-                            Next
-                            oTitleblock = oDoc.activesheet.TitleBlock
-                            If S = 0 Then
-                                Adjust = Ty(S) - oRevTable.Position.Y
-                            End If
-
-                            oRevTable.Delete()
-                            S += 1
-                        ElseIf S > 0 Then
-                            Sheet.Activate()
-                            oRevTable = oDoc.activesheet.RevisionTables(1)
-                            oRevTable.Delete()
-                        End If
-                    Next Sheet
-                    S = 0
-                    Sheets.Item(1).Activate()
-                    For Each Sheet In Sheets
                         Sheet.Activate()
-                        'Set counter to numeric or alpha based on previous RevTable
-                        Point = _invApp.TransientGeometry.CreatePoint2d(Tx(S), Ty(S) - Adjust)
+                        oRevTable = oDoc.activesheet.RevisionTables(1)
+                        oRevTable.RevisionTableRows.Add()
 
-                        If RevType = 1 Then
-                            oRevTable = oDoc.ActiveSheet.RevisionTables.add2(Point, False, True, False, 0)
-                        Else
-                            oRevTable = oDoc.ActiveSheet.RevisionTables.Add2(Point, False, True, True, "A")
-                        End If
-                        'Add items corresponding to which table form is being populated
-                        S += 1
-                    Next Sheet
-                    Sheet = oDoc.activesheet
-                    Sheet.Activate()
-                    oRevTable = Sheet.RevisionTables(1)
-                    'Iterate through the new revision table and insert the standard information for the respective table
-                    C = oRevTable.RevisionTableColumns.Count
-                    R = oRevTable.RevisionTableRows.Count
-                    Dim Contents(0 To C * R) As String
-                    Dim Rtr As RevisionTableRow
-                    Dim RTCell As RevisionTableCell
-                    i = 1
-                    For Each Rtr In oRevTable.RevisionTableRows
-                        For Each RTCell In Rtr
-                            If i = 3 And RevType = 1 Then
-                                RTCell.Text = My.Settings.NumRev
-                                Exit For
-                            ElseIf i = 3 And RevType = 0 Then
-                                RTCell.Text = My.Settings.AlphaRev
-                                Exit For
+                        For Each oRow As RevisionTableRow In oRevTable.RevisionTableRows
+                            If oRow.IsActiveRow Then
+                            Else
+                                oRow.Delete()
                             End If
-                            i += 1
+                        Next
+                        oTitleblock = oDoc.activesheet.TitleBlock
+                        If S = 0 Then
+                            Adjust = Ty(S) - oRevTable.Position.Y
+                        End If
+
+                        For Each oRevTable In oDoc.activesheet.revisiontables
+                            oRevTable.Delete()
+                        Next
+                        S += 1
+                    ElseIf S > 0 Then
+                        Sheet.Activate()
+                        For Each oRevTable In oDoc.activesheet.revisiontables
+                            oRevTable.Delete()
+                        Next
+                        'oRevTable = oDoc.activesheet.RevisionTables(1)
+
+                    End If
+                Next Sheet
+                S = 0
+                Sheets.Item(1).Activate()
+                For Each Sheet In Sheets
+                    Sheet.Activate()
+                    'Set counter to numeric or alpha based on previous RevTable
+                    Point = _invApp.TransientGeometry.CreatePoint2d(Tx(S), Ty(S) - Adjust)
+
+                    If RevType = 1 Then
+                        oRevTable = oDoc.ActiveSheet.RevisionTables.add2(Point, False, True, False, 0)
+                    Else
+                        oRevTable = oDoc.ActiveSheet.RevisionTables.Add2(Point, False, True, True, "A")
+                    End If
+                    'Add items corresponding to which table form is being populated
+                    S += 1
+                Next Sheet
+                If My.Settings.ArchiveExport = True Then
+                    For Each ParentNode As TreeGridNode In CheckNeeded.tgvCheckNeeded.Rows
+                        If ParentNode.Cells(0).Value = DrawingName Then
+                            For Each childnode In ParentNode.Nodes
+                                oRevTable.RevisionTableRows.Add()
+                            Next
+                        End If
+                    Next
+                End If
+                Sheet = oDoc.ActiveSheet
+                    oRevTable = Sheet.RevisionTables(1)
+                    Col = oRevTable.RevisionTableColumns.Count
+                    Row = oRevTable.RevisionTableRows.Count
+                    Rev = oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
+                    'Iterate through rev table and populate from the userform
+                    Dim Contents(0 To Col * Row) As String
+                    Dim J As Integer = 0
+                    Dim Initials(0 To Row), RevCheckBy(0 To Row), RevDate(0 To Row) As String
+                Dim first As Boolean = True
+                For RevRow = 1 To oRevTable.RevisionTableRows.Count
+                        Dim i As Integer = 1
+                        For Each rtc In oRevTable.RevisionTableColumns
+                            Dim h As New DataGridViewTextBoxColumn
+                        'Dim rtcell As RevisionTableCell = Nothing
+                        h.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(LCase(rtc.Title))
+                        If first = True AndAlso Reset = False Then
+                            If h.Name = My.Settings.RTSDescCol AndAlso My.Settings.RTSDesc = True Then
+                                If IsNumeric(RevNo) Then
+                                    oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = My.Settings.AlphaRev
+                                Else
+                                    oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = My.Settings.NumRev
+                                End If
+                            ElseIf h.Name = My.Settings.RTSNamecol AndAlso My.Settings.RTSName = True Then
+                                oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = _invApp.GeneralOptions.UserName.ToString
+                            End If
+                        Else
+                            Select Case UCase(h.Name)
+                                Case UCase(My.Settings.RTSDateCol)
+                                    If My.Settings.RTSDate = True Then oRevTable.RevisionTableRows(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTSDateCol).Index, RevRow - 1).Value
+                                Case UCase(My.Settings.RTSDescCol)
+                                    If My.Settings.RTSDesc = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTSDescCol).Index, RevRow - 1).Value
+                                Case UCase(My.Settings.RTSNameCol)
+                                    If My.Settings.RTSName = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTSNameCol).Index, RevRow - 1).Value
+                                Case UCase(My.Settings.RTSApprovedCol)
+                                    If My.Settings.RTSApproved = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTSApprovedCol).Index, RevRow - 1).Value
+                                Case UCase(My.Settings.RTS1Col)
+                                    If My.Settings.RTS1 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTS1Col).Index, RevRow - 1).Value
+                                Case UCase(My.Settings.RTS2Col)
+                                    If My.Settings.RTS2 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTS2Col).Index, RevRow - 1).Value
+                                Case UCase(My.Settings.RTS3Col)
+                                    If My.Settings.RTS3 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTS3Col).Index, RevRow - 1).Value
+                                Case UCase(My.Settings.RTS4Col)
+                                    If My.Settings.RTS4 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTS4Col).Index, RevRow - 1).Value
+                                Case UCase(My.Settings.RTS5Col)
+                                    If My.Settings.RTS5 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTS5Col).Index, RevRow - 1).Value
+                            End Select
+                        End If
+                        i = i + 1
                         Next
                     Next
+
+                    CheckNeeded.tgvCheckNeeded.Nodes.Clear()
+
+
+
+                    'Sheet = oDoc.activesheet
+                    'Sheet.Activate()
+                    'oRevTable = Sheet.RevisionTables(1)
+                    ''Iterate through the new revision table and insert the standard information for the respective table
+                    'Col = oRevTable.RevisionTableColumns.Count
+                    'Row = oRevTable.RevisionTableRows.Count
+                    'Dim Contents(0 To Col * Row) As String
+                    'Dim Rtr As RevisionTableRow
+                    'Dim RTCell As RevisionTableCell
+                    'i = 1
+                    'For Each Rtr In oRevTable.RevisionTableRows
+                    '    For Each RTCell In Rtr
+                    '        If i = 3 And RevType = 1 Then
+                    '            RTCell.Text = My.Settings.NumRev
+                    '            Exit For
+                    '        ElseIf i = 3 And RevType = 0 Then
+                    '            RTCell.Text = My.Settings.AlphaRev
+                    '            Exit For
+                    '        End If
+                    '        i += 1
+                    '    Next
+                    'Next
                     oDoc.sheets.item(1).activate()
                     _invApp.SilentOperation = True
                     Try
@@ -2037,23 +2100,27 @@ Public Class Main
     Private Sub Search_For_Duplicates(ByVal Filename As String, DrawingName As String, ByVal Filetype As String)
         For Each file As IO.FileInfo In Get_Files(Strings.Left(Filename, InStrRev(Filename, "\")),
                                                                   IO.SearchOption.TopDirectoryOnly, Filetype,
-                                                                  "\" & Strings.Left(DrawingName, InStrRev(DrawingName, ".")))
+                                                                  "\" & IO.Path.GetFileNameWithoutExtension(DrawingName) & ".")
             If file.FullName <> Filename Then
                 If My.Computer.FileSystem.FileExists(file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived")) Then
                     Kill(file.FullName)
-                Else
+                ElseIf My.Settings.ArchiveExport = True Then
                     System.IO.File.Move(file.FullName, file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived"))
+                ElseIf My.Settings.ArchiveExport = False Then
+                    Kill(file.FullName)
                 End If
             End If
         Next
         For Each file As IO.FileInfo In Get_Files(Strings.Left(Filename, InStrRev(Filename, "\")),
                                                                   IO.SearchOption.TopDirectoryOnly, Filetype,
-                                                                  "\" & Strings.Left(DrawingName, InStrRev(DrawingName, ".") - 1) & "-R")
+                                                                  "\" & IO.Path.GetFileNameWithoutExtension(DrawingName) & "-R")
             If file.FullName <> Filename Then
                 If My.Computer.FileSystem.FileExists(file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived")) Then
                     Kill(file.FullName)
-                Else
+                ElseIf My.Settings.ArchiveExport = True Then
                     System.IO.File.Move(file.FullName, file.FullName.Insert(file.FullName.LastIndexOf("\"), "\Archived"))
+                ElseIf My.Settings.ArchiveExport = False Then
+                    Kill(file.FullName)
                 End If
             End If
         Next
@@ -3055,26 +3122,6 @@ Public Class Main
     Private Sub CMSSpreadsheet_Click(sender As Object, e As EventArgs)
         ExportText(CMSHeirarchical.Checked, CMSMissingDWG.Checked, False, True)
     End Sub
-    'Private Sub LVSubFiles_Click(sender As Object, e As EventArgs)
-    '    If LVSubFiles.Items(LVSubFiles.FocusedItem.Index).ForeColor <> Drawing.Color.Gray And
-    '        LVSubFiles.Items(LVSubFiles.FocusedItem.Index).ForeColor <> Drawing.Color.Red Then
-    '        If LVSubFiles.Items(LVSubFiles.FocusedItem.Index).Checked = True Then
-    '            LVSubFiles.Items(LVSubFiles.FocusedItem.Index).Checked = False
-    '        Else
-    '            LVSubFiles.Items(LVSubFiles.FocusedItem.Index).Checked = True
-    '        End If
-    '    End If
-    'End Sub
-    'Private Sub LVSubFiles_ItemChecked(sender As Object, e As ItemCheckedEventArgs)
-
-    '    If LVSubFiles.Items(e.Item.Index).ForeColor = Drawing.Color.Gray OrElse
-    '        LVSubFiles.Items(e.Item.Index).ForeColor = Drawing.Color.Red Then
-    '        e.Item.Checked = False
-    '    End If
-    '    ' End If
-    '    LVSubFiles.FocusedItem = Nothing
-    '    If LVSubFiles.Items.Count > 10 Then LVSubFiles.Height = dgvOpenFiles.Height - 25
-    'End Sub
     Private Sub CMSSubSpreadsheet_Click(sender As Object, e As EventArgs) Handles CMSSubSpreadsheet.Click
         ExportText(CMSHeirarchical.Checked, CMSMissingDWG.Checked, False, False)
     End Sub
@@ -3250,10 +3297,10 @@ Public Class Main
         'If dgvSubFiles(dgvSubFiles.Columns("Comments").Index, dgvSubFiles.CurrentCell.RowIndex).Value <> "DNE" AndAlso
         '        dgvSubFiles(dgvSubFiles.Columns("Comments").Index, dgvSubFiles.CurrentCell.RowIndex).Value <> "PPM" Then
         If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True Then
-                dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = False
-            Else
-                dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True
-            End If
+            dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = False
+        Else
+            dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True
+        End If
         'Else
         '    dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = False
         'End If
@@ -3459,24 +3506,28 @@ Public Class Main
         End If
         If ChkRevType.Checked = True Then
             writeDebug("Accessing RevType")
-            Call ChangeRev()
+            Dim RevSwitch As New Rev_Switch
+            RevSwitch.PopMain(Me)
+            Dim RevType As Integer = 0
+            Dim Rev_Switch As New Rev_Switch
+            RevSwitch.First(RevType)
             ChkRevType.Checked = False
         End If
 
         If chkCheck.Checked = True Then
-
+            'Dim Checkneeded As New CheckNeeded
             writeDebug("Accessing Checked properties")
             CheckNeeded.PopMain(Me)
             CheckNeeded.PopulateCheckNeeded(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs)
-            If CheckNeeded.tgvCheckNeeded.Rows.Count > 0 Then
-                CheckNeeded.btnHide.Visible = True
-                CheckNeeded.ShowDialog()
-            Else
-                MsgBox("All drawings have been checked.")
-            End If
+            'If CheckNeeded.tgvCheckNeeded.Rows.Count > 0 Then
+            CheckNeeded.btnHide.Visible = True
+            CheckNeeded.ShowDialog(Me)
+            'Else
+            '    MsgBox("All drawings have been checked.")
+            'End If
             chkCheck.Checked = False
         End If
-            If chkRRev.Checked = True Then
+        If chkRRev.Checked = True Then
             writeDebug("Accessing remove rev details")
             CheckNeeded.PopMain(Me)
             CheckNeeded.btnHide.Visible = False
@@ -3557,17 +3608,12 @@ Public Class Main
         If chkiProp.Checked = True Then iProperties.ShowDialog(Me)
         chkiProp.CheckState = CheckState.Unchecked
 
-        If chkCheck.Checked = True Then
-            ' If CheckNeeded.tgvCheckNeeded.Rows.Count > 0 Then
-            'CheckNeeded.ShowDialog(Me)
-
-            'ElseIf CheckNeeded.tgvCheckNeeded.Rows.Count > 0 Then
-            '    CheckNeeded.btnHide.Visible = True
-            '    CheckNeeded.ShowDialog(Me)
-            'Else
-            '    MsgBox("All drawings have been checked.")
-            'End If
-        End If
+        'If CheckNeeded.tgvCheckNeeded.Rows.Count > 0 Then
+        'CheckNeeded.btnHide.Visible = True
+        ' If chkCheck.Checked = True Then CheckNeeded.ShowDialog(Me)
+        'Else
+        'MsgBox("All drawings have been checked.")
+        'End If
         chkCheck.Checked = False
         'If chkPrint.Checked = True Then Print.ShowDialog(Me)
         'chkPrint.Checked = False

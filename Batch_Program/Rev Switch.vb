@@ -6,7 +6,7 @@
         Return Nothing
     End Function
     Public Sub First(ByRef RevType As Integer)
-        Me.ShowDialog()
+        Me.ShowDialog(Main)
     End Sub
     Private Sub btnNumeric_Click(sender As System.Object, e As System.EventArgs) Handles btnNumeric.Click
         Main.ChangeRev(1, chkResetRev.Checked)
