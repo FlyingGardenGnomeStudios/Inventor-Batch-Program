@@ -1,0 +1,14 @@
+bin\Debug\ExpandableGridView.dll
+bin\Debug\ExpandableGridView.pdb
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\AdvancedDataGridView.Properties.Resources.resources
+obj\Debug\ExpandableGridView.csproj.GenerateResource.Cache
+obj\Debug\ExpandableGridView.dll
+obj\Debug\ExpandableGridView.pdb
+bin\Release\ExpandableGridView.dll
+bin\Release\ExpandableGridView.pdb
+obj\Release\ResolveAssemblyReference.cache
+obj\Release\AdvancedDataGridView.Properties.Resources.resources
+obj\Release\ExpandableGridView.csproj.GenerateResource.Cache
+obj\Release\ExpandableGridView.dll
+obj\Release\ExpandableGridView.pdb

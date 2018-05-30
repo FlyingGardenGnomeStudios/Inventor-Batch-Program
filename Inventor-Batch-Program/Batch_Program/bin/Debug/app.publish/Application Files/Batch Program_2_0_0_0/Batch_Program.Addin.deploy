@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Addin Type="Standard">
+  <ClassId>{97c796fe-4ecd-47ca-9736-c4ba1ba68a1b}</ClassId>
+  <ClientId>{97c796fe-4ecd-47ca-9736-c4ba1ba68a1b}</ClientId>
+  <DisplayName>InventorAddinServer</DisplayName>
+  <Description>InventorAddinServer</Description>
+  <Assembly>K:\Program Files (x86)\Visual Studio 2015\Projects\Batch Program\Batch_Program\bin\Debug/Batch_Program.dll</Assembly>
+  <LoadBehavior>0</LoadBehavior>
+  <UserUnloadable>1</UserUnloadable>
+  <Hidden>0</Hidden>
+  <SupportedSoftwareVersionGreaterThan>18..</SupportedSoftwareVersionGreaterThan>
+  <SupportedSoftwareVersionLessThan>20..</SupportedSoftwareVersionLessThan>
+  <DataVersion>1</DataVersion>
+  <UserInterfaceVersion>1</UserInterfaceVersion>
+</Addin>
