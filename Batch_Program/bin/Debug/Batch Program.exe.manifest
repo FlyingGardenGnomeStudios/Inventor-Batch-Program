@@ -43,26 +43,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Batch Program.exe" size="3390416">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Batch Program.exe" size="3390928">
       <assemblyIdentity name="Batch Program" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>ClitQ/VucrQaAQEP59UVcDG2dL4=</dsig:DigestValue>
+        <dsig:DigestValue>tD9gLyQZ1sQeWGH5Tb1ENRdcMKQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ExpandableGridView.dll" size="45056">
-      <assemblyIdentity name="ExpandableGridView" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ExpandableGridView.dll" size="28672">
+      <assemblyIdentity name="ExpandableGridView" version="1.0.1.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>AenMnrGL9IoExbCGf5jGvdLyKKc=</dsig:DigestValue>
+        <dsig:DigestValue>dXMQM76xLxPEmmrMIaZ/BlL1OjQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

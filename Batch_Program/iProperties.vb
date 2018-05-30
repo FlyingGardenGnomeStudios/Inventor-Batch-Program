@@ -107,6 +107,17 @@ Public Class iProperties
             oDateTimePicker.Visible = False
         End If
     End Sub
+    'Private Sub cmbYesNo(ByVal e As DataGridViewCellEventArgs, ByRef YesNoRow As Boolean, dgvControl As DataGridView)
+    '    If YesNoRow = True Then
+    '        dgvControl.Controls.Add(ocmbYesNo)
+    '        If dgvControl.CurrentCell.Value = "" Then
+    '            ocmbYesNo.SelectedValue = ""
+    '        Else
+    '            ocmbYesNo.SelectedValue = "Yes"
+    '        End If
+
+    '    End If
+    'End Sub
     Private Sub dgvStatus_CellEnter(sender As Object, e As DataGridViewCellEventArgs) Handles dgvStatus.CellEnter
         Dim DateRow As Boolean = False
         If e.RowIndex = -1 Or e.ColumnIndex <= 0 Then Exit Sub
@@ -145,6 +156,7 @@ Public Class iProperties
             oDateTimePicker.Visible = False
         End If
     End Sub
+
     Private Sub iPropdateTimePicker_OnTextChange(ByVal sender As Object, ByVal e As EventArgs)
         ' Saving the 'Selected Date on Calendar' into DataGridView current cell
         If dpControl = "Status" Then
@@ -180,10 +192,12 @@ Public Class iProperties
         End If
         'dpControl = ""
     End Sub
+
     Private Sub iPropDateTimePicker_CloseUp(ByVal sender As Object, ByVal e As EventArgs)
         ' Hiding the control after use 
         oDateTimePicker.Visible = False
     End Sub
+
     Dim RevTable As New RevTable
     Public Sub New()
 
@@ -397,6 +411,7 @@ Public Class iProperties
         'Go through iProperties of each selected item and retrieve the values
         iPropIdentify(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs, 0, Total, Read)
     End Sub
+
     Private Sub btnAddRev_Click(sender As Object, e As EventArgs) Handles btnAddRev.Click
         AddRev()
     End Sub
@@ -491,6 +506,7 @@ Public Class iProperties
         AddHandler newDGV.CellEnter, AddressOf Me.RevDatePicker
         newDGV.Name = "dgvRev" & RevisionTabs.TabCount
     End Sub
+
     Public Sub iPropIdentify(Path As Documents, ByRef oDoc As Document, ByRef Archive As String _
                              , ByRef DrawingName As String, ByRef DrawSource As String, OpenDocs As ArrayList _
                              , ByRef RevTotal As Integer, ByRef Total As Integer, ByRef Read As Boolean)
@@ -606,11 +622,8 @@ Public Class iProperties
                    .DrawingValue = invDrawDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("15").Value})
         SumDic.Add("Comments:", New Items With {.ModelValue = invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("6").Value,
                    .DrawingValue = invDrawDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("6").Value})
-        Try
-            SumDic.Add("Material:", New Items With {.ModelValue = invModelDoc.ComponentDefinition.Material.Name,
+        SumDic.Add("Material:", New Items With {.ModelValue = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("20").Value,
                    .DrawingValue = Nothing})
-        Catch
-        End Try
         ProjDic.Clear()
         ProjDic.Add("Location:", New Items With {.ModelValue = invModelDoc.FullFileName,
                     .DrawingValue = invDrawDoc.FullFileName})
@@ -1048,22 +1061,20 @@ Public Class iProperties
         Dim cmbMaterial As DataGridViewComboBoxCell = dgvSummary(1, dgvSummary.RowCount - 1)
         For Row = 0 To dgvSummary.RowCount - 1
             dgvSummary(dgvSummary.Columns("SummaryIsDirty").Index, Row).Value = "False"
-            If dgvSummary("SumItem", Row).Value = "Material:" Then
-                If cmbMaterial.Value <> "*Varies*" AndAlso cmbMaterial.Value = "" AndAlso cmbMaterial.Value IsNot Nothing Then
-                    If cmbMaterial.Items.Contains(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue) Then
-                        cmbMaterial.Value = SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue
-                    ElseIf Not cmbMaterial.Items.Contains(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue) Then
-                        cmbMaterial.Items.Add(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue)
-                        cmbMaterial.Value = SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue
-                    Else
-                        cmbMaterial.Items.Add("*Varies*")
-                        cmbMaterial.Value = "*Varies*"
-                    End If
+            If Row = dgvSummary.RowCount - 1 AndAlso cmbMaterial.Value <> "*Varies*" AndAlso cmbMaterial.Value = "" Then
+                If cmbMaterial.Items.Contains(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue) Then
+                    cmbMaterial.Value = SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue
+                ElseIf Not cmbMaterial.Items.Contains(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue) Then
+                    cmbMaterial.Items.Add(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue)
+                    cmbMaterial.Value = SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue
+                Else
+                    cmbMaterial.Items.Add("*Varies*")
+                    cmbMaterial.Value = "*Varies*"
                 End If
             ElseIf SumDicRows(dgvSummary("SumItem", Row).Value).Cells("SumModel").Value = "" Then
-                    SumDicRows(dgvSummary("SumItem", Row).Value).Cells("SumModel").Value = SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue
-                ElseIf SumDicRows(dgvSummary("SumItem", Row).Value).Cells("SumModel").Value <> SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue Then
-                    SumDicRows(dgvSummary("SumItem", Row).Value).Cells("SumModel").Value = "*Varies*"
+                SumDicRows(dgvSummary("SumItem", Row).Value).Cells("SumModel").Value = SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue
+            ElseIf SumDicRows(dgvSummary("SumItem", Row).Value).Cells("SumModel").Value <> SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue Then
+                SumDicRows(dgvSummary("SumItem", Row).Value).Cells("SumModel").Value = "*Varies*"
             End If
             Try
                 If SumDicRows(dgvSummary("SumItem", Row).Value).Cells("SumDrawing").Value = "" Then
@@ -1253,15 +1264,6 @@ Public Class iProperties
                         oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("5").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
                     Case "Comments:"
                         oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("6").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                    Case "Material:"
-                        If dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value <> "*Varies*" AndAlso
-                            dgvSummary.Columns("Sum" & Document).Index = 1 AndAlso
-                            dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value <> "" Then
-                            Try
-                                oDoc.componentdefinition.material.name = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                            Catch
-                            End Try
-                        End If
                 End Select
             End If
         Next
@@ -1353,7 +1355,7 @@ Public Class iProperties
                         End If
                 End Select
             End If
-            oDoc.Update()
+
         Next
     End Sub
     Private Sub WriteDrawingProps(ByRef oDoc As Document)
@@ -1560,7 +1562,6 @@ Public Class iProperties
         'Next
     End Sub
     Private Sub dgvCheckNeeded_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvSummary.CellClick
-
         Dim DateCol As Boolean = False
         If e.RowIndex = -1 Or e.ColumnIndex = -1 Then Exit Sub
         'If dgvSummary.CurrentCellAddress.X = 1 And dgvSummary.CurrentCellAddress.Y = 8 Then
@@ -1667,51 +1668,50 @@ Public Class iProperties
 #End Region
 
 #Region "Combobox 1-Click"
-    'Private Sub dgvStatus_CellMouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles dgvStatus.CellMouseClick
-    '    'Make sure the type is set to something, a work around if the grid contains checkboxes.
-    '    If e.RowIndex > -1 And e.ColumnIndex > -1 Then
-    '        If dgvStatus(e.ColumnIndex, e.RowIndex).EditType IsNot Nothing Then
-    '            'Check if the control is a combo box if so, edit on enter
-    '            If dgvStatus(e.ColumnIndex, e.RowIndex).EditType.ToString() = "System.Windows.Forms.DataGridViewComboBoxEditingControl" Then
-    '                SendKeys.Send("{F4}")
-    '            End If
-    '        End If
-    '    End If
-    'End Sub
-    'Private Sub dgvSummary_CellMouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles dgvSummary.CellMouseClick
-    '    'Make sure the type is set to something, a work around if the grid contains checkboxes.
-    '    If e.RowIndex > -1 And e.ColumnIndex > -1 Then
-    '        'Debug.WriteLine(dgvSummary(e.ColumnIndex, e.RowIndex))
-    '        If dgvSummary(e.ColumnIndex, e.RowIndex).EditType IsNot Nothing Then
-    '            'Check if the control is a combo box if so, edit on enter
-    '            If dgvSummary(e.ColumnIndex, e.RowIndex).EditType.ToString() = "System.Windows.Forms.DataGridViewComboBoxEditingControl" Then
-    '                SendKeys.Send("{F4}")
-    '            End If
-    '        End If
-    '    End If
-    'End Sub
-    'Private Sub dgvCustomModel_CellMouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles dgvCustomModel.CellMouseClick
-    '    'Make sure the type is set to something, a work around if the grid contains checkboxes.
-    '    If e.RowIndex > -1 And e.ColumnIndex > -1 Then
-    '        If dgvCustomModel(e.ColumnIndex, e.RowIndex).EditType IsNot Nothing Then
-    '            'Check if the control is a combo box if so, edit on enter
-    '            If dgvCustomModel(e.ColumnIndex, e.RowIndex).EditType.ToString() = "System.Windows.Forms.DataGridViewComboBoxEditingControl" Then
-    '                SendKeys.Send("{F4}")
-    '            End If
-    '        End If
-    '    End If
-    'End Sub
-    'Private Sub dgvCustomDrawing_CellMouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles dgvCustomDrawing.CellMouseClick
-    '    'Make sure the type is set to something, a work around if the grid contains checkboxes.
-    '    If e.RowIndex > -1 And e.ColumnIndex > -1 Then
-    '        If dgvCustomDrawing(e.ColumnIndex, e.RowIndex).EditType IsNot Nothing Then
-    '            'Check if the control is a combo box if so, edit on enter
-    '            If dgvCustomDrawing(e.ColumnIndex, e.RowIndex).EditType.ToString() = "System.Windows.Forms.DataGridViewComboBoxEditingControl" Then
-    '                SendKeys.Send("{F4}")
-    '            End If
-    '        End If
-    '    End If
-    'End Sub
+    Private Sub dgvStatus_CellMouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles dgvStatus.CellMouseClick
+        'Make sure the type is set to something, a work around if the grid contains checkboxes.
+        If e.RowIndex > -1 And e.ColumnIndex > -1 Then
+            If dgvStatus(e.ColumnIndex, e.RowIndex).EditType IsNot Nothing Then
+                'Check if the control is a combo box if so, edit on enter
+                If dgvStatus(e.ColumnIndex, e.RowIndex).EditType.ToString() = "System.Windows.Forms.DataGridViewComboBoxEditingControl" Then
+                    SendKeys.Send("{F4}")
+                End If
+            End If
+        End If
+    End Sub
+    Private Sub dgvSummary_CellMouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles dgvSummary.CellMouseClick
+        'Make sure the type is set to something, a work around if the grid contains checkboxes.
+        If e.RowIndex > -1 And e.ColumnIndex > -1 Then
+            If dgvSummary(e.ColumnIndex, e.RowIndex).EditType IsNot Nothing Then
+                'Check if the control is a combo box if so, edit on enter
+                If dgvSummary(e.ColumnIndex, e.RowIndex).EditType.ToString() = "System.Windows.Forms.DataGridViewComboBoxEditingControl" Then
+                    SendKeys.Send("{F4}")
+                End If
+            End If
+        End If
+    End Sub
+    Private Sub dgvCustomModel_CellMouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles dgvCustomModel.CellMouseClick
+        'Make sure the type is set to something, a work around if the grid contains checkboxes.
+        If e.RowIndex > -1 And e.ColumnIndex > -1 Then
+            If dgvCustomModel(e.ColumnIndex, e.RowIndex).EditType IsNot Nothing Then
+                'Check if the control is a combo box if so, edit on enter
+                If dgvCustomModel(e.ColumnIndex, e.RowIndex).EditType.ToString() = "System.Windows.Forms.DataGridViewComboBoxEditingControl" Then
+                    SendKeys.Send("{F4}")
+                End If
+            End If
+        End If
+    End Sub
+    Private Sub dgvCustomDrawing_CellMouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles dgvCustomDrawing.CellMouseClick
+        'Make sure the type is set to something, a work around if the grid contains checkboxes.
+        If e.RowIndex > -1 And e.ColumnIndex > -1 Then
+            If dgvCustomDrawing(e.ColumnIndex, e.RowIndex).EditType IsNot Nothing Then
+                'Check if the control is a combo box if so, edit on enter
+                If dgvCustomDrawing(e.ColumnIndex, e.RowIndex).EditType.ToString() = "System.Windows.Forms.DataGridViewComboBoxEditingControl" Then
+                    SendKeys.Send("{F4}")
+                End If
+            End If
+        End If
+    End Sub
 #End Region
 End Class
 Public Class Items
