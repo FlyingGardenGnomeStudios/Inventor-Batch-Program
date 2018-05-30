@@ -29,23 +29,43 @@ Partial Class iProperties
         Me.iProp = New System.Windows.Forms.TabControl()
         Me.Summary = New System.Windows.Forms.TabPage()
         Me.dgvSummary = New System.Windows.Forms.DataGridView()
+        Me.SumItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SumModel = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SumDrawing = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SummaryIsDirty = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Project = New System.Windows.Forms.TabPage()
         Me.dgvProject = New System.Windows.Forms.DataGridView()
+        Me.ProjItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ProjModel = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ProjDrawing = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ProjectIsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Status = New System.Windows.Forms.TabPage()
         Me.dgvStatus = New System.Windows.Forms.DataGridView()
+        Me.StatusItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.StatusModel = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.StatusDrawing = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.StatusIsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Custom = New System.Windows.Forms.TabPage()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.dgvCustomDrawing = New System.Windows.Forms.DataGridView()
+        Me.DCusName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DCusValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DCusType = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.DrawingIsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.dgvCustomModel = New System.Windows.Forms.DataGridView()
+        Me.PCusName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PCusValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PCusType = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.ModelIsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.RevisionTable = New System.Windows.Forms.TabPage()
         Me.RevisionTabs = New System.Windows.Forms.TabControl()
         Me.Rev1 = New System.Windows.Forms.TabPage()
         Me.btnAddRev = New System.Windows.Forms.Button()
         Me.dgvRev1 = New System.Windows.Forms.DataGridView()
+        Me.Rev1Item = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Rev1Drawing = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Rev1IsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lblRev0 = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.ProgressBar2 = New System.Windows.Forms.ProgressBar()
@@ -69,26 +89,6 @@ Partial Class iProperties
         Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SumItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SumModel = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SumDrawing = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ProjItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ProjModel = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ProjDrawing = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ProjectIsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.StatusItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.StatusModel = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.StatusDrawing = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.StatusIsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DCusName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DCusValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DrawingIsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PCusName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PCusValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ModelIsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Rev1Item = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Rev1Drawing = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Rev1IsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -160,6 +160,7 @@ Partial Class iProperties
         '
         Me.dgvSummary.AllowUserToAddRows = False
         Me.dgvSummary.AllowUserToDeleteRows = False
+        Me.dgvSummary.AllowUserToResizeRows = False
         Me.dgvSummary.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvSummary.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.SumItem, Me.SumModel, Me.SumDrawing, Me.SummaryIsDirty})
@@ -169,6 +170,26 @@ Partial Class iProperties
         Me.dgvSummary.RowHeadersVisible = False
         Me.dgvSummary.Size = New System.Drawing.Size(326, 386)
         Me.dgvSummary.TabIndex = 16
+        '
+        'SumItem
+        '
+        Me.SumItem.HeaderText = "Item"
+        Me.SumItem.Name = "SumItem"
+        Me.SumItem.ReadOnly = True
+        Me.SumItem.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.SumItem.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'SumModel
+        '
+        Me.SumModel.HeaderText = "Model"
+        Me.SumModel.Name = "SumModel"
+        Me.SumModel.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'SumDrawing
+        '
+        Me.SumDrawing.HeaderText = "Drawing"
+        Me.SumDrawing.Name = "SumDrawing"
+        Me.SumDrawing.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'SummaryIsDirty
         '
@@ -204,6 +225,30 @@ Partial Class iProperties
         Me.dgvProject.Size = New System.Drawing.Size(326, 386)
         Me.dgvProject.TabIndex = 46
         '
+        'ProjItem
+        '
+        Me.ProjItem.HeaderText = "Item"
+        Me.ProjItem.Name = "ProjItem"
+        Me.ProjItem.ReadOnly = True
+        Me.ProjItem.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.ProjItem.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'ProjModel
+        '
+        Me.ProjModel.HeaderText = "Model"
+        Me.ProjModel.Name = "ProjModel"
+        '
+        'ProjDrawing
+        '
+        Me.ProjDrawing.HeaderText = "Drawing"
+        Me.ProjDrawing.Name = "ProjDrawing"
+        '
+        'ProjectIsDirty
+        '
+        Me.ProjectIsDirty.HeaderText = "IsDirty"
+        Me.ProjectIsDirty.Name = "ProjectIsDirty"
+        Me.ProjectIsDirty.Visible = False
+        '
         'Status
         '
         Me.Status.Controls.Add(Me.dgvStatus)
@@ -228,6 +273,30 @@ Partial Class iProperties
         Me.dgvStatus.RowHeadersVisible = False
         Me.dgvStatus.Size = New System.Drawing.Size(326, 386)
         Me.dgvStatus.TabIndex = 62
+        '
+        'StatusItem
+        '
+        Me.StatusItem.HeaderText = "Item"
+        Me.StatusItem.Name = "StatusItem"
+        Me.StatusItem.ReadOnly = True
+        Me.StatusItem.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.StatusItem.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'StatusModel
+        '
+        Me.StatusModel.HeaderText = "Model"
+        Me.StatusModel.Name = "StatusModel"
+        '
+        'StatusDrawing
+        '
+        Me.StatusDrawing.HeaderText = "Drawing"
+        Me.StatusDrawing.Name = "StatusDrawing"
+        '
+        'StatusIsDirty
+        '
+        Me.StatusIsDirty.HeaderText = "IsDirty"
+        Me.StatusIsDirty.Name = "StatusIsDirty"
+        Me.StatusIsDirty.Visible = False
         '
         'Custom
         '
@@ -274,6 +343,18 @@ Partial Class iProperties
         Me.dgvCustomDrawing.Size = New System.Drawing.Size(326, 173)
         Me.dgvCustomDrawing.TabIndex = 57
         '
+        'DCusName
+        '
+        Me.DCusName.HeaderText = "Name"
+        Me.DCusName.Name = "DCusName"
+        Me.DCusName.ReadOnly = True
+        Me.DCusName.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        '
+        'DCusValue
+        '
+        Me.DCusValue.HeaderText = "Value"
+        Me.DCusValue.Name = "DCusValue"
+        '
         'DCusType
         '
         Me.DCusType.HeaderText = "Type"
@@ -281,6 +362,12 @@ Partial Class iProperties
         Me.DCusType.Name = "DCusType"
         Me.DCusType.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DCusType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
+        'DrawingIsDirty
+        '
+        Me.DrawingIsDirty.HeaderText = "IsDirty"
+        Me.DrawingIsDirty.Name = "DrawingIsDirty"
+        Me.DrawingIsDirty.Visible = False
         '
         'dgvCustomModel
         '
@@ -295,6 +382,18 @@ Partial Class iProperties
         Me.dgvCustomModel.Size = New System.Drawing.Size(326, 173)
         Me.dgvCustomModel.TabIndex = 56
         '
+        'PCusName
+        '
+        Me.PCusName.HeaderText = "Name"
+        Me.PCusName.Name = "PCusName"
+        Me.PCusName.ReadOnly = True
+        Me.PCusName.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        '
+        'PCusValue
+        '
+        Me.PCusValue.HeaderText = "Value"
+        Me.PCusValue.Name = "PCusValue"
+        '
         'PCusType
         '
         Me.PCusType.HeaderText = "Type"
@@ -302,6 +401,12 @@ Partial Class iProperties
         Me.PCusType.Name = "PCusType"
         Me.PCusType.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.PCusType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
+        'ModelIsDirty
+        '
+        Me.ModelIsDirty.HeaderText = "IsDirty"
+        Me.ModelIsDirty.Name = "ModelIsDirty"
+        Me.ModelIsDirty.Visible = False
         '
         'RevisionTable
         '
@@ -360,6 +465,25 @@ Partial Class iProperties
         Me.dgvRev1.RowHeadersVisible = False
         Me.dgvRev1.Size = New System.Drawing.Size(326, 312)
         Me.dgvRev1.TabIndex = 17
+        '
+        'Rev1Item
+        '
+        Me.Rev1Item.HeaderText = "Item"
+        Me.Rev1Item.Name = "Rev1Item"
+        Me.Rev1Item.ReadOnly = True
+        Me.Rev1Item.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.Rev1Item.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Rev1Drawing
+        '
+        Me.Rev1Drawing.HeaderText = "Value"
+        Me.Rev1Drawing.Name = "Rev1Drawing"
+        '
+        'Rev1IsDirty
+        '
+        Me.Rev1IsDirty.HeaderText = "IsDirty"
+        Me.Rev1IsDirty.Name = "Rev1IsDirty"
+        Me.Rev1IsDirty.Visible = False
         '
         'lblRev0
         '
@@ -543,129 +667,6 @@ Partial Class iProperties
         Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
         Me.DataGridViewTextBoxColumn20.Visible = False
         Me.DataGridViewTextBoxColumn20.Width = 161
-        '
-        'SumItem
-        '
-        Me.SumItem.HeaderText = "Item"
-        Me.SumItem.Name = "SumItem"
-        Me.SumItem.ReadOnly = True
-        Me.SumItem.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.SumItem.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'SumModel
-        '
-        Me.SumModel.HeaderText = "Model"
-        Me.SumModel.Name = "SumModel"
-        Me.SumModel.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'SumDrawing
-        '
-        Me.SumDrawing.HeaderText = "Drawing"
-        Me.SumDrawing.Name = "SumDrawing"
-        Me.SumDrawing.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'ProjItem
-        '
-        Me.ProjItem.HeaderText = "Item"
-        Me.ProjItem.Name = "ProjItem"
-        Me.ProjItem.ReadOnly = True
-        Me.ProjItem.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.ProjItem.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'ProjModel
-        '
-        Me.ProjModel.HeaderText = "Model"
-        Me.ProjModel.Name = "ProjModel"
-        '
-        'ProjDrawing
-        '
-        Me.ProjDrawing.HeaderText = "Drawing"
-        Me.ProjDrawing.Name = "ProjDrawing"
-        '
-        'ProjectIsDirty
-        '
-        Me.ProjectIsDirty.HeaderText = "IsDirty"
-        Me.ProjectIsDirty.Name = "ProjectIsDirty"
-        Me.ProjectIsDirty.Visible = False
-        '
-        'StatusItem
-        '
-        Me.StatusItem.HeaderText = "Item"
-        Me.StatusItem.Name = "StatusItem"
-        Me.StatusItem.ReadOnly = True
-        Me.StatusItem.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.StatusItem.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'StatusModel
-        '
-        Me.StatusModel.HeaderText = "Model"
-        Me.StatusModel.Name = "StatusModel"
-        '
-        'StatusDrawing
-        '
-        Me.StatusDrawing.HeaderText = "Drawing"
-        Me.StatusDrawing.Name = "StatusDrawing"
-        '
-        'StatusIsDirty
-        '
-        Me.StatusIsDirty.HeaderText = "IsDirty"
-        Me.StatusIsDirty.Name = "StatusIsDirty"
-        Me.StatusIsDirty.Visible = False
-        '
-        'DCusName
-        '
-        Me.DCusName.HeaderText = "Name"
-        Me.DCusName.Name = "DCusName"
-        Me.DCusName.ReadOnly = True
-        Me.DCusName.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        '
-        'DCusValue
-        '
-        Me.DCusValue.HeaderText = "Value"
-        Me.DCusValue.Name = "DCusValue"
-        '
-        'DrawingIsDirty
-        '
-        Me.DrawingIsDirty.HeaderText = "IsDirty"
-        Me.DrawingIsDirty.Name = "DrawingIsDirty"
-        Me.DrawingIsDirty.Visible = False
-        '
-        'PCusName
-        '
-        Me.PCusName.HeaderText = "Name"
-        Me.PCusName.Name = "PCusName"
-        Me.PCusName.ReadOnly = True
-        Me.PCusName.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        '
-        'PCusValue
-        '
-        Me.PCusValue.HeaderText = "Value"
-        Me.PCusValue.Name = "PCusValue"
-        '
-        'ModelIsDirty
-        '
-        Me.ModelIsDirty.HeaderText = "IsDirty"
-        Me.ModelIsDirty.Name = "ModelIsDirty"
-        Me.ModelIsDirty.Visible = False
-        '
-        'Rev1Item
-        '
-        Me.Rev1Item.HeaderText = "Item"
-        Me.Rev1Item.Name = "Rev1Item"
-        Me.Rev1Item.ReadOnly = True
-        Me.Rev1Item.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.Rev1Item.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Rev1Drawing
-        '
-        Me.Rev1Drawing.HeaderText = "Value"
-        Me.Rev1Drawing.Name = "Rev1Drawing"
-        '
-        'Rev1IsDirty
-        '
-        Me.Rev1IsDirty.HeaderText = "IsDirty"
-        Me.Rev1IsDirty.Name = "Rev1IsDirty"
-        Me.Rev1IsDirty.Visible = False
         '
         'DataGridViewTextBoxColumn21
         '

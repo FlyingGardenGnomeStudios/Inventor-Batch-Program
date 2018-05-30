@@ -3,7 +3,5 @@
 
 	Items not currently functioning
 	- Custom iProperties
-	- Check drawings
 	- Cannot cancel task after execution
 	- No tutorials yet
-	- iProperty material settings
