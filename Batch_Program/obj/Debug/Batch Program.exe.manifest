@@ -50,19 +50,19 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>um3981wO+MNFTZGGeuBHadKw/B4=</dsig:DigestValue>
+        <dsig:DigestValue>ClitQ/VucrQaAQEP59UVcDG2dL4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ExpandableGridView.dll" size="28672">
-      <assemblyIdentity name="ExpandableGridView" version="1.0.1.0" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ExpandableGridView.dll" size="45056">
+      <assemblyIdentity name="ExpandableGridView" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>dXMQM76xLxPEmmrMIaZ/BlL1OjQ=</dsig:DigestValue>
+        <dsig:DigestValue>AenMnrGL9IoExbCGf5jGvdLyKKc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

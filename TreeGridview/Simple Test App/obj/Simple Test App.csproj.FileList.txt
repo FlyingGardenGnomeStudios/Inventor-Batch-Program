@@ -1,0 +1,20 @@
+bin\Debug\Simple Test App.exe
+bin\Debug\Simple Test App.pdb
+bin\Debug\ExpandableGridView.dll
+bin\Debug\ExpandableGridView.pdb
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\Simple_Test_App.Form1.resources
+obj\Debug\Simple_Test_App.Properties.Resources.resources
+obj\Debug\Simple Test App.csproj.GenerateResource.Cache
+obj\Debug\Simple Test App.exe
+obj\Debug\Simple Test App.pdb
+bin\Release\Simple Test App.exe
+bin\Release\Simple Test App.pdb
+bin\Release\ExpandableGridView.dll
+bin\Release\ExpandableGridView.pdb
+obj\Release\ResolveAssemblyReference.cache
+obj\Release\Simple_Test_App.Form1.resources
+obj\Release\Simple_Test_App.Properties.Resources.resources
+obj\Release\Simple Test App.csproj.GenerateResource.Cache
+obj\Release\Simple Test App.exe
+obj\Release\Simple Test App.pdb

@@ -1,0 +1,18 @@
+.\bin\Debug\AdvancedDataGridView.exe
+.\bin\Debug\AdvancedDataGridView.pdb
+.\bin\Debug\ExpandableGridView.dll
+.\bin\Debug\ExpandableGridView.pdb
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\AdvancedDataGridView.Form1.resources
+obj\Debug\AdvancedDataGridView.Properties.Resources.resources
+obj\Debug\News Reader Look.csproj.GenerateResource.Cache
+obj\Debug\AdvancedDataGridView.exe
+obj\Debug\AdvancedDataGridView.pdb
+.\bin\Release\AdvancedDataGridView.exe
+.\bin\Release\ExpandableGridView.dll
+.\bin\Release\ExpandableGridView.pdb
+obj\Release\ResolveAssemblyReference.cache
+obj\Release\AdvancedDataGridView.Form1.resources
+obj\Release\AdvancedDataGridView.Properties.Resources.resources
+obj\Release\News Reader Look.csproj.GenerateResource.Cache
+obj\Release\AdvancedDataGridView.exe
