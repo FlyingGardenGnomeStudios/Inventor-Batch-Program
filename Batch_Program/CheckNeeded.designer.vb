@@ -34,6 +34,8 @@ Partial Class CheckNeeded
         Me.ApplyRowValuesToAllRowsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ApplyCellValueToEntireColumnToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClearCellToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RemoveRevisionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AddRevisionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tgvCheckNeeded = New AdvancedDataGridView.TreeGridView()
         Me.DrawingName = New AdvancedDataGridView.TreeGridColumn()
         Me.Splitter1 = New System.Windows.Forms.Splitter()
@@ -61,7 +63,6 @@ Partial Class CheckNeeded
         '
         'btnHide
         '
-        Me.btnHide.Enabled = False
         Me.btnHide.Location = New System.Drawing.Point(174, 183)
         Me.btnHide.Name = "btnHide"
         Me.btnHide.RightToLeft = System.Windows.Forms.RightToLeft.No
@@ -100,15 +101,15 @@ Partial Class CheckNeeded
         '
         'cmsApplyValues
         '
-        Me.cmsApplyValues.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ApplyRowValuesToAllRowsToolStripMenuItem, Me.ApplyCellValueToEntireColumnToolStripMenuItem, Me.ClearCellToolStripMenuItem})
+        Me.cmsApplyValues.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ApplyRowValuesToAllRowsToolStripMenuItem, Me.ApplyCellValueToEntireColumnToolStripMenuItem, Me.ClearCellToolStripMenuItem, Me.RemoveRevisionToolStripMenuItem, Me.AddRevisionToolStripMenuItem})
         Me.cmsApplyValues.Name = "ContextMenuStrip1"
-        Me.cmsApplyValues.Size = New System.Drawing.Size(331, 70)
+        Me.cmsApplyValues.Size = New System.Drawing.Size(331, 114)
         '
         'ApplyRowValuesToAllRowsToolStripMenuItem
         '
         Me.ApplyRowValuesToAllRowsToolStripMenuItem.Name = "ApplyRowValuesToAllRowsToolStripMenuItem"
         Me.ApplyRowValuesToAllRowsToolStripMenuItem.Size = New System.Drawing.Size(330, 22)
-        Me.ApplyRowValuesToAllRowsToolStripMenuItem.Text = "Apply selected row values to all  visible rows"
+        Me.ApplyRowValuesToAllRowsToolStripMenuItem.Text = "Apply selected row values to all visible rows"
         '
         'ApplyCellValueToEntireColumnToolStripMenuItem
         '
@@ -121,6 +122,18 @@ Partial Class CheckNeeded
         Me.ClearCellToolStripMenuItem.Name = "ClearCellToolStripMenuItem"
         Me.ClearCellToolStripMenuItem.Size = New System.Drawing.Size(330, 22)
         Me.ClearCellToolStripMenuItem.Text = "Clear Cell"
+        '
+        'RemoveRevisionToolStripMenuItem
+        '
+        Me.RemoveRevisionToolStripMenuItem.Name = "RemoveRevisionToolStripMenuItem"
+        Me.RemoveRevisionToolStripMenuItem.Size = New System.Drawing.Size(330, 22)
+        Me.RemoveRevisionToolStripMenuItem.Text = "Remove Revision"
+        '
+        'AddRevisionToolStripMenuItem
+        '
+        Me.AddRevisionToolStripMenuItem.Name = "AddRevisionToolStripMenuItem"
+        Me.AddRevisionToolStripMenuItem.Size = New System.Drawing.Size(330, 22)
+        Me.AddRevisionToolStripMenuItem.Text = "Add Revision"
         '
         'tgvCheckNeeded
         '
@@ -253,4 +266,7 @@ Partial Class CheckNeeded
     Friend WithEvents GridDateControl2 As GridDateControl
     Friend WithEvents DrawingName As AdvancedDataGridView.TreeGridColumn
     Friend WithEvents ClearCellToolStripMenuItem As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents RemoveRevisionToolStripMenuItem As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem1 As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents AddRevisionToolStripMenuItem As Windows.Forms.ToolStripMenuItem
 End Class

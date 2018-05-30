@@ -215,11 +215,19 @@ Public Class Main
         dgvOpenFiles.Rows.Clear()
         dgvSubFiles.Rows.Clear()
         Dim oDoc As Document
+        Dim Exists As Boolean = False
         Dim PartSource As String = Nothing
         'Iterate through each document open in Inventor and retrieve the display name
         Try
             For Each oDoc In _invApp.Documents.VisibleDocuments
-                If oDoc.FullFileName <> Nothing Then
+                Exists = False
+                For Each item In dgvOpenFiles.Rows
+                    If IO.Path.GetFileName(oDoc.FullFileName) = dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, item.index).Value Then
+                        Exists = True
+                        Exit For
+                    End If
+                Next
+                If oDoc.FullFileName <> Nothing AndAlso Exists = False Then
                     'Compare file type to the files chosen to display and only display the selected documents.
                     'Add the document name to key & location to value for faster recall
                     If chkAssy.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
@@ -1130,27 +1138,27 @@ Public Class Main
                     Next
                 End If
                 Sheet = oDoc.ActiveSheet
-                    oRevTable = Sheet.RevisionTables(1)
-                    Col = oRevTable.RevisionTableColumns.Count
-                    Row = oRevTable.RevisionTableRows.Count
-                    Rev = oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
-                    'Iterate through rev table and populate from the userform
-                    Dim Contents(0 To Col * Row) As String
-                    Dim J As Integer = 0
-                    Dim Initials(0 To Row), RevCheckBy(0 To Row), RevDate(0 To Row) As String
+                oRevTable = Sheet.RevisionTables(1)
+                Col = oRevTable.RevisionTableColumns.Count
+                Row = oRevTable.RevisionTableRows.Count
+                Rev = oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
+                'Iterate through rev table and populate from the userform
+                Dim Contents(0 To Col * Row) As String
+                Dim J As Integer = 0
+                Dim Initials(0 To Row), RevCheckBy(0 To Row), RevDate(0 To Row) As String
                 Dim first As Boolean = True
                 For RevRow = 1 To oRevTable.RevisionTableRows.Count
-                        Dim i As Integer = 1
-                        For Each rtc In oRevTable.RevisionTableColumns
-                            Dim h As New DataGridViewTextBoxColumn
+                    Dim i As Integer = 1
+                    For Each rtc In oRevTable.RevisionTableColumns
+                        Dim h As New DataGridViewTextBoxColumn
                         'Dim rtcell As RevisionTableCell = Nothing
                         h.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(LCase(rtc.Title))
                         If first = True AndAlso Reset = False Then
                             If h.Name = My.Settings.RTSDescCol AndAlso My.Settings.RTSDesc = True Then
-                                If IsNumeric(RevNo) Then
-                                    oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = My.Settings.AlphaRev
-                                Else
+                                If RevType = 1 Then
                                     oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = My.Settings.NumRev
+                                Else
+                                    oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = My.Settings.AlphaRev
                                 End If
                             ElseIf h.Name = My.Settings.RTSNamecol AndAlso My.Settings.RTSName = True Then
                                 oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = _invApp.GeneralOptions.UserName.ToString
@@ -1178,46 +1186,47 @@ Public Class Main
                             End Select
                         End If
                         i = i + 1
-                        Next
                     Next
+                Next
 
-                    CheckNeeded.tgvCheckNeeded.Nodes.Clear()
+                CheckNeeded.tgvCheckNeeded.Nodes.Clear()
 
 
 
-                    'Sheet = oDoc.activesheet
-                    'Sheet.Activate()
-                    'oRevTable = Sheet.RevisionTables(1)
-                    ''Iterate through the new revision table and insert the standard information for the respective table
-                    'Col = oRevTable.RevisionTableColumns.Count
-                    'Row = oRevTable.RevisionTableRows.Count
-                    'Dim Contents(0 To Col * Row) As String
-                    'Dim Rtr As RevisionTableRow
-                    'Dim RTCell As RevisionTableCell
-                    'i = 1
-                    'For Each Rtr In oRevTable.RevisionTableRows
-                    '    For Each RTCell In Rtr
-                    '        If i = 3 And RevType = 1 Then
-                    '            RTCell.Text = My.Settings.NumRev
-                    '            Exit For
-                    '        ElseIf i = 3 And RevType = 0 Then
-                    '            RTCell.Text = My.Settings.AlphaRev
-                    '            Exit For
-                    '        End If
-                    '        i += 1
-                    '    Next
-                    'Next
-                    oDoc.sheets.item(1).activate()
-                    _invApp.SilentOperation = True
-                    Try
-                        oDoc.Save()
-                    Catch ex As Exception
-                        MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                    End Try
-                    CloseLater(DrawingName, oDoc)
-                    _invApp.SilentOperation = False
-                End If
+                'Sheet = oDoc.activesheet
+                'Sheet.Activate()
+                'oRevTable = Sheet.RevisionTables(1)
+                ''Iterate through the new revision table and insert the standard information for the respective table
+                'Col = oRevTable.RevisionTableColumns.Count
+                'Row = oRevTable.RevisionTableRows.Count
+                'Dim Contents(0 To Col * Row) As String
+                'Dim Rtr As RevisionTableRow
+                'Dim RTCell As RevisionTableCell
+                'i = 1
+                'For Each Rtr In oRevTable.RevisionTableRows
+                '    For Each RTCell In Rtr
+                '        If i = 3 And RevType = 1 Then
+                '            RTCell.Text = My.Settings.NumRev
+                '            Exit For
+                '        ElseIf i = 3 And RevType = 0 Then
+                '            RTCell.Text = My.Settings.AlphaRev
+                '            Exit For
+                '        End If
+                '        i += 1
+                '    Next
+                'Next
+                oDoc.sheets.item(1).activate()
+                _invApp.SilentOperation = True
+                Try
+                    oDoc.Save()
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                End Try
+                CloseLater(DrawingName, oDoc)
+                _invApp.SilentOperation = False
+            End If
         Next
+        CheckNeeded.tgvCheckNeeded.Nodes.Clear
         _invApp.SilentOperation = False
         'MsVistaProgressBar.Visible = False
     End Sub
@@ -1582,27 +1591,25 @@ Public Class Main
                                 Exit For
                             End If
                         Next
-                        If exists = False Then
-                            If oDoc.FullFileName <> Nothing Then
-                                'Compare file type to the files chosen to display and only display the selected documents.
-                                'Add the document name to key & location to value for faster recall
-                                If chkAssy.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
-                                    'OpenFiles.Add(New KeyValuePair(Of String, String)(IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName))
-                                    dgvOpenFiles.Rows.Add(New String() {False, IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName, oDoc.FullDocumentName, dgvOpenFiles.RowCount})
-                                ElseIf chkParts.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kPartDocumentObject Then
-                                    'OpenFiles.Add(New KeyValuePair(Of String, String)(IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName))
-                                    dgvOpenFiles.Rows.Add(New String() {False, IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName, oDoc.FullDocumentName, dgvOpenFiles.RowCount})
-                                ElseIf chkDrawings.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kDrawingDocumentObject Then
-                                    'OpenFiles.Add(New KeyValuePair(Of String, String)(IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName))
-                                    For Each osheet As Sheet In oDoc.sheets
-                                        PartSource = osheet.DrawingViews.Item(1).ReferencedDocumentDescriptor.ReferencedDocument.fulldocumentname
-                                        Exit For
-                                    Next
-                                    dgvOpenFiles.Rows.Add(New String() {False, IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName, PartSource, dgvOpenFiles.RowCount})
-                                ElseIf chkPres.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kPresentationDocumentObject Then
-                                    'OpenFiles.Add(New KeyValuePair(Of String, String)(IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName))
-                                    dgvOpenFiles.Rows.Add(New String() {False, IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName, oDoc.FullDocumentName, dgvOpenFiles.RowCount})
-                                End If
+                        If exists = False AndAlso oDoc.FullFileName <> Nothing Then
+                            'Compare file type to the files chosen to display and only display the selected documents.
+                            'Add the document name to key & location to value for faster recall
+                            If chkAssy.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
+                                'OpenFiles.Add(New KeyValuePair(Of String, String)(IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName))
+                                dgvOpenFiles.Rows.Add(New String() {False, IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName, oDoc.FullDocumentName, dgvOpenFiles.RowCount})
+                            ElseIf chkParts.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kPartDocumentObject Then
+                                'OpenFiles.Add(New KeyValuePair(Of String, String)(IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName))
+                                dgvOpenFiles.Rows.Add(New String() {False, IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName, oDoc.FullDocumentName, dgvOpenFiles.RowCount})
+                            ElseIf chkDrawings.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kDrawingDocumentObject Then
+                                'OpenFiles.Add(New KeyValuePair(Of String, String)(IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName))
+                                For Each osheet As Sheet In oDoc.sheets
+                                    PartSource = osheet.DrawingViews.Item(1).ReferencedDocumentDescriptor.ReferencedDocument.fulldocumentname
+                                    Exit For
+                                Next
+                                dgvOpenFiles.Rows.Add(New String() {False, IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName, PartSource, dgvOpenFiles.RowCount})
+                            ElseIf chkPres.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kPresentationDocumentObject Then
+                                'OpenFiles.Add(New KeyValuePair(Of String, String)(IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName))
+                                dgvOpenFiles.Rows.Add(New String() {False, IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName, oDoc.FullDocumentName, dgvOpenFiles.RowCount})
                             End If
                         End If
                     Next
@@ -3515,37 +3522,40 @@ Public Class Main
         End If
 
         If chkCheck.Checked = True Then
-            'Dim Checkneeded As New CheckNeeded
+            Dim Checkneeded As New CheckNeeded
             writeDebug("Accessing Checked properties")
-            CheckNeeded.PopMain(Me)
-            CheckNeeded.PopulateCheckNeeded(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs)
-            'If CheckNeeded.tgvCheckNeeded.Rows.Count > 0 Then
-            CheckNeeded.btnHide.Visible = True
-            CheckNeeded.ShowDialog(Me)
-            'Else
-            '    MsgBox("All drawings have been checked.")
-            'End If
+            Checkneeded.PopMain(Me)
+            Checkneeded.tgvCheckNeeded.Nodes.Clear()
+            Checkneeded.PopulateCheckNeeded(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs)
+            If CheckNeeded.tgvCheckNeeded.Rows.Count > 0 Then
+                'CheckNeeded.btnHide.Visible = True
+                Checkneeded.ShowDialog(Me)
+
+
+                ' Else
+                '    MsgBox("All drawings have been checked.")
+            End If
             chkCheck.Checked = False
         End If
-        If chkRRev.Checked = True Then
-            writeDebug("Accessing remove rev details")
-            CheckNeeded.PopMain(Me)
-            CheckNeeded.btnHide.Visible = False
-            CheckNeeded.Label2.Text = "These drawings have revisions that can be removed:"
-            CheckNeeded.Refresh()
-            CheckNeeded.btnOK.Visible = False
-            CheckNeeded.btnCancel.Location = CheckNeeded.btnOK.Location
-            CheckNeeded.btnCancel.Text = "Finished"
-            CheckNeeded.PopulateCheckNeeded(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs)
-            'CheckNeeded.lstCheckNeeded
-            'CheckNeeded.ShowDialog()
-            'CheckNeeded.btnIgnore.Visible = True
-            'CheckNeeded.Label1.Text = "The following files have not been checked:"
-            'CheckNeeded.Label2.Visible = True
-            'CheckNeeded.Refresh()
-            chkRRev.Checked = False
-        End If
-        If chkPrint.Checked = True Then
+            'If chkRRev.Checked = True Then
+            '    writeDebug("Accessing remove rev details")
+            '    CheckNeeded.PopMain(Me)
+            '    CheckNeeded.btnHide.Visible = False
+            '    CheckNeeded.Label2.Text = "These drawings have revisions that can be removed:"
+            '    CheckNeeded.Refresh()
+            '    CheckNeeded.btnOK.Visible = False
+            '    CheckNeeded.btnCancel.Location = CheckNeeded.btnOK.Location
+            '    CheckNeeded.btnCancel.Text = "Finished"
+            '    CheckNeeded.PopulateCheckNeeded(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs)
+            '    'CheckNeeded.lstCheckNeeded
+            '    'CheckNeeded.ShowDialog()
+            '    'CheckNeeded.btnIgnore.Visible = True
+            '    'CheckNeeded.Label1.Text = "The following files have not been checked:"
+            '    'CheckNeeded.Label2.Visible = True
+            '    'CheckNeeded.Refresh()
+            '    chkRRev.Checked = False
+            'End If
+            If chkPrint.Checked = True Then
             writeDebug("Accessing Print dialogue")
             Print.PopMain(Me)
             Print.PopulatePrint(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs, SubFiles, AlphaSub)
@@ -3607,14 +3617,17 @@ Public Class Main
         FormBusy(False)
         If chkiProp.Checked = True Then iProperties.ShowDialog(Me)
         chkiProp.CheckState = CheckState.Unchecked
-
         'If CheckNeeded.tgvCheckNeeded.Rows.Count > 0 Then
-        'CheckNeeded.btnHide.Visible = True
-        ' If chkCheck.Checked = True Then CheckNeeded.ShowDialog(Me)
+        ''CheckNeeded.btnHide.Visible = True
+        'If chkCheck.Checked = True AndAlso CheckNeeded.tgvCheckNeeded.RowCount > 0 Then
+        '    'CheckNeeded.tgvCheckNeeded.Visible = True
+        '    CheckNeeded.ShowDialog(Me)
+        'End If
+
         'Else
         'MsgBox("All drawings have been checked.")
-        'End If
-        chkCheck.Checked = False
+        ' End If
+        'chkCheck.Checked = False
         'If chkPrint.Checked = True Then Print.ShowDialog(Me)
         'chkPrint.Checked = False
     End Sub

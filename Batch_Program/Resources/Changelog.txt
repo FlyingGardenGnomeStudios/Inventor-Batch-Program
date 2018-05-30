@@ -2,7 +2,6 @@
 	Complete Batch Program overhaul
 
 	Items not currently functioning
-	- Rev table modifications
 	- Custom iProperties
 	- Check drawings
 	- Cannot cancel task after execution

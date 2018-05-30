@@ -6,6 +6,7 @@ Imports System.Globalization
 Imports System.Drawing
 Imports AdvancedDataGridView
 Imports System.Windows.Forms.DataGridView
+Imports System.ComponentModel
 
 Public Class CheckNeeded
     Public Declare Function mouse_event Lib "user32" Alias "mouse_event" (ByVal dwFlags As Long, ByVal dx As Long, ByVal dy As Long, ByVal cButtons As Long, ByVal dwExtraInfo As Long)
@@ -240,10 +241,12 @@ Public Class CheckNeeded
                         Exit For
                     End If
                 Next
-                If Remove = False AndAlso ParentNode.HasChildren Then
+                If Remove = True AndAlso ParentNode.HasChildren Then
                     For Each ChildNode In ParentNode.Nodes
                         For Each Childcell In ChildNode.Cells
-                            If Childcell.value = "" Then
+                            If Childcell.value = "" AndAlso
+                                tgvCheckNeeded.Columns(Childcell.columnindex).headertext <> "Checked By" AndAlso
+                                tgvCheckNeeded.Columns(Childcell.columnindex).headertext <> "Check Date" Then
                                 Remove = False
                                 Exit For
                             End If
@@ -251,15 +254,15 @@ Public Class CheckNeeded
                     Next
                 End If
                 If Remove = True Then
+                    btnHide.Text = "Show Completed"
                     For Each Childnode In ParentNode.Nodes
                         Childnode.Visible = False
                     Next
                     ParentNode.Visible = False
                 End If
-
-
             Next
         Else
+            btnHide.Text = "Hide Completed"
             For Each Node As TreeGridNode In tgvCheckNeeded.Rows
                 Node.Visible = True
                 If Node.HasChildren = True Then
@@ -269,16 +272,11 @@ Public Class CheckNeeded
                 End If
             Next
         End If
-        If btnHide.Text = "Hide Completed" Then
-            btnHide.Text = "Show Completed"
-        Else
-            btnHide.Text = "Hide Completed"
-        End If
     End Sub
     Private Sub btnOK_Click(sender As System.Object, e As System.EventArgs) Handles btnOK.Click
         Dim DrawingName, Archive, DrawSource, Rev As String
         Dim Sheet As Sheet
-        Dim Col, Ans As Integer
+        Dim Col, Row, Ans As Integer
         Dim RevTable As RevisionTable
         Dim Path As Documents = _invApp.Documents
         Dim oDoc As Document = Nothing
@@ -307,10 +305,10 @@ Public Class CheckNeeded
         'Iterate through checkneeded table to get drawing name
         Dim Flag As Boolean = False
         DrawSource = Nothing
-        For Each row In tgvCheckNeeded.Rows
+        For Each node In tgvCheckNeeded.Nodes
             'For Each row In dgvCheckNeeded.Rows
             'If tgvCheckNeeded.IsCurrentRowDirty Then
-            DrawingName = tgvCheckNeeded(tgvCheckNeeded.Columns("DrawingName").Index, row.index).Value
+            DrawingName = tgvCheckNeeded(tgvCheckNeeded.Columns("DrawingName").Index, node.RowIndex).Value
             For Each X In Main.dgvSubFiles.Rows
                 If DrawingName = Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingName").Index, X.index).Value Then
                     DrawSource = Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingLocation").Index, X.index).Value
@@ -326,29 +324,29 @@ Public Class CheckNeeded
                 'MsgBox("An error occurred in opening " & DrawSource & vbNewLine & "The values for this drawing will not be updated")
                 For Each Column In tgvCheckNeeded.Columns
                     Select Case Column.name
-                        Case "CheckedBy"
-                            If tgvCheckNeeded(Column.index, row.index).value = "" Then
+                        Case "Checked By"
+                            If tgvCheckNeeded(Column.index, node.RowIndex).Value = "" Then
                                 oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10").Value = ""
                             Else
-                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10").Value = tgvCheckNeeded(Column.index, row.index).value
+                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10").Value = node.Cells(tgvCheckNeeded.Columns(Column)).Value
                             End If
-                        Case "CheckDate"
-                            If tgvCheckNeeded(Column.index, row.index).value = "" Then
+                        Case "Check Date"
+                            If tgvCheckNeeded(Column.index, node.RowIndex).Value = "" Then
                                 oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value = #1/1/1601#
                             Else
-                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value = tgvCheckNeeded(Column.index, row.index).value
+                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value = node.Cells(tgvCheckNeeded.Columns(Column)).Value
                             End If
                     End Select
                 Next
                 Sheet = oDoc.ActiveSheet
                 RevTable = Sheet.RevisionTables(1)
                 Col = RevTable.RevisionTableColumns.Count
-                row = RevTable.RevisionTableRows.Count
+                Row = RevTable.RevisionTableRows.Count
                 Rev = oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
                 'Iterate through rev table and populate from the userform
-                Dim Contents(0 To Col * row) As String
+                Dim Contents(0 To Col * Row) As String
                 Dim J As Integer = 0
-                Dim Initials(0 To row), RevCheckBy(0 To row), RevDate(0 To row) As String
+                Dim Initials(0 To Row), RevCheckBy(0 To Row), RevDate(0 To Row) As String
 
                 For RevRow = 1 To RevTable.RevisionTableRows.Count
                     Dim i As Integer = 1
@@ -438,7 +436,7 @@ Public Class CheckNeeded
                 End Try
                 Main.CloseLater(DrawingName, oDoc)
                 _invApp.SilentOperation = False
-                ProgressBar1.Value = (row / tgvCheckNeeded.RowCount) * 100
+                ProgressBar1.Value = (Row / tgvCheckNeeded.RowCount) * 100
                 ProgressBar1.PerformStep()
                 Exit For
             Catch ex As Exception
@@ -622,21 +620,36 @@ Public Class CheckNeeded
                                 If RevCheck5ColNum <> 0 Then Rev(z) = contents((k * rt.RevisionTableColumns.Count) + RevCheck5ColNum)
                         End Select
                     Next
-                    Dim add As Boolean = False
-                    For check = 0 To tgvCheckNeeded.Columns.Count - 1
-                        If Rev(check) = "" Then
-                            add = True
-                            Exit For
-                        End If
-                    Next
+                    Dim add As Boolean = True
+                    'For check = 0 To tgvCheckNeeded.Columns.Count - 1
+                    '    If Rev(check) = "" Then
+                    '        add = True
+                    '        Exit For
+                    '    End If
+                    'Next
                     Dim result As DataGridViewRow
                     result = New DataGridViewRow
                     If k = 0 And add = True Then
                         node = tgvCheckNeeded.Nodes.Add(Rev)
                     ElseIf k = 1 Then
                         node = node.Nodes.Add(Rev)
+                        For Column = 1 To tgvCheckNeeded.Columns.Count - 1
+                            If tgvCheckNeeded.Columns(Column).HeaderText = "Checked By" Or
+                                    tgvCheckNeeded.Columns(Column).HeaderText = "Check Date" Then
+                                node.Cells(Column).ReadOnly = True
+                                node.Cells(Column).Style.BackColor = Drawing.Color.LightGray
+
+                            End If
+                        Next
                     Else
                         node = node.Parent.Nodes.Add(Rev)
+                        For Column = 1 To tgvCheckNeeded.Columns.Count - 1
+                            If tgvCheckNeeded.Columns(Column).HeaderText = "Checked By" Or
+                                    tgvCheckNeeded.Columns(Column).HeaderText = "Check Date" Then
+                                node.Cells(Column).ReadOnly = True
+                                node.Cells(Column).Style.BackColor = Drawing.Color.LightGray
+                            End If
+                        Next
                     End If
 
                     k += 1
@@ -659,91 +672,33 @@ Public Class CheckNeeded
             tgvCheckNeeded.AutoResizeColumns()
         End If
     End Sub
-    'Private Sub dgvCheckNeeded_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCheckNeeded.CellEnter
-    '    Dim DateCol As Boolean = False
-    '    If e.RowIndex = -1 Or e.ColumnIndex = -1 Then Exit Sub
-    '    Select Case dgvCheckNeeded.Columns(e.ColumnIndex).Name
-    '        Case My.Settings.RTSDateCol
-    '            DateCol = True
-    '        Case "Check Date"
-    '            DateCol = True
-    '        Case My.Settings.RTS1
-    '            If My.Settings.RTS2 = "Date" Then DateCol = True
-    '        Case My.Settings.RTS2
-    '            If My.Settings.RTS2 = "Date" Then DateCol = True
-    '        Case My.Settings.RTS3
-    '            If My.Settings.RTS2 = "Date" Then DateCol = True
-    '        Case My.Settings.RTS4
-    '            If My.Settings.RTS2 = "Date" Then DateCol = True
-    '    End Select
-
-    '    If DateCol = True Then
-
-    '        'Adding DateTimePicker control into DataGridView 
-    '        dgvCheckNeeded.Controls.Add(oDateTimePicker)
-    '        ' Setting the format (i.e. 2014-10-10)
-    '        oDateTimePicker.Format = DateTimePickerFormat.Short
-    '        oDateTimePicker.ShowCheckBox = True
-    '        ' It returns the retangular area that represents the Display area for a cell
-    '        Dim oRectangle As Rectangle = dgvCheckNeeded.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, True)
-    '        'Setting area for DateTimePicker Control
-    '        oDateTimePicker.Size = New Size(oRectangle.Width, oRectangle.Height)
-    '        ' Setting Location
-    '        oDateTimePicker.Location = New Drawing.Point(oRectangle.X, oRectangle.Y)
-    '        ' An event attached to dateTimePicker Control which is fired when DateTimeControl is closed
-    '        AddHandler oDateTimePicker.CloseUp, AddressOf Me.oDateTimePicker_CloseUp
-    '        ' An event attached to dateTimePicker Control which is fired when any date is selected
-    '        AddHandler oDateTimePicker.TextChanged, AddressOf Me.dateTimePicker_OnTextChange
-    '        ' Now make it visible
-    '        oDateTimePicker.Visible = True
-    '    Else
-    '        oDateTimePicker.Visible = False
-    '    End If
-    'End Sub
-
-    'Private Sub dateTimePicker_OnTextChange(ByVal sender As Object, ByVal e As EventArgs)
-    '    ' Saving the 'Selected Date on Calendar' into DataGridView current cell
-    '    If oDateTimePicker.Checked = True Then
-    '        dgvCheckNeeded.CurrentCell.Value = oDateTimePicker.Value.ToString(System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern())
-    '    Else
-    '        dgvCheckNeeded.CurrentCell.Value = ""
-    '    End If
-    'End Sub
-
-    'Private Sub oDateTimePicker_CloseUp(ByVal sender As Object, ByVal e As EventArgs)
-    '    ' Hiding the control after use 
-    '    oDateTimePicker.Visible = False
-    'End Sub
-
     Private Sub tgvCheckNeeded_MouseUp(sender As Object, e As MouseEventArgs) Handles tgvCheckNeeded.MouseUp
+        Me.TopMost = True
+        If e.Button <> MouseButtons.Right Then Return
         Dim hit As DataGridView.HitTestInfo = tgvCheckNeeded.HitTest(e.X, e.Y)
         If e.X < 1 Or e.Y < 1 Then Exit Sub
         If (hit.RowIndex) < 0 Or (hit.ColumnIndex) < 0 Then Exit Sub
         SelectedCell = tgvCheckNeeded.Rows(hit.RowIndex).Cells(hit.ColumnIndex)
-        For Each Node As TreeGridNode In tgvCheckNeeded.Rows
-            If Node.Cells(0).Value = tgvCheckNeeded(0, SelectedCell.RowIndex).Value Then
-                If Node.HasChildren = True Then
-                    cmsApplyValues.Items.Item(1).Enabled = True
-                Else
-                    cmsApplyValues.Items.Item(1).Enabled = False
-                End If
-                Exit For
-            End If
-        Next
         Dim VisNodes As Integer = 0
         For Each Node As TreeGridNode In tgvCheckNeeded.Rows
             If Node.Visible = True Then
                 VisNodes += 1
             End If
         Next
-        If e.Button = MouseButtons.Right And VisNodes = 1 Then
-            cmsApplyValues.Items.Item(0).Enabled = False
-            cmsApplyValues.Show(Cursor.Position)
+        If VisNodes = 1 Then
+            cmsApplyValues.Items.Item(0).Visible = False
+            cmsApplyValues.Items.Item(1).Visible = False
         Else
-            'cmsApplyValues.Items.Item(0).Enabled = True
+            cmsApplyValues.Items.Item(0).Visible = True
+            cmsApplyValues.Items.Item(1).Visible = True
         End If
-
-        'cmsApplyValues.Show(Cursor.Position)
+        If SelectedCell.RowIndex > 0 AndAlso tgvCheckNeeded.Rows(hit.RowIndex - 1).Cells(0).Value = tgvCheckNeeded.Rows(hit.RowIndex).Cells(0).Value Then
+            cmsApplyValues.Items.Item(3).Visible = True
+        Else
+            cmsApplyValues.Items.Item(3).Visible = False
+        End If
+        cmsApplyValues.Show(Cursor.Position)
+        Me.TopMost = False
     End Sub
 
     Private Sub ApplyRowValuesToAllRowsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ApplyRowValuesToAllRowsToolStripMenuItem.Click
@@ -776,61 +731,6 @@ Public Class CheckNeeded
             Node.Cells(SelectedCell.ColumnIndex).Value = Value
         Next
     End Sub
-
-    'Private Sub EditPartRevisionTableToolStripMenuItem_Click(sender As Object, e As EventArgs)
-    '    Dim List As String = ""
-    '    Dim oDoc As Document
-    '    Dim Path As Documents = _invApp.Documents
-    '    Dim DrawingName As String
-    '    Dim RevNo As String = ""
-    '    Dim DrawSource As String = ""
-    '    RevTable.PopCheckNeeded(Me)
-    '    RevTable.dgvRevTable.Rows.Clear()
-    '    DrawingName = tgvCheckNeeded(0, SelectedCell.RowIndex).Value
-    '    'Look for selected item
-    '    For X = 0 To Main.dgvSubFiles.RowCount - 1
-    '        If Main.dgvSubFiles(Main.dgvSubFiles.Columns("chkSubFiles").Index, X).Value = True And
-    '            DrawingName = Trim(Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingName").Index, X).Value) Then
-    '            Main.MatchDrawing(DrawSource, DrawingName, X)
-    '            oDoc = _invApp.Documents.Open(DrawSource, True)
-    '            If btnHide.Visible = False Then
-    '                RevTable.btnIgnore.Visible = False
-    '            Else
-    '                RevTable.btnIgnore.Visible = True
-    '            End If
-    '            RevTable.Refresh()
-    '            'Dim RevTable As New RevTable
-    '            Call RevTable.PopCheckNeeded(Me)
-    '            Call RevTable.PopulateRevTable(oDoc, RevNo, False)
-    '            _invApp.SilentOperation = True
-    '            Try
-    '                'oDoc.Save()
-    '            Catch
-    '            End Try
-    '            Main.CloseLater(DrawingName, oDoc)
-    '            _invApp.SilentOperation = False
-    '            Exit For
-    '        End If
-    '    Next
-    '    'For J As Integer = 1 To _invApp.Documents.Count
-    '    'oDoc = Path.Item(J)
-    '    'Archive = oDoc.FullDocumentName
-    '    'Use the Partsource file to create the drawingsource file
-    '    'If Archive IsNot Nothing Then
-    '    ' DrawSource = Strings.Left(Archive, Strings.Len(Archive))
-    '    'DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "idw"
-    '    'If DrawingName = Strings.Right(DrawSource, Len(DrawSource) - InStrRev(DrawSource, "\")) Then
-    '    'If My.Computer.FileSystem.FileExists(DrawSource) = True Then
-    '    '
-    '    'Exit For
-    '    'End If
-    '    'End If
-    '    'End If
-    '    'Next
-    '    'RevTable.btnIgnore.Visible = True
-    '    RevTable.ShowDialog()
-    'End Sub
-
     Private Sub tgvCheckNeeded_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles tgvCheckNeeded.CellEndEdit
         If tgvCheckNeeded.Columns(e.ColumnIndex).Tag = "Number" And ChangeFlag = False Then
 
@@ -860,12 +760,105 @@ Public Class CheckNeeded
             MessageBox.Show("This property cannot be modified")
             Exit Sub
         End If
-        ' Dim Value As String = SelectedCell.Value
         SelectedCell.Value = Nothing
         tgvCheckNeeded.ClearSelection()
     End Sub
 
     Private Sub CheckNeeded_Closed(sender As Object, e As EventArgs) Handles Me.Closed
-        tgvCheckNeeded.Nodes.Clear()
+
     End Sub
+
+    Private Sub RemoveRevisionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RemoveRevisionToolStripMenuItem.Click
+        Dim Rev As String = Nothing
+        For Each node As TreeGridNode In tgvCheckNeeded.Nodes
+            If tgvCheckNeeded(0, SelectedCell.RowIndex).Value = tgvCheckNeeded(0, node.RowIndex).Value Then
+                Rev = tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTSRevCol).Index, node.RowIndex).Value
+                For Each childnode As TreeGridNode In node.Nodes
+                    If childnode.RowIndex = SelectedCell.RowIndex Then
+                        node.Nodes.Remove(childnode)
+                        Exit For
+                    End If
+                Next
+
+                For Column = 1 To tgvCheckNeeded.Columns.Count - 1
+                    If tgvCheckNeeded.Columns(Column).HeaderText = My.Settings.RTSRevCol Then
+                        For Each childnode As TreeGridNode In node.Nodes
+                            If IsNumeric(Rev) Then
+                                Rev += 1
+                            Else
+                                Rev = GetAlphaString(Asc(Rev) - 63)
+                            End If
+                            childnode.Cells(Column).Value = Rev
+                        Next
+                    End If
+
+                Next
+                Exit For
+            End If
+        Next
+    End Sub
+
+    Private Sub AddRevisionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddRevisionToolStripMenuItem.Click
+        For Each node As TreeGridNode In tgvCheckNeeded.Nodes
+            Dim NewRev As String
+            Dim TotRevs As Integer
+            Dim Rev(tgvCheckNeeded.Columns.Count - 1) As String
+            If tgvCheckNeeded(0, SelectedCell.RowIndex).Value = tgvCheckNeeded(0, node.RowIndex).Value Then
+                Rev(0) = tgvCheckNeeded(0, SelectedCell.RowIndex).Value
+                For Column = 1 To tgvCheckNeeded.Columns.Count - 1
+                    Select Case tgvCheckNeeded.Columns(Column).HeaderText
+                        Case My.Settings.RTSRevCol
+                            If My.Settings.RTSRev = True Then
+                                For Each objNode In node.Nodes
+                                    TotRevs += 1
+                                Next
+                                If IsNumeric(tgvCheckNeeded(Column, SelectedCell.RowIndex).Value) Then
+                                    If TotRevs = 0 Then
+                                        NewRev = tgvCheckNeeded(Column, SelectedCell.RowIndex).Value + 1
+                                    Else
+                                        NewRev = node.Nodes(TotRevs - 1).Cells(Column).Value + 1
+                                    End If
+                                Else
+                                    NewRev = GetAlphaString(TotRevs + 2)
+                                End If
+                                Rev(Column) = NewRev
+                            End If
+                        Case My.Settings.RTSNameCol
+                            Rev(Column) = _invApp.GeneralOptions.UserName
+                        Case My.Settings.RTSDateCol
+                            Rev(Column) = Today.ToShortDateString
+                    End Select
+
+                Next
+                node.Nodes.Add(Rev)
+
+                Exit Sub
+            End If
+        Next
+    End Sub
+    Public Function GetAlphaString(AlphaNum As Integer)
+        Dim alphaCD1 As String
+        Dim alphaCD2 As String
+        Dim DV() As String
+        Dim TV() As String
+        alphaCD1 = Math.Round(Val((AlphaNum - 1) / 26), 3)
+        alphaCD2 = Math.Round(Val((AlphaNum - 1) / 676), 3)
+        DV = Split(alphaCD1, ".")
+        TV = Split(alphaCD2, ".")
+
+        Select Case AlphaNum
+            Case 1 To 27 'A to Z
+                GetAlphaString = Chr(64 + AlphaNum)
+            Case 27 To 702 'AA to ZZ
+                GetAlphaString = Chr(64 + DV(0)) & Chr(64 + (AlphaNum - (26 * DV(0))))
+            Case 702 To 18278 'AAA to ZZZ
+                If TV(0) < 27 Then 'If does not exceeds the limit of 26 (total no. of english alphabets).
+                    GetAlphaString = Chr(64 + TV(0)) & Chr(64 + (DV(0) - (26 * TV(0)))) & Chr(64 + (AlphaNum - (26 * DV(0))))
+                Else 'If exceeds the limit of 26 (total no. of english alphabets).
+                    GetAlphaString = "Z" & "Z" & Chr(64 + (AlphaNum - (26 * DV(0))))
+                End If
+            Case Else
+                Exit Function
+        End Select
+    End Function
 End Class

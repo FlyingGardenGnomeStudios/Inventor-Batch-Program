@@ -538,7 +538,7 @@ Public Class iProperties
                     InvRef.Clear()
                     If Modelsource <> "" AndAlso DrawSource <> "" Then
                         Call SetBothProps(oDoc, dDoc)
-                        Call ModifyRevTable(dDoc, True)
+                        'Call ModifyRevTable(dDoc, True)
                     Else
                         Call SetModelProps(oDoc)
                     End If
@@ -547,7 +547,7 @@ Public Class iProperties
                     Call WriteProps(oDoc, "Model")
                     oDoc.Update()
                     Call WriteProps(dDoc, "Drawing")
-                    Call ModifyRevTable(dDoc, False)
+                    ' Call ModifyRevTable(dDoc, False)
                     dDoc.Update()
                 End If
                 Main.CloseLater(DrawingName, oDoc)
