@@ -51,8 +51,9 @@ Public Class CheckNeeded
             tgvCheckNeeded.Columns.Add(RTSRev)
         End If
         If My.Settings.RTSDate = True Then
-            Dim RTSRevDate As New GridDateControl With
-              {.Name = My.Settings.RTSDateCol,
+            'Dim RTSRevDate As New GridDateControl With
+            Dim RTSRevDate As New DataGridViewTextBoxColumn With
+               {.Name = My.Settings.RTSDateCol,
               .HeaderText = My.Settings.RTSDateCol,
               .SortMode = DataGridViewColumnSortMode.Automatic,
               .ReadOnly = False}
@@ -101,7 +102,8 @@ Public Class CheckNeeded
                         .ReadOnly = False}
                     tgvCheckNeeded.Columns.Add(RTS1Value)
                 Case "Date"
-                    Dim RTS1Value As New GridDateControl With
+                    'Dim RTS1Value As New GridDateControl With
+                    Dim RTS1Value As New DataGridViewTextBoxColumn With
                         {.Name = My.Settings.RTS1Item,
                         .HeaderText = My.Settings.RTS1Col,
                         .SortMode = DataGridViewColumnSortMode.Automatic,
@@ -283,6 +285,7 @@ Public Class CheckNeeded
         Dim Opendocs As New ArrayList
         Main.CreateOpenDocs(Opendocs)
         ProgressBar1.Visible = True
+        Dim RevNode As TreeGridNode
         For Each node As TreeGridNode In tgvCheckNeeded.Rows
             node.Expand()
         Next
@@ -306,6 +309,12 @@ Public Class CheckNeeded
         Dim Flag As Boolean = False
         DrawSource = Nothing
         For Each node In tgvCheckNeeded.Nodes
+            Dim TotRevs As Integer = 1
+            If node.HasChildren Then
+                For Each ChildNode In node.Nodes
+                    TotRevs += 1
+                Next
+            End If
             'For Each row In dgvCheckNeeded.Rows
             'If tgvCheckNeeded.IsCurrentRowDirty Then
             DrawingName = tgvCheckNeeded(tgvCheckNeeded.Columns("DrawingName").Index, node.RowIndex).Value
@@ -324,22 +333,33 @@ Public Class CheckNeeded
                 'MsgBox("An error occurred in opening " & DrawSource & vbNewLine & "The values for this drawing will not be updated")
                 For Each Column In tgvCheckNeeded.Columns
                     Select Case Column.name
-                        Case "Checked By"
+                        Case "CheckedBy"
                             If tgvCheckNeeded(Column.index, node.RowIndex).Value = "" Then
                                 oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10").Value = ""
                             Else
-                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10").Value = node.Cells(tgvCheckNeeded.Columns(Column)).Value
+                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10").Value = tgvCheckNeeded(Column.index, node.RowIndex).Value
                             End If
-                        Case "Check Date"
+                        Case "CheckDate"
                             If tgvCheckNeeded(Column.index, node.RowIndex).Value = "" Then
                                 oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value = #1/1/1601#
                             Else
-                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value = node.Cells(tgvCheckNeeded.Columns(Column)).Value
+                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value = tgvCheckNeeded(Column.index, node.RowIndex).Value
                             End If
                     End Select
                 Next
                 Sheet = oDoc.ActiveSheet
                 RevTable = Sheet.RevisionTables(1)
+                If RevTable.RevisionTableRows.Count < TotRevs Then
+                    Do Until RevTable.RevisionTableRows.Count = TotRevs
+                        RevTable.RevisionTableRows.Add()
+                    Loop
+                ElseIf RevTable.RevisionTableRows.Count > TotRevs Then
+                    RevTable.RevisionTableRows.Add()
+                    Do Until RevTable.RevisionTableRows.Count = TotRevs
+                        RevTable.RevisionTableRows(RevTable.RevisionTableRows.Count - 1).Delete()
+                    Loop
+                End If
+
                 Col = RevTable.RevisionTableColumns.Count
                 Row = RevTable.RevisionTableRows.Count
                 Rev = oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
@@ -350,75 +370,17 @@ Public Class CheckNeeded
 
                 For RevRow = 1 To RevTable.RevisionTableRows.Count
                     Dim i As Integer = 1
+                    If RevRow > 1 Then
+                        RevNode = node.Nodes.Item(RevRow - 2)
+                    Else
+                        RevNode = node
+                    End If
                     For Each rtc In RevTable.RevisionTableColumns
                         Dim h As New DataGridViewTextBoxColumn
                         Dim rtcell As RevisionTableCell = Nothing
                         h.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(LCase(rtc.Title))
-                        Select Case UCase(h.Name)
-                            Case UCase(My.Settings.RTSDateCol)
-                                If My.Settings.RTSDate = True Then
-                                    If tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTSDateCol).Index, RevRow).Value Is Nothing Then
-                                        RevTable.RevisionTableRows(RevRow).Item(i).Text = ""
-                                    End If
-                                    RevTable.RevisionTableRows(RevRow).Item(i).Text = tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTSDateCol).Index, RevRow - 1).Value
-                                End If
-                            Case UCase(My.Settings.RTSDescCol)
-                                If My.Settings.RTSDesc = True Then
-                                    If tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTSDescCol).Index, RevRow).Value Is Nothing Then
-                                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
-                                    End If
-                                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTSDescCol).Index, RevRow - 1).Value
-                                End If
-                            Case UCase(My.Settings.RTSNameCol)
-                                If My.Settings.RTSName = True Then
-                                    If tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTSNameCol).Index, RevRow).Value Is Nothing Then
-                                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
-                                    End If
-                                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTSNameCol).Index, RevRow - 1).Value
-                                End If
-                            Case UCase(My.Settings.RTSApprovedCol)
-                                If My.Settings.RTSApproved = True Then
-                                    If tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTSApprovedCol).Index, RevRow).Value Is Nothing Then
-                                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
-                                    End If
-                                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTSApprovedCol).Index, RevRow - 1).Value
-                                End If
-                            Case UCase(My.Settings.RTS1Col)
-                                If My.Settings.RTS1 = True Then
-                                    If tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTS1Col).Index, RevRow).Value Is Nothing Then
-                                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
-                                    End If
-                                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTS1Col).Index, RevRow - 1).Value
-                                End If
-                            Case UCase(My.Settings.RTS2Col)
-                                If My.Settings.RTS2 = True Then
-                                    If tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTS2Col).Index, RevRow).Value Is Nothing Then
-                                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
-                                    End If
-                                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTS2Col).Index, RevRow - 1).Value
-                                End If
-                            Case UCase(My.Settings.RTS3Col)
-                                If My.Settings.RTS3 = True Then
-                                    If tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTS3Col).Index, RevRow).Value Is Nothing Then
-                                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
-                                    End If
-                                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTS3Col).Index, RevRow - 1).Value
-                                End If
-                            Case UCase(My.Settings.RTS4Col)
-                                If My.Settings.RTS4 = True Then
-                                    If tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTS4Col).Index, RevRow).Value Is Nothing Then
-                                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
-                                    End If
-                                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTS4Col).Index, RevRow - 1).Value
-                                End If
-                            Case UCase(My.Settings.RTS5Col)
-                                If My.Settings.RTS5 = True Then
-                                    If tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTS5Col).Index, RevRow).Value Is Nothing Then
-                                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
-                                    End If
-                                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTS5Col).Index, RevRow - 1).Value
-                                End If
-                        End Select
+
+                        WriteRevCase(RevNode, h.Name, RevRow, i, RevTable, oDoc)
                         i = i + 1
                     Next
                 Next
@@ -442,11 +404,90 @@ Public Class CheckNeeded
             Catch ex As Exception
             End Try
             'End If
+            If node.HasChildren Then
+                For Each Childnode In node.Nodes
+
+                Next
+            End If
         Next
         'Main.chkCheck.CheckState = CheckState.Indeterminate
         ProgressBar1.Visible = False
         Me.Close()
         'If Main.chkCheck.CheckState = CheckState.Indeterminate Then Main.ExportCheck(Path, odoc:=Nothing, Archive:="", Main.dgvSubFiles, DrawingName:="", DrawSource:="", ExportType:="dxf")
+    End Sub
+    Private Sub WriteRevCase(node As TreeGridNode, Title As String, RevRow As Integer, i As Integer, RevTable As RevisionTable, oDoc As Document)
+        Select Case UCase(Title)
+            Case UCase(My.Settings.RTSRevCol)
+                If My.Settings.RTSDate = True Then
+                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTSRevCol).Index).Value Is Nothing Then
+                        RevTable.RevisionTableRows(RevRow).Item(i).Text = ""
+                    End If
+                    RevTable.RevisionTableRows(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTSRevCol).Index).Value
+                End If
+            Case UCase(My.Settings.RTSDateCol)
+                If My.Settings.RTSDate = True Then
+                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTSDateCol).Index).Value Is Nothing Then
+                        RevTable.RevisionTableRows(RevRow).Item(i).Text = ""
+                    End If
+                    RevTable.RevisionTableRows(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTSDateCol).Index).Value
+                End If
+            Case UCase(My.Settings.RTSDescCol)
+                If My.Settings.RTSDesc = True Then
+                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTSDescCol).Index).Value Is Nothing Then
+                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
+                    End If
+                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTSDescCol).Index).Value
+                End If
+            Case UCase(My.Settings.RTSNameCol)
+                If My.Settings.RTSName = True Then
+                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTSNameCol).Index).Value Is Nothing Then
+                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
+                    End If
+                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTSNameCol).Index).Value
+                End If
+            Case UCase(My.Settings.RTSApprovedCol)
+                If My.Settings.RTSApproved = True Then
+                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTSApprovedCol).Index).Value Is Nothing Then
+                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
+                    End If
+                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTSApprovedCol).Index).Value
+                End If
+            Case UCase(My.Settings.RTS1Col)
+                If My.Settings.RTS1 = True Then
+                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS1Col).Index).Value Is Nothing Then
+                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
+                    End If
+                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS1Col).Index).Value
+                End If
+            Case UCase(My.Settings.RTS2Col)
+                If My.Settings.RTS2 = True Then
+                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS2Col).Index).Value Is Nothing Then
+                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
+                    End If
+                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS2Col).Index).Value
+                End If
+            Case UCase(My.Settings.RTS3Col)
+                If My.Settings.RTS3 = True Then
+                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS4Col).Index).Value Is Nothing Then
+                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
+                    End If
+                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS3Col).Index).Value
+                End If
+            Case UCase(My.Settings.RTS4Col)
+                If My.Settings.RTS4 = True Then
+                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS4Col).Index).Value Is Nothing Then
+                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
+                    End If
+                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS4Col).Index).Value
+                End If
+            Case UCase(My.Settings.RTS5Col)
+                If My.Settings.RTS5 = True Then
+                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS5Col).Index).Value Is Nothing Then
+                        RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
+                    End If
+                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS5Col).Index).Value
+                End If
+        End Select
     End Sub
     Public Sub PopulateCheckNeeded(Path As Documents, ByRef odoc As Document, ByRef Archive As String _
                                  , ByRef DrawingName As String, ByRef DrawSource As String, OpenDocs As ArrayList)
@@ -674,8 +715,11 @@ Public Class CheckNeeded
     End Sub
     Private Sub tgvCheckNeeded_MouseUp(sender As Object, e As MouseEventArgs) Handles tgvCheckNeeded.MouseUp
         Me.TopMost = True
-        If e.Button <> MouseButtons.Right Then Return
         Dim hit As DataGridView.HitTestInfo = tgvCheckNeeded.HitTest(e.X, e.Y)
+        If e.Button <> MouseButtons.Right Then
+            Return
+        End If
+
         If e.X < 1 Or e.Y < 1 Then Exit Sub
         If (hit.RowIndex) < 0 Or (hit.ColumnIndex) < 0 Then Exit Sub
         SelectedCell = tgvCheckNeeded.Rows(hit.RowIndex).Cells(hit.ColumnIndex)
@@ -700,7 +744,47 @@ Public Class CheckNeeded
         cmsApplyValues.Show(Cursor.Position)
         Me.TopMost = False
     End Sub
+    Private Sub DateTimePicker(ByVal e As DataGridViewCellEventArgs, ByRef DateRow As Boolean, dgvcontrol As DataGridView)
+        If DateRow = True Then
+            'Adding DateTimePicker control into DataGridView 
+            dgvcontrol.Controls.Add(oDateTimePicker)
+            ' Setting the format (i.e. 2014-10-10)
+            oDateTimePicker.Format = DateTimePickerFormat.Short
+            oDateTimePicker.ShowCheckBox = True
+            If dgvcontrol.CurrentCell.Value = "" Or dgvcontrol Is Nothing Then
+                oDateTimePicker.Checked = False
+            Else
+                oDateTimePicker.Checked = True
+            End If
+            ' It returns the retangular area that represents the Display area for a cell
+            Dim oRectangle As Rectangle = dgvcontrol.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, True)
+            'Setting area for DateTimePicker Control
+            oDateTimePicker.Size = New Size(oRectangle.Width, oRectangle.Height)
+            ' Setting Location
+            oDateTimePicker.Location = New Drawing.Point(oRectangle.X, oRectangle.Y)
+            ' An event attached to dateTimePicker Control which is fired when DateTimeControl is closed
+            AddHandler oDateTimePicker.CloseUp, AddressOf iPropDateTimePicker_CloseUp
+            ' An event attached to dateTimePicker Control which is fired when any date is selected
+            AddHandler oDateTimePicker.TextChanged, AddressOf iPropdateTimePicker_OnTextChange
+            ' Now make it visible
+            oDateTimePicker.Visible = True
+        Else
+            oDateTimePicker.Visible = False
+        End If
+    End Sub
+    Private Sub iPropdateTimePicker_OnTextChange(ByVal sender As Object, ByVal e As EventArgs)
+        ' Saving the 'Selected Date on Calendar' into DataGridView current cell
+        If oDateTimePicker.Checked = True Then
+            tgvCheckNeeded.CurrentCell.Value = oDateTimePicker.Value.ToString(System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern())
+        Else
+            tgvCheckNeeded.CurrentCell.Value = ""
+        End If
+    End Sub
 
+    Private Sub iPropDateTimePicker_CloseUp(ByVal sender As Object, ByVal e As EventArgs)
+        ' Hiding the control after use 
+        oDateTimePicker.Visible = False
+    End Sub
     Private Sub ApplyRowValuesToAllRowsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ApplyRowValuesToAllRowsToolStripMenuItem.Click
         tgvCheckNeeded.CurrentCell = Nothing
         tgvCheckNeeded.ClearSelection()
@@ -717,7 +801,6 @@ Public Class CheckNeeded
         Next
 
     End Sub
-
     Private Sub ApplyCellValueToEntireColumnToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ApplyCellValueToEntireColumnToolStripMenuItem.Click
         If tgvCheckNeeded.Columns(SelectedCell.ColumnIndex).ReadOnly = True Then
             MessageBox.Show("This property cannot be modified")
@@ -745,7 +828,6 @@ Public Class CheckNeeded
         End If
 
     End Sub
-
     Private Sub CheckNeeded_Resize(sender As Object, e As EventArgs) Handles Me.Resize
         tgvCheckNeeded.Width = Me.Width - 44
         tgvCheckNeeded.Height = Me.Height - 104
@@ -754,7 +836,6 @@ Public Class CheckNeeded
         btnHide.Location = New Drawing.Point(btnHide.Location.X, Me.Height - 73)
 
     End Sub
-
     Private Sub ClearCellToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ClearCellToolStripMenuItem.Click
         If tgvCheckNeeded.Columns(SelectedCell.ColumnIndex).ReadOnly = True Then
             MessageBox.Show("This property cannot be modified")
@@ -763,11 +844,6 @@ Public Class CheckNeeded
         SelectedCell.Value = Nothing
         tgvCheckNeeded.ClearSelection()
     End Sub
-
-    Private Sub CheckNeeded_Closed(sender As Object, e As EventArgs) Handles Me.Closed
-
-    End Sub
-
     Private Sub RemoveRevisionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RemoveRevisionToolStripMenuItem.Click
         Dim Rev As String = Nothing
         For Each node As TreeGridNode In tgvCheckNeeded.Nodes
@@ -797,7 +873,6 @@ Public Class CheckNeeded
             End If
         Next
     End Sub
-
     Private Sub AddRevisionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddRevisionToolStripMenuItem.Click
         For Each node As TreeGridNode In tgvCheckNeeded.Nodes
             Dim NewRev As String
@@ -861,4 +936,16 @@ Public Class CheckNeeded
                 Exit Function
         End Select
     End Function
+
+    Private Sub tgvCheckNeeded_CellEnter(sender As Object, e As DataGridViewCellEventArgs) Handles tgvCheckNeeded.CellEnter
+        Dim DateRow As Boolean = False
+        If e.RowIndex = -1 Or e.ColumnIndex <= 0 Then Exit Sub
+        If (LCase(CStr(tgvCheckNeeded.Columns(e.ColumnIndex).HeaderText))).Contains("date") Then
+            ' If InStr(tgvCheckNeeded(tgvCheckNeeded.Columns("StatusItem").Index, (e.RowIndex)).Value, "Date") <> 0 Then
+            DateRow = True
+            DateTimePicker(e, DateRow, tgvCheckNeeded)
+        Else
+            oDateTimePicker.Visible = False
+        End If
+    End Sub
 End Class

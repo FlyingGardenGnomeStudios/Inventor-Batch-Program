@@ -121,6 +121,7 @@ Class CalendarEditingControl
         Me.Font = dataGridViewCellStyle.Font
         Me.CalendarForeColor = dataGridViewCellStyle.ForeColor
         Me.CalendarMonthBackground = dataGridViewCellStyle.BackColor
+        Me.ShowCheckBox = True
 
     End Sub
 
