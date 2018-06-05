@@ -1,9 +1,13 @@
 ﻿Version 2.0.0 (4/25/18)
 	Complete Batch Program overhaul
 
+Version 2.0.0.1 (6/05/18)
+	- Removed revision control from iProperties
+	- Enabled full revision control in Drawing Actions
+	- Fixed iProperty read/write
+
 	Items not currently functioning
 	- Custom iProperties
-	- Check drawings
 	- Cannot cancel task after execution
 	- No tutorials yet
-	- iProperty material settings
+	- Renaming function works, but sometimes doesn't play nice

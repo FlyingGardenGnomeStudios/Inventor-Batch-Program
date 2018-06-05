@@ -3419,7 +3419,7 @@ Public Class Main
     Private Sub AboutBatchProgramToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutBatchProgramToolStripMenuItem.Click
         About.ShowDialog()
     End Sub
-    Private Sub IPropertySettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles IPropertySettingsToolStripMenuItem.Click
+    Private Sub IPropertySettingsToolStripMenuItem_Click(sender As Object, e As EventArgs)
         iPropertySettings.ShowDialog()
     End Sub
     Private Sub HowToToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles HowToToolStripMenuItem1.Click

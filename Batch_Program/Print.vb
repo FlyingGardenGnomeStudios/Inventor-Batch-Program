@@ -125,9 +125,10 @@ Public Class Print
                     'Main.ProgressBar(PEnd + 1 * Y, Z, "Printing: ", DrawingName)
                     Main.bgwRun.ReportProgress((Z / (PEnd + 1 * Y)) * 100, "Printing: " & DrawingName)
                     Z += 1
+
                     PrintSheets(DrawingName, ScaleSelect, Range, dDoc, Colour)
                     Main.CloseLater(DrawingName, dDoc)
-                End If
+                    End If
             Next
         Next
         Print_Size.rdoAsk.Checked = True
@@ -195,7 +196,7 @@ Public Class Print
                 End If
             End If
             If Print_Size.lblDWGSize.Text = "Cancel" Then Exit Sub
-            oPM.SubmitPrint()
+            If oDoc.Sheets.Item(X).ExcludeFromPrinting = False Then oPM.SubmitPrint()
 
             If Range <> 3 Then Exit For
         Next

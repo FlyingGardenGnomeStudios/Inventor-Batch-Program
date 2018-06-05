@@ -610,6 +610,7 @@ Public Class iProperties
             SumDic.Add("Material:", New Items With {.ModelValue = invModelDoc.ComponentDefinition.Material.Name,
                    .DrawingValue = Nothing})
         Catch
+            SumDic.Add("Material:", New Items With {.ModelValue = Nothing, .DrawingValue = Nothing})
         End Try
         ProjDic.Clear()
         ProjDic.Add("Location:", New Items With {.ModelValue = invModelDoc.FullFileName,
@@ -1049,7 +1050,7 @@ Public Class iProperties
         For Row = 0 To dgvSummary.RowCount - 1
             dgvSummary(dgvSummary.Columns("SummaryIsDirty").Index, Row).Value = "False"
             If dgvSummary("SumItem", Row).Value = "Material:" Then
-                If cmbMaterial.Value <> "*Varies*" AndAlso cmbMaterial.Value = "" AndAlso cmbMaterial.Value Is Nothing Then
+                If cmbMaterial.Value <> "*Varies*" AndAlso cmbMaterial.Value = "" AndAlso SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue IsNot Nothing Then
                     If cmbMaterial.Items.Contains(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue) Then
                         cmbMaterial.Value = SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue
                     ElseIf Not cmbMaterial.Items.Contains(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue) Then

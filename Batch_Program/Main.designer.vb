@@ -55,7 +55,6 @@ Partial Class Main
         Me.gbxDrawings = New System.Windows.Forms.GroupBox()
         Me.chkUseDrawings = New System.Windows.Forms.CheckBox()
         Me.chkSkipAssy = New System.Windows.Forms.CheckBox()
-        Me.chkRRev = New System.Windows.Forms.CheckBox()
         Me.ChkRevType = New System.Windows.Forms.CheckBox()
         Me.chkDWG = New System.Windows.Forms.CheckBox()
         Me.chkPDF = New System.Windows.Forms.CheckBox()
@@ -92,7 +91,6 @@ Partial Class Main
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DefaultSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.IPropertySettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RevTableSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutBatchProgramToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -197,7 +195,7 @@ Partial Class Main
         'chkDwgClose
         '
         Me.chkDwgClose.AutoSize = True
-        Me.chkDwgClose.Location = New System.Drawing.Point(6, 106)
+        Me.chkDwgClose.Location = New System.Drawing.Point(6, 91)
         Me.chkDwgClose.Name = "chkDwgClose"
         Me.chkDwgClose.Size = New System.Drawing.Size(128, 17)
         Me.chkDwgClose.TabIndex = 43
@@ -208,7 +206,7 @@ Partial Class Main
         'chkDwgExport
         '
         Me.chkDwgExport.AutoSize = True
-        Me.chkDwgExport.Location = New System.Drawing.Point(6, 90)
+        Me.chkDwgExport.Location = New System.Drawing.Point(6, 75)
         Me.chkDwgExport.Name = "chkDwgExport"
         Me.chkDwgExport.Size = New System.Drawing.Size(98, 17)
         Me.chkDwgExport.TabIndex = 42
@@ -219,7 +217,7 @@ Partial Class Main
         'chkDXF
         '
         Me.chkDXF.AutoSize = True
-        Me.chkDXF.Location = New System.Drawing.Point(109, 106)
+        Me.chkDXF.Location = New System.Drawing.Point(109, 92)
         Me.chkDXF.Name = "chkDXF"
         Me.chkDXF.Size = New System.Drawing.Size(47, 17)
         Me.chkDXF.TabIndex = 41
@@ -417,7 +415,6 @@ Partial Class Main
         Me.gbxDrawings.Controls.Add(Me.chkSkipAssy)
         Me.gbxDrawings.Controls.Add(Me.chkDwgExport)
         Me.gbxDrawings.Controls.Add(Me.chkDXF)
-        Me.gbxDrawings.Controls.Add(Me.chkRRev)
         Me.gbxDrawings.Controls.Add(Me.ChkRevType)
         Me.gbxDrawings.Controls.Add(Me.chkDWG)
         Me.gbxDrawings.Controls.Add(Me.chkPDF)
@@ -435,7 +432,7 @@ Partial Class Main
         'chkUseDrawings
         '
         Me.chkUseDrawings.AutoSize = True
-        Me.chkUseDrawings.Location = New System.Drawing.Point(21, 136)
+        Me.chkUseDrawings.Location = New System.Drawing.Point(21, 121)
         Me.chkUseDrawings.Name = "chkUseDrawings"
         Me.chkUseDrawings.Size = New System.Drawing.Size(92, 17)
         Me.chkUseDrawings.TabIndex = 62
@@ -447,7 +444,7 @@ Partial Class Main
         'chkSkipAssy
         '
         Me.chkSkipAssy.AutoSize = True
-        Me.chkSkipAssy.Location = New System.Drawing.Point(21, 121)
+        Me.chkSkipAssy.Location = New System.Drawing.Point(21, 106)
         Me.chkSkipAssy.Name = "chkSkipAssy"
         Me.chkSkipAssy.Size = New System.Drawing.Size(102, 17)
         Me.chkSkipAssy.TabIndex = 36
@@ -455,17 +452,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.chkSkipAssy, "Do not make a DXF of the assemby")
         Me.chkSkipAssy.UseVisualStyleBackColor = True
         Me.chkSkipAssy.Visible = False
-        '
-        'chkRRev
-        '
-        Me.chkRRev.AutoSize = True
-        Me.chkRRev.Enabled = False
-        Me.chkRRev.Location = New System.Drawing.Point(6, 75)
-        Me.chkRRev.Name = "chkRRev"
-        Me.chkRRev.Size = New System.Drawing.Size(110, 17)
-        Me.chkRRev.TabIndex = 60
-        Me.chkRRev.Text = "Remove Revision"
-        Me.chkRRev.UseVisualStyleBackColor = True
         '
         'ChkRevType
         '
@@ -480,7 +466,7 @@ Partial Class Main
         'chkDWG
         '
         Me.chkDWG.AutoSize = True
-        Me.chkDWG.Location = New System.Drawing.Point(58, 106)
+        Me.chkDWG.Location = New System.Drawing.Point(58, 92)
         Me.chkDWG.Name = "chkDWG"
         Me.chkDWG.Size = New System.Drawing.Size(53, 17)
         Me.chkDWG.TabIndex = 58
@@ -491,7 +477,7 @@ Partial Class Main
         'chkPDF
         '
         Me.chkPDF.AutoSize = True
-        Me.chkPDF.Location = New System.Drawing.Point(13, 106)
+        Me.chkPDF.Location = New System.Drawing.Point(13, 91)
         Me.chkPDF.Name = "chkPDF"
         Me.chkPDF.Size = New System.Drawing.Size(47, 17)
         Me.chkPDF.TabIndex = 57
@@ -822,7 +808,7 @@ Partial Class Main
         '
         'FileToolStripMenuItem
         '
-        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DefaultSettingsToolStripMenuItem, Me.IPropertySettingsToolStripMenuItem, Me.RevTableSettingsToolStripMenuItem})
+        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DefaultSettingsToolStripMenuItem, Me.RevTableSettingsToolStripMenuItem})
         Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
         Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
         Me.FileToolStripMenuItem.Text = "File"
@@ -832,12 +818,6 @@ Partial Class Main
         Me.DefaultSettingsToolStripMenuItem.Name = "DefaultSettingsToolStripMenuItem"
         Me.DefaultSettingsToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
         Me.DefaultSettingsToolStripMenuItem.Text = "Export Settings"
-        '
-        'IPropertySettingsToolStripMenuItem
-        '
-        Me.IPropertySettingsToolStripMenuItem.Name = "IPropertySettingsToolStripMenuItem"
-        Me.IPropertySettingsToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
-        Me.IPropertySettingsToolStripMenuItem.Text = "iProperty Settings"
         '
         'RevTableSettingsToolStripMenuItem
         '
@@ -1211,7 +1191,6 @@ Partial Class Main
     Friend WithEvents chkPartSelect As Windows.Forms.CheckBox
     Friend WithEvents PictureBox2 As Windows.Forms.PictureBox
     Friend WithEvents chkDWGSelect As Windows.Forms.CheckBox
-    Friend WithEvents chkRRev As Windows.Forms.CheckBox
     Friend WithEvents ChkRevType As Windows.Forms.CheckBox
     Friend WithEvents gbxUtilities As Windows.Forms.GroupBox
     Friend WithEvents chkUseDrawings As Windows.Forms.CheckBox
@@ -1242,7 +1221,6 @@ Partial Class Main
     Friend WithEvents ExportToToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSSubSpreadsheet As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSSubText As Windows.Forms.ToolStripMenuItem
-    Friend WithEvents IPropertySettingsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents HowToToolStripMenuItem1 As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSReference As Windows.Forms.ToolStripMenuItem
     Friend WithEvents IFoundABugToolStripMenuItem As Windows.Forms.ToolStripMenuItem
