@@ -3,6 +3,7 @@ Imports Inventor
 Imports System.Runtime.InteropServices
 Imports System.Globalization
 Imports System.Drawing
+Imports System.ComponentModel
 
 Public Class iProperties
 #Region "Form Setup"
@@ -64,18 +65,13 @@ Public Class iProperties
     End Sub
     Private Sub dgvCustomModel_CellEnter(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCustomModel.CellEnter
         Dim DateRow As Boolean = False
-        Dim YesNoRow As Boolean = False
         If e.RowIndex = -1 Or e.ColumnIndex <= 0 Then Exit Sub
         If dgvCustomModel(dgvCustomModel.Columns("PCusType").Index, e.RowIndex).Value = "Date" AndAlso
-           dgvCustomModel.Columns("PCusValue").Index = e.ColumnIndex Then
+            dgvCustomModel.Columns("PCusValue").Index = e.ColumnIndex Then
             DateRow = True
             dpControl = "CustomModel"
             DateTimePicker(e, DateRow, dgvCustomModel)
-            'ElseIf dgvCustomModel(dgvCustomModel.Columns("PCusType").Index, e.RowIndex).Value = "Yes or No" AndAlso
-            '   dgvCustomModel.Columns("PCusValue").Index = e.ColumnIndex Then
-            '    YesNoRow = True
-            '    cmbYesNo(e, YesNoRow, dgvCustomModel)
-            'Else
+        Else
             oDateTimePicker.Visible = False
         End If
     End Sub
@@ -1176,6 +1172,7 @@ Public Class iProperties
             End If
 
         Next
+        dgvCustomModel.Sort(dgvCustomModel.Columns(0), ListSortDirection.Ascending)
         For Each Item In CustomDrawDic
             Dim skip As Boolean = False
             For Each row In dgvCustomDrawing.Rows
@@ -1187,9 +1184,10 @@ Public Class iProperties
             Next
             Type = ConvertiPropType(False, Item.Value.Type)
             If skip = False Then
-                dgvCustomDrawing.Rows.Add(Item.Key, Item.Value.ModelValue, Type.ToString)
+                dgvCustomDrawing.Rows.Add(Item.Key, Item.Value.DrawingValue, Type.ToString)
             End If
         Next
+        dgvCustomDrawing.Sort(dgvCustomDrawing.Columns(0), ListSortDirection.Ascending)
     End Sub
     Private Function ConvertiPropType(Model As Boolean, iPropType As Object) As String
         If Model = True Then
@@ -1237,7 +1235,6 @@ Public Class iProperties
                 ' If dgvSummary(dgvSummary.Columns(Document).Index, row.index).Value <> "*Varies*" Then
                 If dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value Is Nothing Then dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value = ""
                 Select Case dgvSummary(0, row.index).Value
-
                     Case "Title:"
                         oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("2").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
                     Case "Subject:"
@@ -1296,7 +1293,6 @@ Public Class iProperties
                             oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4").Value = #1/1/1601#
                         Else
                             oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
-
                         End If
                     Case "Vendor:"
                         oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
@@ -1356,6 +1352,42 @@ Public Class iProperties
             End If
             oDoc.Update()
         Next
+        Dim AddProp As Boolean = True
+        Dim CusRow As Integer
+        If Not oDoc.DocumentType = DocumentTypeEnum.kDrawingDocumentObject Then
+            For CusRow = 0 To dgvCustomModel.RowCount - 1
+                If dgvCustomModel(dgvCustomModel.Columns("ModelIsDirty").Index, CusRow).Value = True Then
+                    For Each iProp As Inventor.Property In oDoc.PropertySets.Item("Inventor User Defined Properties")
+                        If dgvCustomModel(0, CusRow).Value = iProp.Name Then
+                            AddProp = False
+                            iProp.Value = dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, CusRow).Value
+                        End If
+                    Next
+                    If AddProp = True Then
+                        oDoc.PropertySets.Item("Inventor User Defined Properties").Add(dgvCustomModel(dgvCustomModel.Columns("Value").Index, CusRow).Value,
+                                                                                       dgvCustomModel(0, CusRow).Value,
+                                                                                       dgvCustomModel(dgvCustomModel.Columns("ModelIsDirty").Index, CusRow).Value)
+                    End If
+                End If
+            Next
+
+        Else
+            For CusRow = 0 To dgvCustomDrawing.RowCount - 1
+                If dgvCustomDrawing(dgvCustomDrawing.Columns("DrawingIsDirty").Index, CusRow).Value = True Then
+                    For Each iProp As Inventor.Property In oDoc.PropertySets.Item("Inventor User Defined Properties")
+                        If dgvCustomDrawing(0, CusRow).Value = iProp.Name Then
+                            AddProp = False
+                            iProp.Value = dgvCustomDrawing(dgvCustomDrawing.Columns("DCusValue").Index, CusRow).Value
+                        End If
+                    Next
+                    If AddProp = True Then
+                        oDoc.PropertySets.Item("Inventor User Defined Properties").Add(dgvCustomDrawing(dgvCustomDrawing.Columns("Value").Index, CusRow).Value,
+                                                                                       dgvCustomDrawing(0, CusRow).Value,
+                                                                                       dgvCustomDrawing(dgvCustomDrawing.Columns("DrawingIsDirty").Index, CusRow).Value)
+                    End If
+                End If
+            Next
+        End If
     End Sub
     Private Sub WriteDrawingProps(ByRef oDoc As Document)
         'If txtTitle.Text <> "*Varies*" And My.Settings.Title = "Drawing" Then
@@ -1642,8 +1674,14 @@ Public Class iProperties
                 dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex) = New DataGridViewTextBoxCell
                 TextCell = dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex)
             ElseIf dgvCustomModel(dgvCustomModel.Columns("PCusType").Index, e.RowIndex).Value = "Number" Then
+                Dim NumCell As DataGridViewTextBoxCell
+                NumCell = dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex)
                 Dim strSource As String = Numeric(dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex).Value)
                 If dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex).Value <> strSource Then dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex).Value = strSource
+            Else
+                Dim TextCell As DataGridViewTextBoxCell
+                dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex) = New DataGridViewTextBoxCell
+                TextCell = dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex)
             End If
         End If
     End Sub
@@ -1662,7 +1700,7 @@ Public Class iProperties
         Next
         If strResult <> "" Then Numeric = strResult
     End Function
-    Private Sub dgvCustomDrawing_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs)
+    Private Sub dgvCustomDrawing_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCustomDrawing.CellValueChanged
         If Me.Created Then dgvCustomDrawing(dgvCustomDrawing.Columns("DrawingIsDirty").Index, e.RowIndex).Value = "True"
     End Sub
 #End Region

@@ -770,7 +770,7 @@ Public Class Main
                     End If
 
                     CloseLater(DrawingName, oDoc)
-                    Counter += 1
+                    'Counter += 1
                     ' Title = "Checking"
                     bgwRun.ReportProgress((Counter / Total) * 100, "Checking: " & DrawingName)
                     ' ProgressBar(Total, Counter, Title, DrawingName)
