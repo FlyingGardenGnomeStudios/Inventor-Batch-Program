@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class iProperties
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class iProperties
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(iProperties))
@@ -38,15 +38,15 @@ Partial Class iProperties
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.dgvCustomDrawing = New System.Windows.Forms.DataGridView()
-        Me.DCusType = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.dgvCustomModel = New System.Windows.Forms.DataGridView()
-        Me.PCusType = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.RevisionTable = New System.Windows.Forms.TabPage()
         Me.RevisionTabs = New System.Windows.Forms.TabControl()
         Me.Rev1 = New System.Windows.Forms.TabPage()
         Me.btnAddRev = New System.Windows.Forms.Button()
         Me.dgvRev1 = New System.Windows.Forms.DataGridView()
         Me.lblRev0 = New System.Windows.Forms.Label()
+        Me.cmsCustom = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.RemoveIPropertyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.ProgressBar2 = New System.Windows.Forms.ProgressBar()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -80,12 +80,6 @@ Partial Class iProperties
         Me.StatusModel = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.StatusDrawing = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.StatusIsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DCusName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DCusValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DrawingIsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PCusName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PCusValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ModelIsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Rev1Item = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Rev1Drawing = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Rev1IsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -97,6 +91,14 @@ Partial Class iProperties
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn36 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DCusName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DCusValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DCusType = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.DrawingIsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PCusName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PCusValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PCusType = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.ModelIsDirty = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.iProp.SuspendLayout()
         Me.Summary.SuspendLayout()
         CType(Me.dgvSummary, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -111,6 +113,7 @@ Partial Class iProperties
         Me.RevisionTabs.SuspendLayout()
         Me.Rev1.SuspendLayout()
         CType(Me.dgvRev1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.cmsCustom.SuspendLayout()
         Me.SuspendLayout()
         '
         'btnOK
@@ -274,17 +277,8 @@ Partial Class iProperties
         Me.dgvCustomDrawing.Size = New System.Drawing.Size(326, 173)
         Me.dgvCustomDrawing.TabIndex = 57
         '
-        'DCusType
-        '
-        Me.DCusType.HeaderText = "Type"
-        Me.DCusType.Items.AddRange(New Object() {"Text", "Date", "Number", "Yes or No"})
-        Me.DCusType.Name = "DCusType"
-        Me.DCusType.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DCusType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        '
         'dgvCustomModel
         '
-        Me.dgvCustomModel.AllowUserToOrderColumns = True
         Me.dgvCustomModel.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvCustomModel.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvCustomModel.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.PCusName, Me.PCusValue, Me.PCusType, Me.ModelIsDirty})
@@ -294,14 +288,6 @@ Partial Class iProperties
         Me.dgvCustomModel.RowHeadersVisible = False
         Me.dgvCustomModel.Size = New System.Drawing.Size(326, 173)
         Me.dgvCustomModel.TabIndex = 56
-        '
-        'PCusType
-        '
-        Me.PCusType.HeaderText = "Type"
-        Me.PCusType.Items.AddRange(New Object() {"Text", "Date", "Number", "Yes or No"})
-        Me.PCusType.Name = "PCusType"
-        Me.PCusType.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.PCusType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         '
         'RevisionTable
         '
@@ -370,6 +356,18 @@ Partial Class iProperties
         Me.lblRev0.Size = New System.Drawing.Size(307, 13)
         Me.lblRev0.TabIndex = 0
         Me.lblRev0.Text = "Changes here overwrite the revision table, proceed with caution" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
+        '
+        'cmsCustom
+        '
+        Me.cmsCustom.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RemoveIPropertyToolStripMenuItem})
+        Me.cmsCustom.Name = "ContextMenuStrip1"
+        Me.cmsCustom.Size = New System.Drawing.Size(169, 26)
+        '
+        'RemoveIPropertyToolStripMenuItem
+        '
+        Me.RemoveIPropertyToolStripMenuItem.Name = "RemoveIPropertyToolStripMenuItem"
+        Me.RemoveIPropertyToolStripMenuItem.Size = New System.Drawing.Size(168, 22)
+        Me.RemoveIPropertyToolStripMenuItem.Text = "Remove iProperty"
         '
         'ProgressBar2
         '
@@ -612,42 +610,6 @@ Partial Class iProperties
         Me.StatusIsDirty.Name = "StatusIsDirty"
         Me.StatusIsDirty.Visible = False
         '
-        'DCusName
-        '
-        Me.DCusName.HeaderText = "Name"
-        Me.DCusName.Name = "DCusName"
-        Me.DCusName.ReadOnly = True
-        Me.DCusName.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        '
-        'DCusValue
-        '
-        Me.DCusValue.HeaderText = "Value"
-        Me.DCusValue.Name = "DCusValue"
-        '
-        'DrawingIsDirty
-        '
-        Me.DrawingIsDirty.HeaderText = "IsDirty"
-        Me.DrawingIsDirty.Name = "DrawingIsDirty"
-        Me.DrawingIsDirty.Visible = False
-        '
-        'PCusName
-        '
-        Me.PCusName.HeaderText = "Name"
-        Me.PCusName.Name = "PCusName"
-        Me.PCusName.ReadOnly = True
-        Me.PCusName.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        '
-        'PCusValue
-        '
-        Me.PCusValue.HeaderText = "Value"
-        Me.PCusValue.Name = "PCusValue"
-        '
-        'ModelIsDirty
-        '
-        Me.ModelIsDirty.HeaderText = "IsDirty"
-        Me.ModelIsDirty.Name = "ModelIsDirty"
-        Me.ModelIsDirty.Visible = False
-        '
         'Rev1Item
         '
         Me.Rev1Item.HeaderText = "Item"
@@ -730,6 +692,56 @@ Partial Class iProperties
         Me.DataGridViewTextBoxColumn37.Name = "DataGridViewTextBoxColumn37"
         Me.DataGridViewTextBoxColumn37.Width = 108
         '
+        'DCusName
+        '
+        Me.DCusName.HeaderText = "Name"
+        Me.DCusName.Name = "DCusName"
+        Me.DCusName.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        '
+        'DCusValue
+        '
+        Me.DCusValue.HeaderText = "Value"
+        Me.DCusValue.Name = "DCusValue"
+        '
+        'DCusType
+        '
+        Me.DCusType.HeaderText = "Type"
+        Me.DCusType.Items.AddRange(New Object() {"Text", "Date", "Number", "Yes or No"})
+        Me.DCusType.Name = "DCusType"
+        Me.DCusType.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DCusType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
+        'DrawingIsDirty
+        '
+        Me.DrawingIsDirty.HeaderText = "IsDirty"
+        Me.DrawingIsDirty.Name = "DrawingIsDirty"
+        Me.DrawingIsDirty.Visible = False
+        '
+        'PCusName
+        '
+        Me.PCusName.HeaderText = "Name"
+        Me.PCusName.Name = "PCusName"
+        Me.PCusName.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        '
+        'PCusValue
+        '
+        Me.PCusValue.HeaderText = "Value"
+        Me.PCusValue.Name = "PCusValue"
+        '
+        'PCusType
+        '
+        Me.PCusType.HeaderText = "Type"
+        Me.PCusType.Items.AddRange(New Object() {"Text", "Date", "Number", "Yes or No"})
+        Me.PCusType.Name = "PCusType"
+        Me.PCusType.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.PCusType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
+        'ModelIsDirty
+        '
+        Me.ModelIsDirty.HeaderText = "IsDirty"
+        Me.ModelIsDirty.Name = "ModelIsDirty"
+        Me.ModelIsDirty.Visible = False
+        '
         'iProperties
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -760,6 +772,7 @@ Partial Class iProperties
         Me.Rev1.ResumeLayout(False)
         Me.Rev1.PerformLayout()
         CType(Me.dgvRev1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.cmsCustom.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -814,14 +827,6 @@ Partial Class iProperties
     Friend WithEvents DataGridViewTextBoxColumn22 As Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn23 As Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn24 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DCusName As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DCusValue As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DCusType As Windows.Forms.DataGridViewComboBoxColumn
-    Friend WithEvents DrawingIsDirty As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PCusName As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PCusValue As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PCusType As Windows.Forms.DataGridViewComboBoxColumn
-    Friend WithEvents ModelIsDirty As Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents StatusItem As Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents StatusModel As Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents StatusDrawing As Windows.Forms.DataGridViewTextBoxColumn
@@ -836,4 +841,14 @@ Partial Class iProperties
     Friend WithEvents Rev1Item As Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Rev1Drawing As Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Rev1IsDirty As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents cmsCustom As Windows.Forms.ContextMenuStrip
+    Friend WithEvents RemoveIPropertyToolStripMenuItem As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents DCusName As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents DCusValue As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents DCusType As Windows.Forms.DataGridViewComboBoxColumn
+    Friend WithEvents DrawingIsDirty As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents PCusName As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents PCusValue As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents PCusType As Windows.Forms.DataGridViewComboBoxColumn
+    Friend WithEvents ModelIsDirty As Windows.Forms.DataGridViewTextBoxColumn
 End Class

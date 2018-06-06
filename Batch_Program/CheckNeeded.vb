@@ -751,7 +751,7 @@ Public Class CheckNeeded
             ' Setting the format (i.e. 2014-10-10)
             oDateTimePicker.Format = DateTimePickerFormat.Short
             oDateTimePicker.ShowCheckBox = True
-            If dgvcontrol.CurrentCell.Value = "" Or dgvcontrol Is Nothing Then
+            If dgvcontrol.CurrentCell.Value = Nothing Or dgvcontrol Is Nothing Then
                 oDateTimePicker.Checked = False
             Else
                 oDateTimePicker.Checked = True

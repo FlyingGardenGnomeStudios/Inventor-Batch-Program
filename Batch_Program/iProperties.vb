@@ -36,6 +36,8 @@ Public Class iProperties
     Dim InvRef As New Dictionary(Of String, String)
     Dim InvRefProp(0 To 9) As Inventor.Property
     Dim MaterialCell As DataGridViewComboBoxCell = New DataGridViewComboBoxCell
+    Dim CurrentCell As DataGridViewCell
+    Dim CurrentGrid As DataGridView
 #End Region
     Dim Main As Main
 #Region "Setup iProperties"
@@ -53,26 +55,50 @@ Public Class iProperties
     End Sub
     Private Sub dgvCustomDrawing_CellEnter(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCustomDrawing.CellEnter
         Dim DateRow As Boolean = False
+        Dim BoolRow As Boolean = False
         If e.RowIndex = -1 Or e.ColumnIndex <= 0 Then Exit Sub
         If dgvCustomDrawing(dgvCustomDrawing.Columns("DCusType").Index, e.RowIndex).Value = "Date" AndAlso
             dgvCustomDrawing.Columns("DCusValue").Index = e.ColumnIndex Then
             DateRow = True
             dpControl = "CustomDrawing"
             DateTimePicker(e, DateRow, dgvCustomDrawing)
+        ElseIf dgvCustomDrawing(dgvCustomDrawing.Columns("DCusType").Index, e.RowIndex).value = "Yes or No" AndAlso
+                                  dgvCustomDrawing.Columns("DCusValue").Index = e.ColumnIndex Then
+            BoolRow = True
+            dpControl = "CustomDrawing"
+            BoolCombobox(e, BoolRow, dgvCustomDrawing)
+            oDateTimePicker.Visible = False
         Else
             oDateTimePicker.Visible = False
         End If
     End Sub
     Private Sub dgvCustomModel_CellEnter(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCustomModel.CellEnter
         Dim DateRow As Boolean = False
+        Dim BoolRow As Boolean = False
         If e.RowIndex = -1 Or e.ColumnIndex <= 0 Then Exit Sub
         If dgvCustomModel(dgvCustomModel.Columns("PCusType").Index, e.RowIndex).Value = "Date" AndAlso
             dgvCustomModel.Columns("PCusValue").Index = e.ColumnIndex Then
             DateRow = True
             dpControl = "CustomModel"
             DateTimePicker(e, DateRow, dgvCustomModel)
+        ElseIf dgvCustomModel(dgvCustomModel.Columns("PCusType").Index, e.RowIndex).value = "Yes or No" AndAlso
+                                  dgvCustomModel.Columns("PCusValue").Index = e.ColumnIndex Then
+            BoolRow = True
+            dpControl = "CustomModel"
+            If CurrentCell.RowIndex <> e.RowIndex AndAlso CurrentCell.ColumnIndex <> e.ColumnIndex Then BoolCombobox(e, BoolRow, dgvCustomModel)
+            oDateTimePicker.Visible = False
         Else
             oDateTimePicker.Visible = False
+        End If
+    End Sub
+    Private Sub BoolCombobox(ByVal e As DataGridViewCellEventArgs, ByRef BoolRow As Boolean, dgvcontrol As DataGridView)
+        If BoolRow = True Then
+            'dgvcontrol(dgvcontrol.Columns(e.ColumnIndex).Index, e.RowIndex) = New DataGridViewComboBoxCell
+            'cmbYesNo = dgvcontrol(dgvcontrol.Columns(e.ColumnIndex).Index, e.RowIndex)
+            'cmbYesNo.Items.AddRange("Yes", "No")
+            'AddHandler oDateTimePicker.CloseUp, AddressOf iPropDateTimePicker_CloseUp
+            ' An event attached to dateTimePicker Control which is fired when any date is selected
+            ' AddHandler oDateTimePicker.TextChanged, AddressOf iPropdateTimePicker_OnTextChange
         End If
     End Sub
     Private Sub DateTimePicker(ByVal e As DataGridViewCellEventArgs, ByRef DateRow As Boolean, dgvcontrol As DataGridView)
@@ -672,6 +698,15 @@ Public Class iProperties
                           .Type = iProp.Value.GetType.Name})
         Next
     End Sub
+
+    Private Sub RemoveIPropertyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RemoveIPropertyToolStripMenuItem.Click
+        If CurrentGrid.RowCount > 1 Then
+            CurrentGrid.Rows.Remove(CurrentGrid.Rows(CurrentCell.RowIndex))
+        Else
+            MsgBox("You cannot remove this row")
+        End If
+        CurrentCell = CurrentGrid.CurrentCell
+    End Sub
     Private Sub SetModelProps(invModelDoc As Document)
         'Set the identifiers for the model properties
         SumDic.Clear()
@@ -1168,7 +1203,28 @@ Public Class iProperties
             Next
             Type = ConvertiPropType(True, Item.Value.Type)
             If skip = False Then
-                dgvCustomModel.Rows.Add(Item.Key, Item.Value.ModelValue, Type.ToString)
+                Select Case Type
+                    Case "Date"
+                        dgvCustomModel.Rows.Add(Item.Key, Item.Value.ModelValue, Type.ToString)
+                    Case "Yes or No"
+                        Dim BoolProp As String
+                        If Item.Value.ModelValue = True Then
+                            BoolProp = "Yes"
+                        Else
+                            BoolProp = "No"
+                        End If
+                        dgvCustomModel.Rows.Add(Item.Key)
+                        'dgvCustomModel.Rows.Add(Item.Key, BoolProp, Type.ToString)
+                        dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, dgvCustomModel.RowCount - 2) = New DataGridViewComboBoxCell
+                        dgvcmbcell = dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, dgvCustomModel.RowCount - 2)
+                        dgvCustomModel(dgvCustomModel.Columns("PCusType").Index, dgvCustomModel.RowCount - 2).Value = Type.ToString
+                        dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, dgvCustomModel.RowCount - 2).Value = BoolProp
+                        dgvcmbcell.Items.AddRange("Yes", "No")
+                    Case "Text"
+                        dgvCustomModel.Rows.Add(Item.Key, Item.Value.ModelValue, Type.ToString)
+                    Case "Number"
+                        dgvCustomModel.Rows.Add(Item.Key, Item.Value.ModelValue, Type.ToString)
+                End Select
             End If
 
         Next
@@ -1184,7 +1240,31 @@ Public Class iProperties
             Next
             Type = ConvertiPropType(False, Item.Value.Type)
             If skip = False Then
-                dgvCustomDrawing.Rows.Add(Item.Key, Item.Value.DrawingValue, Type.ToString)
+                Select Case Type
+                    Case "Date"
+                        dgvCustomDrawing.Rows.Add(Item.Key, Item.Value.DrawingValue, Type.ToString)
+                    Case "Yes or No"
+                        Dim BoolProp As String
+                        If Item.Value.DrawingValue = True Then
+                            BoolProp = "Yes"
+                        Else
+                            BoolProp = "No"
+                        End If
+                        dgvCustomDrawing.Rows.Add(Item.Key)
+                        'dgvCustomDrawing.Rows.Add(Item.Key, BoolProp, Type.ToString)
+                        dgvCustomDrawing(dgvCustomDrawing.Columns("DCusValue").Index, dgvCustomDrawing.RowCount - 2) = New DataGridViewComboBoxCell
+                        dgvcmbcell = dgvCustomDrawing(dgvCustomDrawing.Columns("DCusValue").Index, dgvCustomDrawing.RowCount - 2)
+                        dgvCustomDrawing(dgvCustomDrawing.Columns("DCusType").Index, dgvCustomDrawing.RowCount - 2).Value = Type.ToString
+                        dgvCustomDrawing(dgvCustomDrawing.Columns("DCusValue").Index, dgvCustomDrawing.RowCount - 2).Value = BoolProp
+                        dgvcmbcell.Items.AddRange("Yes", "No")
+
+                        'dgvCustomDrawing.Rows.Add(Item.Key, BoolProp, Type.ToString)
+                    Case "Text"
+                        dgvCustomDrawing.Rows.Add(Item.Key, Item.Value.DrawingValue, Type.ToString)
+                    Case "Number"
+                        dgvCustomDrawing.Rows.Add(Item.Key, Item.Value.DrawingValue, Type.ToString)
+                End Select
+
             End If
         Next
         dgvCustomDrawing.Sort(dgvCustomDrawing.Columns(0), ListSortDirection.Ascending)
@@ -1352,42 +1432,56 @@ Public Class iProperties
             End If
             oDoc.Update()
         Next
-        Dim AddProp As Boolean = True
-        Dim CusRow As Integer
         If Not oDoc.DocumentType = DocumentTypeEnum.kDrawingDocumentObject Then
-            For CusRow = 0 To dgvCustomModel.RowCount - 1
-                If dgvCustomModel(dgvCustomModel.Columns("ModelIsDirty").Index, CusRow).Value = True Then
-                    For Each iProp As Inventor.Property In oDoc.PropertySets.Item("Inventor User Defined Properties")
-                        If dgvCustomModel(0, CusRow).Value = iProp.Name Then
-                            AddProp = False
-                            iProp.Value = dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, CusRow).Value
-                        End If
-                    Next
-                    If AddProp = True Then
-                        oDoc.PropertySets.Item("Inventor User Defined Properties").Add(dgvCustomModel(dgvCustomModel.Columns("Value").Index, CusRow).Value,
-                                                                                       dgvCustomModel(0, CusRow).Value,
-                                                                                       dgvCustomModel(dgvCustomModel.Columns("ModelIsDirty").Index, CusRow).Value)
-                    End If
-                End If
-            Next
-
+            CheckCustomiProps(oDoc, dgvCustomModel, "ModelIsDirty", "PCusValue", "PCusName", "PCusType")
         Else
-            For CusRow = 0 To dgvCustomDrawing.RowCount - 1
-                If dgvCustomDrawing(dgvCustomDrawing.Columns("DrawingIsDirty").Index, CusRow).Value = True Then
-                    For Each iProp As Inventor.Property In oDoc.PropertySets.Item("Inventor User Defined Properties")
-                        If dgvCustomDrawing(0, CusRow).Value = iProp.Name Then
-                            AddProp = False
-                            iProp.Value = dgvCustomDrawing(dgvCustomDrawing.Columns("DCusValue").Index, CusRow).Value
-                        End If
-                    Next
-                    If AddProp = True Then
-                        oDoc.PropertySets.Item("Inventor User Defined Properties").Add(dgvCustomDrawing(dgvCustomDrawing.Columns("Value").Index, CusRow).Value,
-                                                                                       dgvCustomDrawing(0, CusRow).Value,
-                                                                                       dgvCustomDrawing(dgvCustomDrawing.Columns("DrawingIsDirty").Index, CusRow).Value)
-                    End If
+            CheckCustomiProps(oDoc, dgvCustomDrawing, "DrawingIsDirty", "DCusValue", "DCusName", "DCusType")
+        End If
+    End Sub
+    Private Sub CheckCustomiProps(oDoc As Document, Grid As DataGridView, Dirty As String, CusValue As String, CusName As String, CusType As String)
+        For Each iProp As [Property] In oDoc.PropertySets.Item("Inventor User Defined Properties")
+            Dim RemoveiProp As Boolean = True
+            For CusRow = 0 To Grid.RowCount - 1
+                If iProp.Name = Grid(Grid.Columns(CusName).Index, CusRow).Value Then
+                    RemoveiProp = False
                 End If
             Next
-        End If
+            If RemoveiProp = True Then
+                iProp.Delete()
+            End If
+        Next
+        For CusRow = 0 To Grid.RowCount - 1
+            If Grid(Grid.Columns(Dirty).Index, CusRow).Value = True Then
+                Dim AddProp As Boolean = True
+                For Each iProp As Inventor.Property In oDoc.PropertySets.Item("Inventor User Defined Properties")
+                    Debug.WriteLine(iProp.Value.GetType.Name)
+                    If Grid(0, CusRow).Value = iProp.Name Then
+                        iProp.Delete()
+                    End If
+                Next
+                If AddProp = True Then
+                    Select Case Grid(Grid.Columns(CusType).Index, CusRow).Value
+                        Case "Date"
+                            Dim DateProp As DateTime = DateTime.Parse(Grid(Grid.Columns(CusValue).Index, CusRow).Value)
+                            oDoc.PropertySets.Item("Inventor User Defined Properties").Add(DateProp, Grid(Grid.Columns(CusName).Index, CusRow).Value)
+                        Case "Yes or No"
+                            Dim BoolProp As Boolean
+                            If Grid(Grid.Columns(CusValue).Index, CusRow).Value = "Yes" Then
+                                BoolProp = True
+                            Else
+                                BoolProp = False
+                            End If
+                            oDoc.PropertySets.Item("Inventor User Defined Properties").Add(BoolProp, Grid(Grid.Columns(CusName).Index, CusRow).Value)
+                        Case "Text"
+                            oDoc.PropertySets.Item("Inventor User Defined Properties").Add(Grid(Grid.Columns(CusValue).Index, CusRow).Value, Grid(Grid.Columns(CusName).Index, CusRow).Value)
+                        Case "Number"
+                            Dim NumProp As Integer = Grid(Grid.Columns(CusValue).Index, CusRow).Value
+                            oDoc.PropertySets.Item("Inventor User Defined Properties").Add(NumProp, Grid(Grid.Columns(CusName).Index, CusRow).Value)
+                    End Select
+
+                End If
+            End If
+        Next
     End Sub
     Private Sub WriteDrawingProps(ByRef oDoc As Document)
         'If txtTitle.Text <> "*Varies*" And My.Settings.Title = "Drawing" Then
@@ -1632,15 +1726,12 @@ Public Class iProperties
         '    oDateTimePicker.Visible = False
         'End If
     End Sub
-
     Private Sub dgvSummary_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvSummary.CellValueChanged
         If Me.Created Then dgvSummary(dgvSummary.Columns("SummaryIsDirty").Index, e.RowIndex).Value = "True"
     End Sub
-
     Private Sub dgvStatus_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvStatus.CellValueChanged
         If Me.Created Then dgvStatus(dgvStatus.Columns("StatusIsDirty").Index, e.RowIndex).Value = "True"
     End Sub
-
     Private Sub dgvProject_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvProject.CellValueChanged
         If Me.Created Then dgvProject(dgvProject.Columns("ProjectIsDirty").Index, e.RowIndex).Value = "True"
     End Sub
@@ -1660,36 +1751,13 @@ Public Class iProperties
         End If
     End Sub
     Private Sub dgvCustomModel_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCustomModel.CellValueChanged
-        If Me.Created Then dgvCustomModel(dgvCustomModel.Columns("ModelIsDirty").Index, e.RowIndex).Value = "True"
-        If Me.Created Then
-            If dgvCustomModel(dgvCustomModel.Columns("PCusType").Index, e.RowIndex).Value = "Yes or No" AndAlso
-                dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex).GetType.ToString <> "System.Windows.Forms.DataGridViewComboBoxCell" Then
-                dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex) = New DataGridViewComboBoxCell
-                cmbYesNo = dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex)
-                cmbYesNo.Items.AddRange("Yes", "No")
-                Exit Sub
-                cmbYesNo.Value = "Yes"
-            ElseIf dgvCustomModel(dgvCustomModel.Columns("PCusType").Index, e.RowIndex).Value = "Text" Then
-                Dim TextCell As DataGridViewTextBoxCell
-                dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex) = New DataGridViewTextBoxCell
-                TextCell = dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex)
-            ElseIf dgvCustomModel(dgvCustomModel.Columns("PCusType").Index, e.RowIndex).Value = "Number" Then
-                Dim NumCell As DataGridViewTextBoxCell
-                NumCell = dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex)
-                Dim strSource As String = Numeric(dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex).Value)
-                If dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex).Value <> strSource Then dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex).Value = strSource
-            Else
-                Dim TextCell As DataGridViewTextBoxCell
-                dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex) = New DataGridViewTextBoxCell
-                TextCell = dgvCustomModel(dgvCustomModel.Columns("PCusValue").Index, e.RowIndex)
-            End If
-        End If
+        ChangeCustomiProperty(dgvCustomModel, "PCusType", "PCusValue", e, "ModelIsDirty")
     End Sub
     Public Function Numeric(ByVal StrSource As String) As String
         Dim strResult As String = ""
         Dim Dec As Boolean = False
         For i As Integer = 1 To Strings.Len(StrSource)
-            If 45 < Asc(Mid(StrSource, i, 1)) AndAlso Asc(Mid(StrSource, i, 1)) < 58 Then
+            If 45 <Asc(Mid(StrSource, i, 1)) AndAlso Asc(Mid(StrSource, i, 1)) <58 Then
                 If Asc(Mid(StrSource, i, 1)) = 46 And Dec = False Then
                     Dec = True
                     strResult = strResult & Mid(StrSource, i, 1)
@@ -1701,10 +1769,70 @@ Public Class iProperties
         If strResult <> "" Then Numeric = strResult
     End Function
     Private Sub dgvCustomDrawing_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCustomDrawing.CellValueChanged
-        If Me.Created Then dgvCustomDrawing(dgvCustomDrawing.Columns("DrawingIsDirty").Index, e.RowIndex).Value = "True"
+        ChangeCustomiProperty(dgvCustomDrawing, "DCusType", "DCusValue", e, "DrawingIsDirty")
+    End Sub
+    Private Sub ChangeCustomiProperty(Grid As DataGridView, CusType As String, CusValue As String, e As DataGridViewCellEventArgs, Dirty As String)
+        CurrentCell = Grid.CurrentCell
+        CurrentGrid = Grid
+        If Me.Created Then Grid(Grid.Columns(Dirty).Index, e.RowIndex).Value = "True"
+        If Me.Created Then
+            If Grid(Grid.Columns(CusType).Index, e.RowIndex).Value = "Yes or No" Then
+                If Grid(Grid.Columns(CusValue).Index, e.RowIndex).GetType.ToString <> "System.Windows.Forms.DataGridViewComboBoxCell" Then
+                    Grid(Grid.Columns(CusValue).Index, e.RowIndex) = New DataGridViewComboBoxCell
+                    cmbYesNo = Grid(Grid.Columns(CusValue).Index, e.RowIndex)
+                    cmbYesNo.Items.AddRange("Yes", "No")
+                End If
+            ElseIf Grid(Grid.Columns(CusType).Index, e.RowIndex).Value = "Text" Or Grid(Grid.Columns(CusType).Index, e.RowIndex).Value = "Date" Then
+                If Grid(Grid.Columns(CusValue).Index, e.RowIndex).GetType.ToString <> "System.Windows.Forms.DataGridViewTextBoxCell" Then
+                    Dim TextCell As DataGridViewTextBoxCell
+                    Grid(Grid.Columns(CusValue).Index, e.RowIndex) = New DataGridViewTextBoxCell
+                    TextCell = Grid(Grid.Columns(CusValue).Index, e.RowIndex)
+                End If
+            ElseIf Grid(Grid.Columns(CusType).Index, e.RowIndex).Value = "Number" Then
+                If Grid(Grid.Columns(CusValue).Index, e.RowIndex).GetType.ToString <> "System.Windows.Forms.DataGridViewTextBoxCell" Then
+                    Dim NumCell As DataGridViewTextBoxCell
+                    Grid(Grid.Columns(CusValue).Index, e.RowIndex) = New DataGridViewTextBoxCell
+                    NumCell = Grid(Grid.Columns(CusValue).Index, e.RowIndex)
+                End If
+                Dim strSource As String = Numeric(Grid(Grid.Columns(CusValue).Index, e.RowIndex).Value)
+                    If Grid(Grid.Columns(CusValue).Index, e.RowIndex).Value <> strSource Then Grid(Grid.Columns(CusValue).Index, e.RowIndex).Value = strSource
+
+            Else
+                    Dim TextCell As DataGridViewTextBoxCell
+                Grid(Grid.Columns(CusValue).Index, e.RowIndex) = New DataGridViewTextBoxCell
+                TextCell = Grid(Grid.Columns(CusValue).Index, e.RowIndex)
+            End If
+        End If
+    End Sub
+    Private Sub dgvCustomDrawing_MouseUp(sender As Object, e As MouseEventArgs) Handles dgvCustomDrawing.MouseUp
+        CurrentCell = dgvCustomDrawing.CurrentCell
+        CurrentGrid = dgvCustomDrawing
+        Dim hit As DataGridView.HitTestInfo = dgvCustomDrawing.HitTest(e.X, e.Y)
+        If e.Button <> MouseButtons.Right Then
+            Return
+        End If
+
+        If e.X < 1 Or e.Y < 1 Then Exit Sub
+        If (hit.RowIndex) < 0 Or (hit.ColumnIndex) < 0 Then Exit Sub
+        CurrentCell = dgvCustomDrawing.Rows(hit.RowIndex).Cells(hit.ColumnIndex)
+        Dim VisNodes As Integer = 0
+        cmsCustom.Show(Cursor.Position)
+    End Sub
+    Private Sub dgvCustomModel_MouseUp(sender As Object, e As MouseEventArgs) Handles dgvCustomModel.MouseUp
+        CurrentCell = dgvCustomModel.CurrentCell
+        CurrentGrid = dgvCustomModel
+        Dim hit As DataGridView.HitTestInfo = dgvCustomModel.HitTest(e.X, e.Y)
+        If e.Button <> MouseButtons.Right Then
+            Return
+        End If
+
+        If e.X < 1 Or e.Y < 1 Then Exit Sub
+        If (hit.RowIndex) < 0 Or (hit.ColumnIndex) < 0 Then Exit Sub
+        CurrentCell = dgvCustomModel.Rows(hit.RowIndex).Cells(hit.ColumnIndex)
+        Dim VisNodes As Integer = 0
+        cmsCustom.Show(Cursor.Position)
     End Sub
 #End Region
-
 #Region "Combobox 1-Click"
     'Private Sub dgvStatus_CellMouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles dgvStatus.CellMouseClick
     '    'Make sure the type is set to something, a work around if the grid contains checkboxes.

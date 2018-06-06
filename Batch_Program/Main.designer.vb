@@ -936,6 +936,7 @@ Partial Class Main
         '
         'mnuActDeact
         '
+        Me.mnuActDeact.Enabled = False
         Me.mnuActDeact.Name = "mnuActDeact"
         Me.mnuActDeact.Size = New System.Drawing.Size(189, 22)
         Me.mnuActDeact.Text = "Activate"
@@ -954,6 +955,7 @@ Partial Class Main
         '
         'TutorialsToolStripMenuItem
         '
+        Me.TutorialsToolStripMenuItem.Enabled = False
         Me.TutorialsToolStripMenuItem.Name = "TutorialsToolStripMenuItem"
         Me.TutorialsToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
         Me.TutorialsToolStripMenuItem.Text = "Tutorials"

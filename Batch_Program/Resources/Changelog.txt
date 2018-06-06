@@ -6,8 +6,10 @@ Version 2.0.0.1 (6/05/18)
 	- Enabled full revision control in Drawing Actions
 	- Fixed iProperty read/write
 
+Version 2.0.0.2 (6/06/18)
+	-Fixed custom iProperties
+
 	Items not currently functioning
-	- Custom iProperties (type not working)
 	- Cannot cancel task after execution
 	- No tutorials yet
 	- Renaming function works, but sometimes doesn't play nice
