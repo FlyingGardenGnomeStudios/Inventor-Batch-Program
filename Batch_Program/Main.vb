@@ -694,7 +694,7 @@ Public Class Main
         'Go through drawings to see which ones are selected
         Dim Destin As String = ""
 
-        For X = 0 To Total - 1
+        For X = 0 To GridView.RowCount - 1
             'Look through all sub files in open documents to get the part sourcefile
             If GridView(GridView.Columns(chkcolumn).Index, X).Value = True Then
                 DrawSource = GridView(GridView.Columns(PDTitle & "Location").Index, X).Value
@@ -2624,6 +2624,8 @@ Public Class Main
         PictureBox2.Location = New Drawing.Point(gbxSub.Location.X + 21, 27)
     End Sub
     Private Sub btnFlatPattern_Click(sender As Object, e As EventArgs) Handles btnFlatPattern.Click
+    End Sub
+    Private Sub ExportPart()
         Dim Archive As String = ""
         Dim PartName As String = ""
         Dim PartSource As String = ""
@@ -2641,13 +2643,7 @@ Public Class Main
             End If
         Next
         Dim Flag As Boolean = False
-        'For X = 0 To lstOpenFiles.Items.Count - 1
-        '    If InStr(lstOpenFiles.Items(X), "ipt") <> 0 Then
-        '        Flag = True
-        '        Exit For
 
-        '    End If
-        'Next
         For X = 0 To dgvOpenFiles.RowCount - 1
             If InStr(dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, X).Value, "ipt") <> 0 Then
                 Flag = True
@@ -2657,38 +2653,9 @@ Public Class Main
         Next
         If Flag = False Then
             MsgBox("No part selected." & vbNewLine & "For drawings use the drawing action list.")
-        Else
-            ExportCheck(dgvOpenFiles, "dxf", "chkOpenFiles", "Part")
-            '    For X = 0 To dgvOpenFiles.RowCount - 1
-            '        'Look through all sub files in open documents to get the part sourcefile
-            '        If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = True Then
-            '            PartName = dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, X).Value
-            '            PartSource = dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, X).Value
-
-            '            oDoc = _invApp.Documents.Open(PartSource, False)
-            '            If My.Computer.FileSystem.FileExists(Strings.Replace(PartSource, "ipt", "idw")) Then
-            '                Dim dDoc As DrawingDocument = _invApp.Documents.Open(Strings.Replace(PartSource, "ipt", "idw"), False)
-            '                RevNo = dDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
-            '                dDoc.Close()
-            '            Else
-            '                RevNo = 0
-            '            End If
-
-            '            DXFSource = PartSource.Insert(PartSource.LastIndexOf("\"), "\DWG_DXF")
-            '            If My.Settings.DXFRev = True Then
-            '                DXFSource = DXFSource.Insert(DXFSource.LastIndexOf("."), "-R" & RevNo)
-            '            End If
-            '            DXFSource = Replace(DXFSource, "ipt", "dxf")
-            '            SheetMetalTest(Archive, oDoc, sReadableType)
-            '            If sReadableType = "S" Then
-            '                CreateFlatPattern(oDoc.componentdefinition, PartName, oDoc, True)
-            '                Call SMDXF(oDoc, DXFSource, True, Replace(PartName, ".idw", ".dxf"))
-            '            End If
-            '            ' ProgressBar(Total, X + 1, "Saving: ", PartName)
-            '            bgwRun.ReportProgress(((X + 1) / Total) * 100, "Saving: " & PartName)
-            '        End If
-            '    Next
         End If
+        If chkPartDXF.Checked = True Then ExportCheck(dgvOpenFiles, "dxf", "chkOpenFiles", "Part")
+        If chkPartDWG.Checked = True Then ExportCheck(dgvOpenFiles, "dwg", "chkOpenFiles", "Part")
         pgbMain.Visible = False
     End Sub
     Private Sub ExportPart(DrawSource As String, Archive As String, FlatPattern As Boolean, Destin As String, DrawingName As String,
@@ -3510,6 +3477,9 @@ Public Class Main
             'End If
             'iProperties.ShowDialog(Me)
             'chkiProp.CheckState = CheckState.Unchecked
+        End If
+        If chkPartExport.Checked = True Then
+            ExportPart()
         End If
         If ChkRevType.Checked = True Then
             writeDebug("Accessing RevType")

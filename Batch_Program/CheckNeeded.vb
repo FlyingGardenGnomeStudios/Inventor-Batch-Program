@@ -400,7 +400,7 @@ Public Class CheckNeeded
                 _invApp.SilentOperation = False
                 ProgressBar1.Value = (Row / tgvCheckNeeded.RowCount) * 100
                 ProgressBar1.PerformStep()
-                Exit For
+                'Exit For
             Catch ex As Exception
             End Try
             'End If
@@ -905,8 +905,15 @@ Public Class CheckNeeded
                     End Select
 
                 Next
-                node.Nodes.Add(Rev)
-
+                node = node.Nodes.Add(Rev)
+                ' node.Expand()
+                For Column = 1 To tgvCheckNeeded.Columns.Count - 1
+                    If tgvCheckNeeded.Columns(Column).HeaderText = "Checked By" Or
+                            tgvCheckNeeded.Columns(Column).HeaderText = "Check Date" Then
+                        node.Cells(Column).ReadOnly = True
+                        node.Cells(Column).Style.BackColor = Drawing.Color.LightGray
+                    End If
+                Next
                 Exit Sub
             End If
         Next
