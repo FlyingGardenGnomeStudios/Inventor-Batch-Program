@@ -13,10 +13,13 @@ Version 2.0.0.3 (6/07/18)
 	-Fixed issue where revision changes to multiple drawings wasn't working
 
 Version 2.0.0.4 (6/08/18)
-	- Added option for custom ini export files
+	- Added option for custom ini export files (needs work)
 	- Added custom options for PDF
 	- Fixed dialog issue with custom export locations
 	- Added cancellation support to Exports, Prints, iProperties
+
+Version 2.0.0.5 (6/07/08)
+	- Corrected bug that skipped exports depending on settings
 
 	Items not currently functioning
 	- Open parts list sometimes displays double on first run

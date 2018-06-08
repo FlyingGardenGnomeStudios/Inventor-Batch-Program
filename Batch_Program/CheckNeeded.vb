@@ -640,7 +640,9 @@ Public Class CheckNeeded
                             Case UCase(My.Settings.RTSDescCol)
                                 Rev(z) = contents((k * rt.RevisionTableColumns.Count) + RevCheckDescColNum)
                             Case UCase(My.Settings.RTSDateCol)
-                                If contents((k * rt.RevisionTableColumns.Count) + RevCheckDateColNum) = #1/1/1601# Then
+                                If contents((k * rt.RevisionTableColumns.Count) + RevCheckDateColNum) = "" Then
+                                    Rev(z) = ""
+                                ElseIf contents((k * rt.RevisionTableColumns.Count) + RevCheckDateColNum) = #1/1/1601# Then
                                     Rev(z) = ""
                                 Else
                                     Rev(z) = CStr(DateTime.Parse(contents((k * rt.RevisionTableColumns.Count) + RevCheckDateColNum)))

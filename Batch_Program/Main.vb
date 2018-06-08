@@ -925,6 +925,7 @@ Public Class Main
         For X = 0 To Gridview.RowCount - 1
             'Look through all sub files in open documents to get the part sourcefile
             'MatchPart(DrawSource, DrawingName, X)
+            If bgwRun.CancellationPending = True Then Exit Sub
             If chkSkipAssy.Checked = True And DrawSource.Contains(".iam") Then
             Else
                 If Gridview(Gridview.Columns(ChkColumn).Index, X).Value = True Then
@@ -2724,11 +2725,12 @@ Public Class Main
         oDataIO = oDoc.ComponentDefinition.DataIO
         'Build the string that defines the format of the DXF file
         Dim sOut As String
+        sOut = Translate_ini(My.Settings.DXFiniLoc)
         '&OuterProfileLayer=IV_INTERIOR_PROFILES"
-        sOut = "FLAT PATTERN DXF?AcadVersion=2010" &
-        "&OuterProfileLayer=IV_OUTER_PROFILE&OuterProfileLayerLineType=37633&OuterProfileLayerLineWeight=0,0500&OuterProfileLayerColor=0;0;0" &
-        "&InteriorProfilesLayer=IV_INTERIOR_PROFILES&InteriorProfilesLayerLineType=37633&InteriorProfilesLayerLineWeight=0,0500&InteriorProfilesLayerColor=0;0;0" &
-        "&InvisibleLayers=IV_TANGENT;IV_BEND;IV_Bend_Down;IV_Bend​_Up;IV_ARC_CENTERS"
+        'sOut = "FLAT PATTERN DXF?AcadVersion=2010" &
+        '"&OuterProfileLayer=IV_OUTER_PROFILE&OuterProfileLayerLineType=37633&OuterProfileLayerLineWeight=0,0500&OuterProfileLayerColor=0;0;0" &
+        '"&InteriorProfilesLayer=IV_INTERIOR_PROFILES&InteriorProfilesLayerLineType=37633&InteriorProfilesLayerLineWeight=0,0500&InteriorProfilesLayerColor=0;0;0" &
+        '"&InvisibleLayers=IV_TANGENT;IV_BEND;IV_Bend_Down;IV_Bend​_Up;IV_ARC_CENTERS"
         '
         '
         Try
@@ -2781,6 +2783,133 @@ Public Class Main
         'Call oDXFAddin.SaveCopyAs(oPartDoc, oContext, oNameValueMap, oOutputFile)
 
     End Sub
+    Function Translate_ini(ini)
+        'Create stringbuilder to re-create ini
+        Dim Exportini As New System.Text.StringBuilder
+        'Create a string that contains the invisible layers to append to the file
+        Dim InvisLayers As String = ""
+        'Iterate through each line
+        For Each line As String In System.IO.File.ReadLines(ini)
+            'Create a blank string to convert each line of the ini file into a readable output string
+            Dim Kernel As String = ""
+            'Set the program compatibility
+            If line.Contains("AUTOCAD VERSION") Then
+                'Set the year
+                Dim Year As Integer = Strings.Right(line, 4)
+                'Append the header file to the output
+                Exportini.Append("AcadVersion=" & Year)
+            End If
+            'Each layer contains an =, this differentiates between the comment lines which contain []
+            If line.Contains("=") Then
+                Dim Title As String = ""
+                Dim Header As String = ""
+                Select Case True
+                            'Create a title so we can loop through the different layer types rather than create a case for each
+                    Case line.Contains("Tangent")
+                        Header = "TANGENT"
+                        Title = "TangentLayer"
+                    Case line.Contains("Bend") And line.Contains("Front")
+                        Header = "BEND"
+                        Title = "BendLayer"
+                    Case line.Contains("Bend") And line.Contains("Back")
+                        Header = "BEND_DOWN"
+                        Title = "BendDownLayer"
+                    Case line.Contains("Tool Centers") And line.Contains("Front")
+                        Header = "TOOL_CENTER"
+                        Title = "ToolCenter"
+                    Case line.Contains("Tool Centers") And line.Contains("Back")
+                        Header = "TOOL_CENTER_DOWN"
+                        Title = "ToolCenterDown"
+                    Case line.Contains("Arc Centers")
+                        Header = "ARC_CENTERS"
+                        Title = "ArcCenters"
+                    Case line.Contains("Outer Profile")
+                        Header = "OUTER_PROFILE"
+                        Title = "OuterProfile"
+                    Case line.Contains("Inner Profiles")
+                        Header = "INTERIOR_PROFILES"
+                        Title = "InteriorProfiles"
+                    Case line.Contains("Feature Profile") And line.Contains("Front")
+                        Header = "FEATURE_PROFILES"
+                        Title = "FeatureProfiles"
+                    Case line.Contains("Feature Profile") And line.Contains("Back")
+                        Header = "FEATURE_PROFILES_DOWN"
+                        Title = "FeatureProfilesDown"
+                    Case line.Contains("Alternate Rep") And line.Contains("Front")
+                        Header = "ALTREP_FRONT"
+                        Title = "AltRepFront"
+                    Case line.Contains("Alternate Rep") And line.Contains("Back")
+                        Header = "ALTREP_BACK"
+                        Title = "AltRepBack"
+                    Case line.Contains("Unconsumed Sketches")
+                        Header = "UNCONSUMED_SKETCHES"
+                        Title = "UnconsumedSketches"
+                    Case line.Contains("Tangent Roll Lines")
+                        Header = "ROLL_TANGENT"
+                        Title = "TangentRollLines"
+                    Case line.Contains("Roll Lines")
+                        Header = "ROLL"
+                        Title = "RollLines"
+                    Case line.Contains("REBASE GEOMETRY")
+                        If line.Contains("Yes") Then
+                            Title = "RebaseGeometry=True"
+                        Else
+                            Title = "RebaseGeometry=False"
+                        End If
+                        'Case Line.Contains("GROUP GEOMETRY")
+                        '    If Line.Contains("Yes") Then
+                        '        Title = "MergeProfilesIntoPolyline=True"
+                        '    Else
+                        '        Title = "MergeProfilesIntoPolyline=False"
+                        '    End If
+                    Case line.Contains("REPLACE SPLINE")
+                        If line.Contains("Yes") Then
+                            Title = "MergeProfilesIntoPolyline=True"
+                        Else
+                            Title = "MergeProfilesIntoPolyline=False"
+                        End If
+                    Case line.Contains("SPLINE SIMPLIFICATION METHOD")
+                        If line.Contains("Linear") Then
+                            Title = "True"
+                        Else
+                            Title = "False"
+                        End If
+                    Case line.Contains("CHORD_TOLERANCE")
+                        Title = "SplineTolerance =" & Strings.Right(Strings.Right(line, InStrRev(line, "=") - 1), InStrRev(line, " "))
+                End Select
+                'Split the line into its individual components
+                Dim SplitArray As String() = line.Split(";")
+                Dim Split As String
+                'Iterate through each detail and convert it into a readable format
+                For Each Split In SplitArray
+                    'Differentiate visible layers from invisible layers
+                    If line.Contains("Visibility=ON") Then
+                        'Go through each layer option and convert accordingly
+                        Select Case True
+                            Case Split.Contains("Tangent")
+                                'Write the 1st kernel of the tangent line
+                                Kernel = Title & "=IV_" & Header
+                            Case Split.Contains("LinePattern")
+                                'I've only seen ini's contain 28100 for linetype and outputs contain 37633, so I've bypassed any testing for different options
+                                Kernel = Kernel & Title & "LineType=37633"
+                            Case Split.Contains("LineWeight")
+                                'Lineweights have the same syntax so I've tagged it onto the converted identifyer
+                                Kernel = Kernel & Title & Strings.Replace(Split, ";", "")
+                            Case Split.Contains("Color")
+                                Kernel = Kernel & Title & Strings.Replace(Split, ";", "")
+                            Case Else
+                                Kernel = Kernel & Title
+                        End Select
+                    ElseIf Not line.Contains("[") AndAlso Not line.Contains("=") Then
+                        InvisLayers = InvisLayers & "IV_" & Header & ";"
+                    End If
+                Next
+                If Kernel <> "" Then Exportini.Append(Kernel)
+            End If
+        Next
+        Exportini.Append("InvisibleLayers=" & InvisLayers)
+        Return exportini
+    End Function
     Private Sub releaseObject(ByVal obj As Object)
         Try
             System.Runtime.InteropServices.Marshal.ReleaseComObject(obj)
@@ -3644,23 +3773,29 @@ Public Class Main
         If chkPartExport.Checked = True Or chkDXF.Checked = True Then
             writeDebug("Accessing DXF creation")
             ExportType = "DXF"
-            My.Settings.CustomDXFExportLoc = ExportLocation(ExportType)
-            If My.Settings.CustomDXFExportLoc = Nothing Then Exit Sub
+            If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+                My.Settings.CustomDXFExportLoc = ExportLocation(ExportType)
+                If My.Settings.CustomDXFExportLoc = Nothing Then Exit Sub
+            End If
         End If
         If chkPDF.Checked = True Then
-            writeDebug("Accessing PDF creation")
-            ExportType = "PDF"
-            My.Settings.CustomPDFExportLoc = ExportLocation(ExportType)
-            If My.Settings.CustomPDFExportLoc = Nothing Then Exit Sub
-        End If
-        If chkDWG.Checked = True Then
+                writeDebug("Accessing PDF creation")
+                ExportType = "PDF"
+                If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+                    My.Settings.CustomPDFExportLoc = ExportLocation(ExportType)
+                    If My.Settings.CustomPDFExportLoc = Nothing Then Exit Sub
+                End If
+            End If
+            If chkDWG.Checked = True Then
             writeDebug("Accessing DWG creation")
             ExportType = "DWG"
-            My.Settings.CustomDWGExportLoc = ExportLocation(ExportType)
-            If My.Settings.CustomDWGExportLoc = Nothing Then Exit Sub
-        End If
+                    If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+                        My.Settings.CustomDWGExportLoc = ExportLocation(ExportType)
+                        If My.Settings.CustomDWGExportLoc = Nothing Then Exit Sub
+                    End If
+                End If
 
-        FormBusy(True)
+            FormBusy(True)
         btnOK.Text = "Cancel"
         btnExit.Enabled = False
         pgbMain.Visible = True
