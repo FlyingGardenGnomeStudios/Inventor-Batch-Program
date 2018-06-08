@@ -531,7 +531,7 @@ Public Class iProperties
         'Go through drawings to see which ones are selected
         Dim Warning As Boolean = False
         For Y = 0 To Main.dgvSubFiles.RowCount - 1
-
+            If Main.bgwRun.CancellationPending = True Then Exit Sub
             'Look through all sub files in open documents to get the part sourcefile
             If Main.dgvSubFiles(Main.dgvSubFiles.Columns("chkSubFiles").Index, Y).Value = True Then
                 Modelsource = Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingSource").Index, Y).Value
@@ -550,11 +550,17 @@ Public Class iProperties
                     End If
                     Call InitializeiProperties()
                 Else
-                    Call WriteProps(oDoc, "Model")
-                    oDoc.Update()
-                    Call WriteProps(dDoc, "Drawing")
+                    If oDoc IsNot Nothing Then
+                        Call WriteProps(oDoc, "Model")
+                        oDoc.Update()
+                    End If
+
+                    If dDoc IsNot Nothing Then
+                        Call WriteProps(dDoc, "Drawing")
+                        dDoc.Update()
+                    End If
                     ' Call ModifyRevTable(dDoc, False)
-                    dDoc.Update()
+
                 End If
                 Main.CloseLater(DrawingName, oDoc)
                 Main.MatchDrawing(DrawSource, DrawingName, Y)
@@ -1081,13 +1087,13 @@ Public Class iProperties
         For Row = 0 To dgvSummary.RowCount - 1
             dgvSummary(dgvSummary.Columns("SummaryIsDirty").Index, Row).Value = "False"
             If dgvSummary("SumItem", Row).Value = "Material:" Then
-                If cmbMaterial.Value <> "*Varies*" AndAlso cmbMaterial.Value = "" AndAlso SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue IsNot Nothing Then
+                If cmbMaterial.Value <> "*Varies*" AndAlso SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue <> cmbMaterial.Value Then
                     If cmbMaterial.Items.Contains(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue) Then
-                        cmbMaterial.Value = SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue
-                    ElseIf Not cmbMaterial.Items.Contains(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue) Then
                         cmbMaterial.Items.Add(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue)
+                    End If
+                    If cmbMaterial.Value Is Nothing Then
                         cmbMaterial.Value = SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue
-                    Else
+                    ElseIf cmbMaterial.Value IsNot Nothing Then
                         cmbMaterial.Items.Add("*Varies*")
                         cmbMaterial.Value = "*Varies*"
                     End If
@@ -1311,6 +1317,8 @@ Public Class iProperties
 #Region "Write iProperties"
     Private Sub WriteProps(ByRef oDoc As Document, ByRef Document As String)
         For Each row In dgvSummary.Rows
+            If Main.bgwRun.CancellationPending = True Then Exit Sub
+
             If dgvSummary(dgvSummary.Columns("SummaryIsDirty").Index, row.index).Value = "True" Then
                 ' If dgvSummary(dgvSummary.Columns(Document).Index, row.index).Value <> "*Varies*" Then
                 If dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value Is Nothing Then dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value = ""
@@ -1337,7 +1345,8 @@ Public Class iProperties
                             dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value <> "" Then
                             Try
                                 oDoc.componentdefinition.material.name = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                            Catch
+                            Catch ex As Exception
+                                MessageBox.Show(ex.Message)
                             End Try
                         End If
                 End Select
@@ -1382,7 +1391,6 @@ Public Class iProperties
                         oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("23").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
                 End Select
             End If
-
         Next
         For Each row In dgvStatus.Rows
             If dgvStatus(dgvStatus.Columns("StatusIsDirty").Index, row.index).Value = "True" Then
@@ -1430,7 +1438,6 @@ Public Class iProperties
                         End If
                 End Select
             End If
-            oDoc.Update()
         Next
         If Not oDoc.DocumentType = DocumentTypeEnum.kDrawingDocumentObject Then
             CheckCustomiProps(oDoc, dgvCustomModel, "ModelIsDirty", "PCusValue", "PCusName", "PCusType")

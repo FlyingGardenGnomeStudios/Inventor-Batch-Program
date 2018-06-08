@@ -706,9 +706,9 @@ Public Class CheckNeeded
         Next
         If tgvColWidth < tgvCheckNeeded.Width Then
 
-            tgvCheckNeeded.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            tgvCheckNeeded.AutoResizeColumns()
-        Else
+            '    tgvCheckNeeded.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            '    tgvCheckNeeded.AutoResizeColumns()
+            'Else
             tgvCheckNeeded.AutoSizeColumnsMode = DataGridViewAutoSizeColumnMode.DisplayedCells
             tgvCheckNeeded.AutoResizeColumns()
         End If

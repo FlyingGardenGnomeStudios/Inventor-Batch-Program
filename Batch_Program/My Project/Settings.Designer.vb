@@ -1073,6 +1073,138 @@ Namespace My
                 Me("ArchiveExport") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property DWGini() As Boolean
+            Get
+                Return CType(Me("DWGini"),Boolean)
+            End Get
+            Set
+                Me("DWGini") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property DXFini() As Boolean
+            Get
+                Return CType(Me("DXFini"),Boolean)
+            End Get
+            Set
+                Me("DXFini") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property DWGiniLoc() As String
+            Get
+                Return CType(Me("DWGiniLoc"),String)
+            End Get
+            Set
+                Me("DWGiniLoc") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property DXFiniLoc() As String
+            Get
+                Return CType(Me("DXFiniLoc"),String)
+            End Get
+            Set
+                Me("DXFiniLoc") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property PDFLineWeights() As Boolean
+            Get
+                Return CType(Me("PDFLineWeights"),Boolean)
+            End Get
+            Set
+                Me("PDFLineWeights") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property PDFColoursBlack() As Boolean
+            Get
+                Return CType(Me("PDFColoursBlack"),Boolean)
+            End Get
+            Set
+                Me("PDFColoursBlack") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property PDFRange() As Integer
+            Get
+                Return CType(Me("PDFRange"),Integer)
+            End Get
+            Set
+                Me("PDFRange") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("400")>  _
+        Public Property PDFRes() As Integer
+            Get
+                Return CType(Me("PDFRes"),Integer)
+            End Get
+            Set
+                Me("PDFRes") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property CustomDXFExportLoc() As String
+            Get
+                Return CType(Me("CustomDXFExportLoc"),String)
+            End Get
+            Set
+                Me("CustomDXFExportLoc") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property CustomPDFExportLoc() As String
+            Get
+                Return CType(Me("CustomPDFExportLoc"),String)
+            End Get
+            Set
+                Me("CustomPDFExportLoc") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property CustomDWGExportLoc() As String
+            Get
+                Return CType(Me("CustomDWGExportLoc"),String)
+            End Get
+            Set
+                Me("CustomDWGExportLoc") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

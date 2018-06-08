@@ -207,6 +207,7 @@ Partial Class Rev_Table_Settings
         Me.Controls.Add(Me.btnOK)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Rev_Table_Settings"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Rev_Table_Settings"
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()

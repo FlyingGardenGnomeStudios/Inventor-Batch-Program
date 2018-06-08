@@ -15,7 +15,7 @@ Public Class Main
     Dim _started As Boolean = False
     Public iProperties As iProperties
     Public Shared RevTable As RevTable
-    Dim CheckNeeded As New CheckNeeded
+    Dim CheckNeeded As CheckNeeded
     'Public CheckNeeded As CheckNeeded
     Public Settings As New Settings
     Dim RenameTable As New List(Of List(Of String))
@@ -144,7 +144,6 @@ Public Class Main
         SubfilesData.Columns.Add(idComments)
         bkgUpdateOpen = New System.Threading.Thread(AddressOf runUpdateOpen)
         bkgUpdateOpen.Start()
-        bgwRun.WorkerSupportsCancellation = True
         bgwRun.WorkerReportsProgress = True
 
         'Try
@@ -655,6 +654,7 @@ Public Class Main
             End If
         Next
         For X = 0 To dgvSubFiles.RowCount - 1
+            If bgwRun.CancellationPending = True Then Exit Sub
             'Look through all sub files in open documents to get the part sourcefile
             If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, X).Value = True = True Then
                 MatchDrawing(DrawSource, DrawingName, X)
@@ -703,24 +703,8 @@ Public Class Main
                 If chkSkipAssy.Checked = True And DrawSource.Contains(".iam") Then
                 Else
                     'iterate through opend documents to find the selected file
-
-                    'MatchDrawing(DrawSource, DrawingName, X)
                     If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
-                        Dim Folder As FolderBrowserDialog = New FolderBrowserDialog
-                        Folder.Description = "Choose the location you wish to save the " & UCase(ExportType)
-                        Folder.RootFolder = System.Environment.SpecialFolder.Desktop
-                        Folder.SelectedPath = Strings.Left(DrawSource, InStrRev(DrawSource, "\"))
-                        If Destin = "" Then
-                            Try
-                                If Folder.ShowDialog() = Windows.Forms.DialogResult.OK Then
-                                    Destin = Folder.SelectedPath
-                                Else
-                                    Exit Sub
-                                End If
-                            Catch ex As Exception
-                                MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                            End Try
-                        End If
+                        Destin = My.Settings("Custom" & ExportType & "ExportLoc")
                     ElseIf My.Settings(ExportType & "SaveNewLoc") = True Then
                         Destin = My.Settings(ExportType & "SaveLoc")
                     ElseIf My.Settings(ExportType & "Tag") <> "" Then
@@ -836,6 +820,7 @@ Public Class Main
         'Go through drawings to see which ones are selected
         _invApp.SilentOperation = True
         For X = 0 To dgvSubFiles.RowCount - 1
+            If bgwRun.CancellationPending = True Then Exit Sub
             'Look through all sub files in open documents to get the part sourcefile
             If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, X).Value = True Then
                 'iterate through open documents to find the selected file
@@ -857,10 +842,20 @@ Public Class Main
                         Next
                         'Next
                         Call odoc.Update()
-                        oOptions.Value("Sheet_Range") = Inventor.PrintRangeEnum.kPrintAllSheets
-                        oOptions.Value("All_Color_AS_Black") = False
-                        oOptions.Value("Remove_Line_Weights") = True
-                        oOptions.Value("Vector_Resolution") = 5000
+                        Select Case My.Settings.PDFRange
+                            Case 0
+                                oOptions.Value("Sheet_Range") = PrintRangeEnum.kPrintAllSheets
+                            Case 1
+                                oOptions.Value("Sheet_Range") = PrintRangeEnum.kPrintCurrentSheet
+                            Case 2
+                                oOptions.Value("Sheet_Range") = PrintRangeEnum.kPrintSheetRange
+                                oOptions.Value("Custom_Start_Sheet") = 1
+                                oOptions.Value("Custom_End_Sheet") = 1
+                        End Select
+
+                        oOptions.Value("All_Color_AS_Black") = My.Settings.PDFColoursBlack
+                        oOptions.Value("Remove_Line_Weights") = My.Settings.PDFLineWeights
+                        oOptions.Value("Vector_Resolution") = My.Settings.PDFRes
                         ' Define various settings and input to provide the translator.  
                         oContext.Type = IOMechanismEnum.kFileBrowseIOMechanism
                         Dim oData As DataMedium
@@ -1229,79 +1224,6 @@ Public Class Main
         CheckNeeded.tgvCheckNeeded.Nodes.Clear
         _invApp.SilentOperation = False
         'MsVistaProgressBar.Visible = False
-    End Sub
-    Private Sub RRev()
-        Dim OpenDocs As New ArrayList
-        CreateOpenDocs(OpenDocs)
-        RevTable.PopMain(Me)
-        Dim oDoc As Document
-        Dim Path As Documents
-        'Dim oRevTable As RevisionTable
-        'Dim Point As Point2d
-        Path = _invApp.Documents
-        'Dim Loc As Drawing.Point
-        'Dim Sheets As Sheets
-        'Dim Sheet As Sheet
-        Dim X As Integer = 0
-        'Dim oTitleblock As TitleBlock
-        Dim DwgName, strPath, strFile, RevNo As String
-        RevNo = ""
-        DwgName = ""
-        RevTable.btnIgnore.Visible = False
-        chkiProp.CheckState = CheckState.Unchecked
-        'iterate through the files in subfiles
-        For X = 0 To dgvSubFiles.RowCount - 1
-            'select the files that have been checked
-            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, X).Value = True Then
-                'save the name of the checked file
-                DwgName = dgvSubFiles(dgvSubFiles.Columns("PartName").Index, X).Value
-                Exit For
-            End If
-        Next
-        'Iterate through all the open documents in inventor
-        For j = 1 To Path.Count
-            oDoc = Path.Item(j)
-
-            'Parse the path from the document
-            strPath = Strings.Left(oDoc.FullFileName, Strings.Len(oDoc.FullFileName) - 3) & "idw"
-            'Parse out the filename from the document
-            strFile = Strings.Right(strPath, Strings.Len(strPath) - InStrRev(strPath, "\"))
-            'Compare the selected file to the current document, if they are the same proceed
-            If Trim(DwgName) = strFile Then
-                'Modify the revtable layout to give instruction for removing revisions
-                'Open the selected document in the background
-                oDoc = _invApp.Documents.Open(strPath, False)
-                'Go through each sheet to check for revisiontable
-                'Do Until X > 1
-                'Dim S As Integer = 0
-                'Sheets = oDoc.Sheets
-                'Dim oPoint(0 To oDoc.sheets.count * 2) As String
-                'For Each Sheet In Sheets
-                ' 'For each sheet, on the first cycle, delete the table, and create a new table on the second round
-                ' If X <> 1 Then
-                ' Sheet.Activate()
-                ' On Error Resume Next
-                ' oRevTable = oDoc.activesheet.RevisionTables(1)
-                ' oTitleblock = oDoc.activesheet.TitleBlock
-                ' oPoint(S) = oRevTable.Position.X
-                ' oPoint(S + 1) = oRevTable.RangeBox.MinPoint.Y + 1.14359999263287
-                ' oRevTable.Delete()
-                ' S += 2
-                'Else
-                '   Sheet.Activate()
-                '  Point = _invApp.TransientGeometry.CreatePoint2d(oPoint(S), oPoint(S + 1))
-                ' oRevTable = oDoc.ActiveSheet.Revisiontables.Add2(Point, False, True, False, 0)
-                'S += 2
-                'End If
-                'Next
-                'X += 1
-                'Loop
-                Call RevTable.PopulateRevTable(oDoc, RevNo, False)
-                Exit For
-            End If
-        Next
-        'Show the userform
-        RevTable.Show()
     End Sub
     Private Sub btnRef_Click(sender As System.Object, e As System.EventArgs) Handles btnRef.Click
         Dim Written As Boolean = False
@@ -2484,6 +2406,7 @@ Public Class Main
         Dim Checkin As Boolean
         Dim PartName As String = ""
         For Each row In DGV.Rows
+            If bgwRun.CancellationPending = True Then Exit Sub
             If dgvSubFiles(dgvSubFiles.Columns(Column).Index, row.index).Value = True Then
                 PartName = dgvSubFiles(dgvSubFiles.Columns(Part).Index, row.index).Value
                 If _invApp.Documents.ItemByName(PartName).Dirty = True AndAlso Ans = Nothing Then
@@ -2696,13 +2619,32 @@ Public Class Main
             If Output = "dxf" Then
                 If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC4-122E-11D5-8E91-0010B541CD80}" Then
                     oDWGAddIn = _invApp.ApplicationAddIns.Item(i)
-                    strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dxf.ini")
+                    If My.Settings.DXFini = True Then
+                        If IO.File.Exists(My.Settings.DXFiniLoc) Then
+                            strIniFile = My.Settings.DXFiniLoc
+                        Else
+                            MsgBox("Could not locate the DXF .ini." & vbNewLine & "The default .ini file will be used")
+                            strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dxf.ini")
+                        End If
+                    Else
+                            strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dxf.ini")
+                    End If
                     Exit For
                 End If
             ElseIf Output = "dwg" Then
                 If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC2-122E-11D5-8E91-0010B541CD80}" Then
                     oDWGAddIn = _invApp.ApplicationAddIns.Item(i)
-                    strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dwg.ini")
+                    If My.Settings.DWGini = True Then
+                        If IO.File.Exists(My.Settings.DWGiniLoc) Then
+                            strIniFile = My.Settings.DWGiniLoc
+                        Else
+                            strIniFile = My.Settings.DWGiniLoc
+                            MsgBox("Could not locate the DWG .ini." & vbNewLine & "The default .ini file will be used")
+                        End If
+                    Else
+                        strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dwg.ini")
+                    End If
+
                     Exit For
                 End If
             Else
@@ -3471,12 +3413,6 @@ Public Class Main
             iProperties.PopMain(Me)
             writeDebug("Accessing iProperties")
             iProperties.PopulateiProps(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs, True)
-            'If DrawSource = "" And DrawingName = "" Then
-            '    MsgBox("Could not locate drawing" & vbNewLine & "Ensure the drawing and model are saved to the same directory")
-            '    Exit Sub
-            'End If
-            'iProperties.ShowDialog(Me)
-            'chkiProp.CheckState = CheckState.Unchecked
         End If
         If chkPartExport.Checked = True Then
             ExportPart()
@@ -3497,36 +3433,16 @@ Public Class Main
             Checkneeded.PopMain(Me)
             Checkneeded.tgvCheckNeeded.Nodes.Clear()
             Checkneeded.PopulateCheckNeeded(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs)
-            If CheckNeeded.tgvCheckNeeded.Rows.Count > 0 Then
+            If Checkneeded.tgvCheckNeeded.Rows.Count > 0 Then
                 'CheckNeeded.btnHide.Visible = True
                 Checkneeded.ShowDialog(Me)
-
-
                 ' Else
                 '    MsgBox("All drawings have been checked.")
             End If
             chkCheck.Checked = False
         End If
-            'If chkRRev.Checked = True Then
-            '    writeDebug("Accessing remove rev details")
-            '    CheckNeeded.PopMain(Me)
-            '    CheckNeeded.btnHide.Visible = False
-            '    CheckNeeded.Label2.Text = "These drawings have revisions that can be removed:"
-            '    CheckNeeded.Refresh()
-            '    CheckNeeded.btnOK.Visible = False
-            '    CheckNeeded.btnCancel.Location = CheckNeeded.btnOK.Location
-            '    CheckNeeded.btnCancel.Text = "Finished"
-            '    CheckNeeded.PopulateCheckNeeded(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs)
-            '    'CheckNeeded.lstCheckNeeded
-            '    'CheckNeeded.ShowDialog()
-            '    'CheckNeeded.btnIgnore.Visible = True
-            '    'CheckNeeded.Label1.Text = "The following files have not been checked:"
-            '    'CheckNeeded.Label2.Visible = True
-            '    'CheckNeeded.Refresh()
-            '    chkRRev.Checked = False
-            'End If
-            If chkPrint.Checked = True Then
-            writeDebug("Accessing Print dialogue")
+        If chkPrint.Checked = True Then
+            writeDebug("Accessing Print dialog")
             Print.PopMain(Me)
             Print.PopulatePrint(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs, SubFiles, AlphaSub)
             Print.ShowDialog(Me)
@@ -3585,25 +3501,11 @@ Public Class Main
     End Sub
     Private Sub bgwRun_RunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs) Handles bgwRun.RunWorkerCompleted
         FormBusy(False)
+        If bgwRun.CancellationPending = True Then Exit Sub
         If chkiProp.Checked = True Then iProperties.ShowDialog(Me)
         chkiProp.CheckState = CheckState.Unchecked
-        'If CheckNeeded.tgvCheckNeeded.Rows.Count > 0 Then
-        ''CheckNeeded.btnHide.Visible = True
-        'If chkCheck.Checked = True AndAlso CheckNeeded.tgvCheckNeeded.RowCount > 0 Then
-        '    'CheckNeeded.tgvCheckNeeded.Visible = True
-        '    CheckNeeded.ShowDialog(Me)
-        'End If
-
-        'Else
-        'MsgBox("All drawings have been checked.")
-        ' End If
-        'chkCheck.Checked = False
-        'If chkPrint.Checked = True Then Print.ShowDialog(Me)
-        'chkPrint.Checked = False
     End Sub
     Private Sub bgwUpdate_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwUpdateSub.DoWork
-        bgwUpdateSub.WorkerReportsProgress = True
-        bgwUpdateSub.WorkerSupportsCancellation = True
         btnOK.Text = "Cancel"
         btnExit.Enabled = False
         gbxUtilities.Enabled = False
@@ -3738,14 +3640,67 @@ Public Class Main
             bgwRun.Dispose()
             Exit Sub
         End If
+        Dim ExportType As String
+        If chkPartExport.Checked = True Or chkDXF.Checked = True Then
+            writeDebug("Accessing DXF creation")
+            ExportType = "DXF"
+            My.Settings.CustomDXFExportLoc = ExportLocation(ExportType)
+            If My.Settings.CustomDXFExportLoc = Nothing Then Exit Sub
+        End If
+        If chkPDF.Checked = True Then
+            writeDebug("Accessing PDF creation")
+            ExportType = "PDF"
+            My.Settings.CustomPDFExportLoc = ExportLocation(ExportType)
+            If My.Settings.CustomPDFExportLoc = Nothing Then Exit Sub
+        End If
+        If chkDWG.Checked = True Then
+            writeDebug("Accessing DWG creation")
+            ExportType = "DWG"
+            My.Settings.CustomDWGExportLoc = ExportLocation(ExportType)
+            If My.Settings.CustomDWGExportLoc = Nothing Then Exit Sub
+        End If
+
         FormBusy(True)
         btnOK.Text = "Cancel"
         btnExit.Enabled = False
         pgbMain.Visible = True
         bgwRun.RunWorkerAsync()
     End Sub
+    Function ExportLocation(ExportType)
+        Dim Drawsource As String = ""
+        If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+            For Each row In dgvSubFiles.Rows
+                If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.index).Value = True Then
+                    Drawsource = IO.Path.GetDirectoryName(dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, row.index).Value)
+                End If
+            Next
+            Dim Folder As FolderBrowserDialog = New FolderBrowserDialog
+            Folder.Description = "Choose the location you wish to save the " & UCase(ExportType)
+            Folder.RootFolder = System.Environment.SpecialFolder.Desktop
+            Folder.ShowNewFolderButton = False
+            If Drawsource = "" Then
+                Folder.SelectedPath = System.Environment.SpecialFolder.Desktop
+            Else
+                Folder.SelectedPath = Drawsource
+            End If
+            If My.Settings("Custom" & ExportType & "ExportLoc") = "" Then
+                Try
+                    If Folder.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                        Return Folder.SelectedPath
+                    Else
+                        Return Nothing
+                    End If
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                End Try
+            End If
+        End If
+    End Function
     Private Sub Main_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         MainClosed = True
     End Sub
 
+    Private Sub bgwRun_Disposed(sender As Object, e As EventArgs) Handles bgwRun.Disposed
+
+    End Sub
 End Class

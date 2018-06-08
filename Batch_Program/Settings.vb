@@ -63,12 +63,33 @@ Public Class Settings
         Else
             chkArchive.Checked = True
         End If
+        If My.Settings.DWGini = True Then
+            chkCustDWGini.Checked = True
+            txtCustDWGini.Text = My.Settings.DWGiniLoc
+        End If
+        If My.Settings.DXFini = True Then
+            chkCustDXFini.Checked = True
+            txtCustDXFini.Text = My.Settings.DXFiniLoc
+        End If
+        If My.Settings.PDFLineWeights = True Then
+            chkLineWeights.Checked = True
+        Else
+            chkLineWeights.Checked = False
+        End If
+        If My.Settings.PDFColoursBlack = True Then
+            chkPDFBW.Checked = True
+        Else
+            chkPDFBW.Checked = False
+        End If
+        cmbSheets.SelectedIndex = My.Settings.PDFRange
+        numRes.Value = My.Settings.PDFRes
     End Sub
     Private Sub rdoPDFSaveLoc_CheckedChanged(sender As Object, e As EventArgs) Handles rdoPDFSaveLoc.CheckedChanged
         If rdoPDFSaveLoc.Checked = True Then
             rdoPDFChoose.Checked = False
             rdoPDFTag.Checked = False
             txtPDFSaveLoc.Enabled = True
+            btnPDFLocBrowse.Enabled = True
             txtPDFTag.Enabled = False
             txtPDFTag.Text = "ex: \Drawings\PDF"
         End If
@@ -79,6 +100,7 @@ Public Class Settings
             rdoPDFTag.Checked = False
             rdoPDFSaveLoc.Checked = False
             txtPDFSaveLoc.Enabled = False
+            btnPDFLocBrowse.Enabled = False
             txtPDFTag.Enabled = False
             txtPDFTag.Text = "ex: \Drawings\PDF"
         End If
@@ -245,13 +267,33 @@ Public Class Settings
         Else
             My.Settings.ArchiveExport = False
         End If
+        If chkCustDWGini.Checked = True Then
+            My.Settings.DWGini = True
+            My.Settings.DWGiniLoc = txtCustDWGini.Text
+        End If
+        If chkCustDXFini.Checked = True Then
+            My.Settings.DXFini = True
+            My.Settings.DXFiniLoc = txtCustDXFini.Text
+        End If
+        If chkLineWeights.Checked = True Then
+            My.Settings.PDFLineWeights = True
+        Else
+            My.Settings.PDFLineWeights = False
+        End If
+        If chkPDFBW.Checked Then
+            My.Settings.PDFColoursBlack = True
+        Else
+            My.Settings.PDFColoursBlack = False
+        End If
+        My.Settings.PDFRange = cmbSheets.SelectedIndex
+        My.Settings.PDFRes = numRes.Value
         My.Settings.Save()
         Me.Close()
     End Sub
 
     Private Sub btnPDFLocBrowse_Click(sender As Object, e As EventArgs) Handles btnPDFLocBrowse.Click
         Dim Folder As FolderBrowserDialog = New FolderBrowserDialog
-        Folder.Description = "Choose the location you wish To save To"
+        Folder.Description = "Choose the location you wish to save To"
         Folder.RootFolder = System.Environment.SpecialFolder.Desktop
         Try
             If Folder.ShowDialog() = Windows.Forms.DialogResult.OK Then
@@ -266,7 +308,7 @@ Public Class Settings
 
     Private Sub btnDXFLocBrowse_Click(sender As Object, e As EventArgs) Handles btnDXFLocBrowse.Click
         Dim Folder As FolderBrowserDialog = New FolderBrowserDialog
-        Folder.Description = "Choose the location you wish To save To"
+        Folder.Description = "Choose the location you wish to save To"
         Folder.RootFolder = System.Environment.SpecialFolder.Desktop
         Try
             If Folder.ShowDialog() = Windows.Forms.DialogResult.OK Then
@@ -302,4 +344,62 @@ Public Class Settings
         End If
         Return IsAlpha
     End Function
+
+    Private Sub tabPDF_Click(sender As Object, e As EventArgs) Handles tabPDF.Click
+
+    End Sub
+
+    Private Sub chkCustDWGini_CheckedChanged(sender As Object, e As EventArgs) Handles chkCustDWGini.CheckedChanged
+        If chkCustDWGini.Checked = True Then
+            txtCustDWGini.Enabled = True
+            btnDWGiniBrowse.Enabled = True
+        Else
+            txtCustDWGini.Enabled = False
+            btnDWGiniBrowse.Enabled = False
+        End If
+    End Sub
+
+    Private Sub btnDWGiniBrowse_Click(sender As Object, e As EventArgs) Handles btnDWGiniBrowse.Click
+        Dim Folder As OpenFileDialog = New OpenFileDialog
+        Folder.Title = "Choose the location of the .ini file"
+        Folder.InitialDirectory = System.Environment.SpecialFolder.Desktop
+        Folder.Filter = ".ini Files (*.ini*)|*.ini*"
+        Folder.RestoreDirectory = True
+        Try
+            If Folder.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                txtCustDWGini.Text = Folder.FileName
+            Else
+                Exit Sub
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+        End Try
+    End Sub
+
+    Private Sub chkDXFCustini_CheckedChanged(sender As Object, e As EventArgs) Handles chkCustDXFini.CheckedChanged
+        If chkCustDXFini.Checked = True Then
+            txtCustDXFini.Enabled = True
+            btnDXFiniBrowse.Enabled = True
+        Else
+            txtCustDXFini.Enabled = False
+            btnDXFiniBrowse.Enabled = False
+        End If
+    End Sub
+
+    Private Sub btnDXFiniBrowse_Click(sender As Object, e As EventArgs) Handles btnDXFiniBrowse.Click
+        Dim Folder As OpenFileDialog = New OpenFileDialog
+        Folder.Title = "Choose the location of the .ini file"
+        Folder.InitialDirectory = System.Environment.SpecialFolder.Desktop
+        Folder.Filter = ".ini Files (*.ini*)|*.ini*"
+        Folder.RestoreDirectory = True
+        Try
+            If Folder.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                txtCustDXFini.Text = Folder.FileName
+            Else
+                Exit Sub
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+        End Try
+    End Sub
 End Class

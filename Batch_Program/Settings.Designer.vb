@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Settings
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class Settings
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Settings))
         Me.rdoPDFChoose = New System.Windows.Forms.RadioButton()
@@ -34,6 +34,9 @@ Partial Class Settings
         Me.txtPDFSaveLoc = New System.Windows.Forms.TextBox()
         Me.rdoPDFSaveLoc = New System.Windows.Forms.RadioButton()
         Me.tabDXF = New System.Windows.Forms.TabPage()
+        Me.chkCustDXFini = New System.Windows.Forms.CheckBox()
+        Me.btnDXFiniBrowse = New System.Windows.Forms.Button()
+        Me.txtCustDXFini = New System.Windows.Forms.TextBox()
         Me.chkDXFRev = New System.Windows.Forms.CheckBox()
         Me.txtDXFTag = New System.Windows.Forms.TextBox()
         Me.rdoDXFTag = New System.Windows.Forms.RadioButton()
@@ -42,6 +45,9 @@ Partial Class Settings
         Me.txtDXFSaveLoc = New System.Windows.Forms.TextBox()
         Me.rdoDXFSaveLoc = New System.Windows.Forms.RadioButton()
         Me.tabDWG = New System.Windows.Forms.TabPage()
+        Me.chkCustDWGini = New System.Windows.Forms.CheckBox()
+        Me.btnDWGiniBrowse = New System.Windows.Forms.Button()
+        Me.txtCustDWGini = New System.Windows.Forms.TextBox()
         Me.chkDWGRev = New System.Windows.Forms.CheckBox()
         Me.txtDWGTag = New System.Windows.Forms.TextBox()
         Me.rdoDWGTag = New System.Windows.Forms.RadioButton()
@@ -53,11 +59,18 @@ Partial Class Settings
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
         Me.chkArchive = New System.Windows.Forms.CheckBox()
+        Me.chkPDFBW = New System.Windows.Forms.CheckBox()
+        Me.chkLineWeights = New System.Windows.Forms.CheckBox()
+        Me.cmbSheets = New System.Windows.Forms.ComboBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.numRes = New System.Windows.Forms.NumericUpDown()
         Me.GroupBox1.SuspendLayout()
         Me.tabSaveLoc.SuspendLayout()
         Me.tabPDF.SuspendLayout()
         Me.tabDXF.SuspendLayout()
         Me.tabDWG.SuspendLayout()
+        CType(Me.numRes, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'rdoPDFChoose
@@ -86,6 +99,12 @@ Partial Class Settings
         '
         'tabPDF
         '
+        Me.tabPDF.Controls.Add(Me.numRes)
+        Me.tabPDF.Controls.Add(Me.Label2)
+        Me.tabPDF.Controls.Add(Me.Label1)
+        Me.tabPDF.Controls.Add(Me.cmbSheets)
+        Me.tabPDF.Controls.Add(Me.chkPDFBW)
+        Me.tabPDF.Controls.Add(Me.chkLineWeights)
         Me.tabPDF.Controls.Add(Me.chkPDFRev)
         Me.tabPDF.Controls.Add(Me.txtPDFTag)
         Me.tabPDF.Controls.Add(Me.rdoPDFTag)
@@ -135,6 +154,9 @@ Partial Class Settings
         '
         'tabDXF
         '
+        Me.tabDXF.Controls.Add(Me.chkCustDXFini)
+        Me.tabDXF.Controls.Add(Me.btnDXFiniBrowse)
+        Me.tabDXF.Controls.Add(Me.txtCustDXFini)
         Me.tabDXF.Controls.Add(Me.chkDXFRev)
         Me.tabDXF.Controls.Add(Me.txtDXFTag)
         Me.tabDXF.Controls.Add(Me.rdoDXFTag)
@@ -145,6 +167,23 @@ Partial Class Settings
         resources.ApplyResources(Me.tabDXF, "tabDXF")
         Me.tabDXF.Name = "tabDXF"
         Me.tabDXF.UseVisualStyleBackColor = True
+        '
+        'chkCustDXFini
+        '
+        resources.ApplyResources(Me.chkCustDXFini, "chkCustDXFini")
+        Me.chkCustDXFini.Name = "chkCustDXFini"
+        Me.chkCustDXFini.UseVisualStyleBackColor = True
+        '
+        'btnDXFiniBrowse
+        '
+        resources.ApplyResources(Me.btnDXFiniBrowse, "btnDXFiniBrowse")
+        Me.btnDXFiniBrowse.Name = "btnDXFiniBrowse"
+        Me.btnDXFiniBrowse.UseVisualStyleBackColor = True
+        '
+        'txtCustDXFini
+        '
+        resources.ApplyResources(Me.txtCustDXFini, "txtCustDXFini")
+        Me.txtCustDXFini.Name = "txtCustDXFini"
         '
         'chkDXFRev
         '
@@ -192,6 +231,9 @@ Partial Class Settings
         '
         'tabDWG
         '
+        Me.tabDWG.Controls.Add(Me.chkCustDWGini)
+        Me.tabDWG.Controls.Add(Me.btnDWGiniBrowse)
+        Me.tabDWG.Controls.Add(Me.txtCustDWGini)
         Me.tabDWG.Controls.Add(Me.chkDWGRev)
         Me.tabDWG.Controls.Add(Me.txtDWGTag)
         Me.tabDWG.Controls.Add(Me.rdoDWGTag)
@@ -202,6 +244,23 @@ Partial Class Settings
         resources.ApplyResources(Me.tabDWG, "tabDWG")
         Me.tabDWG.Name = "tabDWG"
         Me.tabDWG.UseVisualStyleBackColor = True
+        '
+        'chkCustDWGini
+        '
+        resources.ApplyResources(Me.chkCustDWGini, "chkCustDWGini")
+        Me.chkCustDWGini.Name = "chkCustDWGini"
+        Me.chkCustDWGini.UseVisualStyleBackColor = True
+        '
+        'btnDWGiniBrowse
+        '
+        resources.ApplyResources(Me.btnDWGiniBrowse, "btnDWGiniBrowse")
+        Me.btnDWGiniBrowse.Name = "btnDWGiniBrowse"
+        Me.btnDWGiniBrowse.UseVisualStyleBackColor = True
+        '
+        'txtCustDWGini
+        '
+        resources.ApplyResources(Me.txtCustDWGini, "txtCustDWGini")
+        Me.txtCustDWGini.Name = "txtCustDWGini"
         '
         'chkDWGRev
         '
@@ -265,6 +324,47 @@ Partial Class Settings
         Me.chkArchive.Name = "chkArchive"
         Me.chkArchive.UseVisualStyleBackColor = True
         '
+        'chkPDFBW
+        '
+        resources.ApplyResources(Me.chkPDFBW, "chkPDFBW")
+        Me.chkPDFBW.Name = "chkPDFBW"
+        Me.chkPDFBW.UseVisualStyleBackColor = True
+        '
+        'chkLineWeights
+        '
+        resources.ApplyResources(Me.chkLineWeights, "chkLineWeights")
+        Me.chkLineWeights.Checked = True
+        Me.chkLineWeights.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkLineWeights.Name = "chkLineWeights"
+        Me.chkLineWeights.UseVisualStyleBackColor = True
+        '
+        'cmbSheets
+        '
+        Me.cmbSheets.AutoCompleteCustomSource.AddRange(New String() {resources.GetString("cmbSheets.AutoCompleteCustomSource"), resources.GetString("cmbSheets.AutoCompleteCustomSource1"), resources.GetString("cmbSheets.AutoCompleteCustomSource2")})
+        Me.cmbSheets.DisplayMember = "All Sheets"
+        Me.cmbSheets.FormattingEnabled = True
+        Me.cmbSheets.Items.AddRange(New Object() {resources.GetString("cmbSheets.Items"), resources.GetString("cmbSheets.Items1"), resources.GetString("cmbSheets.Items2")})
+        resources.ApplyResources(Me.cmbSheets, "cmbSheets")
+        Me.cmbSheets.Name = "cmbSheets"
+        '
+        'Label1
+        '
+        resources.ApplyResources(Me.Label1, "Label1")
+        Me.Label1.Name = "Label1"
+        '
+        'Label2
+        '
+        resources.ApplyResources(Me.Label2, "Label2")
+        Me.Label2.Name = "Label2"
+        '
+        'numRes
+        '
+        resources.ApplyResources(Me.numRes, "numRes")
+        Me.numRes.Maximum = New Decimal(New Integer() {800, 0, 0, 0})
+        Me.numRes.Minimum = New Decimal(New Integer() {10, 0, 0, 0})
+        Me.numRes.Name = "numRes"
+        Me.numRes.Value = New Decimal(New Integer() {400, 0, 0, 0})
+        '
         'Settings
         '
         resources.ApplyResources(Me, "$this")
@@ -283,6 +383,7 @@ Partial Class Settings
         Me.tabDXF.PerformLayout()
         Me.tabDWG.ResumeLayout(False)
         Me.tabDWG.PerformLayout()
+        CType(Me.numRes, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -318,4 +419,16 @@ Partial Class Settings
     Friend WithEvents chkDXFRev As Windows.Forms.CheckBox
     Friend WithEvents chkDWGRev As Windows.Forms.CheckBox
     Friend WithEvents chkArchive As Windows.Forms.CheckBox
+    Friend WithEvents chkCustDXFini As Windows.Forms.CheckBox
+    Friend WithEvents btnDXFiniBrowse As Windows.Forms.Button
+    Friend WithEvents txtCustDXFini As Windows.Forms.TextBox
+    Friend WithEvents chkCustDWGini As Windows.Forms.CheckBox
+    Friend WithEvents btnDWGiniBrowse As Windows.Forms.Button
+    Friend WithEvents txtCustDWGini As Windows.Forms.TextBox
+    Friend WithEvents numRes As Windows.Forms.NumericUpDown
+    Friend WithEvents Label2 As Windows.Forms.Label
+    Friend WithEvents Label1 As Windows.Forms.Label
+    Friend WithEvents cmbSheets As Windows.Forms.ComboBox
+    Friend WithEvents chkLineWeights As Windows.Forms.CheckBox
+    Friend WithEvents chkPDFBW As Windows.Forms.CheckBox
 End Class

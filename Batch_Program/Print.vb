@@ -110,6 +110,7 @@ Public Class Print
                 PEnd = 0
             End If
             For X = PStart To PEnd Step Direction
+                If Main.bgwRun.CancellationPending = True Then Exit Sub
                 If Main.dgvSubFiles(Main.dgvSubFiles.Columns("chkSubFiles").Index, X).Value = True Then
                     Main.MatchDrawing(DrawSource, DrawingName, X)
                     dDoc = _invApp.Documents.Open(DrawSource, True)
@@ -128,7 +129,7 @@ Public Class Print
 
                     PrintSheets(DrawingName, ScaleSelect, Range, dDoc, Colour)
                     Main.CloseLater(DrawingName, dDoc)
-                    End If
+                End If
             Next
         Next
         Print_Size.rdoAsk.Checked = True
