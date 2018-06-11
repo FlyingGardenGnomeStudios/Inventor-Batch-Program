@@ -967,15 +967,15 @@ Public Class Main
                         Archive = Strings.Replace(DrawSource, "idw", "ipt")
                         oDoc = _invApp.Documents.Open(Archive, True)
                         SheetMetalTest(Archive, oDoc, sReadableType)
-                        If sReadableType = "P" And ExportType = "dxf" Then
+                        If sReadableType = "P" And ExportType <> "PDF" Then
                             Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, ExportType, RevNo)
-                        ElseIf sReadableType = "S" And ExportType = "dxf" And chkUseDrawings.Checked = False Then
-                            Call SMDXF(oDoc, Source, True, Replace(DrawingName, ".idw", ".dxf"))
+                        ElseIf sReadableType = "S" And ExportType <> "PDF" And chkUseDrawings.Checked = False Then
+                            Call SMDXF(oDoc, Source, True, Replace(DrawingName, ".idw", "." & ExportType))
                             CloseLater(Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt", oDoc)
-                        ElseIf sReadableType = "S" And ExportType = "dxf" And chkUseDrawings.Checked = True Then
-                            Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "dxf", RevNo)
-                        ElseIf sReadableType <> "" And ExportType = "dwg" Then
-                            Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, "dwg", RevNo)
+                        ElseIf sReadableType = "S" And ExportType <> "PDF" And chkUseDrawings.Checked = True Then
+                            Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, ExportType, RevNo)
+                        ElseIf sReadableType <> "" And ExportType <> "PDF" Then
+                            Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, ExportType, RevNo)
                         ElseIf sReadableType = "" Then
                             CloseLater(Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\")), oDoc)
                         End If
@@ -2628,7 +2628,7 @@ Public Class Main
                             strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dxf.ini")
                         End If
                     Else
-                            strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dxf.ini")
+                        strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dxf.ini")
                     End If
                     Exit For
                 End If
@@ -2677,8 +2677,13 @@ Public Class Main
             Call oDWGAddIn.SaveCopyAs(_invApp.ActiveDocument, oContext, oNameValueMap, oOutputFile)
             writeDebug("Created " & Output & " " & ExportName)
         Catch
-            MessageBox.Show("An error occurred while creating " & ExportName)
-            writeDebug("Unable to create " & Output & " " & ExportName)
+            MsgBox("An error occurred while saving " & Strings.Right(odoc.FullFileName, Len(odoc.FullFileName) - InStrRev(odoc.FullFileName, "\")) & "." & vbNewLine _
+                  & "Ensure the dwg is not open or write protected." _
+                  & vbNewLine & vbNewLine & Err.Description)
+            writeDebug("An error occurred while saving " & Strings.Right(odoc.FullFileName, Len(odoc.FullFileName) - InStrRev(odoc.FullFileName, "\")) & "." & vbNewLine _
+                  & "Ensure the dwg is not open or write protected." _
+                  & vbNewLine & vbNewLine & Err.Description)
+            Err.Clear()
         End Try
         CloseLater(Strings.Right(DrawSource, Strings.Len(DrawSource) - Strings.InStrRev(DrawSource, " \ ")), _invApp.Documents.Open(DrawSource, True))
         CloseLater(Strings.Right(Archive, Strings.Len(Archive) - Strings.InStrRev(Archive, " \ ")), _invApp.Documents.Open(Archive, True))
@@ -2726,13 +2731,6 @@ Public Class Main
         'Build the string that defines the format of the DXF file
         Dim sOut As String
         sOut = Translate_ini(My.Settings.DXFiniLoc)
-        '&OuterProfileLayer=IV_INTERIOR_PROFILES"
-        'sOut = "FLAT PATTERN DXF?AcadVersion=2010" &
-        '"&OuterProfileLayer=IV_OUTER_PROFILE&OuterProfileLayerLineType=37633&OuterProfileLayerLineWeight=0,0500&OuterProfileLayerColor=0;0;0" &
-        '"&InteriorProfilesLayer=IV_INTERIOR_PROFILES&InteriorProfilesLayerLineType=37633&InteriorProfilesLayerLineWeight=0,0500&InteriorProfilesLayerColor=0;0;0" &
-        '"&InvisibleLayers=IV_TANGENT;IV_BEND;IV_Bend_Down;IV_Bend​_Up;IV_ARC_CENTERS"
-        '
-        '
         Try
             oDataIO.WriteDataToFile(sOut, DXFSource)
         Catch
@@ -2745,45 +2743,8 @@ Public Class Main
             Err.Clear()
         End Try
         _invApp.SilentOperation = False
-        ' "&TangentLayer=IV_TANGENT&deletelayer=TrueTangentLayerLineType=37633&TangentLayerLineWeight=0,0500&TangentLayerColor=0;0;0" & _
-        '"&BendLayer=BEND&BendLayerLineType=37633&BendLayerLineWeight=0,0500&BendLayerColor=0;0;0" & _
-        '"&BendDownLayer=BENDD&BendDownLayerLineType=37633&BendDownLayerLineWeight=0,0500&BendDownLayerColor=0;0;0" & _
-        ' "&ArcCentersLayer=ARC&ArcCentersLayerLineType=37633&ArcCentersLayerLineWeight=0,0500&ArcCentersLayerColor=0;0;0" & _
-        ' "&OuterProfileLayer=IV_OUTER_PROFILE&OuterProfileLayerLineType=37633&OuterProfileLayerLineWeight=0,0500&OuterProfileLayerColor=0;0;0" & _
-        ' "&InteriorProfilesLayer=IV_INTERIOR_PROFILES&InteriorProfilesLayerLineType=37633&InteriorProfilesLayerLineWeight=0,0500&InteriorProfilesLayerColor=0;0;0"
-
-        '' ---- Creating DXF from flat pattern through the .INI file doesn't seem to be possible
-        '' ---- the code below is kept for reference only
-        'Dim oDXFAddin As TranslatorAddIn = Nothing
-        'For i As Long = 1 To _invApp.ApplicationAddIns.Count
-        ' If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC4-122E-11D5-8E91-0010B541CD80}" Then
-        ' oDXFAddin = _invApp.ApplicationAddIns.Item(i)
-        ' Exit For
-        ' End If
-        ' Next
-        ' If oDXFAddin Is Nothing Then
-        ' MsgBox("The DXF Add-in could not be found")
-        ' Exit Sub
-        ' End If
-        ' If Not oDXFAddin.Activated Then oDXFAddin.Activate()
-        ' Dim oContext As TranslationContext = _invApp.TransientObjects.CreateTranslationContext
-        ' oContext.Type = IOMechanismEnum.kFileBrowseIOMechanism
-        ' Dim oNameValueMap As NameValueMap = _invApp.TransientObjects.CreateNameValueMap
-        ' If oDXFAddin.HasSaveCopyAsOptions(oPartDoc, oContext, oNameValueMap) Then
-        ' For x = 1 To oNameValueMap.Count
-        ' Next
-        ' oNameValueMap.Value("DwgVersion") = 25
-        ' Dim strIniFile As String = "P:\Inventor System Files\Inventor Add Ins and Programs\IO Profile.ini"
-        ' oNameValueMap.Value("Export_Acad_IniFile") = strIniFile
-        ' End If
-
-        ' Dim oOutputFile As DataMedium = _invApp.TransientObjects.CreateDataMedium
-        ' oOutputFile.FileName = DXFSource
-
-        'Call oDXFAddin.SaveCopyAs(oPartDoc, oContext, oNameValueMap, oOutputFile)
-
     End Sub
-    Function Translate_ini(ini)
+    Function Translate_ini(ByVal ini) As String
         'Create stringbuilder to re-create ini
         Dim Exportini As New System.Text.StringBuilder
         'Create a string that contains the invisible layers to append to the file
@@ -2797,7 +2758,7 @@ Public Class Main
                 'Set the year
                 Dim Year As Integer = Strings.Right(line, 4)
                 'Append the header file to the output
-                Exportini.Append("AcadVersion=" & Year)
+                Exportini.Append("FLAT PATTERN DXF?AcadVersion=" & Year)
             End If
             'Each layer contains an =, this differentiates between the comment lines which contain []
             If line.Contains("=") Then
@@ -2807,54 +2768,54 @@ Public Class Main
                             'Create a title so we can loop through the different layer types rather than create a case for each
                     Case line.Contains("Tangent")
                         Header = "TANGENT"
-                        Title = "TangentLayer"
+                        Title = "&TangentLayer"
                     Case line.Contains("Bend") And line.Contains("Front")
                         Header = "BEND"
-                        Title = "BendLayer"
+                        Title = "&BendLayer"
                     Case line.Contains("Bend") And line.Contains("Back")
                         Header = "BEND_DOWN"
-                        Title = "BendDownLayer"
+                        Title = "&BendDownLayer"
                     Case line.Contains("Tool Centers") And line.Contains("Front")
                         Header = "TOOL_CENTER"
-                        Title = "ToolCenter"
+                        Title = "&ToolCenterLayer"
                     Case line.Contains("Tool Centers") And line.Contains("Back")
                         Header = "TOOL_CENTER_DOWN"
-                        Title = "ToolCenterDown"
+                        Title = "&ToolCenterDownLayer"
                     Case line.Contains("Arc Centers")
                         Header = "ARC_CENTERS"
-                        Title = "ArcCenters"
+                        Title = "&ArcCentersLayer"
                     Case line.Contains("Outer Profile")
                         Header = "OUTER_PROFILE"
-                        Title = "OuterProfile"
-                    Case line.Contains("Inner Profiles")
+                        Title = "&OuterProfileLayer"
+                    Case line.Contains("Inner Profile")
                         Header = "INTERIOR_PROFILES"
-                        Title = "InteriorProfiles"
+                        Title = "&InteriorProfilesLayer"
                     Case line.Contains("Feature Profile") And line.Contains("Front")
                         Header = "FEATURE_PROFILES"
-                        Title = "FeatureProfiles"
+                        Title = "&FeatureProfilesLayer"
                     Case line.Contains("Feature Profile") And line.Contains("Back")
                         Header = "FEATURE_PROFILES_DOWN"
-                        Title = "FeatureProfilesDown"
+                        Title = "&FeatureProfilesDownLayer"
                     Case line.Contains("Alternate Rep") And line.Contains("Front")
                         Header = "ALTREP_FRONT"
-                        Title = "AltRepFront"
+                        Title = "&AltRepFrontLayer"
                     Case line.Contains("Alternate Rep") And line.Contains("Back")
                         Header = "ALTREP_BACK"
-                        Title = "AltRepBack"
+                        Title = "&AltRepBackLayer"
                     Case line.Contains("Unconsumed Sketches")
                         Header = "UNCONSUMED_SKETCHES"
-                        Title = "UnconsumedSketches"
+                        Title = "&UnconsumedSketchesLayer"
                     Case line.Contains("Tangent Roll Lines")
                         Header = "ROLL_TANGENT"
-                        Title = "TangentRollLines"
+                        Title = "&TangentRollLinesLayer"
                     Case line.Contains("Roll Lines")
                         Header = "ROLL"
-                        Title = "RollLines"
+                        Title = "&RollLinesLayer"
                     Case line.Contains("REBASE GEOMETRY")
                         If line.Contains("Yes") Then
-                            Title = "RebaseGeometry=True"
+                            Title = "&RebaseGeometry=True"
                         Else
-                            Title = "RebaseGeometry=False"
+                            Title = "&RebaseGeometry=False"
                         End If
                         'Case Line.Contains("GROUP GEOMETRY")
                         '    If Line.Contains("Yes") Then
@@ -2864,51 +2825,75 @@ Public Class Main
                         '    End If
                     Case line.Contains("REPLACE SPLINE")
                         If line.Contains("Yes") Then
-                            Title = "MergeProfilesIntoPolyline=True"
+                            Title = "&MergeProfilesIntoPolyline=True"
                         Else
-                            Title = "MergeProfilesIntoPolyline=False"
+                            Title = "&MergeProfilesIntoPolyline=False"
                         End If
                     Case line.Contains("SPLINE SIMPLIFICATION METHOD")
                         If line.Contains("Linear") Then
-                            Title = "True"
+                            Title = "&SimplifySplines=True"
                         Else
-                            Title = "False"
+                            Title = "&SimplifySplines=False"
                         End If
                     Case line.Contains("CHORD_TOLERANCE")
-                        Title = "SplineTolerance =" & Strings.Right(Strings.Right(line, InStrRev(line, "=") - 1), InStrRev(line, " "))
+                        'Trim off identifyer
+                        Title = Strings.Right(line, Len(line) - InStrRev(line, "="))
+                        'replace syntax
+                        Title = Replace(Title, ".", ",")
+                        'trim off units
+                        Title = "&SplineTolerance =" & Strings.Left(Title, InStr(Title, " ") - 1)
                 End Select
                 'Split the line into its individual components
                 Dim SplitArray As String() = line.Split(";")
                 Dim Split As String
                 'Iterate through each detail and convert it into a readable format
-                For Each Split In SplitArray
-                    'Differentiate visible layers from invisible layers
-                    If line.Contains("Visibility=ON") Then
-                        'Go through each layer option and convert accordingly
-                        Select Case True
-                            Case Split.Contains("Tangent")
-                                'Write the 1st kernel of the tangent line
-                                Kernel = Title & "=IV_" & Header
-                            Case Split.Contains("LinePattern")
-                                'I've only seen ini's contain 28100 for linetype and outputs contain 37633, so I've bypassed any testing for different options
-                                Kernel = Kernel & Title & "LineType=37633"
-                            Case Split.Contains("LineWeight")
-                                'Lineweights have the same syntax so I've tagged it onto the converted identifyer
-                                Kernel = Kernel & Title & Strings.Replace(Split, ";", "")
-                            Case Split.Contains("Color")
-                                Kernel = Kernel & Title & Strings.Replace(Split, ";", "")
-                            Case Else
-                                Kernel = Kernel & Title
-                        End Select
-                    ElseIf Not line.Contains("[") AndAlso Not line.Contains("=") Then
-                        InvisLayers = InvisLayers & "IV_" & Header & ";"
-                    End If
-                Next
+                If Header = "" AndAlso Title <> "" Then
+                    Kernel = Title
+                Else
+                    For Each Split In SplitArray
+                        'Differentiate visible layers from invisible layers
+                        If line.Contains("Visibility=ON") Then
+                            'Go through each layer option and convert accordingly
+                            Select Case True
+                                Case Split.Contains("=IV")
+                                    'Write the 1st kernel of the tangent line
+                                    Kernel = Title & "=IV_" & Header
+                                Case Split.Contains("LinePattern")
+                                    'I've only seen ini's contain 28100 for linetype and outputs contain 37633, so I've bypassed any testing for different options
+                                    Kernel = Kernel & Title & "LineType=37633"
+                                Case Split.Contains("LineWeight")
+                                    'Lineweights have the same syntax so I've tagged it onto the converted identifyer
+                                    Split = Replace(Split, ";", "")
+                                    Kernel = Kernel & Title & Strings.Replace(Split, ".", ",")
+                                Case Split.Contains("Color")
+                                    'same as lineweights
+                                    Split = Replace(Split, ";", "")
+                                    Kernel = Kernel & Title & Strings.Replace(Split, ",", ";")
+                                Case Split = ""
+                                    'the last split returns nothing so don't include anything in the kernel
+                                Case Else
+                                    'Add flat pattern geometry options 
+                                    Kernel = Kernel & Title
+                            End Select
+                        ElseIf Not line.Contains("[") AndAlso Header <> "" Then
+                            'for invisible layers, compile a list and tag on at the end
+                            If InvisLayers = "" Then
+                                InvisLayers = "IV_" & Header
+                            Else
+                                InvisLayers = InvisLayers & ";IV_" & Header
+                            End If
+                            Exit For
+                        End If
+                    Next
+                End If
+                'add the compiled kernel before moving to the next line
                 If Kernel <> "" Then Exportini.Append(Kernel)
             End If
         Next
-        Exportini.Append("InvisibleLayers=" & InvisLayers)
-        Return exportini
+        'After all the lines are read, tack on the invisible layers
+        If InvisLayers <> "" Then Exportini.Append("&InvisibleLayers=" & InvisLayers)
+        'Return the string as the output for the dxf
+        Return Exportini.ToString
     End Function
     Private Sub releaseObject(ByVal obj As Object)
         Try
