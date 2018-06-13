@@ -9,6 +9,8 @@ Imports System.Text.RegularExpressions
 Imports System.ComponentModel
 Imports System.Globalization
 Imports AdvancedDataGridView
+Imports System.Deployment.Application
+Imports Microsoft.Win32
 
 Public Class Main
     Dim _invApp As Inventor.Application
@@ -203,6 +205,29 @@ Public Class Main
         ''See step 9, below.
         'ShowTrial(Not isGenuine)
         CreateOpenDocs()
+    End Sub
+    Private Shared Sub SetAddRemoveProgramsIcon()
+        If ApplicationDeployment.IsNetworkDeployed AndAlso ApplicationDeployment.CurrentDeployment.IsFirstRun Then
+
+            Try
+                Dim iconSourcePath As String = IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "Batch Program - Beta.ico")
+                If Not IO.File.Exists(iconSourcePath) Then Return
+                Dim myUninstallKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\Uninstall")
+                Dim mySubKeyNames As String() = myUninstallKey.GetSubKeyNames()
+
+                For i As Integer = 0 To mySubKeyNames.Length - 1
+                    Dim myKey As RegistryKey = myUninstallKey.OpenSubKey(mySubKeyNames(i), True)
+                    Dim myValue As Object = myKey.GetValue("DisplayName")
+
+                    If myValue IsNot Nothing AndAlso myValue.ToString() = "Batch Program - Beta" Then
+                        myKey.SetValue("DisplayIcon", iconSourcePath)
+                        Exit For
+                    End If
+                Next
+
+            Catch ex As Exception
+            End Try
+        End If
     End Sub
 #End Region
 #Region "Form Updating"
@@ -1072,10 +1097,10 @@ Public Class Main
                 Next
                 S = 0
                 If Reset = True Then
-                    CheckNeeded.PopMain(Me)
-                    CheckNeeded.PopulateCheckNeeded(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs)
+                    Checkneeded.PopMain(Me)
+                    Checkneeded.PopulateCheckNeeded(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs)
                 End If
-                For Each node As TreeGridNode In CheckNeeded.tgvCheckNeeded.Rows
+                For Each node As TreeGridNode In Checkneeded.tgvCheckNeeded.Rows
                     If node.HasChildren Then node.Expand()
                 Next
 
@@ -1126,7 +1151,7 @@ Public Class Main
                     S += 1
                 Next Sheet
                 If My.Settings.ArchiveExport = True Then
-                    For Each ParentNode As TreeGridNode In CheckNeeded.tgvCheckNeeded.Rows
+                    For Each ParentNode As TreeGridNode In Checkneeded.tgvCheckNeeded.Rows
                         If ParentNode.Cells(0).Value = DrawingName Then
                             For Each childnode In ParentNode.Nodes
                                 oRevTable.RevisionTableRows.Add()
@@ -1157,29 +1182,29 @@ Public Class Main
                                 Else
                                     oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = My.Settings.AlphaRev
                                 End If
-                            ElseIf h.Name = My.Settings.RTSNamecol AndAlso My.Settings.RTSName = True Then
+                            ElseIf h.Name = My.Settings.RTSNameCol AndAlso My.Settings.RTSName = True Then
                                 oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = _invApp.GeneralOptions.UserName.ToString
                             End If
                         Else
                             Select Case UCase(h.Name)
                                 Case UCase(My.Settings.RTSDateCol)
-                                    If My.Settings.RTSDate = True Then oRevTable.RevisionTableRows(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTSDateCol).Index, RevRow - 1).Value
+                                    If My.Settings.RTSDate = True Then oRevTable.RevisionTableRows(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTSDateCol).Index, RevRow - 1).Value
                                 Case UCase(My.Settings.RTSDescCol)
-                                    If My.Settings.RTSDesc = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTSDescCol).Index, RevRow - 1).Value
+                                    If My.Settings.RTSDesc = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTSDescCol).Index, RevRow - 1).Value
                                 Case UCase(My.Settings.RTSNameCol)
-                                    If My.Settings.RTSName = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTSNameCol).Index, RevRow - 1).Value
+                                    If My.Settings.RTSName = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTSNameCol).Index, RevRow - 1).Value
                                 Case UCase(My.Settings.RTSApprovedCol)
-                                    If My.Settings.RTSApproved = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTSApprovedCol).Index, RevRow - 1).Value
+                                    If My.Settings.RTSApproved = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTSApprovedCol).Index, RevRow - 1).Value
                                 Case UCase(My.Settings.RTS1Col)
-                                    If My.Settings.RTS1 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTS1Col).Index, RevRow - 1).Value
+                                    If My.Settings.RTS1 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTS1Col).Index, RevRow - 1).Value
                                 Case UCase(My.Settings.RTS2Col)
-                                    If My.Settings.RTS2 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTS2Col).Index, RevRow - 1).Value
+                                    If My.Settings.RTS2 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTS2Col).Index, RevRow - 1).Value
                                 Case UCase(My.Settings.RTS3Col)
-                                    If My.Settings.RTS3 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTS3Col).Index, RevRow - 1).Value
+                                    If My.Settings.RTS3 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTS3Col).Index, RevRow - 1).Value
                                 Case UCase(My.Settings.RTS4Col)
-                                    If My.Settings.RTS4 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTS4Col).Index, RevRow - 1).Value
+                                    If My.Settings.RTS4 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTS4Col).Index, RevRow - 1).Value
                                 Case UCase(My.Settings.RTS5Col)
-                                    If My.Settings.RTS5 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = CheckNeeded.tgvCheckNeeded(CheckNeeded.tgvCheckNeeded.Columns(My.Settings.RTS5Col).Index, RevRow - 1).Value
+                                    If My.Settings.RTS5 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTS5Col).Index, RevRow - 1).Value
                             End Select
                         End If
                         i = i + 1
@@ -1222,7 +1247,7 @@ Public Class Main
                 _invApp.SilentOperation = False
             End If
         Next
-        CheckNeeded.tgvCheckNeeded.Nodes.Clear
+        Checkneeded.tgvCheckNeeded.Nodes.Clear()
         _invApp.SilentOperation = False
         'MsVistaProgressBar.Visible = False
     End Sub
@@ -3752,23 +3777,23 @@ Public Class Main
             End If
         End If
         If chkPDF.Checked = True Then
-                writeDebug("Accessing PDF creation")
-                ExportType = "PDF"
-                If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
-                    My.Settings.CustomPDFExportLoc = ExportLocation(ExportType)
-                    If My.Settings.CustomPDFExportLoc = Nothing Then Exit Sub
-                End If
+            writeDebug("Accessing PDF creation")
+            ExportType = "PDF"
+            If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+                My.Settings.CustomPDFExportLoc = ExportLocation(ExportType)
+                If My.Settings.CustomPDFExportLoc = Nothing Then Exit Sub
             End If
-            If chkDWG.Checked = True Then
+        End If
+        If chkDWG.Checked = True Then
             writeDebug("Accessing DWG creation")
             ExportType = "DWG"
-                    If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
-                        My.Settings.CustomDWGExportLoc = ExportLocation(ExportType)
-                        If My.Settings.CustomDWGExportLoc = Nothing Then Exit Sub
-                    End If
-                End If
+            If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+                My.Settings.CustomDWGExportLoc = ExportLocation(ExportType)
+                If My.Settings.CustomDWGExportLoc = Nothing Then Exit Sub
+            End If
+        End If
 
-            FormBusy(True)
+        FormBusy(True)
         btnOK.Text = "Cancel"
         btnExit.Enabled = False
         pgbMain.Visible = True
