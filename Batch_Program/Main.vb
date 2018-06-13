@@ -145,7 +145,7 @@ Public Class Main
         bkgUpdateOpen = New System.Threading.Thread(AddressOf runUpdateOpen)
         bkgUpdateOpen.Start()
         bgwRun.WorkerReportsProgress = True
-
+        AddHandler _invApp.ApplicationEvents.OnOpenDocument, AddressOf CreateOpenDocs
         'Try
         '    'TODO: goto the version page at LimeLM and paste this GUID here
         '    ta = New TurboActivate("3d2a7b7e59bfcc74c5df44.47834669")
@@ -202,7 +202,7 @@ Public Class Main
         ''Show a trial if we're not genuine
         ''See step 9, below.
         'ShowTrial(Not isGenuine)
-        CreateOpenDocs(OpenDocs)
+        CreateOpenDocs()
     End Sub
 #End Region
 #Region "Form Updating"
@@ -420,7 +420,7 @@ Public Class Main
         Dim PropSets As PropertySets
         Dim ExcelDoc As Excel.Workbook = Nothing
         Dim OpenDocs As New ArrayList
-        CreateOpenDocs(OpenDocs)
+        CreateOpenDocs()
         Dim Elog As String = ""
         Dim StartTime As Date = Now
         Dim _ExcelApp As New Excel.Application
@@ -557,7 +557,7 @@ Public Class Main
         If My.Settings.RenameShowMe = True Then
             Infoform.ShowDialog()
         End If
-        CreateOpenDocs(OpenDocs)
+        CreateOpenDocs()
         Dim ErrList As String = ""
         Dim Elog As String = ""
         If VBAFlag = "False" Then CreateVBA()
@@ -673,10 +673,10 @@ Public Class Main
     End Sub
     Public Sub ExportCheck(GridView As DataGridView, ExportType As String, chkcolumn As String, PDTitle As String)
         Dim OpenDocs As New ArrayList
-        CreateOpenDocs(OpenDocs)
+        CreateOpenDocs()
         Dim X, Ans, Total, Counter, OWCounter As Integer
         Counter = 1
-        Dim Overwrite, Title, PDFSource, DXFSource, DWGSource, RevNo, DrawSource, DrawingName As String
+        Dim Overwrite, PDFSource, DXFSource, DWGSource, RevNo, DrawSource, DrawingName As String
         Overwrite = ""
         PDFSource = ""
         DXFSource = ""
@@ -801,7 +801,7 @@ Public Class Main
                              , Total As Integer, Counter As Integer)
         ' Get the PDF translator Add-In.
         Dim ErrorReport As String = ""
-        Dim Title, RevNo As String
+        Dim RevNo As String
         Dim DrawSource As String = ""
         Dim DrawingName As String = ""
         Dim PDFSource As String = ""
@@ -914,7 +914,7 @@ Public Class Main
     Public Sub DXFDWGCreator(ByRef Destin As String, ByRef DrawSource As String, OpenDocs As ArrayList _
                              , Total As Integer, Counter As Integer, ExportType As String, Gridview As DataGridView, ChkColumn As String, PDTitle As String)
         Dim sReadableType As String = ""
-        Dim Title, RevNo As String
+        Dim RevNo As String
         Dim oDoc As Inventor.Document
         Dim Archive As String = ""
         Dim NotMade As String = ""
@@ -967,16 +967,16 @@ Public Class Main
                         Archive = Strings.Replace(DrawSource, "idw", "ipt")
                         oDoc = _invApp.Documents.Open(Archive, True)
                         SheetMetalTest(Archive, oDoc, sReadableType)
-                        If sReadableType = "P" And ExportType <> "PDF" Then
+                        If sReadableType = "P" And ExportType <> "PDF" And chkFlatPattern.Checked = False Then
                             Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, ExportType, RevNo)
                         ElseIf sReadableType = "S" And ExportType <> "PDF" And chkUseDrawings.Checked = False Then
                             Call SMDXF(oDoc, Source, True, Replace(DrawingName, ".idw", "." & ExportType))
                             CloseLater(Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt", oDoc)
                         ElseIf sReadableType = "S" And ExportType <> "PDF" And chkUseDrawings.Checked = True Then
                             Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, ExportType, RevNo)
-                        ElseIf sReadableType <> "" And ExportType <> "PDF" Then
+                        ElseIf sReadableType <> "" And ExportType <> "PDF" And chkFlatPattern.Checked = False Then
                             Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, OpenDocs, ExportType, RevNo)
-                        ElseIf sReadableType = "" Then
+                        ElseIf sReadableType = "" And chkFlatPattern.Checked = False Then
                             CloseLater(Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\")), oDoc)
                         End If
                         If chkCheck.CheckState = CheckState.Indeterminate Then
@@ -1008,8 +1008,9 @@ Public Class Main
         Dim DrawSource As String = Nothing
         Dim OpenDocs As New ArrayList
         Dim Y, Q As Integer
+        Dim Checkneeded As New CheckNeeded
         Q = 0
-        CreateOpenDocs(OpenDocs)
+        CreateOpenDocs()
         _invApp.SilentOperation = True
         For Y = 0 To dgvSubFiles.RowCount - 1
             If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, Y).Value = True Then
@@ -1075,7 +1076,7 @@ Public Class Main
                     CheckNeeded.PopulateCheckNeeded(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs)
                 End If
                 For Each node As TreeGridNode In CheckNeeded.tgvCheckNeeded.Rows
-                    node.Expand()
+                    If node.HasChildren Then node.Expand()
                 Next
 
                 For Each Sheet In Sheets
@@ -1185,8 +1186,7 @@ Public Class Main
                     Next
                 Next
 
-                CheckNeeded.tgvCheckNeeded.Nodes.Clear()
-
+                Checkneeded.tgvCheckNeeded.Nodes.Clear()
 
 
                 'Sheet = oDoc.activesheet
@@ -1216,7 +1216,7 @@ Public Class Main
                 Try
                     oDoc.Save()
                 Catch ex As Exception
-                    MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                    'MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                 End Try
                 CloseLater(DrawingName, oDoc)
                 _invApp.SilentOperation = False
@@ -1250,7 +1250,7 @@ Public Class Main
         Dim OpenDocs As New ArrayList
         Dim AsmDoc As AssemblyDocument
         Dim DocType As DocumentTypeEnum
-        Dim Ans, strFile, PartName, Archive, DrawSource As String
+        Dim Ans, strFile, PartName As String
         Dim DrawingName As String = ""
         Dim test, ChildFile, ParentFile As String
         ChildFile = ""
@@ -1419,18 +1419,21 @@ Public Class Main
             chkUseDrawings.Visible = True
             chkSkipAssy.CheckState = CheckState.Checked
             chkSkipAssy.Visible = True
-            chkDwgClose.Top = chkDwgClose.Top + 30
-            gbxDrawings.Height = gbxDrawings.Size.Height.ToString + 30
-            Me.MinimumSize = New System.Drawing.Size(Me.MinimumSize.Width, Me.MinimumSize.Height + 30)
+            chkFlatPattern.Visible = True
+            chkFlatPattern.Checked = True
+            chkDwgClose.Top = chkDwgClose.Top + 45
+            gbxDrawings.Height = gbxDrawings.Size.Height.ToString + 40
+            Me.MinimumSize = New System.Drawing.Size(Me.MinimumSize.Width, Me.MinimumSize.Height + 40)
 
         Else
             chkUseDrawings.CheckState = CheckState.Checked
             chkUseDrawings.Visible = False
             chkSkipAssy.Visible = False
-            chkDwgClose.Top = chkDwgClose.Top - 30
-            gbxDrawings.Height = gbxDrawings.Size.Height.ToString - 30
-
-            Me.MinimumSize = New System.Drawing.Size(Me.MinimumSize.Width, Me.MinimumSize.Height - 30)
+            chkDwgClose.Top = chkDwgClose.Top - 45
+            gbxDrawings.Height = gbxDrawings.Size.Height.ToString - 40
+            chkFlatPattern.Visible = False
+            chkFlatPattern.Checked = False
+            Me.MinimumSize = New System.Drawing.Size(Me.MinimumSize.Width, Me.MinimumSize.Height - 40)
             If Me.MinimumSize.Height = Me.Height - 30 Then Me.Height = Me.Height - 30
         End If
     End Sub
@@ -1439,9 +1442,9 @@ Public Class Main
             chkDWG.Visible = True
             chkPDF.Visible = True
             chkDXF.Visible = True
-            chkDwgClose.Top = chkDwgClose.Top + 15
-            gbxDrawings.Height = gbxDrawings.Height + 15
-            Me.MinimumSize = New System.Drawing.Size(Me.MinimumSize.Width, Me.MinimumSize.Height + 15)
+            chkDwgClose.Top = chkDwgClose.Top + 17
+            gbxDrawings.Height = gbxDrawings.Height + 10
+            Me.MinimumSize = New System.Drawing.Size(Me.MinimumSize.Width, Me.MinimumSize.Height + 10)
 
             chkPDF.CheckState = CheckState.Unchecked
             chkDWG.CheckState = CheckState.Unchecked
@@ -1453,11 +1456,11 @@ Public Class Main
             chkDXF.CheckState = CheckState.Unchecked
             chkDWG.CheckState = CheckState.Unchecked
             chkPDF.CheckState = CheckState.Unchecked
-            chkDwgClose.Top = chkDwgClose.Top - 15
+            chkDwgClose.Top = chkDwgClose.Top - 17
 
-            Me.MinimumSize = New System.Drawing.Size(Me.MinimumSize.Width, Me.MinimumSize.Height - 15)
+            Me.MinimumSize = New System.Drawing.Size(Me.MinimumSize.Width, Me.MinimumSize.Height - 10)
             If Me.MinimumSize.Height = Me.Height - 15 Then Me.Height = Me.Height - 15
-            gbxDrawings.Height = gbxDrawings.Height - 15
+            gbxDrawings.Height = gbxDrawings.Height - 10
         End If
     End Sub
     Private Sub chkDWG_CheckedChanged(sender As Object, e As EventArgs) Handles chkDWG.CheckedChanged
@@ -1848,44 +1851,7 @@ Public Class Main
                "Open VBA Editor in Inventor and import" & vbNewLine &
                My.Computer.FileSystem.SpecialDirectories.Temp & "\Get64BitPicture.bas into the ""modules list""")
     End Sub
-    'Private Sub RunCompleted()
-    '    If dgvSubFiles.RowCount > 10 Then
-    '        txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, Me.Height - 122)
-    '        txtSearch.Visible = True
-    '        txtSearch.Text = "Search"
-    '        txtSearch.ForeColor = Drawing.Color.Gray
-    '        dgvSubFiles.Height = GroupBox2.Height - 49
-    '    Else
-    '        dgvSubFiles.Height = dgvOpenFiles.Height
-
-    '        txtSearch.Visible = False
-    '    End If
-    '    For Each row In dgvSubFiles.Rows
-    '        If dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Gray Or
-    '            dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Red Then
-    '            dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.Index).Value = True = False
-    '        End If
-    '    Next
-    '    dgvSubFiles.Columns("chkSubFiles").Visible = True
-    '    'if no drawings are found, notify the user
-    '    If dgvSubFiles.RowCount = 0 Then
-    '        'change display style to simulate an unusable entity
-    '        dgvSubFiles.Rows.Add(False, "No Drawings Found")
-    '        dgvSubFiles.Rows(0).DefaultCellStyle.ForeColor = Drawing.Color.Gray
-    '        dgvSubFiles.Columns("chkSubFiles").Visible = False
-    '    ElseIf CMSHeirarchical.Checked = True Then
-    '        ' SortHeirarchical()
-
-    '    ElseIf CMSAlphabetical.Checked = True Then
-    '        'SortAlpha()
-    '    End If
-    '    writeDebug("Finished updating OpenFiles list")
-    '    ' dgvSubFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
-    '    MsVistaProgressBar.Visible = False
-    '    dgvSubFiles.ClearSelection()
-    '    Me.Update()
-    'End Sub
-    Public Sub CreateOpenDocs(OpenDocs As ArrayList)
+    Public Sub CreateOpenDocs() '(OpenDocs As ArrayList)
         OpenDocs.Clear()
         Dim Archive, DocSource, DocName As String
         For Each oDoc In _invApp.Documents.VisibleDocuments
@@ -2408,8 +2374,8 @@ Public Class Main
         Dim PartName As String = ""
         For Each row In DGV.Rows
             If bgwRun.CancellationPending = True Then Exit Sub
-            If dgvSubFiles(dgvSubFiles.Columns(Column).Index, row.index).Value = True Then
-                PartName = dgvSubFiles(dgvSubFiles.Columns(Part).Index, row.index).Value
+            If DGV(DGV.Columns(Column).Index, row.index).Value = True Then
+                PartName = DGV(DGV.Columns(Part).Index, row.index).Value
                 If _invApp.Documents.ItemByName(PartName).Dirty = True AndAlso Ans = Nothing Then
                     Ans = MsgBox("Do you wish to save these documents?", vbYesNoCancel, "Close Documents")
                     If Ans = vbYes Then
@@ -2520,10 +2486,10 @@ Public Class Main
     Private Sub Rename_Resize(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Resize
         chkiProp.Location = New Drawing.Point(Me.Width - 203, 27)
         gbxParts.Location = New Drawing.Point(Me.Width - 203, 47)
-        gbxDrawings.Location = New Drawing.Point(Me.Width - 203, 47 + gbxParts.Height)
+        gbxDrawings.Location = New Drawing.Point(Me.Width - 203, 50 + gbxParts.Height)
         btnOK.Location = New Drawing.Point(Me.Width - 115, Me.Height - 70)
         btnExit.Location = New Drawing.Point(Me.Width - 196, btnOK.Location.Y)
-        gbxOpen.Height = (Me.Height - 96)
+        gbxOpen.Height = (Me.Height - 105)
         gbxOpen.Width = (Me.Width - 375) / 2
         gbxSub.Height = gbxOpen.Height
         gbxSub.Width = gbxOpen.Width
@@ -2534,7 +2500,7 @@ Public Class Main
         ' dgvSubFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
         pgbMain.Location = New Drawing.Point(12, Me.Height - 67)
         pgbMain.Width = Me.Width - 226
-        gbxUtilities.Location = New Drawing.Point(12, Me.Height - 187)
+        gbxUtilities.Location = New Drawing.Point(12, Me.Height - 195)
         If dgvSubFiles.RowCount < dgvSubFiles.Height / 18 And txtSearch.ForeColor = Drawing.Color.Gray Or dgvSubFiles.RowCount = 0 Then
             txtSearch.Visible = False
             dgvSubFiles.Height = gbxOpen.Height - 24
@@ -3331,9 +3297,17 @@ Public Class Main
         Else
             dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True
         End If
-        'Else
-        '    dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = False
-        'End If
+        If dgvSubFiles.RowCount > 0 Then
+            Dim Check As Boolean = dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, 0).Value
+            Dim Diff As Boolean = False
+            For Each Row In dgvSubFiles.Rows
+                If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, Row.index).Value <> Check Then
+                    Diff = True
+                    Exit Sub
+                End If
+            Next
+            If Diff = False Then chkDWGSelect.Checked = Check
+        End If
         dgvSubFiles.ClearSelection()
     End Sub
     Private Sub dgvOpenFiles_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvOpenFiles.CellContentClick
@@ -3343,6 +3317,19 @@ Public Class Main
             dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, dgvOpenFiles.CurrentCell.RowIndex).Value = True
         End If
         dgvSubFiles.ClearSelection()
+
+        If dgvOpenFiles.RowCount > 0 Then
+            Dim Check As Boolean = dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, 0).Value
+            Dim Diff As Boolean = False
+            For Each Row In dgvOpenFiles.Rows
+                If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, Row.index).Value <> Check Then
+                    Diff = True
+                    Exit Sub
+                End If
+            Next
+            If Diff = False Then chkPartSelect.Checked = Check
+        End If
+
     End Sub
 #End Region
 #Region "Top Menus"
@@ -3501,7 +3488,8 @@ Public Class Main
         Dim DrawSource As String = ""
         Dim DrawingName As String = ""
         Dim DocSource, DocName As String
-        CreateOpenDocs(OpenDocs)
+        CreateOpenDocs()
+
         For Each Row In dgvOpenFiles.Rows
             If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, Row.index).Value = True Then
                 NoPart = False
@@ -3589,7 +3577,7 @@ Public Class Main
         End If
         If chkPartClose.Checked = True Then
             writeDebug("Closing open parts")
-            CloseDocuments("DrawingSource", dgvOpenFiles, "chkOpenFiles")
+            CloseDocuments("PartLocation", dgvOpenFiles, "chkOpenFiles")
         End If
         ' RunCompleted()
         writeDebug("Cleaning up documents")
@@ -3640,7 +3628,7 @@ Public Class Main
 
         bgwUpdateSub.ReportProgress((Counter / Total) * 100, "Found: ")
 
-        CreateOpenDocs(OpenDocs)
+        CreateOpenDocs()
 
         For Each Row In dgvOpenFiles.Rows
             If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, Row.index).Value = True Then
@@ -3815,6 +3803,7 @@ Public Class Main
                 End Try
             End If
         End If
+        Return Nothing
     End Function
     Private Sub Main_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         MainClosed = True

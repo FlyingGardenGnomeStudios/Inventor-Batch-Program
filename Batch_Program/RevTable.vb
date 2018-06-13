@@ -45,8 +45,6 @@ Public Class RevTable
     Private Sub btnOK_Click(sender As System.Object, e As System.EventArgs) Handles btnOK.Click
         CheckNeeded.PopRevTable(Me)
         Dim oDoc As Document = _invApp.ActiveDocument
-        Dim Sheet As Sheet
-        Dim Sheets As Sheets
         Dim Archive As String = ""
         Dim DrawingName As String = ""
         Dim DrawSource As String = ""
@@ -57,7 +55,6 @@ Public Class RevTable
         Dim oPointX(0 To oDoc.sheets.count) As String
         Dim Point As Point2d = Nothing
         Dim oRevtable As RevisionTable = Nothing
-        Dim oTitleBlock As TitleBlock
         Dim Rev As String = oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
         Dim X As Integer = 0
         'Dim Y As Integer = lstCheckFiles.Items.Count
@@ -249,7 +246,7 @@ Public Class RevTable
         ' Counter
         Dim i As Integer, j As Integer
         ' Get headers and column widths
-        Dim rtc As RevisionTableColumn
+        Dim rtc As RevisionTableColumn = Nothing
         For Each rtc In rt.RevisionTableColumns
             Dim h As New DataGridViewTextBoxColumn With
             {.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(LCase(rtc.Title)),

@@ -351,6 +351,7 @@ Public Class iProperties
             End If
         Catch
         End Try
+        Return Nothing
     End Function
     Private Function dgvStatus_EditingContrtolShowing(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DataGridViewEditingControlShowingEventArgs) Handles dgvStatus.EditingControlShowing
         Try
@@ -360,6 +361,7 @@ Public Class iProperties
             End If
         Catch
         End Try
+        Return Nothing
     End Function
     Private Function dgvCustomModel_EditingContrtolShowing(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DataGridViewEditingControlShowingEventArgs) Handles dgvCustomModel.EditingControlShowing
         Try
@@ -369,6 +371,7 @@ Public Class iProperties
             End If
         Catch
         End Try
+        Return Nothing
     End Function
     Private Function dgvCustomDrawing_EditingContrtolShowing(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DataGridViewEditingControlShowingEventArgs) Handles dgvCustomDrawing.EditingControlShowing
         Try
@@ -378,6 +381,7 @@ Public Class iProperties
             End If
         Catch
         End Try
+        Return Nothing
     End Function
     Public Shared Function AdjustComboBoxWidth(ByVal sender As Object)
         Dim senderComboBox = DirectCast(sender, ComboBox)
@@ -895,7 +899,6 @@ Public Class iProperties
         Dim Input(c) As String
         Dim heights(r) As Double
         Dim rtr As RevisionTableRow
-        Dim DGVRows As Integer
         i = 0 : j = 1
         For Each rtr In rt.RevisionTableRows
             Dim rtcell As RevisionTableCell
@@ -1308,7 +1311,7 @@ Public Class iProperties
         Dim Archive As String = ""
         Dim DrawSource As String = ""
         Dim DrawingName As String = ""
-        Main.CreateOpenDocs(OpenDocs)
+        Main.CreateOpenDocs()
         Call PopulateiProps(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs, Read:=False)
         'Call Main.OpenSelected(Path, oDoc, Archive, DrawingName, DrawSource)
         Me.Hide()
@@ -1774,6 +1777,7 @@ Public Class iProperties
             End If
         Next
         If strResult <> "" Then Numeric = strResult
+        Return Nothing
     End Function
     Private Sub dgvCustomDrawing_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCustomDrawing.CellValueChanged
         ChangeCustomiProperty(dgvCustomDrawing, "DCusType", "DCusValue", e, "DrawingIsDirty")

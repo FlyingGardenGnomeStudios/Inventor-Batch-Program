@@ -276,14 +276,14 @@ Public Class CheckNeeded
         End If
     End Sub
     Private Sub btnOK_Click(sender As System.Object, e As System.EventArgs) Handles btnOK.Click
-        Dim DrawingName, Archive, DrawSource, Rev As String
+        Dim DrawingName, DrawSource, Rev As String
         Dim Sheet As Sheet
         Dim Col, Row, Ans As Integer
         Dim RevTable As RevisionTable
         Dim Path As Documents = _invApp.Documents
         Dim oDoc As Document = Nothing
         Dim Opendocs As New ArrayList
-        Main.CreateOpenDocs(Opendocs)
+        Main.CreateOpenDocs()
         ProgressBar1.Visible = True
         Dim RevNode As TreeGridNode
         For Each node As TreeGridNode In tgvCheckNeeded.Rows
@@ -942,6 +942,7 @@ Public Class CheckNeeded
                     GetAlphaString = "Z" & "Z" & Chr(64 + (AlphaNum - (26 * DV(0))))
                 End If
             Case Else
+                Return Nothing
                 Exit Function
         End Select
     End Function
