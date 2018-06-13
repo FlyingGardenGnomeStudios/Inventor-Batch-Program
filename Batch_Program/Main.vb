@@ -95,7 +95,7 @@ Public Class Main
                 My.Settings.Save()
             End If
         End If
-
+        SetAddRemoveProgramsIcon()
         'If My.Settings.DonateShowMe = True Then
         '    If My.Settings.DonateCount = 0 Then
         '        Warning.Donate()
