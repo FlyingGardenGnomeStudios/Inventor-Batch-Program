@@ -40,3 +40,4 @@
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\Batch Program.pdb
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\Batch Program.xml
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch_Program.vbprojResolveAssemblyReference.cache
+\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\Resources\Batch Program - Beta.ico

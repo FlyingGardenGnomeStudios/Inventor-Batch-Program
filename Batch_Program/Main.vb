@@ -1,6 +1,4 @@
-﻿Imports System.Type
-Imports System.Activator
-Imports System.Runtime.InteropServices
+﻿Imports System.Runtime.InteropServices
 Imports Inventor
 Imports System.Windows.Forms
 Imports Microsoft.Office.Interop
@@ -9,8 +7,37 @@ Imports System.Text.RegularExpressions
 Imports System.ComponentModel
 Imports System.Globalization
 Imports AdvancedDataGridView
-Imports System.Deployment.Application
+Imports System.Deployment.Application.ApplicationDeployment
+Imports System.IO
 Imports Microsoft.Win32
+
+Module ControlPanelIcon
+    ' Call this method as soon as possible
+    ' Writes entry to registry
+    Public Function SetAddRemoveProgramsIcon() As Boolean
+        Dim iName As String = "Batch Program - Beta.ico" ' <---- set this (1)
+        Dim aName As String = "Batch Program - Beta" '      <---- set this (2)
+        Try
+            Dim iconSourcePath As String = IO.Path.Combine(System.Windows.Forms.Application.StartupPath, iName)
+            If Not IsNetworkDeployed Then Return False ' ClickOnce check
+            If Not CurrentDeployment.IsFirstRun Then Return False
+            If Not IO.File.Exists(iconSourcePath) Then Return False
+            Dim myUninstallKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\Uninstall")
+            Dim mySubKeyNames As String() = myUninstallKey.GetSubKeyNames()
+            For i As Integer = 0 To mySubKeyNames.Length Step 1
+                Dim myKey As RegistryKey = myUninstallKey.OpenSubKey(mySubKeyNames(i), True)
+                Dim myValue As Object = myKey.GetValue("DisplayName")
+                If (myValue IsNot Nothing And myValue.ToString() = aName) Then
+                    myKey.SetValue("DisplayIcon", iconSourcePath)
+                    Return True
+                End If
+            Next i
+        Catch ex As Exception
+            Return False
+        End Try
+        Return False
+    End Function
+End Module
 
 Public Class Main
     Dim _invApp As Inventor.Application
@@ -95,7 +122,7 @@ Public Class Main
                 My.Settings.Save()
             End If
         End If
-        SetAddRemoveProgramsIcon()
+        ControlPanelIcon.SetAddRemoveProgramsIcon()
         'If My.Settings.DonateShowMe = True Then
         '    If My.Settings.DonateCount = 0 Then
         '        Warning.Donate()
@@ -206,29 +233,8 @@ Public Class Main
         'ShowTrial(Not isGenuine)
         CreateOpenDocs()
     End Sub
-    Private Shared Sub SetAddRemoveProgramsIcon()
-        If ApplicationDeployment.IsNetworkDeployed AndAlso ApplicationDeployment.CurrentDeployment.IsFirstRun Then
 
-            Try
-                Dim iconSourcePath As String = IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "Batch Program - Beta.ico")
-                If Not IO.File.Exists(iconSourcePath) Then Return
-                Dim myUninstallKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\Uninstall")
-                Dim mySubKeyNames As String() = myUninstallKey.GetSubKeyNames()
 
-                For i As Integer = 0 To mySubKeyNames.Length - 1
-                    Dim myKey As RegistryKey = myUninstallKey.OpenSubKey(mySubKeyNames(i), True)
-                    Dim myValue As Object = myKey.GetValue("DisplayName")
-
-                    If myValue IsNot Nothing AndAlso myValue.ToString() = "Batch Program - Beta" Then
-                        myKey.SetValue("DisplayIcon", iconSourcePath)
-                        Exit For
-                    End If
-                Next
-
-            Catch ex As Exception
-            End Try
-        End If
-    End Sub
 #End Region
 #Region "Form Updating"
     Public Sub UpdateForm()
@@ -2191,7 +2197,7 @@ Public Class Main
                 SheetMetalTest(oDoc.FullFileName, oDoc, sReadablefiletype)
                 If Process = "SC" AndAlso sReadablefiletype = "S" Then
                     Dim oDef As PartComponentDefinition = oDoc.componentdefinition
-                    Dim oPath As Path = Nothing
+                    Dim oPath As Inventor.Path = Nothing
                     Dim TotalLength As Double = 0
                     For X = 1 To oDef.Features.Count
                         oPath = oDef.Features.Item(X).path

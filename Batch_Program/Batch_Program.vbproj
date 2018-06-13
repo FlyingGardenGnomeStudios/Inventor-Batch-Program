@@ -290,6 +290,9 @@
     <None Include="Inventor Batch Program.pfx" />
     <None Include="Resources\Changelog.txt" />
     <Content Include="Batch Program - Beta.ico" />
+    <None Include="Resources\Batch Program - Beta.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Resources\List-Blank.xlsm" />
     <Content Include="Resources\Quote-Blank.xlsm" />
     <Content Include="Resources\Rename.xlsm" />

@@ -71,6 +71,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        '''</summary>
+        Friend ReadOnly Property Batch_Program___Beta() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Batch_Program___Beta", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property btn_donate_LG() As System.Drawing.Bitmap
@@ -81,15 +91,19 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to Version 1.2.2.10
-        '''- Changed how the program initializes and finds Inventor (Starts Inventor if not yet open)
-        '''- Cleans up invisible drawings upon program exit.
-        '''- Closes invisible drawings when opened through iProperties command
+        '''  Looks up a localized string similar to Version 2.0.0.6 (6/12/08)
+        '''	- Continuous running openfile list so newly open documents won&apos;t be closed when Batch Program closes
+        '''	- Added Flat Pattern only option for export
+        '''	- Close drawings option working
         '''
-        '''Version 1.2.2.11
-        '''- Skip Assembly checkbox now actually skips creation of assemblies
-        '''- Fixed incorrect thumbnails when opening rename window 2nd time
-        '''- Enabled communication between Inventor and Batch Program in regards to programs shutting down/restarting.
+        '''	Items not currently functioning
+        '''	- Open parts list sometimes displays double on first run
+        '''	- No tutorials yet
+        '''	- Renaming function works, but sometimes doesn&apos;t play nice
+        '''	
+        '''Version 2.0.0.5 (6/07/08)
+        '''	- Corrected bug that skipped exports depending on settings
+        '''	- Fixed ini layer visibility and  [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property Changelog() As String
             Get
