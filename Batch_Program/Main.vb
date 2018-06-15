@@ -649,9 +649,11 @@ Public Class Main
 
         If chkDWGSelect.CheckState = CheckState.Checked Then
             For X = 0 To dgvSubFiles.RowCount - 1
-                'If dgvSubFiles(dgvSubFiles.Columns("Comments").Index, dgvSubFiles.CurrentCell.RowIndex).Value <> "DNE" AndAlso
-                'dgvSubFiles(dgvSubFiles.Columns("Comments").Index, dgvSubFiles.CurrentCell.RowIndex).Value <> "PPM" Then
-                dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, X).Value = True
+                If dgvSubFiles.Rows(X).Visible = True Then
+                    'If dgvSubFiles(dgvSubFiles.Columns("Comments").Index, dgvSubFiles.CurrentCell.RowIndex).Value <> "DNE" AndAlso
+                    'dgvSubFiles(dgvSubFiles.Columns("Comments").Index, dgvSubFiles.CurrentCell.RowIndex).Value <> "PPM" Then
+                    dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, X).Value = True
+                End If
                 ' End If
             Next
 
@@ -680,7 +682,8 @@ Public Class Main
         'Go through drawings to see which ones are selected
         Dim Total As Integer = 0
         For Each row In dgvSubFiles.Rows
-            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.index).Value = True Then
+            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.index).Value = True AndAlso
+                dgvSubFiles.Rows(row.index).Visible = True Then
                 Total += 1
             End If
         Next
@@ -1072,7 +1075,8 @@ Public Class Main
                 'Set the point at which the rev table should be inserted
                 Dim Total As Integer = 0
                 For Each dgvrow In dgvSubFiles.Rows
-                    If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvrow.index).Value = True Then
+                    If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvrow.index).Value = True AndAlso
+                        dgvSubFiles.Rows(dgvrow.index).Visible = True Then
                         Total += 1
                     End If
                 Next
@@ -1271,7 +1275,8 @@ Public Class Main
         Dim Parent As New List(Of List(Of String))
         Dim Total As Integer = 0
         For Each row In dgvSubFiles.Rows
-            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.index).Value = True Then
+            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.index).Value = True AndAlso
+                dgvSubFiles.Rows(row.index).Visible = True Then
                 Total += 1
             End If
         Next
@@ -3113,18 +3118,18 @@ Public Class Main
         End If
     End Sub
     Private Sub dgvSubFiles_MouseUp(sender As Object, e As MouseEventArgs) Handles dgvSubFiles.MouseUp
-        Try
-            If e.Button = Windows.Forms.MouseButtons.Right Then
-                'CMSSubFiles.Show(Cursor.Position)
-                If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentRow.Index).Value = True Then
-                    dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentRow.Index).Value = False
-                Else
-                    dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentRow.Index).Value = True
-                End If
-            End If
-        Catch
-        End Try
-        dgvSubFiles.ClearSelection()
+        'Try
+        '    If e.Button = Windows.Forms.MouseButtons.Right Then
+        '        'CMSSubFiles.Show(Cursor.Position)
+        '        If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentRow.Index).Value = True Then
+        '            dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentRow.Index).Value = False
+        '        Else
+        '            dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentRow.Index).Value = True
+        '        End If
+        '    End If
+        'Catch
+        'End Try
+        'dgvSubFiles.ClearSelection()
     End Sub
     Private Sub CMSAlphabetical_Click(sender As Object, e As EventArgs) Handles CMSAlphabetical.Click
         SortAlpha()
@@ -3323,6 +3328,7 @@ Public Class Main
     Private Sub dgvSubFiles_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvSubFiles.CellContentClick
         'If dgvSubFiles(dgvSubFiles.Columns("Comments").Index, dgvSubFiles.CurrentCell.RowIndex).Value <> "DNE" AndAlso
         '        dgvSubFiles(dgvSubFiles.Columns("Comments").Index, dgvSubFiles.CurrentCell.RowIndex).Value <> "PPM" Then
+
         If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True Then
             dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = False
         Else
@@ -3339,6 +3345,7 @@ Public Class Main
             Next
             If Diff = False Then chkDWGSelect.Checked = Check
         End If
+        dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Style.ForeColor = Me.dgvSubFiles.DefaultCellStyle.ForeColor
         dgvSubFiles.ClearSelection()
     End Sub
     Private Sub dgvOpenFiles_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvOpenFiles.CellContentClick
@@ -3528,7 +3535,8 @@ Public Class Main
             End If
         Next
         For Each Row In dgvSubFiles.Rows
-            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, Row.index).Value = True Then
+            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, Row.index).Value = True AndAlso
+                dgvSubFiles.Rows(Row.index).Visible = True Then
                 NoDraw = False
                 Exit For
             End If
@@ -3809,7 +3817,8 @@ Public Class Main
         Dim Drawsource As String = ""
         If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
             For Each row In dgvSubFiles.Rows
-                If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.index).Value = True Then
+                If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.index).Value = True AndAlso
+                    dgvSubFiles.Rows(row.index).Visible = True Then
                     Drawsource = IO.Path.GetDirectoryName(dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, row.index).Value)
                 End If
             Next
@@ -3840,7 +3849,7 @@ Public Class Main
         MainClosed = True
     End Sub
 
-    Private Sub bgwRun_Disposed(sender As Object, e As EventArgs) Handles bgwRun.Disposed
-
+    Private Sub dgvSubFiles_SelectionChanged(sender As Object, e As EventArgs) Handles dgvSubFiles.SelectionChanged
+        dgvSubFiles.ClearSelection()
     End Sub
 End Class

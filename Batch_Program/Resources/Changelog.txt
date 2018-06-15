@@ -1,13 +1,16 @@
-﻿Version 2.0.0.6 (6/12/08)
+﻿Version 2.0.0.7 (6/15/18)
+	-Minor UI tweaks
+
+Items not currently functioning
+	- Open parts list sometimes displays double on first run
+	- No tutorials yet
+	- Renaming function works, but sometimes doesn't play nice
+
+Version 2.0.0.6 (6/12/08)
 	- Continuous running openfile list so newly open documents won't be closed when Batch Program closes
 	- Added Flat Pattern only option for export
 	- Close drawings option working
 
-	Items not currently functioning
-	- Open parts list sometimes displays double on first run
-	- No tutorials yet
-	- Renaming function works, but sometimes doesn't play nice
-	
 Version 2.0.0.5 (6/07/08)
 	- Corrected bug that skipped exports depending on settings
 	- Fixed ini layer visibility and color settings for dxf & dwg flat pattern outputs

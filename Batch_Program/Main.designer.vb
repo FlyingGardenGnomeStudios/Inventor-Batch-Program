@@ -619,7 +619,7 @@ Partial Class Main
         Me.dgvSubFiles.ShowCellToolTips = False
         Me.dgvSubFiles.ShowEditingIcon = False
         Me.dgvSubFiles.ShowRowErrors = False
-        Me.dgvSubFiles.Size = New System.Drawing.Size(178, 155)
+        Me.dgvSubFiles.Size = New System.Drawing.Size(178, 160)
         Me.dgvSubFiles.TabIndex = 63
         '
         'chkSubFiles

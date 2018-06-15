@@ -246,12 +246,15 @@ Public Class CheckNeeded
                 If Remove = True AndAlso ParentNode.HasChildren Then
                     For Each ChildNode In ParentNode.Nodes
                         For Each Childcell In ChildNode.Cells
-                            If Childcell.value = "" AndAlso
-                                tgvCheckNeeded.Columns(Childcell.columnindex).headertext <> "Checked By" AndAlso
-                                tgvCheckNeeded.Columns(Childcell.columnindex).headertext <> "Check Date" Then
-                                Remove = False
-                                Exit For
-                            End If
+                            If Childcell.value = Nothing Then
+                                If Childcell.readonly = False Then
+                                    '     If tgvCheckNeeded.Columns(Childcell.columnindex).headertext <> "Checked By" AndAlso
+                                    '      tgvCheckNeeded.Columns(Childcell.columnindex).headertext <> "Check Date" Then
+                                    Remove = False
+                                        Exit For
+                                    End If
+                                End If
+
                         Next
                     Next
                 End If
