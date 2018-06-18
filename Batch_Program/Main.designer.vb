@@ -534,8 +534,8 @@ Partial Class Main
         '
         Me.gbxSub.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.gbxSub.Controls.Add(Me.txtSearch)
-        Me.gbxSub.Controls.Add(Me.chkDWGSelect)
         Me.gbxSub.Controls.Add(Me.dgvSubFiles)
+        Me.gbxSub.Controls.Add(Me.chkDWGSelect)
         Me.gbxSub.Cursor = System.Windows.Forms.Cursors.Default
         Me.gbxSub.Location = New System.Drawing.Point(357, 27)
         Me.gbxSub.Name = "gbxSub"
@@ -594,7 +594,7 @@ Partial Class Main
         Me.dgvSubFiles.DefaultCellStyle = DataGridViewCellStyle6
         Me.dgvSubFiles.EnableHeadersVisualStyles = False
         Me.dgvSubFiles.GridColor = System.Drawing.SystemColors.Window
-        Me.dgvSubFiles.Location = New System.Drawing.Point(6, 15)
+        Me.dgvSubFiles.Location = New System.Drawing.Point(6, 16)
         Me.dgvSubFiles.MultiSelect = False
         Me.dgvSubFiles.Name = "dgvSubFiles"
         Me.dgvSubFiles.ReadOnly = True
@@ -619,7 +619,7 @@ Partial Class Main
         Me.dgvSubFiles.ShowCellToolTips = False
         Me.dgvSubFiles.ShowEditingIcon = False
         Me.dgvSubFiles.ShowRowErrors = False
-        Me.dgvSubFiles.Size = New System.Drawing.Size(178, 160)
+        Me.dgvSubFiles.Size = New System.Drawing.Size(178, 184)
         Me.dgvSubFiles.TabIndex = 63
         '
         'chkSubFiles

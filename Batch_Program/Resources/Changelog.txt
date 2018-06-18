@@ -1,10 +1,13 @@
-﻿Version 2.0.0.7 (6/15/18)
-	-Minor UI tweaks
+﻿Version 2.0.0.8 (6/18/18)
+	- Fixed search function not operating properly with missing drawings
 
 Items not currently functioning
 	- Open parts list sometimes displays double on first run
 	- No tutorials yet
 	- Renaming function works, but sometimes doesn't play nice
+
+Version 2.0.0.7 (6/15/18)
+	- Minor UI tweaks
 
 Version 2.0.0.6 (6/12/08)
 	- Continuous running openfile list so newly open documents won't be closed when Batch Program closes

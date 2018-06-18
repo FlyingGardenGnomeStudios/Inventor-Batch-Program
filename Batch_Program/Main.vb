@@ -690,7 +690,8 @@ Public Class Main
         For X = 0 To dgvSubFiles.RowCount - 1
             If bgwRun.CancellationPending = True Then Exit Sub
             'Look through all sub files in open documents to get the part sourcefile
-            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, X).Value = True = True Then
+            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, X).Value = True = True AndAlso
+                dgvSubFiles.Rows(X).Visible = True Then
                 MatchDrawing(DrawSource, DrawingName, X)
                 'DrawSource = Strings.Left(SubFiles.Item(X).Value, Len(SubFiles.Item(X).Value) - 3) & "idw"
                 bgwRun.ReportProgress((X / Total) * 100, "Opening: " & DrawingName)
@@ -2412,16 +2413,20 @@ Public Class Main
             If bgwRun.CancellationPending = True Then Exit Sub
             If DGV(DGV.Columns(Column).Index, row.index).Value = True Then
                 PartName = DGV(DGV.Columns(Part).Index, row.index).Value
-                If _invApp.Documents.ItemByName(PartName).Dirty = True AndAlso Ans = Nothing Then
-                    Ans = MsgBox("Do you wish to save these documents?", vbYesNoCancel, "Close Documents")
-                    If Ans = vbYes Then
-                        Checkin = True
-                    ElseIf Ans = vbNo Then
-                        Checkin = False
-                    Else
-                        Exit Sub
+                Try
+                    If _invApp.Documents.ItemByName(PartName).Dirty = True AndAlso Ans = Nothing Then
+                        Ans = MsgBox("Do you wish to save these documents?", vbYesNoCancel, "Close Documents")
+                        If Ans = vbYes Then
+                            Checkin = True
+                        ElseIf Ans = vbNo Then
+                            Checkin = False
+                        Else
+                            Exit Sub
+                        End If
                     End If
-                End If
+                Catch ex As Exception
+                    writeDebug("Error closing :" & PartName & vbNewLine & ex.Message)
+                End Try
             End If
             If Checkin = True Then
                 Try
@@ -2433,8 +2438,13 @@ Public Class Main
                     writeDebug("Error saving/closing :" & PartName & vbNewLine & ex.Message)
                 End Try
             Else
-                _invApp.Documents.ItemByName(PartName).Close(True)
-                writeDebug("Part " & PartName & " closed without save")
+                Try
+                    _invApp.Documents.ItemByName(PartName).Close(True)
+                    writeDebug("Part " & PartName & " closed without save")
+                Catch ex As exception
+                    writeDebug("Error closing :" & PartName & vbNewLine & ex.Message)
+                End Try
+
             End If
         Next
     End Sub
@@ -2537,6 +2547,7 @@ Public Class Main
         pgbMain.Location = New Drawing.Point(12, Me.Height - 67)
         pgbMain.Width = Me.Width - 226
         gbxUtilities.Location = New Drawing.Point(12, Me.Height - 195)
+        'txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, dgvSubFiles.Location.Y + dgvSubFiles.Height + 5)
         If dgvSubFiles.RowCount < dgvSubFiles.Height / 18 And txtSearch.ForeColor = Drawing.Color.Gray Or dgvSubFiles.RowCount = 0 Then
             txtSearch.Visible = False
             dgvSubFiles.Height = gbxOpen.Height - 24
@@ -2544,7 +2555,7 @@ Public Class Main
             txtSearch.Visible = True
             dgvSubFiles.Height = gbxOpen.Height - 49
             txtSearch.Width = dgvSubFiles.Width
-            txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, Me.Height - 122)
+            txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, Me.Height - 135)
 
         End If
         PictureBox2.Location = New Drawing.Point(gbxSub.Location.X + 21, 27)
@@ -3028,93 +3039,50 @@ Public Class Main
             search = ""
         End If
         For Each row In dgvSubFiles.Rows
-            If dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Gray Then
-                If CMSMissingDWG.Text = "Show Missing Drawings" Then
-                    dgvSubFiles.Rows(row.index).Visible = False
-                Else
+            If InStr(UCase(dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, row.index).Value), UCase(search)) = 0 Then
+                dgvSubFiles.Rows(row.index).Visible = False
+            Else
+                If dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Empty Then
                     dgvSubFiles.Rows(row.index).Visible = True
                 End If
-            End If
-            If dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Red Then
-                If CMSMissingParts.Text = "Show Missing Parts" Then
-                    dgvSubFiles.Rows(row.index).Visible = False
-                Else
-                    dgvSubFiles.Rows(row.index).Visible = True
+                If dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Gray Then
+                    If CMSMissingDWG.Text = "Show Missing Drawings" Then
+                        dgvSubFiles.Rows(row.index).Visible = False
+                    Else
+                        dgvSubFiles.Rows(row.index).Visible = True
+                    End If
                 End If
-            End If
-            If dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Blue Then
-                If CMSReference.Text = "Show Reference Parts" Then
-                    dgvSubFiles.Rows(row.index).Visible = False
-                Else
-                    dgvSubFiles.Rows(row.index).Visible = True
+                If dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Red Then
+                    If CMSMissingParts.Text = "Show Missing Parts" Then
+                        dgvSubFiles.Rows(row.index).Visible = False
+                    Else
+                        dgvSubFiles.Rows(row.index).Visible = True
+                    End If
+                End If
+                If dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Blue Then
+                    If CMSReference.Text = "Show Reference Parts" Then
+                        dgvSubFiles.Rows(row.index).Visible = False
+                    Else
+                        dgvSubFiles.Rows(row.index).Visible = True
+                    End If
                 End If
             End If
         Next
-        For Each row In dgvSubFiles.Rows
-            If dgvSubFiles.Rows(row.index).Visible = True Then
-                If InStr(UCase(dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, row.index).Value), UCase(search)) = 0 Then
-                    dgvSubFiles.Rows(row.index).Visible = False
-                Else
-                    dgvSubFiles.Rows(row.index).Visible = True
-                End If
-            End If
-        Next
+        'For Each row In dgvSubFiles.Rows
+        '    If InStr(UCase(dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, row.index).Value), UCase(search)) = 0 Then
+        '        dgvSubFiles.Rows(row.index).Visible = False
+        '    Else
+        '        dgvSubFiles.Rows(row.index).Visible = True
+        '    End If
+        'Next
         If CMSHeirarchical.Checked = True Then
             dgvSubFiles.Columns("DrawingName").Visible = True
             dgvSubFiles.Columns("DrawingNameAlpha").Visible = False
             dgvSubFiles.Columns("DrawingName").SortMode = DataGridViewColumnSortMode.Automatic
-            '    For Each pair As KeyValuePair(Of String, String) In SubFiles
-
-            '        If Strings.InStr(pair.Key, search) <> 0 Then
-
-            '            If Strings.InStr(pair.Key, "(DNE)") <> 0 Then
-            '                If CMSMissingDWG.Text = "Hide Missing Drawings" Then
-            '                    dgvSubFiles.Rows.Add(False, Strings.Replace(pair.Key, "(DNE)", ""), pair.Value)
-            '                    dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = Drawing.Color.Gray
-            '                End If
-            '            ElseIf Strings.InStr(pair.Key, "(REF)") <> 0 Then
-            '                If CMSReference.Text = "Hide Reference Drawings" Then
-            '                    dgvSubFiles.Rows.Add(False, Strings.Replace(pair.Key, "(REF)", ""), pair.Value)
-            '                    dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = Drawing.Color.Blue
-            '                End If
-            '            ElseIf Strings.InStr(pair.Key, "(PPM)") <> 0 Then
-            '                If CMSMissingParts.Text = "Hide Missing Parts" Then
-            '                    dgvSubFiles.Rows.Add(False, Strings.Replace(pair.Key, "(PPM)", ""), pair.Value)
-            '                    dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = Drawing.Color.Red
-            '                End If
-            '            Else
-            '                dgvSubFiles.Rows.Add(True, pair.Key, pair.Value)
-            '            End If
-            '        End If
-
-            '    Next
-
         Else
             dgvSubFiles.Columns("DrawingName").Visible = False
             dgvSubFiles.Columns("DrawingNameAlpha").Visible = True
             dgvSubFiles.Columns("Order").SortMode = DataGridViewColumnSortMode.Automatic
-            '    For Each pair As KeyValuePair(Of String, String) In AlphaSub
-            '        If Strings.InStr(pair.Key, search) <> 0 Then
-            '            If Strings.InStr(pair.Key, "(DNE)") <> 0 Then
-            '                If CMSMissingDWG.Text = "Hide Missing Drawings" Then
-            '                    dgvSubFiles.Rows.Add(False, Strings.Replace(pair.Key, "(DNE)", ""), pair.Value)
-            '                    dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = Drawing.Color.Gray
-            '                End If
-            '            ElseIf Strings.InStr(pair.Key, "(REF)") <> 0 Then
-            '                If CMSReference.Text = "Hide Reference Drawings" Then
-            '                    dgvSubFiles.Rows.Add(False, Strings.Replace(pair.Key, "(REF)", ""), pair.Value)
-            '                    dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = Drawing.Color.Blue
-            '                End If
-            '            ElseIf Strings.InStr(pair.Key, "(PPM)") <> 0 Then
-            '                If CMSMissingParts.Text = "Hide Missing Parts" Then
-            '                    dgvSubFiles.Rows.Add(False, Strings.Replace(pair.Key, "(PPM)", ""), pair.Value)
-            '                    dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = Drawing.Color.Red
-            '                End If
-            '            Else
-            '                dgvSubFiles.Rows.Add(True, pair.Key, pair.Value)
-            '            End If
-            '        End If
-            '    Next
         End If
     End Sub
     Private Sub dgvSubFiles_MouseUp(sender As Object, e As MouseEventArgs) Handles dgvSubFiles.MouseUp
@@ -3216,31 +3184,39 @@ Public Class Main
                 'Next
                 objWriter.WriteLine(vbNewLine & "Files associated with " & vbNewLine & vbNewLine & Parents & vbNewLine & vbNewLine &
                                 "Filename:" & vbTab & vbTab & vbTab & vbTab & "Location:" & vbNewLine)
-                If CMSHeirarchical.Checked = True Then
-                    For Each pair As KeyValuePair(Of String, String) In SubFiles
-                        If CMSMissingDWG.Text = "Hide Missing Drawings" And InStr(pair.Key, "(DNE)") <> 0 Then
-                            objWriter.WriteLine(Strings.Replace(pair.Key, "(DNE)", "") & ":" & vbTab & vbTab & vbTab & pair.Value)
-                        ElseIf CMSMissingParts.Text = "Hide Missing Parts" And InStr(pair.Key, "(PPM)") <> 0 Then
-                            objWriter.WriteLine(Strings.Replace(pair.Key, "(PPM)", "") & ":" & vbTab & vbTab & vbTab & pair.Value)
-                        ElseIf CMSReference.Text = "Hide Reference Parts" And InStr(pair.Key, "(REF)") <> 0 Then
-                            objWriter.WriteLine(Strings.Replace(pair.Key, "(REF)", "") & ":" & vbTab & vbTab & vbTab & pair.Value)
-                        ElseIf InStr(pair.Key, "(DNE)") = 0 And InStr(pair.Key, "(PPM)") = 0 And InStr(pair.Key, "(REF)") = 0 Then
-                            objWriter.WriteLine(pair.Key & ":" & vbTab & vbTab & vbTab & pair.Value)
-                        End If
-                    Next
-                ElseIf CMSHeirarchical.Checked = False Then
-                    For Each pair As KeyValuePair(Of String, String) In AlphaSub
-                        If CMSMissingDWG.Text = "Hide Missing Drawings" And InStr(pair.Key, "(DNE)") <> 0 Then
-                            objWriter.WriteLine(Strings.Replace(pair.Key, "(DNE)", "") & ":" & vbTab & vbTab & vbTab & pair.Value)
-                        ElseIf CMSMissingParts.Text = "Hide Missing Parts" And InStr(pair.Key, "(PPM)") <> 0 Then
-                            objWriter.WriteLine(Strings.Replace(pair.Key, "(PPM)", "") & ":" & vbTab & vbTab & vbTab & pair.Value)
-                        ElseIf CMSReference.Text = "Hide Reference Parts" And InStr(pair.Key, "(REF)") <> 0 Then
-                            objWriter.WriteLine(Strings.Replace(pair.Key, "(REF)", "") & ":" & vbTab & vbTab & vbTab & pair.Value)
-                        ElseIf InStr(pair.Key, "(DNE)") = 0 And InStr(pair.Key, "(PPM)") = 0 And InStr(pair.Key, "(REF)") = 0 Then
-                            objWriter.WriteLine(pair.Key & ":" & vbTab & vbTab & vbTab & pair.Value)
-                        End If
-                    Next
-                End If
+                For Each Row In dgvSubFiles.Rows
+                    If dgvSubFiles(dgvSubFiles.Columns("ChkSubFiles").Index, Row.index).Value = True AndAlso
+                            dgvSubFiles.Rows(Row.index).Visible = True Then
+                        objWriter.WriteLine(dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, Row.index).Value & ":" & vbTab & vbTab & vbTab &
+                                           dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, Row.index).Value)
+                    End If
+                Next
+
+                'If CMSHeirarchical.Checked = True Then
+                '    For Each pair As KeyValuePair(Of String, String) In SubFiles
+                '        If CMSMissingDWG.Text = "Hide Missing Drawings" And InStr(pair.Key, "(DNE)") <> 0 Then
+                '            objWriter.WriteLine(Strings.Replace(pair.Key, "(DNE)", "") & ":" & vbTab & vbTab & vbTab & pair.Value)
+                '        ElseIf CMSMissingParts.Text = "Hide Missing Parts" And InStr(pair.Key, "(PPM)") <> 0 Then
+                '            objWriter.WriteLine(Strings.Replace(pair.Key, "(PPM)", "") & ":" & vbTab & vbTab & vbTab & pair.Value)
+                '        ElseIf CMSReference.Text = "Hide Reference Parts" And InStr(pair.Key, "(REF)") <> 0 Then
+                '            objWriter.WriteLine(Strings.Replace(pair.Key, "(REF)", "") & ":" & vbTab & vbTab & vbTab & pair.Value)
+                '        ElseIf InStr(pair.Key, "(DNE)") = 0 And InStr(pair.Key, "(PPM)") = 0 And InStr(pair.Key, "(REF)") = 0 Then
+                '            objWriter.WriteLine(pair.Key & ":" & vbTab & vbTab & vbTab & pair.Value)
+                '        End If
+                '    Next
+                'ElseIf CMSHeirarchical.Checked = False Then
+                '    For Each pair As KeyValuePair(Of String, String) In AlphaSub
+                '        If CMSMissingDWG.Text = "Hide Missing Drawings" And InStr(pair.Key, "(DNE)") <> 0 Then
+                '            objWriter.WriteLine(Strings.Replace(pair.Key, "(DNE)", "") & ":" & vbTab & vbTab & vbTab & pair.Value)
+                '        ElseIf CMSMissingParts.Text = "Hide Missing Parts" And InStr(pair.Key, "(PPM)") <> 0 Then
+                '            objWriter.WriteLine(Strings.Replace(pair.Key, "(PPM)", "") & ":" & vbTab & vbTab & vbTab & pair.Value)
+                '        ElseIf CMSReference.Text = "Hide Reference Parts" And InStr(pair.Key, "(REF)") <> 0 Then
+                '            objWriter.WriteLine(Strings.Replace(pair.Key, "(REF)", "") & ":" & vbTab & vbTab & vbTab & pair.Value)
+                '        ElseIf InStr(pair.Key, "(DNE)") = 0 And InStr(pair.Key, "(PPM)") = 0 And InStr(pair.Key, "(REF)") = 0 Then
+                '            objWriter.WriteLine(pair.Key & ":" & vbTab & vbTab & vbTab & pair.Value)
+                '        End If
+                '    Next
+                'End If
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "Error Creating Log File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             End Try
@@ -3265,55 +3241,64 @@ Public Class Main
             Dim X As Integer
             For X = 0 To dgvOpenFiles.RowCount - 1
                 If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = True Then
-                    xlWorkSheet.Cells(3 + X, 2) = dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value
+                    xlWorkSheet.Cells(3 + X, 2) = dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, X).Value
                 End If
             Next
             'For X = 0 To lstOpenFiles.CheckedItems.Count - 1
             '    xlWorkSheet.Cells(3 + X, 2) = lstOpenFiles.Items(X)
             'Next
-            If CMSHeirarchical.Checked = True Then
-                For Each pair As KeyValuePair(Of String, String) In SubFiles
-                    If CMSMissingDWG.Text = "Hide Missing Drawings" And InStr(pair.Key, "(DNE)") <> 0 Then
-                        xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(DNE)", "")
-                        xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
-                    ElseIf CMSMissingParts.Text = "Hide Missing Parts" And InStr(pair.Key, "(PPM)") <> 0 Then
-                        xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(PPM)", "")
-                        xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
-                    ElseIf CMSReference.Text = "Hide Reference Parts" And InStr(pair.Key, "(REF)") <> 0 Then
-                        xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(REF)", "")
-                        xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
-                    Else
-                        If Not InStr(pair.Key, "(DNE)") <> 0 And
-                                Not InStr(pair.Key, "(PPM)") <> 0 And
-                           Not InStr(pair.Key, "(REF)") <> 0 Then
-                            xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Trim(pair.Key)
-                            xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
-                        End If
-                    End If
+            For Each Row In dgvSubFiles.Rows
+                If dgvSubFiles(dgvSubFiles.Columns("ChkSubFiles").Index, Row.index).Value = True AndAlso
+                            dgvSubFiles.Rows(Row.index).Visible = True Then
+                    xlWorkSheet.Cells(X + 4, 1) = dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, Row.index).Value
+                    xlWorkSheet.Cells(X + 4, 2) = dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, Row.index).Value
                     X += 1
-                Next
-            Else
-                For Each pair As KeyValuePair(Of String, String) In AlphaSub
-                    If CMSMissingDWG.Text = "Hide Missing Drawings" And InStr(pair.Key, "(DNE)") <> 0 Then
-                        xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(DNE)", "")
-                        xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
-                    ElseIf CMSMissingParts.Text = "Hide Missing Parts" And InStr(pair.Key, "(PPM)") <> 0 Then
-                        xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(PPM)", "")
-                        xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
-                    ElseIf CMSReference.Text = "Hide Reference Parts" And InStr(pair.Key, "(REF)") <> 0 Then
-                        xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(REF)", "")
-                        xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
-                    Else
-                        If Not InStr(pair.Key, "(DNE)") <> 0 And
-                                Not InStr(pair.Key, "(PPM)") <> 0 And
-                           Not InStr(pair.Key, "(REF)") <> 0 Then
-                            xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Trim(pair.Key)
-                            xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
-                        End If
-                    End If
-                    X += 1
-                Next
-            End If
+                End If
+            Next
+
+            'If CMSHeirarchical.Checked = True Then
+            '    For Each pair As KeyValuePair(Of String, String) In SubFiles
+            '        If CMSMissingDWG.Text = "Hide Missing Drawings" And InStr(pair.Key, "(DNE)") <> 0 Then
+            '            xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(DNE)", "")
+            '            xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
+            '        ElseIf CMSMissingParts.Text = "Hide Missing Parts" And InStr(pair.Key, "(PPM)") <> 0 Then
+            '            xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(PPM)", "")
+            '            xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
+            '        ElseIf CMSReference.Text = "Hide Reference Parts" And InStr(pair.Key, "(REF)") <> 0 Then
+            '            xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(REF)", "")
+            '            xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
+            '        Else
+            '            If Not InStr(pair.Key, "(DNE)") <> 0 And
+            '                    Not InStr(pair.Key, "(PPM)") <> 0 And
+            '               Not InStr(pair.Key, "(REF)") <> 0 Then
+            '                xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Trim(pair.Key)
+            '                xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
+            '            End If
+            '        End If
+            '        X += 1
+            '    Next
+            'Else
+            '    For Each pair As KeyValuePair(Of String, String) In AlphaSub
+            '        If CMSMissingDWG.Text = "Hide Missing Drawings" And InStr(pair.Key, "(DNE)") <> 0 Then
+            '            xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(DNE)", "")
+            '            xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
+            '        ElseIf CMSMissingParts.Text = "Hide Missing Parts" And InStr(pair.Key, "(PPM)") <> 0 Then
+            '            xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(PPM)", "")
+            '            xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
+            '        ElseIf CMSReference.Text = "Hide Reference Parts" And InStr(pair.Key, "(REF)") <> 0 Then
+            '            xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Strings.Replace(Trim(pair.Key), "(REF)", "")
+            '            xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
+            '        Else
+            '            If Not InStr(pair.Key, "(DNE)") <> 0 And
+            '                    Not InStr(pair.Key, "(PPM)") <> 0 And
+            '               Not InStr(pair.Key, "(REF)") <> 0 Then
+            '                xlWorkSheet.Cells(X + 4, 1 + Regex.Match(pair.Key, "[^ ]").Index / 3) = Trim(pair.Key)
+            '                xlWorkSheet.Cells(X + 4, 2 + Regex.Match(pair.Key, "[^ ]").Index / 3) = pair.Value
+            '            End If
+            '        End If
+            '        X += 1
+            '    Next
+            'End If
             xlWorkBook.SaveAs(My.Computer.FileSystem.SpecialDirectories.Temp & "\Parts List" & filetype, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue,
             Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue)
             xlWorkBook.Close(True, misValue, misValue)
@@ -3730,7 +3715,8 @@ Public Class Main
             End If
         Next
         If dgvSubFiles.RowCount > 10 Then
-            txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, Me.Height - 122)
+            txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, Me.Height - 135)
+            txtSearch.Width = dgvSubFiles.Width
             txtSearch.Visible = True
             txtSearch.Text = "Search"
             txtSearch.ForeColor = Drawing.Color.Gray
