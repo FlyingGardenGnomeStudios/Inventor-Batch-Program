@@ -1,5 +1,8 @@
 ﻿Version 2.0.0.8 (6/18/18)
 	- Fixed search function not operating properly with missing drawings
+	- Added ability to select which files get overwritten
+	- Enabled ability to open parts as well as drawings
+	- Stopped drawings from closing when program closed
 
 Items not currently functioning
 	- Open parts list sometimes displays double on first run

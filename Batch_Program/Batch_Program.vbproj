@@ -190,6 +190,12 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GridDateControl.vb" />
+    <Compile Include="Overwrite.Designer.vb">
+      <DependentUpon>Overwrite.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Overwrite.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Rev Table Settings.Designer.vb">
       <DependentUpon>Rev Table Settings.vb</DependentUpon>
     </Compile>
@@ -307,6 +313,9 @@
     <EmbeddedResource Include="CheckNeeded.resx">
       <DependentUpon>CheckNeeded.vb</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Overwrite.resx">
+      <DependentUpon>Overwrite.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Rev Table Settings.resx">
       <DependentUpon>Rev Table Settings.vb</DependentUpon>
