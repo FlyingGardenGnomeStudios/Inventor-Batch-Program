@@ -1,13 +1,17 @@
-﻿Version 2.0.0.8 (6/18/18)
+﻿Version 2.0.0.9 (6/29/18)
+	- Fixed part opening when drawing selected
+	- Tweaked rename function and added backup option.
+
+	Items not currently functioning
+	- Open parts list sometimes displays double on first run
+	- No tutorials yet
+	- Renaming function works but hasn't been thoroughly tested.
+
+Version 2.0.0.8 (6/18/18)
 	- Fixed search function not operating properly with missing drawings
 	- Added ability to select which files get overwritten
 	- Enabled ability to open parts as well as drawings
 	- Stopped drawings from closing when program closed
-
-Items not currently functioning
-	- Open parts list sometimes displays double on first run
-	- No tutorials yet
-	- Renaming function works, but sometimes doesn't play nice
 
 Version 2.0.0.7 (6/15/18)
 	- Minor UI tweaks
