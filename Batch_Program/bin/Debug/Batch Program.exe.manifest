@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Batch Program.exe" size="3584976">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Batch Program.exe" size="3588048">
       <assemblyIdentity name="Batch Program" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>+BdhIC2xbk0d2o8TstzUP5LS2f8=</dsig:DigestValue>
+        <dsig:DigestValue>Ud5vnrIBQH8lWD93sdr7xP/CfLg=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

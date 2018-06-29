@@ -5,6 +5,7 @@ Imports System
 Imports System.IO
 Imports Microsoft.Office.Interop
 Imports System.Runtime.InteropServices
+Imports System.IO.Packaging
 
 Public Class Rename
     Private fromIndex As Integer
@@ -265,7 +266,7 @@ Public Class Rename
 
         If My.Computer.FileSystem.FileExists(My.Computer.FileSystem.SpecialDirectories.Temp & "\Rename.xlsm") Then
             Try
-                Kill(My.Computer.FileSystem.SpecialDirectories.Temp & "\Rename.xlsm")
+                ' Kill(My.Computer.FileSystem.SpecialDirectories.Temp & "\Rename.xlsm")
             Catch
             End Try
         End If
@@ -298,6 +299,29 @@ Public Class Rename
             MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End Try
         CopyFiles(TempLoc, SaveLoc)
+        If txtParentSource.Text = SaveLoc Then
+            MsgBox(txtParent.Text & " needs to be closed in order to update part references")
+            _invapp.Documents.ItemByName(IO.Path.Combine(txtParentSource.Text, txtParent.Text)).Save()
+            _invapp.Documents.ItemByName(IO.Path.Combine(txtParentSource.Text, txtParent.Text)).Close()
+            For Each Doc As Document In _invapp.Documents
+                Main.CloseLater(Doc.FullFileName, Doc)
+            Next
+            For Each Row In DGVRename.Rows
+                If My.Computer.FileSystem.FileExists(IO.Path.Combine(DGVRename(DGVRename.Columns("FileLocation").Index, Row.index).Value,
+                                                                     DGVRename(DGVRename.Columns("NewName").Index, Row.index).Value)) Then
+                    Kill(IO.Path.Combine(DGVRename(DGVRename.Columns("FileLocation").Index, Row.index).Value,
+                                         DGVRename(DGVRename.Columns("Part").Index, Row.index).Value))
+                    Try
+                        If DGVRename(DGVRename.Columns("Drawing").Index, Row.index).Value <> "" Then
+                            Kill(IO.Path.Combine(DGVRename(DGVRename.Columns("FileLocation").Index, Row.index).Value,
+                                                     Strings.Replace(DGVRename(DGVRename.Columns("NewName").Index, Row.index).Value,
+                                                 IO.Path.GetExtension(DGVRename(DGVRename.Columns("NewName").Index, Row.index).Value), ".idw")))
+                        End If
+                    Catch
+                    End Try
+                End If
+            Next
+        End If
         Try
             My.Computer.FileSystem.MoveDirectory(TempLoc, SaveLoc, True)
         Catch
@@ -329,6 +353,7 @@ Public Class Rename
         Remaining.Visible = False
     End Sub
     Private Sub CopyFiles(TempLoc As String, SaveLoc As String)
+        Dim Backup As Boolean = False
         RenameProgress.Visible = True
         Label2.Visible = True
         Remaining.Visible = True
@@ -345,6 +370,22 @@ Public Class Rename
         Dim Z As Integer = 0
         Dim DWGError As String = "The following drawing were copied but with errors:" & vbNewLine & vbNewLine
         _invapp.SilentOperation = True
+        If txtParentSource.Text <> SaveLoc Then
+            ans = MsgBox("Do you wish to make a backup of the original assembly?", vbYesNoCancel)
+        Else
+            ans = vbYes
+        End If
+        If ans = vbYes Then
+            If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(txtParentSource.Text), IO.Path.GetFileNameWithoutExtension(txtParent.Text)) & "-Backup.zip") Then
+                Kill(IO.Path.Combine(IO.Path.GetDirectoryName(txtParentSource.Text), IO.Path.GetFileNameWithoutExtension(txtParent.Text)) & "-Backup.zip")
+            End If
+            Dim ZipPath As String = IO.Path.Combine(IO.Path.GetDirectoryName(txtParentSource.Text), IO.Path.GetFileNameWithoutExtension(txtParent.Text)) & "-Backup.zip"
+            AddtoZip(ZipPath)
+            Backup = True
+        ElseIf ans = vbNo Then
+        Else
+            Exit Sub
+        End If
         Try
             For X = 0 To DGVRename.RowCount - 1
                 If DGVRename.Rows(X).Cells("Reuse").Value = False Then
@@ -442,6 +483,54 @@ Public Class Rename
             MsgBox(DWGError)
         End If
     End Sub
+    Private Sub AddtoZip(ByVal ZipPath As String)
+        Dim Zip As Package = ZipPackage.Open(ZipPath, IO.FileMode.OpenOrCreate, IO.FileAccess.ReadWrite)
+        Dim FileToAdd As String
+        For Each row In DGVRename.Rows
+            If DGVRename(DGVRename.Columns("Drawing").Index, row.index).Value = "" Then
+                FileToAdd = IO.Path.Combine(DGVRename(DGVRename.Columns("FileLocation").Index, row.index).Value,
+                DGVRename(DGVRename.Columns("Part").Index, row.index).Value)
+                AddToArchive(Zip, FileToAdd)
+            Else
+                FileToAdd = IO.Path.Combine(DGVRename(DGVRename.Columns("FileLocation").Index, row.index).Value,
+                                DGVRename(DGVRename.Columns("Part").Index, row.index).Value)
+                AddToArchive(Zip, FileToAdd)
+                FileToAdd = IO.Path.Combine(DGVRename(DGVRename.Columns("FileLocation").Index, row.index).Value,
+                                DGVRename(DGVRename.Columns("Drawing").Index, row.index).Value)
+                AddToArchive(Zip, FileToAdd)
+            End If
+        Next
+
+        Zip.Close()
+    End Sub
+    Private Sub AddToArchive(ByVal zip As Package,
+                     ByVal FileToAdd As String)
+
+        'Replace spaces with an underscore (_)
+        Dim uriFileName As String = FileToAdd.Replace(" ", "_")
+
+        'A Uri always starts with a forward slash "/"
+        Dim zipUri As String = String.Concat("/",
+               IO.Path.GetFileName(uriFileName))
+
+        Dim partUri As New Uri(zipUri, UriKind.Relative)
+        Dim contentType As String =
+               Net.Mime.MediaTypeNames.Application.Zip
+
+        'The PackagePart contains the information:
+        ' Where to extract the file when it's extracted (partUri)
+        ' The type of content stream (MIME type):  (contentType)
+        ' The type of compression:  (CompressionOption.Normal)
+        Dim pkgPart As PackagePart = zip.CreatePart(partUri,
+               contentType, CompressionOption.Normal)
+
+        'Read all of the bytes from the file to add to the zip file
+        Dim bites As Byte() = IO.File.ReadAllBytes(FileToAdd)
+
+        'Compress and write the bytes to the zip file
+        pkgPart.GetStream().Write(bites, 0, bites.Length)
+
+    End Sub
     Private Sub ReplaceReferences(ByVal oDoc As Document, ByVal SaveLoc As String, ByVal Source As String)
         Dim Start As Date = Now()
         For Row As Integer = 0 To DGVRename.Rows.Count - 1
@@ -457,7 +546,7 @@ Public Class Rename
         Next
         Dim oAssDoc As AssemblyDocument = _invapp.Documents.Open(Source, False)
         Dim oAssDef As AssemblyComponentDefinition = oAssDoc.ComponentDefinition
-            Dim oCompOccs As ComponentOccurrences = oAssDef.Occurrences
+        Dim oCompOccs As ComponentOccurrences = oAssDef.Occurrences
         TraverseAssembly(oAssDoc, oCompOccs, SaveLoc, Start, 0)
         Try
             oAssDoc.Save()
