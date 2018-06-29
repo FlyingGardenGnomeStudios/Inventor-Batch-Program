@@ -681,6 +681,7 @@ Public Class Main
         'Go through drawings to see which ones are selected
         Dim oDoc As Document
         Dim Total As Integer = 0
+        Dim FileToOpen As String = ""
         For Each row In dgvSubFiles.Rows
             If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.index).Value = True AndAlso
                 dgvSubFiles.Rows(row.index).Visible = True Then
@@ -693,19 +694,25 @@ Public Class Main
             If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, X).Value = True = True AndAlso
                 dgvSubFiles.Rows(X).Visible = True Then
                 'MatchDrawing(DrawSource, DrawingName, X)
-                Dim DrawSource As String = dgvSubFiles(dgvSubFiles.Columns("DrawingSource").Index, X).Value
-                Dim DrawingName As String = dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, X).Value
+                If Type = "Part" Then
+                    FileToOpen = dgvSubFiles(dgvSubFiles.Columns("DrawingSource").Index, X).Value
+                Else
+                    FileToOpen = dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, X).Value
+                End If
                 'DrawSource = Strings.Left(SubFiles.Item(X).Value, Len(SubFiles.Item(X).Value) - 3) & "idw"
-                bgwRun.ReportProgress((X / Total) * 100, "Opening: " & DrawingName)
+                bgwRun.ReportProgress((X / Total) * 100, "Opening: " & Filetoopen)
                 ' ProgressBar(Total, X, "Opening:   ", DrawingName)
+
                 Try
-                    odoc = _invApp.Documents.Open(DrawSource, True)
-                    writeDebug("Opened " & Type & ": " & DrawingName)
+                    oDoc = _invApp.Documents.Open(FileToOpen, True)
+                    writeDebug("Opened " & Type & ": " & FileToOpen)
                 Catch
-                    MsgBox("Could not open " & Type & ". Ensure the " & Type & " exists")
-                    writeDebug("Could not open " & Type & ": " & DrawingName)
+                        MsgBox("Could not open " & Type & ". Ensure the " & Type & " exists")
+                    writeDebug("Could not open " & Type & ": " & FileToOpen)
                 End Try
-            End If
+
+
+                End If
         Next
     End Sub
     Public Sub ExportCheck(GridView As DataGridView, ExportType As String, chkcolumn As String, PDTitle As String)
