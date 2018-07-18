@@ -24,14 +24,6 @@ Partial Class Overwrite
     Private Sub InitializeComponent()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.dgvOverwrite = New System.Windows.Forms.DataGridView()
-        Me.chkOverwrite = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.Total = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Counter = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Destin = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DrawingName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DrawSource = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Rev = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.btnOK = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -41,6 +33,14 @@ Partial Class Overwrite
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.chkOverwrite = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Total = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Counter = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Destin = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DrawingName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DrawSource = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Rev = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvOverwrite, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -66,18 +66,95 @@ Partial Class Overwrite
         Me.dgvOverwrite.Location = New System.Drawing.Point(12, 25)
         Me.dgvOverwrite.Name = "dgvOverwrite"
         Me.dgvOverwrite.RowHeadersVisible = False
-        Me.dgvOverwrite.Size = New System.Drawing.Size(444, 150)
+        Me.dgvOverwrite.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvOverwrite.Size = New System.Drawing.Size(249, 150)
         Me.dgvOverwrite.TabIndex = 1
+        '
+        'btnOK
+        '
+        Me.btnOK.Location = New System.Drawing.Point(186, 181)
+        Me.btnOK.Name = "btnOK"
+        Me.btnOK.Size = New System.Drawing.Size(75, 21)
+        Me.btnOK.TabIndex = 2
+        Me.btnOK.Text = "OK"
+        Me.btnOK.UseVisualStyleBackColor = True
+        '
+        'btnCancel
+        '
+        Me.btnCancel.Location = New System.Drawing.Point(105, 181)
+        Me.btnCancel.Name = "btnCancel"
+        Me.btnCancel.Size = New System.Drawing.Size(75, 21)
+        Me.btnCancel.TabIndex = 3
+        Me.btnCancel.Text = "Cancel"
+        Me.btnCancel.UseVisualStyleBackColor = True
+        '
+        'DataGridViewTextBoxColumn1
+        '
+        Me.DataGridViewTextBoxColumn1.HeaderText = "Destin"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
+        Me.DataGridViewTextBoxColumn1.Visible = False
+        Me.DataGridViewTextBoxColumn1.Width = 5
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.HeaderText = "DrawSource"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
+        Me.DataGridViewTextBoxColumn2.Visible = False
+        Me.DataGridViewTextBoxColumn2.Width = 5
+        '
+        'DataGridViewTextBoxColumn3
+        '
+        Me.DataGridViewTextBoxColumn3.HeaderText = "Total"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
+        Me.DataGridViewTextBoxColumn3.Visible = False
+        Me.DataGridViewTextBoxColumn3.Width = 5
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        Me.DataGridViewTextBoxColumn4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.DataGridViewTextBoxColumn4.FillWeight = 131.0785!
+        Me.DataGridViewTextBoxColumn4.HeaderText = "Counter"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn5
+        '
+        Me.DataGridViewTextBoxColumn5.HeaderText = "Type"
+        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        Me.DataGridViewTextBoxColumn5.ReadOnly = True
+        Me.DataGridViewTextBoxColumn5.Visible = False
+        Me.DataGridViewTextBoxColumn5.Width = 5
+        '
+        'DataGridViewTextBoxColumn6
+        '
+        Me.DataGridViewTextBoxColumn6.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.DataGridViewTextBoxColumn6.FillWeight = 121.8274!
+        Me.DataGridViewTextBoxColumn6.HeaderText = "Name"
+        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        Me.DataGridViewTextBoxColumn6.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn7
+        '
+        Me.DataGridViewTextBoxColumn7.HeaderText = "Location"
+        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
+        Me.DataGridViewTextBoxColumn7.ReadOnly = True
+        Me.DataGridViewTextBoxColumn7.Visible = False
+        Me.DataGridViewTextBoxColumn7.Width = 5
         '
         'chkOverwrite
         '
         Me.chkOverwrite.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader
         Me.chkOverwrite.FalseValue = "False"
         Me.chkOverwrite.FillWeight = 47.09408!
-        Me.chkOverwrite.HeaderText = ""
+        Me.chkOverwrite.HeaderText = "Overwrite"
+        Me.chkOverwrite.IndeterminateValue = "Overwrite"
+        Me.chkOverwrite.MinimumWidth = 25
         Me.chkOverwrite.Name = "chkOverwrite"
         Me.chkOverwrite.TrueValue = "True"
-        Me.chkOverwrite.Width = 5
+        Me.chkOverwrite.Width = 58
         '
         'Total
         '
@@ -100,10 +177,11 @@ Partial Class Overwrite
         '
         'DrawingName
         '
-        Me.DrawingName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.DrawingName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
         Me.DrawingName.FillWeight = 131.0785!
         Me.DrawingName.HeaderText = "DrawingName"
         Me.DrawingName.Name = "DrawingName"
+        Me.DrawingName.Width = 99
         '
         'DrawSource
         '
@@ -128,78 +206,11 @@ Partial Class Overwrite
         Me.Rev.ReadOnly = True
         Me.Rev.Visible = False
         '
-        'btnOK
-        '
-        Me.btnOK.Location = New System.Drawing.Point(381, 181)
-        Me.btnOK.Name = "btnOK"
-        Me.btnOK.Size = New System.Drawing.Size(75, 23)
-        Me.btnOK.TabIndex = 2
-        Me.btnOK.Text = "OK"
-        Me.btnOK.UseVisualStyleBackColor = True
-        '
-        'btnCancel
-        '
-        Me.btnCancel.Location = New System.Drawing.Point(300, 181)
-        Me.btnCancel.Name = "btnCancel"
-        Me.btnCancel.Size = New System.Drawing.Size(75, 23)
-        Me.btnCancel.TabIndex = 3
-        Me.btnCancel.Text = "Cancel"
-        Me.btnCancel.UseVisualStyleBackColor = True
-        '
-        'DataGridViewTextBoxColumn1
-        '
-        Me.DataGridViewTextBoxColumn1.HeaderText = "Destin"
-        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
-        Me.DataGridViewTextBoxColumn1.ReadOnly = True
-        Me.DataGridViewTextBoxColumn1.Width = 5
-        '
-        'DataGridViewTextBoxColumn2
-        '
-        Me.DataGridViewTextBoxColumn2.HeaderText = "DrawSource"
-        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
-        Me.DataGridViewTextBoxColumn2.ReadOnly = True
-        Me.DataGridViewTextBoxColumn2.Width = 5
-        '
-        'DataGridViewTextBoxColumn3
-        '
-        Me.DataGridViewTextBoxColumn3.HeaderText = "Total"
-        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
-        Me.DataGridViewTextBoxColumn3.ReadOnly = True
-        Me.DataGridViewTextBoxColumn3.Width = 5
-        '
-        'DataGridViewTextBoxColumn4
-        '
-        Me.DataGridViewTextBoxColumn4.HeaderText = "Counter"
-        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
-        Me.DataGridViewTextBoxColumn4.ReadOnly = True
-        Me.DataGridViewTextBoxColumn4.Width = 5
-        '
-        'DataGridViewTextBoxColumn5
-        '
-        Me.DataGridViewTextBoxColumn5.HeaderText = "Type"
-        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
-        Me.DataGridViewTextBoxColumn5.ReadOnly = True
-        Me.DataGridViewTextBoxColumn5.Width = 5
-        '
-        'DataGridViewTextBoxColumn6
-        '
-        Me.DataGridViewTextBoxColumn6.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.DataGridViewTextBoxColumn6.HeaderText = "Name"
-        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
-        Me.DataGridViewTextBoxColumn6.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn7
-        '
-        Me.DataGridViewTextBoxColumn7.HeaderText = "Location"
-        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
-        Me.DataGridViewTextBoxColumn7.ReadOnly = True
-        Me.DataGridViewTextBoxColumn7.Width = 5
-        '
         'Overwrite
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(468, 214)
+        Me.ClientSize = New System.Drawing.Size(271, 214)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.dgvOverwrite)

@@ -1,4 +1,5 @@
 ﻿Version 2.0.0.9 (6/29/18)
+	- Added options to overwrite notification on dxf/pdf/dwg
 	- Fixed part opening when drawing selected
 	- Tweaked rename function and added backup option.
 

@@ -468,7 +468,7 @@ Public Class Rename
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End Try
-        ReplaceReferences(oDoc, TempLoc, Source)
+        ReplaceReferences(oDoc, TempLoc, txtParentSource.Text & txtParent.Text)
 
         Try
             Dim atts As System.IO.FileAttributes = System.IO.File.GetAttributes(oDoc.FullFileName)
@@ -533,17 +533,17 @@ Public Class Rename
     End Sub
     Private Sub ReplaceReferences(ByVal oDoc As Document, ByVal SaveLoc As String, ByVal Source As String)
         Dim Start As Date = Now()
-        For Row As Integer = 0 To DGVRename.Rows.Count - 1
-            If DGVRename.Rows(Row).Cells(2).Value = txtParent.Text Then
-                If DGVRename.Rows(Row).Cells("Reuse").Value = False Then
-                    Source = SaveLoc & DGVRename.Rows(Row).Cells(3).Value
-                    Exit For
-                Else
-                    Source = DGVRename.Rows(Row).Cells(0).Value & DGVRename.Rows(Row).Cells(2).Value
-                    Exit For
-                End If
-            End If
-        Next
+        'For Row As Integer = 0 To DGVRename.Rows.Count - 1
+        '    If DGVRename.Rows(Row).Cells(2).Value = txtParent.Text Then
+        '        If DGVRename.Rows(Row).Cells("Reuse").Value = False Then
+        '            Source = SaveLoc & DGVRename.Rows(Row).Cells(3).Value
+        '            Exit For
+        '        Else
+        '            Source = DGVRename.Rows(Row).Cells(0).Value & DGVRename.Rows(Row).Cells(2).Value
+        '            Exit For
+        '        End If
+        '    End If
+        'Next
         Dim oAssDoc As AssemblyDocument = _invapp.Documents.Open(Source, False)
         Dim oAssDef As AssemblyComponentDefinition = oAssDoc.ComponentDefinition
         Dim oCompOccs As ComponentOccurrences = oAssDef.Occurrences
@@ -563,7 +563,7 @@ Public Class Rename
         For Each oCompOcc In oCompOccs
             For X = 0 To DGVRename.RowCount - 1
                 If oCompOcc.Definition.Document.fullfilename = DGVRename.Rows(X).Cells(0).Value & DGVRename.Rows(X).Cells(2).Value And
-                    DGVRename.Rows(X).Cells("Reuse").Value = False Then
+                    DGVRename.Rows(X).Cells("Reuse").Value = Nothing Then
                     Source = DGVRename.Rows.Item(X).Cells(0).Value & DGVRename.Rows(X).Cells(2).Value
                     If chkStructure.Checked = True Then
                         If InStr(Source, txtParentSource.Text) <> 0 Then

@@ -721,7 +721,7 @@ Public Class Main
         Dim X, Total, Counter As Integer
         Counter = 1
         Dim Overwrite As New Overwrite
-        Dim PDFSource, DXFSource, DWGSource, RevNo, DrawSource, DrawingName As String
+        Dim PDFSource, DXFSource, DWGSource, RevNo, DrawSource, DrawingName, SaveLoc As String
         PDFSource = ""
         DXFSource = ""
         DWGSource = ""
@@ -747,74 +747,70 @@ Public Class Main
                 If My.Computer.FileSystem.FileExists(Strings.Replace(DrawSource, "idw", "iam")) = True AndAlso chkSkipAssy.Checked = True Then
 
                 Else
-                    If chkSkipAssy.Checked = True Then
-                        'iterate through opend documents to find the selected file
-                        If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
-                            Destin = My.Settings("Custom" & ExportType & "ExportLoc")
-                        ElseIf My.Settings(ExportType & "SaveNewLoc") = True Then
-                            Destin = My.Settings(ExportType & "SaveLoc")
-                        ElseIf My.Settings(ExportType & "Tag") <> "" Then
-                            Destin = Strings.Left(DrawSource, InStrRev(DrawSource, "\") - 1) & My.Settings(ExportType & "Tag")
-                        End If
-                        'open drawing
-                        oDoc = _invApp.Documents.Open(DrawSource, False)
+                    'If chkSkipAssy.Checked = True Then
+                    'iterate through opend documents to find the selected file
+                    If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+                        Destin = My.Settings("Custom" & ExportType & "ExportLoc")
+                    ElseIf My.Settings(ExportType & "SaveNewLoc") = True Then
+                        Destin = My.Settings(ExportType & "SaveLoc")
+                    ElseIf My.Settings(ExportType & "Tag") <> "" Then
+                        Destin = IO.Path.GetDirectoryName(DrawSource) & My.Settings(ExportType & "Tag")
+                    End If
+
+                    'open drawing
+                    oDoc = _invApp.Documents.Open(DrawSource, False)
                         'Get revision number
                         If My.Settings(ExportType & "Rev") = True Then
                             RevNo = "-R" & oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
                         Else
                             RevNo = ""
                         End If
-                        'Check for files that will be overwritten
-                        'Set the filename to be saved along with the revision
+                    'Check for files that will be overwritten
+                    'Set the filename to be saved along with the revision
 
-                        'Set the PDF/DXF name and search to see if it exists
-                        DXFSource = Destin & "\" & DrawingName
-                        PDFSource = Destin & "\" & DrawingName
-                        DXFSource = DXFSource.Insert(DXFSource.LastIndexOf("."), RevNo)
-                        PDFSource = PDFSource.Insert(PDFSource.LastIndexOf("."), RevNo)
-                        DXFSource = Replace(DXFSource, "idw", "dxf")
-                        PDFSource = Replace(PDFSource, "idw", "pdf")
-                        DWGSource = Replace(DXFSource, "dxf", "dwg")
-                        'If the file exists, save it for display later
-                        Dim sReadableType As String = ""
+                    'Set the PDF/DXF name and search to see if it exists
+                    SaveLoc = IO.Path.Combine(Destin, IO.Path.GetFileNameWithoutExtension(DrawingName.Insert(DrawingName.LastIndexOf("."), RevNo)) & "." & LCase(ExportType))
+
+                    'If the file exists, save it for display later
+                    Dim sReadableType As String = ""
                         Dim Archive As String = Strings.Replace(DrawSource, "idw", "ipt")
                         oDoc = _invApp.Documents.Open(Archive, True)
                         SheetMetalTest(Archive, oDoc, sReadableType)
-                        If chkFlatPattern.Checked = True AndAlso sReadableType <> "S" Then
-                        Else
-                            If ExportType = "PDF" Then
-                                If chkPDF.CheckState = CheckState.Checked Then
-                                    If My.Computer.FileSystem.FileExists(PDFSource) Then
-                                        Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "PDF", RevNo)
-                                        ' overwrite.Add(New KeyValuePair(Of String, String)(IO.Path.GetFileNameWithoutExtension(DrawingName) & ".pdf", PDFSource))
-                                        'OWCounter += 1
-                                    End If
-                                End If
-                            ElseIf ExportType = "dwg" Then
-                                If chkDWG.CheckState = CheckState.Checked Then
-                                    If My.Computer.FileSystem.FileExists(DWGSource) Or
-                                My.Computer.FileSystem.FileExists(DWGSource.Insert(DWGSource.LastIndexOf("."), "_Sheet_1")) Then
-                                        Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "DWG", RevNo)
-                                        'Overwrite.dgvOverwrite.Rows.Add(True, IO.Path.GetFileNameWithoutExtension(DrawingName) & ".dwg", DWGSource)
-                                        'OWCounter += 1
-                                    End If
-                                End If
-                            ElseIf ExportType = "dxf" Then
-                                If My.Computer.FileSystem.FileExists(DXFSource) Or
-                        My.Computer.FileSystem.FileExists(DXFSource.Insert(DXFSource.LastIndexOf("."), "_Sheet_1")) Then
-                                    Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "DXF", RevNo)
-                                    'Overwrite.dgvOverwrite.Rows.Add(True, IO.Path.GetFileNameWithoutExtension(DrawingName) & ".dxf", DXFSource)
+                    If chkFlatPattern.Checked = True AndAlso sReadableType <> "S" Then
+                    Else
+                        If ExportType = "PDF" Then
+                            If chkPDF.CheckState = CheckState.Checked Then
+                                If My.Computer.FileSystem.FileExists(SaveLoc) Then
+                                    Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "PDF", RevNo)
+                                    ' overwrite.Add(New KeyValuePair(Of String, String)(IO.Path.GetFileNameWithoutExtension(DrawingName) & ".pdf", PDFSource))
                                     'OWCounter += 1
                                 End If
                             End If
-
-                            CloseLater(DrawingName, oDoc)
-                            'Counter += 1
-                            ' Title = "Checking"
-                            bgwRun.ReportProgress((Counter / Total) * 100, "Checking: " & DrawingName)
-                            ' ProgressBar(Total, Counter, Title, DrawingName)
-                            'Display any files that will be overwritten
+                        ElseIf ExportType = "dwg" Then
+                            If chkDWG.CheckState = CheckState.Checked Then
+                                If My.Computer.FileSystem.FileExists(SaveLoc) Or
+                                My.Computer.FileSystem.FileExists(SaveLoc.Insert(SaveLoc.LastIndexOf("."), "_Sheet_1")) Then
+                                    Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "DWG", RevNo)
+                                    'Overwrite.dgvOverwrite.Rows.Add(True, IO.Path.GetFileNameWithoutExtension(DrawingName) & ".dwg", DWGSource)
+                                    'OWCounter += 1
+                                End If
+                            End If
+                        ElseIf ExportType = "dxf" Then
+                            If My.Computer.FileSystem.FileExists(SaveLoc) Or
+                        My.Computer.FileSystem.FileExists(SaveLoc.Insert(SaveLoc.LastIndexOf("."), "_Sheet_1")) Then
+                                Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "DXF", RevNo)
+                                'Overwrite.dgvOverwrite.Rows.Add(True, IO.Path.GetFileNameWithoutExtension(DrawingName) & ".dxf", DXFSource)
+                                'OWCounter += 1
+                            End If
                         End If
+
+                        CloseLater(DrawingName, oDoc)
+                        'Counter += 1
+                        ' Title = "Checking"
+                        bgwRun.ReportProgress((Counter / Total) * 100, "Checking: " & DrawingName)
+                        ' ProgressBar(Total, Counter, Title, DrawingName)
+                        'Display any files that will be overwritten
+                        'End If
                     End If
                 End If
             End If
