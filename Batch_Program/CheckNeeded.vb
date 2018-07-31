@@ -531,7 +531,8 @@ Public Class CheckNeeded
                     oPoint = _invApp.TransientGeometry.CreatePoint2d(Sheet.Width, Sheet.Height)
                 End If
                 'Define the revision table from the active sheet
-                RevisionTable = Sheet.RevisionTables(1)
+
+                RevisionTable = Sheet.RevisionTables.Item(1)
                 If Err.Number = 5 Then
                     oRevTable = odoc.ActiveSheet.Revisiontables.Add2(oPoint, False, True, False, 0)
                     'clear the error for future code.
@@ -625,7 +626,7 @@ Public Class CheckNeeded
                     Next
                     Dim Rev(tgvCheckNeeded.Columns.Count - 1) As String
                     DGVRows = tgvCheckNeeded.Rows.Count - 1
-                    Rev(0) = DrawingName
+                    Rev(0) = Trim(DrawingName)
                     For z = 1 To tgvCheckNeeded.ColumnCount - 1
                         Select Case UCase(tgvCheckNeeded.Columns(z).Name)
                             Case UCase("CheckedBy")

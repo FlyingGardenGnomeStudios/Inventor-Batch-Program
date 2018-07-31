@@ -1205,6 +1205,78 @@ Namespace My
                 Me("CustomDWGExportLoc") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("BR")>  _
+        Public Property DWGLoc() As String
+            Get
+                Return CType(Me("DWGLoc"),String)
+            End Get
+            Set
+                Me("DWGLoc") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property PrintRange() As Integer
+            Get
+                Return CType(Me("PrintRange"),Integer)
+            End Get
+            Set
+                Me("PrintRange") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property PrintSize() As Integer
+            Get
+                Return CType(Me("PrintSize"),Integer)
+            End Get
+            Set
+                Me("PrintSize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property PrintColour() As Integer
+            Get
+                Return CType(Me("PrintColour"),Integer)
+            End Get
+            Set
+                Me("PrintColour") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property PrintReverse() As Boolean
+            Get
+                Return CType(Me("PrintReverse"),Boolean)
+            End Get
+            Set
+                Me("PrintReverse") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property PrintDwgLoc() As Boolean
+            Get
+                Return CType(Me("PrintDwgLoc"),Boolean)
+            End Get
+            Set
+                Me("PrintDwgLoc") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

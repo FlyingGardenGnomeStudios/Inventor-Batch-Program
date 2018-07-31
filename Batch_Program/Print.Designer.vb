@@ -38,10 +38,18 @@ Partial Class Print
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.rdoColour = New System.Windows.Forms.RadioButton()
         Me.rdoBW = New System.Windows.Forms.RadioButton()
+        Me.btnExpand = New System.Windows.Forms.Button()
+        Me.chkDWGLocation = New System.Windows.Forms.CheckBox()
+        Me.rdbTL = New System.Windows.Forms.RadioButton()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.rdbTR = New System.Windows.Forms.RadioButton()
+        Me.rdbBR = New System.Windows.Forms.RadioButton()
+        Me.rdbBL = New System.Windows.Forms.RadioButton()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         CType(Me.txtCopies, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox3.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'rdoAllPages
@@ -123,9 +131,9 @@ Partial Class Print
         '
         'btnOK
         '
-        Me.btnOK.Location = New System.Drawing.Point(203, 117)
+        Me.btnOK.Location = New System.Drawing.Point(189, 117)
         Me.btnOK.Name = "btnOK"
-        Me.btnOK.Size = New System.Drawing.Size(75, 23)
+        Me.btnOK.Size = New System.Drawing.Size(67, 23)
         Me.btnOK.TabIndex = 9
         Me.btnOK.Text = "OK"
         Me.btnOK.UseVisualStyleBackColor = True
@@ -134,7 +142,7 @@ Partial Class Print
         '
         Me.btnCancel.Location = New System.Drawing.Point(122, 117)
         Me.btnCancel.Name = "btnCancel"
-        Me.btnCancel.Size = New System.Drawing.Size(75, 23)
+        Me.btnCancel.Size = New System.Drawing.Size(61, 23)
         Me.btnCancel.TabIndex = 10
         Me.btnCancel.Text = "Cancel"
         Me.btnCancel.UseVisualStyleBackColor = True
@@ -199,11 +207,86 @@ Partial Class Print
         Me.rdoBW.Text = "Black and White"
         Me.rdoBW.UseVisualStyleBackColor = True
         '
+        'btnExpand
+        '
+        Me.btnExpand.Location = New System.Drawing.Point(229, 88)
+        Me.btnExpand.Name = "btnExpand"
+        Me.btnExpand.Size = New System.Drawing.Size(27, 23)
+        Me.btnExpand.TabIndex = 52
+        Me.btnExpand.Text = ">>"
+        Me.btnExpand.UseVisualStyleBackColor = True
+        '
+        'chkDWGLocation
+        '
+        Me.chkDWGLocation.AutoSize = True
+        Me.chkDWGLocation.Location = New System.Drawing.Point(266, 13)
+        Me.chkDWGLocation.Name = "chkDWGLocation"
+        Me.chkDWGLocation.Size = New System.Drawing.Size(119, 17)
+        Me.chkDWGLocation.TabIndex = 53
+        Me.chkDWGLocation.Text = "Add DWG Location"
+        Me.chkDWGLocation.UseVisualStyleBackColor = True
+        '
+        'rdbTL
+        '
+        Me.rdbTL.AutoSize = True
+        Me.rdbTL.Location = New System.Drawing.Point(289, 44)
+        Me.rdbTL.Name = "rdbTL"
+        Me.rdbTL.Size = New System.Drawing.Size(14, 13)
+        Me.rdbTL.TabIndex = 54
+        Me.rdbTL.UseVisualStyleBackColor = True
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.ErrorImage = Nothing
+        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
+        Me.PictureBox1.InitialImage = Nothing
+        Me.PictureBox1.Location = New System.Drawing.Point(302, 61)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(36, 34)
+        Me.PictureBox1.TabIndex = 55
+        Me.PictureBox1.TabStop = False
+        Me.PictureBox1.WaitOnLoad = True
+        '
+        'rdbTR
+        '
+        Me.rdbTR.AutoSize = True
+        Me.rdbTR.Location = New System.Drawing.Point(339, 44)
+        Me.rdbTR.Name = "rdbTR"
+        Me.rdbTR.Size = New System.Drawing.Size(14, 13)
+        Me.rdbTR.TabIndex = 56
+        Me.rdbTR.UseVisualStyleBackColor = True
+        '
+        'rdbBR
+        '
+        Me.rdbBR.AutoSize = True
+        Me.rdbBR.Location = New System.Drawing.Point(339, 98)
+        Me.rdbBR.Name = "rdbBR"
+        Me.rdbBR.Size = New System.Drawing.Size(14, 13)
+        Me.rdbBR.TabIndex = 58
+        Me.rdbBR.UseVisualStyleBackColor = True
+        '
+        'rdbBL
+        '
+        Me.rdbBL.AutoSize = True
+        Me.rdbBL.Location = New System.Drawing.Point(289, 98)
+        Me.rdbBL.Name = "rdbBL"
+        Me.rdbBL.Size = New System.Drawing.Size(14, 13)
+        Me.rdbBL.TabIndex = 57
+        Me.rdbBL.UseVisualStyleBackColor = True
+        '
         'Print
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(288, 152)
+        Me.ClientSize = New System.Drawing.Size(264, 152)
+        Me.ControlBox = False
+        Me.Controls.Add(Me.rdbBR)
+        Me.Controls.Add(Me.rdbBL)
+        Me.Controls.Add(Me.rdbTR)
+        Me.Controls.Add(Me.PictureBox1)
+        Me.Controls.Add(Me.rdbTL)
+        Me.Controls.Add(Me.chkDWGLocation)
+        Me.Controls.Add(Me.btnExpand)
         Me.Controls.Add(Me.GroupBox3)
         Me.Controls.Add(Me.chkReverse)
         Me.Controls.Add(Me.txtCopies)
@@ -223,6 +306,7 @@ Partial Class Print
         CType(Me.txtCopies, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -243,4 +327,11 @@ Partial Class Print
     Friend WithEvents GroupBox3 As Windows.Forms.GroupBox
     Friend WithEvents rdoColour As Windows.Forms.RadioButton
     Friend WithEvents rdoBW As Windows.Forms.RadioButton
+    Friend WithEvents btnExpand As Windows.Forms.Button
+    Friend WithEvents chkDWGLocation As Windows.Forms.CheckBox
+    Friend WithEvents rdbTL As Windows.Forms.RadioButton
+    Friend WithEvents PictureBox1 As Windows.Forms.PictureBox
+    Friend WithEvents rdbTR As Windows.Forms.RadioButton
+    Friend WithEvents rdbBR As Windows.Forms.RadioButton
+    Friend WithEvents rdbBL As Windows.Forms.RadioButton
 End Class

@@ -31,6 +31,39 @@ Public Class Print
         POpenDocs = OpenDocs
         PSubfiles = SubFiles
         ASubfiles = AlphaSub
+        Select Case My.Settings.PrintSize
+            Case 0
+                rdoFull.Checked = True
+            Case 1
+                rdoScale.Checked = True
+        End Select
+        If My.Settings.PrintDwgLoc = True Then
+            Select Case My.Settings.DWGLoc
+                Case "TR"
+                    rdbTR.Checked = True
+                Case "TL"
+                    rdbTL.Checked = True
+                Case "BR"
+                    rdbBR.Checked = True
+                Case "BL"
+                    rdbBL.Checked = True
+            End Select
+        End If
+        Select Case My.Settings.PrintRange
+            Case 0
+                rdoAllPages.Checked = True
+            Case 1
+                rdoFirstPage.Checked = True
+            Case 2
+                rdoCurrentPage.Checked = True
+        End Select
+        Select Case My.Settings.PrintColour
+            Case 0
+                rdoColour.Checked = True
+            Case 1
+                rdoBW.Checked = True
+        End Select
+        chkDWGLocation.Checked = My.Settings.PrintDwgLoc
     End Sub
 
     Private Sub rdoAllPages_CheckedChanged(sender As Object, e As EventArgs) Handles rdoAllPages.CheckedChanged
@@ -66,12 +99,102 @@ Public Class Print
         End If
     End Sub
 
+    Private Sub btnExpand_Click(sender As Object, e As EventArgs) Handles btnExpand.Click
+        If btnExpand.Text = ">>" Then
+            Me.Width = 400
+            btnExpand.Text = "<<"
+        Else
+            Me.Width = 280
+            btnExpand.Text = ">>"
+        End If
+    End Sub
+
+    Private Sub RadioButton2_CheckedChanged(sender As Object, e As EventArgs) Handles rdbBR.CheckedChanged
+        If rdbBR.Checked = True Then
+            rdbBL.Checked = False
+            rdbTL.Checked = False
+            rdbTR.Checked = False
+            My.Settings.DWGLoc = "BR"
+            My.Settings.Save()
+        End If
+    End Sub
+
+    Private Sub rdbBL_CheckedChanged(sender As Object, e As EventArgs) Handles rdbBL.CheckedChanged
+        If rdbBL.Checked = True Then
+            rdbTL.Checked = False
+            rdbTR.Checked = False
+            rdbBR.Checked = False
+            My.Settings.DWGLoc = "BL"
+            My.Settings.Save()
+        End If
+    End Sub
+
+    Private Sub rdbTL_CheckedChanged(sender As Object, e As EventArgs) Handles rdbTL.CheckedChanged
+        If rdbTL.Checked = True Then
+            rdbBL.Checked = False
+            rdbTR.Checked = False
+            rdbBR.Checked = False
+            My.Settings.DWGLoc = "TL"
+            My.Settings.Save()
+        End If
+    End Sub
+
+    Private Sub rdbTR_CheckedChanged(sender As Object, e As EventArgs) Handles rdbTR.CheckedChanged
+        If rdbTR.Checked = True Then
+            rdbBL.Checked = False
+            rdbTL.Checked = False
+            rdbBR.Checked = False
+            My.Settings.DWGLoc = "True"
+            My.Settings.Save()
+        End If
+    End Sub
+
+    Private Sub dwgLocation_CheckedChanged(sender As Object, e As EventArgs) Handles chkDWGLocation.CheckedChanged
+        If chkDWGLocation.Checked = True Then
+            Select Case My.Settings.DWGLoc
+                Case "TR"
+                    rdbTR.Checked = True
+                Case "TL"
+                    rdbTL.Checked = True
+                Case "BR"
+                    rdbBR.Checked = True
+                Case "BL"
+                    rdbBL.Checked = True
+            End Select
+        Else
+            rdbTR.Checked = False
+            rdbTL.Checked = False
+            rdbBR.Checked = False
+            rdbBL.Checked = False
+        End If
+    End Sub
+
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         Me.Close()
     End Sub
 
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
         Print_Size.PopPrint(Me)
+        If rdoCurrentPage.Checked = True Then
+            My.Settings.PrintRange = 0
+        ElseIf rdoFirstPage.Checked = True Then
+            My.Settings.PrintRange = 1
+        Else
+            My.Settings.PrintRange = 2
+        End If
+        If rdoFull.Checked = True Then
+            My.Settings.PrintSize = 0
+        Else
+            My.Settings.PrintSize = 1
+        End If
+        If rdoColour.Checked = True Then
+            My.Settings.PrintColour = 0
+        Else
+            My.Settings.PrintColour = 1
+        End If
+        My.Settings.PrintDwgLoc = chkDWGLocation.Checked
+            My.Settings.Save()
+        My.Settings.PrintReverse = chkReverse.Checked
         Me.Hide()
         Dim dDoc As Inventor.DrawingDocument
         Dim Range, Direction As Integer : Range = 0 : Direction = 0
@@ -197,9 +320,44 @@ Public Class Print
                 End If
             End If
             If Print_Size.lblDWGSize.Text = "Cancel" Then Exit Sub
-            If oDoc.Sheets.Item(X).ExcludeFromPrinting = False Then oPM.SubmitPrint()
+            If oDoc.Sheets.Item(X).ExcludeFromPrinting = False Then
+                Dim oSketch As DrawingSketch = Nothing
+                If My.Settings.PrintDwgLoc = True Then
+                    oSketch = dDoc.activesheet.sketches.add
+                    oSketch.Edit()
+                    Dim oTG As TransientGeometry = _invApp.TransientGeometry
+                    Dim DWGLoc As String = dDoc.FullFileName
+                    Dim oBorder As Border = Nothing
+                    Try
+                        oBorder = oDoc.ActiveSheet.Border
+                    Catch ex As Exception
+                        MessageBox.Show("Drawing border missing" & vbNewLine & ex.Message)
+                    End Try
+                    Dim oTextBox As Inventor.TextBox
+                    Select Case My.Settings.DWGLoc
+                        Case "TR"
+                            oTextBox = oSketch.TextBoxes.AddFitted(oTG.CreatePoint2d(oBorder.RangeBox.MaxPoint.X, oBorder.RangeBox.MaxPoint.Y + 0.45), DWGLoc)
+                            oTextBox.HorizontalJustification = HorizontalTextAlignmentEnum.kAlignTextRight
+                        Case "BR"
+                            oTextBox = oSketch.TextBoxes.AddFitted(oTG.CreatePoint2d(oBorder.RangeBox.MaxPoint.X, oBorder.RangeBox.MinPoint.Y - 0.3), DWGLoc)
+                            oTextBox.HorizontalJustification = HorizontalTextAlignmentEnum.kAlignTextRight
+                        Case "TL"
+                            oTextBox = oSketch.TextBoxes.AddFitted(oTG.CreatePoint2d(oBorder.RangeBox.MinPoint.X, oBorder.RangeBox.MaxPoint.Y + 0.45), DWGLoc)
+                            oTextBox.HorizontalJustification = HorizontalTextAlignmentEnum.kAlignTextLeft
+                        Case "BL"
+                            oTextBox = oSketch.TextBoxes.AddFitted(oTG.CreatePoint2d(oBorder.RangeBox.MinPoint.X, oBorder.RangeBox.MinPoint.Y - 0.3), DWGLoc)
+                            oTextBox.HorizontalJustification = HorizontalTextAlignmentEnum.kAlignTextLeft
+                    End Select
+                End If
+                oPM.SubmitPrint()
+                Try
+                    oSketch.ExitEdit()
+                    oSketch.Delete()
+                Catch
+                End Try
+            End If
 
-            If Range <> 3 Then Exit For
+                If Range <> 3 Then Exit For
         Next
         'oPM.PaperSize = PaperSizeEnum.kPaperSizeLetter
     End Sub

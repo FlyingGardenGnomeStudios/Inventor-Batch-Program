@@ -2,6 +2,7 @@
 	- Added options to overwrite notification on dxf/pdf/dwg
 	- Fixed part opening when drawing selected
 	- Tweaked rename function and added backup option.
+	- Added part location option to drawing print
 
 	Items not currently functioning
 	- Open parts list sometimes displays double on first run

@@ -39,19 +39,19 @@ Batch Program
 </member>
 <member name="P:My.Resources.Resources.Changelog">
 <summary>
-  Looks up a localized string similar to Version 2.0.0.6 (6/12/08)
-	- Continuous running openfile list so newly open documents won&apos;t be closed when Batch Program closes
-	- Added Flat Pattern only option for export
-	- Close drawings option working
+  Looks up a localized string similar to Version 2.0.0.9 (6/29/18)
+	- Added options to overwrite notification on dxf/pdf/dwg
+	- Fixed part opening when drawing selected
+	- Tweaked rename function and added backup option.
 
 	Items not currently functioning
 	- Open parts list sometimes displays double on first run
 	- No tutorials yet
-	- Renaming function works, but sometimes doesn&apos;t play nice
-	
-Version 2.0.0.5 (6/07/08)
-	- Corrected bug that skipped exports depending on settings
-	- Fixed ini layer visibility and  [rest of string was truncated]&quot;;.
+	- Renaming function works but hasn&apos;t been thoroughly tested.
+
+Version 2.0.0.8 (6/18/18)
+	- Fixed search function not operating properly with missing drawings
+	- Added ability to select which files get overwr [rest of string was truncated]&quot;;.
 </summary>
 </member>
 <member name="P:My.Resources.Resources.dwg">
@@ -77,6 +77,11 @@ MODEL GEOMETRY ONLY=No
 EXPLODE DIMENSIONS=No
 SYMBOLS ARE BLOCKED=Yes
 AUTOCAD T [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.DWGLN">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
 <member name="P:My.Resources.Resources.DXF">

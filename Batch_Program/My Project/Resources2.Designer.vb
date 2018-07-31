@@ -91,19 +91,19 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to Version 2.0.0.6 (6/12/08)
-        '''	- Continuous running openfile list so newly open documents won&apos;t be closed when Batch Program closes
-        '''	- Added Flat Pattern only option for export
-        '''	- Close drawings option working
+        '''  Looks up a localized string similar to Version 2.0.0.9 (6/29/18)
+        '''	- Added options to overwrite notification on dxf/pdf/dwg
+        '''	- Fixed part opening when drawing selected
+        '''	- Tweaked rename function and added backup option.
         '''
         '''	Items not currently functioning
         '''	- Open parts list sometimes displays double on first run
         '''	- No tutorials yet
-        '''	- Renaming function works, but sometimes doesn&apos;t play nice
-        '''	
-        '''Version 2.0.0.5 (6/07/08)
-        '''	- Corrected bug that skipped exports depending on settings
-        '''	- Fixed ini layer visibility and  [rest of string was truncated]&quot;;.
+        '''	- Renaming function works but hasn&apos;t been thoroughly tested.
+        '''
+        '''Version 2.0.0.8 (6/18/18)
+        '''	- Fixed search function not operating properly with missing drawings
+        '''	- Added ability to select which files get overwr [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property Changelog() As String
             Get
@@ -137,6 +137,16 @@ Namespace My.Resources
         Friend ReadOnly Property dwg() As String
             Get
                 Return ResourceManager.GetString("dwg", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property DWGLN() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("DWGLN", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         

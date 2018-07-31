@@ -1090,7 +1090,8 @@ Public Class iProperties
         For Row = 0 To dgvSummary.RowCount - 1
             dgvSummary(dgvSummary.Columns("SummaryIsDirty").Index, Row).Value = "False"
             If dgvSummary("SumItem", Row).Value = "Material:" Then
-                If cmbMaterial.Value <> "*Varies*" AndAlso SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue <> cmbMaterial.Value Then
+                If SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue = Nothing Then
+                ElseIf cmbMaterial.Value <> "*Varies*" AndAlso SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue <> cmbMaterial.Value Then
                     If cmbMaterial.Items.Contains(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue) Then
                         cmbMaterial.Items.Add(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue)
                     End If
@@ -1321,39 +1322,42 @@ Public Class iProperties
     Private Sub WriteProps(ByRef oDoc As Document, ByRef Document As String)
         For Each row In dgvSummary.Rows
             If Main.bgwRun.CancellationPending = True Then Exit Sub
-
-            If dgvSummary(dgvSummary.Columns("SummaryIsDirty").Index, row.index).Value = "True" Then
-                ' If dgvSummary(dgvSummary.Columns(Document).Index, row.index).Value <> "*Varies*" Then
-                If dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value Is Nothing Then dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value = ""
-                Select Case dgvSummary(0, row.index).Value
-                    Case "Title:"
-                        oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("2").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                    Case "Subject:"
-                        oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("3").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                    Case "Author:"
-                        oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("4").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                    Case "Manager:"
-                        oDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("14").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                    Case "Company:"
-                        oDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("15").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                    Case "Category:"
-                        oDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("2").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                    Case "Keywords:"
-                        oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("5").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                    Case "Comments:"
-                        oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("6").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                    Case "Material:"
-                        If dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value <> "*Varies*" AndAlso
-                            dgvSummary.Columns("Sum" & Document).Index = 1 AndAlso
-                            dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value <> "" Then
-                            Try
-                                oDoc.componentdefinition.material.name = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                            Catch ex As Exception
-                                MessageBox.Show(ex.Message)
-                            End Try
-                        End If
-                End Select
-            End If
+            Try
+                If dgvSummary(dgvSummary.Columns("SummaryIsDirty").Index, row.index).Value = "True" Then
+                    ' If dgvSummary(dgvSummary.Columns(Document).Index, row.index).Value <> "*Varies*" Then
+                    If dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value Is Nothing Then dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value = ""
+                    Select Case dgvSummary(0, row.index).Value
+                        Case "Title:"
+                            oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("2").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                        Case "Subject:"
+                            oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("3").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                        Case "Author:"
+                            oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("4").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                        Case "Manager:"
+                            oDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("14").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                        Case "Company:"
+                            oDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("15").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                        Case "Category:"
+                            oDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("2").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                        Case "Keywords:"
+                            oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("5").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                        Case "Comments:"
+                            oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("6").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                        Case "Material:"
+                            If dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value <> "*Varies*" AndAlso
+                                dgvSummary.Columns("Sum" & Document).Index = 1 AndAlso
+                                dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value <> "" Then
+                                Try
+                                    oDoc.componentdefinition.material.name = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                                Catch ex As Exception
+                                    MessageBox.Show(ex.Message)
+                                End Try
+                            End If
+                    End Select
+                End If
+            Catch ex As Exception
+                Main.writeDebug("Error writing iProperty" & vbNewLine & ex.Message)
+            End Try
         Next
         For Each row In dgvProject.Rows
             If dgvProject(dgvProject.Columns("ProjectIsDirty").Index, row.index).Value = "True" Then
