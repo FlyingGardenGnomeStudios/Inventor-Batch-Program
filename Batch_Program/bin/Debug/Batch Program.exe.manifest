@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Batch Program.exe" size="3603920">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Batch Program.exe" size="3605456">
       <assemblyIdentity name="Batch Program" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>dHvR4JPItWRCITVaUhek6/Y7mXg=</dsig:DigestValue>
+        <dsig:DigestValue>hzIrwsrrHgKaM8BSWJ7+WmYI/Nk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -123,13 +123,13 @@
       <dsig:DigestValue>rgBZeCrQez4K9c3a5bhlsAPGu+0=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Resources\DXF.ini" size="1175">
+  <file name="Resources\DXF.ini" size="1187">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>lvgHPo/Tfvq3bPZScdec5Vj8BcU=</dsig:DigestValue>
+      <dsig:DigestValue>wtbwV7jeyihG0SQ+th2QUnPYUwo=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Resources\List-Blank.xlsm" size="87196">

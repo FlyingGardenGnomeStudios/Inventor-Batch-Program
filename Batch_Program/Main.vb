@@ -94,7 +94,7 @@ Public Class Main
             System.IO.File.Create(FILE_NAME).Dispose()
         End If
         Dim objWriter As New System.IO.StreamWriter(FILE_NAME, True)
-        objWriter.WriteLine(DateTime.Now.ToLongTimeString & " " & x & vbNewLine)
+        objWriter.WriteLine(DateTime.Now.ToLongTimeString & " " & x) ' & vbNewLine)
         objWriter.Close()
     End Sub
     Public Sub ProcessStarted()
@@ -1049,16 +1049,23 @@ Public Class Main
                                    "Export Type: " & ExportType & vbNewLine &
                                    "Flat Patterns Only: " & chkFlatPattern.Checked)
                         If sReadableType = "P" And ExportType <> "PDF" And chkFlatPattern.Checked = False Then
+                            writeDebug("Exporting")
                             Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, ExportType, RevNo)
                         ElseIf sReadableType = "S" And ExportType <> "PDF" And chkUseDrawings.Checked = False Then
+                            writeDebug("Exporting")
                             Call SMDXF(oDoc, Source, True, Replace(DrawingName, ".idw", "." & ExportType))
                             CloseLater(Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt", oDoc)
                         ElseIf sReadableType = "S" And ExportType <> "PDF" And chkUseDrawings.Checked = True Then
+                            writeDebug("Exporting")
                             Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, ExportType, RevNo)
                         ElseIf sReadableType <> "" And ExportType <> "PDF" And chkFlatPattern.Checked = False Then
+                            writeDebug("Exporting")
                             Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, ExportType, RevNo)
                         ElseIf sReadableType = "" And chkFlatPattern.Checked = False Then
+                            writeDebug("Exporting")
                             CloseLater(Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\")), oDoc)
+                        Else
+                            writeDebug("Part not exported")
                         End If
                         If chkCheck.CheckState = CheckState.Indeterminate Then
                             chkCheck.CheckState = CheckState.Unchecked
@@ -2678,22 +2685,23 @@ Public Class Main
         oOutputFile = _invApp.TransientObjects.CreateDataMedium
 
         For i = 1 To _invApp.ApplicationAddIns.Count
-            If Output = "dxf" Then
+            If UCase(Output) = "DXF" Then
                 If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC4-122E-11D5-8E91-0010B541CD80}" Then
                     oDWGAddIn = _invApp.ApplicationAddIns.Item(i)
                     If My.Settings.DXFini = True Then
                         If IO.File.Exists(My.Settings.DXFiniLoc) Then
                             strIniFile = My.Settings.DXFiniLoc
                         Else
-                            MsgBox("Could not locate the DXF .ini." & vbNewLine & "The default .ini file will be used")
+                            MsgBox("Could not locate the DXF .ini file." & vbNewLine & "The default .ini file will be used")
                             strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dxf.ini")
                         End If
                     Else
-                        strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dxf.ini")
+                        IO.File.WriteAllText(IO.Path.Combine(IO.Path.GetTempPath, "DXF.ini"), My.Resources.DXF)
+                        strIniFile = IO.Path.Combine(My.Computer.FileSystem.SpecialDirectories.Temp, "DXF.ini")
                     End If
                     Exit For
                 End If
-            ElseIf Output = "dwg" Then
+            ElseIf ucase(Output) = "DWG" Then
                 If _invApp.ApplicationAddIns.Item(i).ClassIdString = "{C24E3AC2-122E-11D5-8E91-0010B541CD80}" Then
                     oDWGAddIn = _invApp.ApplicationAddIns.Item(i)
                     If My.Settings.DWGini = True Then
@@ -2701,10 +2709,11 @@ Public Class Main
                             strIniFile = My.Settings.DWGiniLoc
                         Else
                             strIniFile = My.Settings.DWGiniLoc
-                            MsgBox("Could not locate the DWG .ini." & vbNewLine & "The default .ini file will be used")
+                            MsgBox("Could not locate the DWG .ini file." & vbNewLine & "The default .ini file will be used")
                         End If
                     Else
-                        strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dwg.ini")
+                        IO.File.WriteAllText(IO.Path.Combine(IO.Path.GetTempPath, "DWG.ini"), My.Resources.dwg)
+                        strIniFile = IO.Path.Combine(My.Computer.FileSystem.SpecialDirectories.Temp, "DWG.ini")
                     End If
 
                     Exit For
