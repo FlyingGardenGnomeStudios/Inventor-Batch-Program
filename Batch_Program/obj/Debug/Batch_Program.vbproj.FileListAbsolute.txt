@@ -42,3 +42,46 @@
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch_Program.vbprojResolveAssemblyReference.cache
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\Resources\Batch Program - Beta.ico
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Overwrite.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\TurboActivate.dat
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\TurboActivate.dll
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\TurboActivate.exe
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\Resources\DXF.bmp
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\Resources\DXF.ini
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\Resources\Batch Program - Beta.ico
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\Batch Program.exe.config
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\Batch Program.exe.manifest
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\Batch Program.application
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\Batch Program.exe
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\Batch Program.pdb
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\Batch Program.xml
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\ExpandableGridView.dll
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\ExpandableGridView.pdb
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\WinControls.ListView.pdb
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\WinControls.ListView.xml
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch_Program.vbprojResolveAssemblyReference.cache
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Interop.Shell32.dll
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch_Program.vbproj.ResolveComReference.cache
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\About.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\CheckNeeded.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Overwrite.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Rev_Table_Settings.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Warning.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\iPropertySettings.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Print_Size.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\ReVerifyNow.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Settings.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\iProperties.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Main.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Resources.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Print.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Rename.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Rev_Switch.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\RevTable.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Splash.resources
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch_Program.vbproj.GenerateResource.Cache
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch Program.TrustInfo.xml
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch Program.exe.manifest
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch Program.application
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch Program.exe
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch Program.xml
+C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch Program.pdb

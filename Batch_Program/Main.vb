@@ -759,7 +759,6 @@ Public Class Main
                     ElseIf My.Settings(ExportType & "Tag") <> "" Then
                         Destin = IO.Path.GetDirectoryName(DrawSource) & My.Settings(ExportType & "Tag")
                     End If
-
                     'open drawing
                     oDoc = _invApp.Documents.Open(DrawSource, False)
                     'Get revision number
@@ -922,6 +921,15 @@ Public Class Main
                         Dim oData As DataMedium
                         oData = _invApp.TransientObjects.CreateDataMedium
                         'create save locations
+                        Dim ExportType As String = "PDF"
+                        If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+                            Destin = My.Settings("Custom" & ExportType & "ExportLoc")
+                        ElseIf My.Settings(ExportType & "SaveNewLoc") = True Then
+                            Destin = My.Settings(ExportType & "SaveLoc")
+                        ElseIf My.Settings(ExportType & "Tag") <> "" Then
+                            Destin = IO.Path.GetDirectoryName(DrawSource) & My.Settings(ExportType & "Tag")
+                        End If
+                        writeDebug(ExportType & " export location set: " & Destin)
                         If My.Settings.PDFRev = True Then
                             RevNo = "-R" & odoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
                         Else
@@ -996,6 +1004,14 @@ Public Class Main
                     DrawSource = Gridview(Gridview.Columns(PDTitle & "Location").Index, X).Value
                     DrawingName = Trim(Gridview(Gridview.Columns(PDTitle & "Name").Index, X).Value)
                     oDoc = _invApp.Documents.Open(DrawSource, False)
+                    If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+                        Destin = My.Settings("Custom" & ExportType & "ExportLoc")
+                    ElseIf My.Settings(ExportType & "SaveNewLoc") = True Then
+                        Destin = My.Settings(ExportType & "SaveLoc")
+                    ElseIf My.Settings(ExportType & "Tag") <> "" Then
+                        Destin = IO.Path.GetDirectoryName(DrawSource) & My.Settings(ExportType & "Tag")
+                    End If
+                    writeDebug(ExportType & " export location set: " & Destin)
                     If My.Settings(ExportType & "Rev") = True Then
                         If oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value = Nothing Then
                             RevNo = "-R0"
@@ -1028,6 +1044,10 @@ Public Class Main
                         Archive = Strings.Replace(DrawSource, "idw", "ipt")
                         oDoc = _invApp.Documents.Open(Archive, True)
                         SheetMetalTest(Archive, oDoc, sReadableType)
+                        writeDebug("Exporting parameters: " & vbNewLine &
+                                   "Sheet Metal(S)/Part(P) " & sReadableType & vbNewLine &
+                                   "Export Type: " & ExportType & vbNewLine &
+                                   "Flat Patterns Only: " & chkFlatPattern.Checked)
                         If sReadableType = "P" And ExportType <> "PDF" And chkFlatPattern.Checked = False Then
                             Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, ExportType, RevNo)
                         ElseIf sReadableType = "S" And ExportType <> "PDF" And chkUseDrawings.Checked = False Then
@@ -2770,8 +2790,14 @@ Public Class Main
         Dim oDataIO As DataIO
         oDataIO = oDoc.ComponentDefinition.DataIO
         'Build the string that defines the format of the DXF file
+
         Dim sOut As String
-        sOut = Translate_ini(My.Settings.DXFiniLoc)
+        If My.Settings.DXFini = True Then
+            sOut = Translate_ini(My.Settings.DXFiniLoc)
+        Else
+            sOut = My.Resources.DXF
+        End If
+
         Try
             oDataIO.WriteDataToFile(sOut, DXFSource)
         Catch
