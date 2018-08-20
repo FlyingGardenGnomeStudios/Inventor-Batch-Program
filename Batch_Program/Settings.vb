@@ -270,13 +270,14 @@ Public Class Settings
         If chkCustDWGini.Checked = True Then
             My.Settings.DWGini = True
             My.Settings.DWGiniLoc = txtCustDWGini.Text
+        Else
+            My.Settings.DWGini = False
         End If
         If chkCustDXFini.Checked = True Then
             My.Settings.DXFini = True
             My.Settings.DXFiniLoc = txtCustDXFini.Text
         Else
             My.Settings.DXFini = False
-            'My.Settings.DXFinil = My.Resources.DXF
         End If
         If chkLineWeights.Checked = True Then
             My.Settings.PDFLineWeights = True

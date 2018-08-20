@@ -3906,4 +3906,8 @@ Public Class Main
     Private Sub dgvSubFiles_SelectionChanged(sender As Object, e As EventArgs) Handles dgvSubFiles.SelectionChanged
         dgvSubFiles.ClearSelection()
     End Sub
+
+    Private Sub DebugLogToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DebugLogToolStripMenuItem.Click
+        Process.Start(IO.Path.Combine(IO.Path.GetTempPath, "debug.txt"))
+    End Sub
 End Class
