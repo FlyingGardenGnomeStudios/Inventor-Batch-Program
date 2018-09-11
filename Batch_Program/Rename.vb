@@ -301,7 +301,7 @@ Public Class Rename
         CopyFiles(TempLoc, SaveLoc)
         If txtParentSource.Text = SaveLoc Then
             MsgBox(txtParent.Text & " needs to be closed in order to update part references")
-            '_invapp.Documents.ItemByName(IO.Path.Combine(txtParentSource.Text, txtParent.Text)).Save()
+            ' _invapp.Documents.ItemByName(IO.Path.Combine(txtParentSource.Text, txtParent.Text)).Save()
             ' _invapp.Documents.ItemByName(IO.Path.Combine(txtParentSource.Text, txtParent.Text)).Close()
             For Each Doc As Document In _invapp.Documents
                 Main.CloseLater(Doc.FullFileName, Doc)
@@ -557,8 +557,12 @@ Public Class Rename
         Dim oCompOccs As ComponentOccurrences = oAssDef.Occurrences
         TraverseAssembly(oAssDoc, oCompOccs, SaveLoc, Start, 0)
         Try
+            _invapp.SilentOperation = True
             oAssDoc.Save()
+
         Catch
+        Finally
+            _invapp.SilentOperation = False
         End Try
         Main.CloseLater(Source, oAssDoc)
         ProgressBar(1, 1, "Cleaning Up", "", Start)
