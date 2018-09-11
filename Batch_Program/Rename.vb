@@ -301,8 +301,8 @@ Public Class Rename
         CopyFiles(TempLoc, SaveLoc)
         If txtParentSource.Text = SaveLoc Then
             MsgBox(txtParent.Text & " needs to be closed in order to update part references")
-            _invapp.Documents.ItemByName(IO.Path.Combine(txtParentSource.Text, txtParent.Text)).Save()
-            _invapp.Documents.ItemByName(IO.Path.Combine(txtParentSource.Text, txtParent.Text)).Close()
+            '_invapp.Documents.ItemByName(IO.Path.Combine(txtParentSource.Text, txtParent.Text)).Save()
+            ' _invapp.Documents.ItemByName(IO.Path.Combine(txtParentSource.Text, txtParent.Text)).Close()
             For Each Doc As Document In _invapp.Documents
                 Main.CloseLater(Doc.FullFileName, Doc)
             Next
@@ -389,7 +389,7 @@ Public Class Rename
         Try
             For X = 0 To DGVRename.RowCount - 1
                 If DGVRename.Rows(X).Cells("Reuse").Value = False Then
-                    Source = DGVRename.Rows.Item(X).Cells(0).Value & DGVRename.Rows(X).Cells(2).Value
+                    Source = DGVRename.Rows.Item(X).Cells("FileLocation").Value & DGVRename.Rows(X).Cells("Part").Value
                     If chkStructure.Checked = True Then
                         If InStr(Source, txtParentSource.Text) <> 0 Then
                             TagLoc = Strings.Replace(Strings.Left(Source, (InStrRev(Source, "\"))), txtParentSource.Text, "")
@@ -399,15 +399,15 @@ Public Class Rename
                     End If
                     ' TagLoc = Replace(Strings.Left(Source, Strings.InStrRev(Source, "\")), txtParentSource.Text, "")
                     oDoc = _invapp.Documents.Open(Source, False)
-                    If DGVRename.Rows(X).Cells(3).Value = "" Then
-                        DGVRename.Rows(X).Cells(3).Value = DGVRename.Rows(X).Cells(2).Value
-                    ElseIf Strings.LCase(Strings.Right(DGVRename.Rows(X).Cells(3).Value, 4)) <> ".ipt" And
-                    Strings.LCase(Strings.Right(DGVRename.Rows(X).Cells(3).Value, 4)) <> ".iam" Then
-                        DGVRename.Rows(X).Cells(3).Value = DGVRename.Rows(X).Cells(3).Value & Strings.LCase(Strings.Right(DGVRename.Rows(X).Cells(2).Value, 4))
+                    If DGVRename.Rows(X).Cells("NewName").Value = "" Then
+                        DGVRename.Rows(X).Cells("NewName").Value = DGVRename.Rows(X).Cells("Part").Value
+                    ElseIf Strings.LCase(IO.Path.GetExtension(DGVRename.Rows(X).Cells("NewName").Value)) <> "ipt" And
+                        Strings.LCase(IO.Path.GetExtension(DGVRename.Rows(X).Cells("NewName").Value)) <> "iam" Then
+                        DGVRename.Rows(X).Cells(3).Value = DGVRename.Rows(X).Cells("NewName").Value & Strings.LCase(IO.Path.GetExtension(DGVRename.Rows(X).Cells("Part").Value))
                     End If
-                    ProgressBar(X + 1, DGVRename.RowCount, "Copying: ", DGVRename.Rows(X).Cells(3).Value, Start)
+                    ProgressBar(X + 1, DGVRename.RowCount, "Copying: ", DGVRename.Rows(X).Cells("NewName").Value, Start)
 
-                    If My.Computer.FileSystem.FileExists(SaveLoc & TagLoc & DGVRename.Rows(X).Cells(3).Value) And Overwrite = Nothing Then
+                    If My.Computer.FileSystem.FileExists(SaveLoc & TagLoc & DGVRename.Rows(X).Cells("NewName").Value) And Overwrite = Nothing Then
                         ans = MsgBox("Any files of the same name will be overwritten" & vbNewLine & "Continue?", vbYesNo)
                         If ans = vbYes Then
                             Overwrite = True
@@ -418,34 +418,36 @@ Public Class Rename
                     If Not My.Computer.FileSystem.DirectoryExists(TempLoc & "Transferred Files\") Then
                         My.Computer.FileSystem.CreateDirectory(TempLoc & "Transferred Files\")
                     End If
-                    If Overwrite = True And My.Computer.FileSystem.FileExists(TempLoc & DGVRename.Rows(X).Cells(3).Value) Then
-                        My.Computer.FileSystem.DeleteFile(TempLoc & DGVRename.Rows(X).Cells(3).Value)
+                    If Overwrite = True And My.Computer.FileSystem.FileExists(IO.Path.Combine(TempLoc, TagLoc, DGVRename.Rows(X).Cells("NewName").Value)) Then
+                        My.Computer.FileSystem.DeleteFile(IO.Path.Combine(TempLoc, TagLoc, DGVRename.Rows(X).Cells("NewName").Value))
                     End If
                     Try
-                        oDoc.SaveAs(TempLoc & TagLoc & DGVRename.Rows(X).Cells(3).Value, True)
+                        Debug.Print(IO.Path.Combine(TempLoc, TagLoc, DGVRename.Rows(X).Cells("NewName").Value))
+                        oDoc.SaveAs(TempLoc & TagLoc & DGVRename.Rows(X).Cells("NewName").Value, True)
                     Catch ex As Exception
                         If ex.Message <> "Unspecified error (Exception from HRESULT: 0x80004005 (E_FAIL))" Then
                             MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                         End If
                     End Try
-                    Main.CloseLater(DGVRename.Rows(X).Cells(2).Value, oDoc)
+                    Main.CloseLater(DGVRename.Rows(X).Cells("Part").Value, oDoc)
                     If DGVRename.Rows(X).Cells(1).Value <> "" Then
-                        Source = DGVRename.Rows.Item(X).Cells(0).Value & DGVRename.Rows(X).Cells(1).Value
+                        Source = IO.Path.Combine(DGVRename.Rows.Item(X).Cells(0).Value, DGVRename.Rows(X).Cells("Drawing").Value)
                         dDoc = _invapp.Documents.Open(Source, False)
-                        dDoc.SaveAs(TempLoc & TagLoc & Strings.Left(DGVRename.Rows(X).Cells(3).Value, Len(DGVRename.Rows(X).Cells(3).Value) - 3) & "idw", True)
-                        Main.CloseLater(Strings.Left(DGVRename.Rows(X).Cells(3).Value, Len(DGVRename.Rows(X).Cells(3).Value) - 3) & "idw", dDoc)
+                        dDoc.SaveAs(IO.Path.Combine(TempLoc, TagLoc, IO.Path.GetFileNameWithoutExtension(DGVRename.Rows(X).Cells("NewName").Value)) & ".idw", True)
+                        Main.CloseLater(IO.Path.Combine(TempLoc, TagLoc, IO.Path.GetFileNameWithoutExtension(DGVRename.Rows(X).Cells("NewName").Value)) & ".idw", dDoc)
                         Try
-                            dDoc = _invapp.Documents.Open(TempLoc & Strings.Left(DGVRename.Rows(X).Cells(3).Value, Len(DGVRename.Rows(X).Cells(3).Value) - 3) & "idw", False)
+                            dDoc = _invapp.Documents.Open((IO.Path.Combine(TempLoc, TagLoc, IO.Path.GetFileNameWithoutExtension(DGVRename.Rows(X).Cells("NewName").Value)) & ".idw"), False)
                             For Y = 1 To dDoc.File.ReferencedFileDescriptors.Count
                                 For Z = 0 To DGVRename.RowCount - 1
-                                    If dDoc.File.ReferencedFileDescriptors.Item(Y).ReferencedFile.FullFileName = DGVRename.Rows(Z).Cells(0).Value & DGVRename.Rows(Z).Cells(2).Value Then
+                                    If dDoc.File.ReferencedFileDescriptors.Item(Y).ReferencedFile.FullFileName = DGVRename.Rows(Z).Cells(0).Value & DGVRename.Rows(Z).Cells("Part").Value Then
                                         Try
                                             oFileDesc = dDoc.File.ReferencedFileDescriptors.Item(Y)
-                                            Call oFileDesc.ReplaceReference(TempLoc & DGVRename.Rows(Z).Cells(3).Value)
+                                            Debug.Print(IO.Path.Combine(TempLoc, TagLoc, (DGVRename.Rows(X).Cells("NewName").Value)))
+                                            Call oFileDesc.ReplaceReference(IO.Path.Combine(TempLoc, TagLoc, (DGVRename.Rows(X).Cells("NewName").Value)))
                                             dDoc.Save()
-                                        Catch
-                                            MsgBox("Unknown error replacing reference to " & TempLoc & DGVRename.Rows(Z).Cells(3).Value & "." & vbNewLine &
-                                                   "This replacement will be skipped.")
+                                        Catch ex As Exception
+                                            MsgBox("An error occured while replacing reference to " & TempLoc & DGVRename.Rows(Z).Cells("NewName").Value & "." & vbNewLine &
+                                                ex.Message & vbNewLine & "This replacement will be skipped.")
 
                                         End Try
                                         Exit For
@@ -455,20 +457,26 @@ Public Class Rename
                             Main.CloseLater(Strings.Right(dDoc.FullDocumentName, Len(dDoc.FullDocumentName) - InStrRev(dDoc.FullDocumentName, "\")), dDoc)
                         Catch
                             If Err.Description.Length > 0 And X < DGVRename.RowCount - 1 Then
-                                DWGError = DWGError & Strings.Left(DGVRename.Rows(X).Cells(3).Value, Len(DGVRename.Rows(X).Cells(3).Value) - 3) & "idw" & vbNewLine
+                                DWGError = DWGError & Strings.Left(DGVRename.Rows(X).Cells("NewName").Value, Len(DGVRename.Rows(X).Cells(3).Value) - 3) & "idw" & vbNewLine
                                 Err.Clear()
                             End If
                         End Try
                     End If
                 Else
-                    Source = DGVRename.Rows.Item(X).Cells(0).Value & DGVRename.Rows(X).Cells(2).Value
+                    Source = DGVRename.Rows.Item(X).Cells(0).Value & DGVRename.Rows(X).Cells("Part").Value
                     oDoc = _invapp.Documents.Open(Source, False)
                 End If
             Next
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End Try
-        ReplaceReferences(oDoc, TempLoc, txtParentSource.Text & txtParent.Text)
+        For Each Row In DGVRename.Rows
+            If DGVRename(DGVRename.Columns("Part").Index, Row.index).Value = txtParent.Text Then
+                txtParent.Text = DGVRename(DGVRename.Columns("NewName").Index, Row.index).Value
+                Exit For
+            End If
+        Next
+        ReplaceReferences(oDoc, TempLoc, IO.Path.Combine(TempLoc, txtParent.Text))
 
         Try
             Dim atts As System.IO.FileAttributes = System.IO.File.GetAttributes(oDoc.FullFileName)
@@ -564,7 +572,7 @@ Public Class Rename
             For X = 0 To DGVRename.RowCount - 1
                 If oCompOcc.Definition.Document.fullfilename = DGVRename.Rows(X).Cells(0).Value & DGVRename.Rows(X).Cells(2).Value And
                     DGVRename.Rows(X).Cells("Reuse").Value = Nothing Then
-                    Source = DGVRename.Rows.Item(X).Cells(0).Value & DGVRename.Rows(X).Cells(2).Value
+                    Source = DGVRename.Rows.Item(X).Cells(0).Value & DGVRename.Rows(X).Cells(3).Value
                     If chkStructure.Checked = True Then
                         If InStr(Source, txtParentSource.Text) <> 0 Then
                             TagLoc = Strings.Replace(Strings.Left(Source, (InStrRev(Source, "\"))), txtParentSource.Text, "")
