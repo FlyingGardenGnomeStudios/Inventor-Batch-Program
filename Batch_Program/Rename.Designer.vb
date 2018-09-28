@@ -22,8 +22,11 @@ Partial Class Rename
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Rename))
         Me.DGVRename = New System.Windows.Forms.DataGridView()
+        Me.Thumbnail = New System.Windows.Forms.DataGridViewImageColumn()
+        Me.Reuse = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.btnThumbs = New System.Windows.Forms.Button()
         Me.btnExcel = New System.Windows.Forms.Button()
         Me.btnRename = New System.Windows.Forms.Button()
@@ -37,6 +40,7 @@ Partial Class Rename
         Me.chkDParts = New System.Windows.Forms.CheckBox()
         Me.txtParentSource = New System.Windows.Forms.Label()
         Me.chkStructure = New System.Windows.Forms.CheckBox()
+        Me.chkReuse = New System.Windows.Forms.CheckBox()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -47,9 +51,7 @@ Partial Class Rename
         Me.Drawing = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Part = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.NewName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Thumbnail = New System.Windows.Forms.DataGridViewImageColumn()
         Me.ID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Reuse = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         CType(Me.DGVRename, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -60,11 +62,35 @@ Partial Class Rename
         Me.DGVRename.AllowUserToResizeRows = False
         Me.DGVRename.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DGVRename.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.FileLocation, Me.Drawing, Me.Part, Me.NewName, Me.Thumbnail, Me.ID, Me.Reuse})
+        Me.DGVRename.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.DGVRename.Location = New System.Drawing.Point(27, 25)
         Me.DGVRename.Name = "DGVRename"
         Me.DGVRename.RowHeadersVisible = False
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DGVRename.RowsDefaultCellStyle = DataGridViewCellStyle1
         Me.DGVRename.Size = New System.Drawing.Size(1169, 387)
         Me.DGVRename.TabIndex = 0
+        '
+        'Thumbnail
+        '
+        Me.Thumbnail.FillWeight = 125.0!
+        Me.Thumbnail.HeaderText = "Thumbnail"
+        Me.Thumbnail.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom
+        Me.Thumbnail.MinimumWidth = 50
+        Me.Thumbnail.Name = "Thumbnail"
+        Me.Thumbnail.ReadOnly = True
+        Me.Thumbnail.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Thumbnail.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
+        'Reuse
+        '
+        Me.Reuse.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader
+        Me.Reuse.FalseValue = "False"
+        Me.Reuse.HeaderText = "     Reuse"
+        Me.Reuse.MinimumWidth = 50
+        Me.Reuse.Name = "Reuse"
+        Me.Reuse.TrueValue = "True"
+        Me.Reuse.Width = 59
         '
         'btnThumbs
         '
@@ -105,6 +131,7 @@ Partial Class Rename
         '
         'btnImport
         '
+        Me.btnImport.Enabled = False
         Me.btnImport.Location = New System.Drawing.Point(1214, 84)
         Me.btnImport.Name = "btnImport"
         Me.btnImport.Size = New System.Drawing.Size(96, 23)
@@ -200,6 +227,16 @@ Partial Class Rename
         Me.chkStructure.Text = "Keep Folder" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Structure"
         Me.chkStructure.UseVisualStyleBackColor = True
         '
+        'chkReuse
+        '
+        Me.chkReuse.AutoSize = True
+        Me.chkReuse.Location = New System.Drawing.Point(1140, 30)
+        Me.chkReuse.Name = "chkReuse"
+        Me.chkReuse.Size = New System.Drawing.Size(15, 14)
+        Me.chkReuse.TabIndex = 16
+        Me.chkReuse.ThreeState = True
+        Me.chkReuse.UseVisualStyleBackColor = True
+        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
@@ -236,6 +273,7 @@ Partial Class Rename
         Me.DataGridViewTextBoxColumn5.MinimumWidth = 50
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
         Me.DataGridViewTextBoxColumn5.ReadOnly = True
+        Me.DataGridViewTextBoxColumn5.Visible = False
         '
         'RenameProgress
         '
@@ -283,17 +321,6 @@ Partial Class Rename
         Me.NewName.MinimumWidth = 50
         Me.NewName.Name = "NewName"
         '
-        'Thumbnail
-        '
-        Me.Thumbnail.FillWeight = 125.0!
-        Me.Thumbnail.HeaderText = "Thumbnail"
-        Me.Thumbnail.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom
-        Me.Thumbnail.MinimumWidth = 50
-        Me.Thumbnail.Name = "Thumbnail"
-        Me.Thumbnail.ReadOnly = True
-        Me.Thumbnail.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Thumbnail.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        '
         'ID
         '
         Me.ID.HeaderText = "ID"
@@ -302,20 +329,12 @@ Partial Class Rename
         Me.ID.ReadOnly = True
         Me.ID.Visible = False
         '
-        'Reuse
-        '
-        Me.Reuse.FalseValue = "False"
-        Me.Reuse.HeaderText = "Reuse"
-        Me.Reuse.MinimumWidth = 50
-        Me.Reuse.Name = "Reuse"
-        Me.Reuse.TrueValue = "True"
-        Me.Reuse.Width = 50
-        '
         'Rename
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1334, 447)
+        Me.Controls.Add(Me.chkReuse)
         Me.Controls.Add(Me.chkStructure)
         Me.Controls.Add(Me.txtParentSource)
         Me.Controls.Add(Me.chkDParts)
@@ -357,6 +376,12 @@ Partial Class Rename
     Friend WithEvents chkDParts As Windows.Forms.CheckBox
     Friend WithEvents txtParentSource As Windows.Forms.Label
     Friend WithEvents chkStructure As Windows.Forms.CheckBox
+    Friend WithEvents DataGridViewTextBoxColumn1 As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn2 As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn3 As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn4 As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn5 As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents chkReuse As Windows.Forms.CheckBox
     Friend WithEvents FileLocation As Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Drawing As Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Part As Windows.Forms.DataGridViewTextBoxColumn
@@ -364,9 +389,4 @@ Partial Class Rename
     Friend WithEvents Thumbnail As Windows.Forms.DataGridViewImageColumn
     Friend WithEvents ID As Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Reuse As Windows.Forms.DataGridViewCheckBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn1 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn2 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn3 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn4 As Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn5 As Windows.Forms.DataGridViewTextBoxColumn
 End Class

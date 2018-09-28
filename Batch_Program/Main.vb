@@ -285,7 +285,7 @@ Public Class Main
             writeDebug("Open document list refreshed")
         Catch ex As Exception
             If Strings.Len(Err.ToString) > 0 Then
-                writeDebug("***ERROR***" & vbNewLine & ex.Message & vbNewLine & "***ERROR***" & vbNewLine)
+                writeDebug(ex.StackTrace & " ***ERROR***" & vbNewLine & ex.Message & vbNewLine & "***ERROR***" & vbNewLine)
                 Err.Clear()
             End If
 
@@ -532,6 +532,7 @@ Public Class Main
                             KillAllExcels(StartTime)
 
                         Catch ex As Exception
+                            writeDebug(ex.StackTrace & " " & ex.Message)
                             MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                         Finally
                             Ans = MsgBox("A spreadsheet of all part properties has been created" & vbNewLine &
@@ -744,10 +745,14 @@ Public Class Main
         For X = 0 To GridView.RowCount - 1
             'Look through all sub files in open documents to get the part sourcefile
             If GridView(GridView.Columns(chkcolumn).Index, X).Value = True Then
-                DrawSource = GridView(GridView.Columns(PDTitle & "Location").Index, X).Value
+                If Not GridView(GridView.Columns(PDTitle & "Location").Index, X).Value = "" Then
+                    DrawSource = GridView(GridView.Columns(PDTitle & "Location").Index, X).Value
+                Else
+                    DrawSource = GridView(GridView.Columns(PDTitle & "Source").Index, X).Value
+                End If
+
                 DrawingName = Trim(GridView(GridView.Columns(PDTitle & "Name").Index, X).Value)
-                'MatchPart(DrawSource, DrawingName, X)
-                If My.Computer.FileSystem.FileExists(Strings.Replace(DrawSource, "idw", "iam")) = True AndAlso chkSkipAssy.Checked = True Then
+                If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(DrawSource), IO.Path.GetFileNameWithoutExtension(DrawSource)) & ".iam") = True AndAlso chkSkipAssy.Checked = True Then
 
                 Else
                     'If chkSkipAssy.Checked = True Then
@@ -778,7 +783,7 @@ Public Class Main
                     If IO.Path.GetExtension(DrawSource) = "ipt" Then
                         Dim Archive As String = Strings.Replace(DrawSource, "idw", "ipt")
                         oDoc = _invApp.Documents.Open(Archive, True)
-                        SheetMetalTest(Archive, oDoc, sReadableType)
+                        SheetMetalTest(oDoc, sReadableType)
                     End If
                     If chkFlatPattern.Checked = True AndAlso sReadableType <> "S" Then
                     Else
@@ -994,6 +999,11 @@ Public Class Main
         For X = 0 To Gridview.RowCount - 1
             'Look through all sub files in open documents to get the part sourcefile
             'MatchPart(DrawSource, DrawingName, X)
+            If Not Gridview(Gridview.Columns(PDTitle & "Location").Index, X).Value = "" Then
+                DrawSource = Gridview(Gridview.Columns(PDTitle & "Location").Index, X).Value
+            Else
+                DrawSource = Gridview(Gridview.Columns(PDTitle & "Source").Index, X).Value
+            End If
             If bgwRun.CancellationPending = True Then Exit Sub
             If chkSkipAssy.Checked = True And DrawSource.Contains(".iam") Then
             Else
@@ -1001,7 +1011,7 @@ Public Class Main
                     'iterate through opend documents to find the selected file
                     'MatchDrawing(DrawSource, DrawingName, X)
                     'open drawing
-                    DrawSource = Gridview(Gridview.Columns(PDTitle & "Location").Index, X).Value
+
                     DrawingName = Trim(Gridview(Gridview.Columns(PDTitle & "Name").Index, X).Value)
                     oDoc = _invApp.Documents.Open(DrawSource, False)
                     If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
@@ -1040,10 +1050,10 @@ Public Class Main
                     'if the archive folder doesn't exist create a new one
                     Dim Filetype As String = "." & ExportType
                     Search_For_Duplicates(Source, DrawingName, Filetype)
-                    If My.Computer.FileSystem.FileExists(Strings.Replace(DrawSource, "idw", "ipt")) = True Then
+                    If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(DrawSource), IO.Path.GetFileNameWithoutExtension(DrawSource)) & ".ipt") = True Then
                         Archive = Strings.Replace(DrawSource, "idw", "ipt")
-                        oDoc = _invApp.Documents.Open(Archive, True)
-                        SheetMetalTest(Archive, oDoc, sReadableType)
+                        oDoc = _invApp.Documents.Open(Archive, False)
+                        SheetMetalTest(oDoc, sReadableType)
                         writeDebug("Exporting parameters: " & vbNewLine &
                                    "Sheet Metal(S)/Part(P) " & sReadableType & vbNewLine &
                                    "Export Type: " & ExportType & vbNewLine &
@@ -1077,6 +1087,7 @@ Public Class Main
                         Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, ExportType, RevNo)
                     End If
                     bgwRun.ReportProgress((Counter / Total) * 100, "Saving: " & Replace(DrawingName, ".idw", "." & ExportType))
+                    CloseLater(DrawSource, oDoc)
                     'Title = "Saving:  "
                     ' ProgressBar(Total, Counter, Title, Replace(DrawingName, ".idw", "." & ExportType))
                     Counter += 1
@@ -1782,9 +1793,9 @@ Public Class Main
         DrawingName = IO.Path.GetFileNameWithoutExtension(PartSource) & ".idw"
         'If Strings.InStr(PartSource, "Content Center") = 0 Then
         If Dev = False Then
-            If Strings.InStr(oAsmDoc.File.FullFileName, "Purchased Parts") > 0 Then
+            If LCase(oAsmDoc.File.FullFileName).Contains("purchased parts") Or oAsmDoc.ComponentDefinition.BOMStructure = BOMStructureEnum.kPurchasedBOMStructure Then
                 ID = "PP"
-            ElseIf Strings.InStr(oAsmDoc.File.FullFileName, "Content Center") > 0 Then
+            ElseIf LCase(oAsmDoc.File.FullFileName).Contains("content center") Then
                 ID = "CC"
             Else
                 ID = oAsmDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("5").Value
@@ -1844,9 +1855,9 @@ Public Class Main
                     'Create a list of sub parts for use in the renaming section. this saves time having to recreate it again later.
                     'If VBAFlag <> "NA" And Strings.InStr(PartSource, "Content Center") = 0 Then 
                     If Dev = False Then
-                        If Strings.InStr(PartSource, "Purchased Parts") > 0 Then
+                        If LCase(PartSource).Contains("purchased parts") Or oOcc.BOMStructure = BOMStructureEnum.kPurchasedBOMStructure Then
                             ID = "PP"
-                        ElseIf Strings.InStr(PartSource, "Content Center") > 0 Then
+                        ElseIf LCase(PartSource).Contains("content center") Then
                             ID = "CC"
                         Else
                             ID = oOcc.Definition.Document.propertysets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("5").Value
@@ -1863,7 +1874,7 @@ Public Class Main
                         CheckForDev(PartSource, Total, Counter, OpenDocs, Elog, Level + 1)
                     End If
 
-                Catch
+                Catch ex As Exception
 
                 End Try
             End If
@@ -2124,7 +2135,7 @@ Public Class Main
 
 
     End Function
-    Public Sub SheetMetalTest(ByRef Archive As String, oDoc As Document, ByRef sReadableType As String)
+    Public Sub SheetMetalTest(oDoc As Document, ByRef sReadableType As String)
         Dim sDocumentSubType As String = oDoc.SubType
         'Get document type
         Dim eDocumentType As DocumentTypeEnum = oDoc.DocumentType
@@ -2254,7 +2265,7 @@ Public Class Main
                 Thk = oPartDef.Parameters.Item("Thickness").Value / 2.54
                 oDoc = _invApp.Documents.Open(Occ.Definition.Document.FullFileName, False)
                 Dim sReadablefiletype As String = ""
-                SheetMetalTest(oDoc.FullFileName, oDoc, sReadablefiletype)
+                SheetMetalTest(oDoc, sReadablefiletype)
                 If Process = "SC" AndAlso sReadablefiletype = "S" Then
                     Dim oDef As PartComponentDefinition = oDoc.componentdefinition
                     Dim oPath As Inventor.Path = Nothing

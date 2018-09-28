@@ -40,7 +40,7 @@ Public Class Overwrite
                 If My.Computer.FileSystem.FileExists(Strings.Replace(DrawSource, "idw", "ipt")) = True Then
                     Archive = Strings.Replace(DrawSource, "idw", "ipt")
                     oDoc = _invApp.Documents.Open(Archive, True)
-                    Main.SheetMetalTest(Archive, oDoc, sReadableType)
+                    Main.SheetMetalTest(oDoc, sReadableType)
                     If sReadableType = "P" And ExportType <> "PDF" Then
                         Call Main.ExportPart(DrawSource, Archive, False, Destin, DrawingName, ExportType, RevNo)
                     ElseIf sReadableType = "S" And ExportType <> "PDF" Then

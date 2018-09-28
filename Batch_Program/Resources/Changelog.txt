@@ -1,4 +1,12 @@
-﻿Version 2.0.0.11 (8/21/18)
+﻿
+Version 2.0.0.15 (9/26/18)
+	- Added export support for parts with no drawings in drawing menu
+	- More fine tuning to rename process. (Vault intetgration required)
+	- Added debug lines to rename code
+Version 2.0.0.14 (9/11/18)
+	- Derived references incorrectly replaced in original assembly rather than renamed
+	- More robust check for Purchased Part ID during rename
+Version 2.0.0.11 (8/21/18)
 	- Corrected a missed DXF.ini translate command during sheet metal export
 Version 2.0.0.10 (8/20/18)
 	- Modified DXF/DWG export
