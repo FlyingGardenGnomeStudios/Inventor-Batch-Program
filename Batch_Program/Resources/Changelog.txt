@@ -3,6 +3,7 @@ Version 2.0.0.15 (9/26/18)
 	- Added export support for parts with no drawings in drawing menu
 	- More fine tuning to rename process. (Vault intetgration required)
 	- Added debug lines to rename code
+	- Fixed bugs when dealing with revision table and multiple drawings
 Version 2.0.0.14 (9/11/18)
 	- Derived references incorrectly replaced in original assembly rather than renamed
 	- More robust check for Purchased Part ID during rename

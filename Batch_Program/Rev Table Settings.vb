@@ -34,6 +34,7 @@ Public Class Rev_Table_Settings
         If My.Settings.RTS5Item <> "" Then dgvRevTableLayout.Rows.Add(My.Settings.RTS5, My.Settings.RTS5Item, My.Settings.RTS5Col, My.Settings.RTS5Value)
         txtNumRev.Text = My.Settings.NumRev
         txtAlphaRev.Text = My.Settings.AlphaRev
+        nudStartVal.Value = My.Settings.StartVal
     End Sub
 
 
@@ -131,6 +132,7 @@ Public Class Rev_Table_Settings
             MsgBox("Please enter a default description for numerical revisions")
             Exit Sub
         End If
+        My.Settings.StartVal = nudStartVal.Value
         My.Settings.Save()
         Me.Close()
     End Sub

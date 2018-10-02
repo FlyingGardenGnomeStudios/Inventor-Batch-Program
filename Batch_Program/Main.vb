@@ -252,12 +252,13 @@ Public Class Main
             For Each oDoc In _invApp.Documents.VisibleDocuments
                 Exists = False
                 For Each item In dgvOpenFiles.Rows
-                    If IO.Path.GetFileName(oDoc.FullFileName) = dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, item.index).Value Then
+                    If IO.Path.GetFileName(oDoc.DisplayName) = dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, item.index).Value Then
                         Exists = True
                         Exit For
                     End If
                 Next
                 If oDoc.FullFileName <> Nothing AndAlso Exists = False Then
+
                     'Compare file type to the files chosen to display and only display the selected documents.
                     'Add the document name to key & location to value for faster recall
                     If chkAssy.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
@@ -1077,8 +1078,8 @@ Public Class Main
                         Else
                             writeDebug("Part not exported")
                         End If
-                        If chkCheck.CheckState = CheckState.Indeterminate Then
-                            chkCheck.CheckState = CheckState.Unchecked
+                        If chkEditRev.CheckState = CheckState.Indeterminate Then
+                            chkEditRev.CheckState = CheckState.Unchecked
                         End If
                     ElseIf My.Computer.FileSystem.FileExists(Strings.Replace(DrawSource, "idw", "iam")) = False Then
                         NotMade = DrawingName & vbNewLine
@@ -1115,7 +1116,9 @@ Public Class Main
         For Y = 0 To dgvSubFiles.RowCount - 1
             If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, Y).Value = True Then
                 Q += 1
-                MatchDrawing(DrawSource, DrawingName, Y)
+                DrawSource = dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, Y).Value
+                DrawingName = dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, Y).Value
+                'MatchDrawing(DrawSource, DrawingName, Y)
                 'open drawing
                 oDoc = _invApp.Documents.Open(DrawSource, True)
                 Dim Sheets As Sheets
@@ -1149,7 +1152,15 @@ Public Class Main
                 bgwRun.ReportProgress((Q / Total) * 100, "Changing Rev: " & IO.Path.GetFileName(oDoc.FullFileName))
                 ' ProgressBar(Total, Q, "Changing Rev: ", Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\")))
                 RevNo = oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
-                oRevTable = oDoc.activesheet.RevisionTables(1)
+
+                Try
+                    oRevTable = oDoc.activesheet.RevisionTables(1)
+                Catch
+                    MsgBox("No rev table detected for drawing " & DrawingName)
+                    writeDebug("No revision table on drawing " & DrawingName)
+                    Exit Sub
+                End Try
+                Point = oRevTable.Position
                 'oRevTable.RevisionTableRows.Add()
                 If IsNumeric(RevNo) Then
                     Rev = RevNo
@@ -1165,8 +1176,13 @@ Public Class Main
                 Sheets.Item(1).Activate()
                 For Each Sheet In Sheets
                     Sheet.Activate()
-
-                    oRevTable = oDoc.activesheet.RevisionTables(1)
+                    Try
+                        oRevTable = oDoc.activesheet.RevisionTables(1)
+                    Catch
+                        writeDebug("Rev table missing on page " & Sheet.Name & vbNewLine &
+                                    "Adding new revision table")
+                        oRevTable = Sheet.RevisionTables.Add(Point)
+                    End Try
                     Tx(S) = oRevTable.Position.X
                     Ty(S) = oRevTable.Position.Y
                     S += 1
@@ -1217,12 +1233,15 @@ Public Class Main
                     Sheet.Activate()
                     'Set counter to numeric or alpha based on previous RevTable
                     Point = _invApp.TransientGeometry.CreatePoint2d(Tx(S), Ty(S) - Adjust)
-
-                    If RevType = 1 Then
-                        oRevTable = oDoc.ActiveSheet.RevisionTables.add2(Point, False, True, False, 0)
-                    Else
-                        oRevTable = oDoc.ActiveSheet.RevisionTables.Add2(Point, False, True, True, "A")
-                    End If
+                    Try
+                        If RevType = 1 Then
+                            oRevTable = oDoc.ActiveSheet.RevisionTables.add2(Point, False, True, False, My.Settings.StartVal)
+                        Else
+                            oRevTable = oDoc.ActiveSheet.RevisionTables.Add2(Point, False, True, True, "A")
+                        End If
+                    Catch
+                        oRevTable = oDoc.activesheet.revisiontables.add(Point)
+                    End Try
                     'Add items corresponding to which table form is being populated
                     S += 1
                 Next Sheet
@@ -1430,7 +1449,7 @@ Public Class Main
                 ' DrawingName = Strings.Right(DrawSource, Strings.Len(DrawSource) - Strings.InStrRev(DrawSource, "\"))
                 'If the drawing file is listed, open the drawing in Inventor
                 'If Trim(LVSubFiles.Items.Item(X).Text) = DrawingName Then
-                oDoc = _invApp.Documents.ItemByName(dgvSubFiles(dgvSubFiles.Columns("DrawingSource").Index, Y).Value)
+                oDoc = _invApp.Documents.ItemByName(dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, Y).Value)
                 'oDoc = _invApp.Documents.Open(DrawSource, False)
                 CustomPropSet = oDoc.PropertySets.Item("{D5CDD505-2E9C-101B-9397-08002B2CF9AE}")
                 PartName = Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\"))
@@ -1614,11 +1633,12 @@ Public Class Main
                     For Each oDoc As Document In _invApp.Documents.VisibleDocuments
                         exists = False
                         For Each item In dgvOpenFiles.Rows
-                            If IO.Path.GetFileName(oDoc.FullFileName) = dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, item.index).Value Then
+                            If IO.Path.GetFileName(oDoc.DisplayName) = dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, item.index).Value Then
                                 exists = True
                                 Exit For
                             End If
                         Next
+
                         If exists = False AndAlso oDoc.FullFileName <> Nothing Then
                             'Compare file type to the files chosen to display and only display the selected documents.
                             'Add the document name to key & location to value for faster recall
@@ -1962,139 +1982,139 @@ Public Class Main
             DocSource = Strings.Left(Archive, Strings.Len(Archive))
             DocName = Strings.Right(DocSource, Strings.Len(DocSource) - Strings.InStrRev(DocSource, "\"))
             OpenDocs.Add(DocName)
-            writeDebug("Created Open Document List :" & OpenDocs.Count & " documents")
         Next
+        writeDebug("Created Open Document List :" & OpenDocs.Count & " documents")
     End Sub
-    Public Sub MatchDrawing(ByRef DrawSource As String, ByRef DrawingName As String, Y As Integer)
-        'If CMSHeirarchical.Checked = True Then
-        'For Each item In dgvSubFiles.Rows
-        If dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, Y).Value <> "" Then
-            DrawSource = dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, Y).Value
-            DrawingName = dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, Y).Value
-        End If
-        'If Strings.Replace(item.Key, "(REF)", "") = dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, Y).Value Then
-        '    DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "idw"
-        '    DrawingName = Trim(Strings.Replace(item.Key, "(REF)", ""))
-        '    'Exit For
-        'End If
-        ' Next
-        'Else
-        '    For Each item In AlphaSub
-        '    If item.Key = dgvSubFiles(dgvSubFiles.Columns("PartName").Index, Y).Value Then
-        '        DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "idw"
-        '        DrawingName = Trim(item.Key)
-        '        Exit For
-        '    End If
-        'Next
-        'End If
-        writeDebug("Matched Drawing: " & DrawingName & " to " & DrawSource)
-    End Sub
-    Public Sub MatchPart(ByRef DrawSource As String, ByRef DrawingName As String, Y As Integer)
-        If dgvSubFiles(dgvSubFiles.Columns("DrawingSource").Index, Y).Value <> "" Then
-            DrawSource = dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, Y).Value
-            DrawingName = dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, Y).Value
-        End If
-        'If CMSHeirarchical.Checked = True Then
+    'Public Sub MatchDrawing(ByRef DrawSource As String, ByRef DrawingName As String, Y As Integer)
+    '    'If CMSHeirarchical.Checked = True Then
+    '    'For Each item In dgvSubFiles.Rows
+    '    If dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, Y).Value <> "" Then
+    '        DrawSource = dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, Y).Value
+    '        DrawingName = dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, Y).Value
+    '    End If
+    '    'If Strings.Replace(item.Key, "(REF)", "") = dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, Y).Value Then
+    '    '    DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "idw"
+    '    '    DrawingName = Trim(Strings.Replace(item.Key, "(REF)", ""))
+    '    '    'Exit For
+    '    'End If
+    '    ' Next
+    '    'Else
+    '    '    For Each item In AlphaSub
+    '    '    If item.Key = dgvSubFiles(dgvSubFiles.Columns("PartName").Index, Y).Value Then
+    '    '        DrawSource = Strings.Left(item.Value, Len(item.Value) - 3) & "idw"
+    '    '        DrawingName = Trim(item.Key)
+    '    '        Exit For
+    '    '    End If
+    '    'Next
+    '    'End If
+    '    writeDebug("Matched Drawing: " & DrawingName & " to " & DrawSource)
+    'End Sub
+    'Public Sub MatchPart(ByRef DrawSource As String, ByRef DrawingName As String, Y As Integer)
+    '    If dgvSubFiles(dgvSubFiles.Columns("DrawingSource").Index, Y).Value <> "" Then
+    '        DrawSource = dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, Y).Value
+    '        DrawingName = dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, Y).Value
+    '    End If
+    '    'If CMSHeirarchical.Checked = True Then
 
-        '    'If SubFiles.Count > LVSubFiles.Items.Count Then
-        '    For Each item In SubFiles
-        '        If item.Key.Contains(dgvSubFiles(dgvSubFiles.Columns("PartName").Index, Y).Value) Then
-        '            DrawingName = item.Key
-        '            DrawSource = item.Value
-        '            If System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") And
-        '                    System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") Then
-        '                If My.Settings.DupName = "Model" Then
-        '                    DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt"
-        '                    DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt"
-        '                Else
-        '                    DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam"
-        '                    DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "iam"
-        '                End If
-        '                Exit For
-        '            ElseIf System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") And
-        '                    Not System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") Then
-        '                DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt"
-        '                DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt"
-        '                Exit For
-        '            ElseIf System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") And
-        '                    Not System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") Then
-        '                DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam"
-        '                DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "iam"
-        '                Exit For
-        '            Else
-        '                MsgBox("There is a discrepancy between the drawing name and model name." & vbNewLine &
-        '                       "Model data could not be located for drawing: " & DrawingName)
-        '                Exit Sub
-        '            End If
-        '        End If
-        '    Next
-        'Else
-        '    For Each item In AlphaSub
-        '        If item.Key.Contains(dgvSubFiles(dgvSubFiles.Columns("PartName").Index, Y).Value) Then
-        '            DrawingName = item.Key
-        '            DrawSource = item.Value
-        '            If System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") And
-        '                    System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") Then
-        '                If My.Settings.DupName = "Model" Then
-        '                    DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt"
-        '                    DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt"
-        '                Else
-        '                    DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam"
-        '                    DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "iam"
-        '                End If
-        '                Exit For
-        '            ElseIf System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") And
-        '                    Not System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") Then
-        '                DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt"
-        '                DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt"
-        '                Exit For
-        '            ElseIf System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") And
-        '                    Not System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") Then
-        '                DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam"
-        '                DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "iam"
-        '                Exit For
-        '            Else
-        '                MsgBox("Couldn't locate model data for " & DrawingName)
-        '                Exit Sub
-        '            End If
-        '        End If
-        '    Next
-        'End If
-        writeDebug("Matched Part: " & DrawingName & " to " & DrawSource)
-        'End If
-        'Look for selected item
-        'Dim CheckedFile As String = Trim(lstSubfiles.Items.Item(X))
-        '        For J = 1 To _invApp.Documents.Count
-        '            oDoc = Path.Item(J)
-        '            Archive = oDoc.FullFileName
-        '            If Archive = Nothing Then GoTo skip
-        '            If Strings.Right(Archive, 1) <> ">" Then
-        '                If Strings.Right(Archive, 3) <> "idw" Then
-        '                    Dim mass As Double = oDoc.ComponentDefinition.MassProperties.Mass
-        '                End If
-        '                'Use the Partsource file to create the drawingsource file
-        '                If System.IO.File.Exists(Strings.Left(Archive, Strings.Len(Archive) - 3) & "ipt") Then
-        '                    PartSource = Strings.Left(Archive, Strings.Len(Archive) - 3) & "ipt"
-        '                ElseIf System.IO.File.Exists(Strings.Left(Archive, Strings.Len(Archive) - 3) & "iam") Then
-        '                    PartSource = Strings.Left(Archive, Strings.Len(Archive) - 3) & "iam"
-        '                End If
-        '                If PartSource = "" Then
-        '                    MsgBox("The drawing " & CheckedFile & " has a model with a different name" & vbNewLine _
-        '                                               & "or has been saved in a different project location." & vbNewLine _
-        '                                               & "This model's properties could not be located.")
-        '                    GoTo skip
-        '                End If
+    '    '    'If SubFiles.Count > LVSubFiles.Items.Count Then
+    '    '    For Each item In SubFiles
+    '    '        If item.Key.Contains(dgvSubFiles(dgvSubFiles.Columns("PartName").Index, Y).Value) Then
+    '    '            DrawingName = item.Key
+    '    '            DrawSource = item.Value
+    '    '            If System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") And
+    '    '                    System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") Then
+    '    '                If My.Settings.DupName = "Model" Then
+    '    '                    DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt"
+    '    '                    DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt"
+    '    '                Else
+    '    '                    DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam"
+    '    '                    DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "iam"
+    '    '                End If
+    '    '                Exit For
+    '    '            ElseIf System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") And
+    '    '                    Not System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") Then
+    '    '                DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt"
+    '    '                DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt"
+    '    '                Exit For
+    '    '            ElseIf System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") And
+    '    '                    Not System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") Then
+    '    '                DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam"
+    '    '                DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "iam"
+    '    '                Exit For
+    '    '            Else
+    '    '                MsgBox("There is a discrepancy between the drawing name and model name." & vbNewLine &
+    '    '                       "Model data could not be located for drawing: " & DrawingName)
+    '    '                Exit Sub
+    '    '            End If
+    '    '        End If
+    '    '    Next
+    '    'Else
+    '    '    For Each item In AlphaSub
+    '    '        If item.Key.Contains(dgvSubFiles(dgvSubFiles.Columns("PartName").Index, Y).Value) Then
+    '    '            DrawingName = item.Key
+    '    '            DrawSource = item.Value
+    '    '            If System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") And
+    '    '                    System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") Then
+    '    '                If My.Settings.DupName = "Model" Then
+    '    '                    DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt"
+    '    '                    DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt"
+    '    '                Else
+    '    '                    DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam"
+    '    '                    DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "iam"
+    '    '                End If
+    '    '                Exit For
+    '    '            ElseIf System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") And
+    '    '                    Not System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") Then
+    '    '                DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt"
+    '    '                DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt"
+    '    '                Exit For
+    '    '            ElseIf System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam") And
+    '    '                    Not System.IO.File.Exists(Strings.Left(DrawSource, Len(DrawSource) - 3) & "ipt") Then
+    '    '                DrawSource = Strings.Left(DrawSource, Len(DrawSource) - 3) & "iam"
+    '    '                DrawingName = Strings.Left(DrawingName, Len(DrawingName) - 3) & "iam"
+    '    '                Exit For
+    '    '            Else
+    '    '                MsgBox("Couldn't locate model data for " & DrawingName)
+    '    '                Exit Sub
+    '    '            End If
+    '    '        End If
+    '    '    Next
+    '    'End If
+    '    writeDebug("Matched Part: " & DrawingName & " to " & DrawSource)
+    '    'End If
+    '    'Look for selected item
+    '    'Dim CheckedFile As String = Trim(lstSubfiles.Items.Item(X))
+    '    '        For J = 1 To _invApp.Documents.Count
+    '    '            oDoc = Path.Item(J)
+    '    '            Archive = oDoc.FullFileName
+    '    '            If Archive = Nothing Then GoTo skip
+    '    '            If Strings.Right(Archive, 1) <> ">" Then
+    '    '                If Strings.Right(Archive, 3) <> "idw" Then
+    '    '                    Dim mass As Double = oDoc.ComponentDefinition.MassProperties.Mass
+    '    '                End If
+    '    '                'Use the Partsource file to create the drawingsource file
+    '    '                If System.IO.File.Exists(Strings.Left(Archive, Strings.Len(Archive) - 3) & "ipt") Then
+    '    '                    PartSource = Strings.Left(Archive, Strings.Len(Archive) - 3) & "ipt"
+    '    '                ElseIf System.IO.File.Exists(Strings.Left(Archive, Strings.Len(Archive) - 3) & "iam") Then
+    '    '                    PartSource = Strings.Left(Archive, Strings.Len(Archive) - 3) & "iam"
+    '    '                End If
+    '    '                If PartSource = "" Then
+    '    '                    MsgBox("The drawing " & CheckedFile & " has a model with a different name" & vbNewLine _
+    '    '                                               & "or has been saved in a different project location." & vbNewLine _
+    '    '                                               & "This model's properties could not be located.")
+    '    '                    GoTo skip
+    '    '                End If
 
-        '                PartName = Strings.Right(PartSource, Strings.Len(PartSource) - Strings.InStrRev(PartSource, "\"))
-        '                'If the drawing file is checked, open the drawing in Inventor
-        '                If Strings.Left(CheckedFile, Len(CheckedFile) - 4) = Strings.Left(PartName, Len(PartName) - 4) Then
-        '                    Archive = PartSource
-        '                    Exit Sub
-        '                End If
-        '            End If
-        'skip:
-        '        Next
-    End Sub
+    '    '                PartName = Strings.Right(PartSource, Strings.Len(PartSource) - Strings.InStrRev(PartSource, "\"))
+    '    '                'If the drawing file is checked, open the drawing in Inventor
+    '    '                If Strings.Left(CheckedFile, Len(CheckedFile) - 4) = Strings.Left(PartName, Len(PartName) - 4) Then
+    '    '                    Archive = PartSource
+    '    '                    Exit Sub
+    '    '                End If
+    '    '            End If
+    '    'skip:
+    '    '        Next
+    'End Sub
     Public Sub Search_For_Duplicates(ByVal Filename As String, DrawingName As String, ByVal Filetype As String)
         For Each file As IO.FileInfo In Get_Files(Strings.Left(Filename, InStrRev(Filename, "\")),
                                                                   IO.SearchOption.TopDirectoryOnly, Filetype,
@@ -3629,7 +3649,7 @@ Public Class Main
             ChkRevType.Checked = False
         End If
 
-        If chkCheck.Checked = True Then
+        If chkEditRev.Checked = True Then
             Dim Checkneeded As New CheckNeeded
             writeDebug("Accessing Checked properties")
             Checkneeded.PopMain(Me)
@@ -3641,7 +3661,7 @@ Public Class Main
                 ' Else
                 '    MsgBox("All drawings have been checked.")
             End If
-            chkCheck.Checked = False
+            chkEditRev.Checked = False
         End If
         If chkPrint.Checked = True Then
             writeDebug("Accessing Print dialog")

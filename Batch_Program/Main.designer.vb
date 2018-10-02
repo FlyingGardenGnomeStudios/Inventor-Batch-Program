@@ -41,7 +41,7 @@ Partial Class Main
         Me.chkDwgExport = New System.Windows.Forms.CheckBox()
         Me.chkDXF = New System.Windows.Forms.CheckBox()
         Me.chkPrint = New System.Windows.Forms.CheckBox()
-        Me.chkCheck = New System.Windows.Forms.CheckBox()
+        Me.chkEditRev = New System.Windows.Forms.CheckBox()
         Me.chkOpen = New System.Windows.Forms.CheckBox()
         Me.chkiProp = New System.Windows.Forms.CheckBox()
         Me.chkAssy = New System.Windows.Forms.CheckBox()
@@ -51,6 +51,10 @@ Partial Class Main
         Me.gbxOpen = New System.Windows.Forms.GroupBox()
         Me.dgvOpenFiles = New System.Windows.Forms.DataGridView()
         Me.chkOpenFiles = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.PartName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PartSource = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PartLocation = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PartOrder = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.chkPartSelect = New System.Windows.Forms.CheckBox()
         Me.gbxDrawings = New System.Windows.Forms.GroupBox()
         Me.chkUseDrawings = New System.Windows.Forms.CheckBox()
@@ -66,6 +70,12 @@ Partial Class Main
         Me.txtSearch = New System.Windows.Forms.TextBox()
         Me.dgvSubFiles = New System.Windows.Forms.DataGridView()
         Me.chkSubFiles = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.DrawingName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DrawingNameAlpha = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DrawingSource = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DrawingLocation = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Comments = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Order = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.CMSSubFiles = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.SortToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CMSAlphabetical = New System.Windows.Forms.ToolStripMenuItem()
@@ -99,6 +109,7 @@ Partial Class Main
         Me.HowToToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.IFoundABugToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TutorialsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DebugLogToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.gbxParts = New System.Windows.Forms.GroupBox()
         Me.chkPartDWG = New System.Windows.Forms.CheckBox()
@@ -116,17 +127,6 @@ Partial Class Main
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.pgbMain = New MSVistaProgressBar()
-        Me.DrawingName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DrawingNameAlpha = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DrawingSource = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DrawingLocation = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Comments = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Order = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PartName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PartSource = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PartLocation = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PartOrder = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DebugLogToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.gbxSelection.SuspendLayout()
         Me.gbxOpen.SuspendLayout()
         CType(Me.dgvOpenFiles, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -239,16 +239,16 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.chkPrint, "Print the drawings selected")
         Me.chkPrint.UseVisualStyleBackColor = True
         '
-        'chkCheck
+        'chkEditRev
         '
-        Me.chkCheck.AutoSize = True
-        Me.chkCheck.Location = New System.Drawing.Point(6, 30)
-        Me.chkCheck.Name = "chkCheck"
-        Me.chkCheck.Size = New System.Drawing.Size(93, 17)
-        Me.chkCheck.TabIndex = 39
-        Me.chkCheck.Text = "Edit Revisions"
-        Me.ToolTip1.SetToolTip(Me.chkCheck, "Check the revision tables of the drawings selected")
-        Me.chkCheck.UseVisualStyleBackColor = True
+        Me.chkEditRev.AutoSize = True
+        Me.chkEditRev.Location = New System.Drawing.Point(6, 30)
+        Me.chkEditRev.Name = "chkEditRev"
+        Me.chkEditRev.Size = New System.Drawing.Size(93, 17)
+        Me.chkEditRev.TabIndex = 39
+        Me.chkEditRev.Text = "Edit Revisions"
+        Me.ToolTip1.SetToolTip(Me.chkEditRev, "Check the revision tables of the drawings selected")
+        Me.chkEditRev.UseVisualStyleBackColor = True
         '
         'chkOpen
         '
@@ -400,6 +400,44 @@ Partial Class Main
         Me.chkOpenFiles.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
         Me.chkOpenFiles.TrueValue = "1"
         '
+        'PartName
+        '
+        Me.PartName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.PartName.FillWeight = 121.8274!
+        Me.PartName.HeaderText = "Part Name"
+        Me.PartName.MinimumWidth = 15
+        Me.PartName.Name = "PartName"
+        Me.PartName.ReadOnly = True
+        Me.PartName.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        '
+        'PartSource
+        '
+        Me.PartSource.FillWeight = 121.8274!
+        Me.PartSource.HeaderText = "Part Source"
+        Me.PartSource.Name = "PartSource"
+        Me.PartSource.ReadOnly = True
+        Me.PartSource.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.PartSource.Visible = False
+        Me.PartSource.Width = 43
+        '
+        'PartLocation
+        '
+        Me.PartLocation.FillWeight = 121.8274!
+        Me.PartLocation.HeaderText = "Part Location"
+        Me.PartLocation.Name = "PartLocation"
+        Me.PartLocation.ReadOnly = True
+        Me.PartLocation.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.PartLocation.Visible = False
+        Me.PartLocation.Width = 42
+        '
+        'PartOrder
+        '
+        Me.PartOrder.HeaderText = "Order"
+        Me.PartOrder.Name = "PartOrder"
+        Me.PartOrder.ReadOnly = True
+        Me.PartOrder.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.PartOrder.Visible = False
+        '
         'chkPartSelect
         '
         Me.chkPartSelect.AutoSize = True
@@ -422,7 +460,7 @@ Partial Class Main
         Me.gbxDrawings.Controls.Add(Me.chkPDF)
         Me.gbxDrawings.Controls.Add(Me.Label3)
         Me.gbxDrawings.Controls.Add(Me.chkPrint)
-        Me.gbxDrawings.Controls.Add(Me.chkCheck)
+        Me.gbxDrawings.Controls.Add(Me.chkEditRev)
         Me.gbxDrawings.Controls.Add(Me.chkOpen)
         Me.gbxDrawings.Location = New System.Drawing.Point(554, 119)
         Me.gbxDrawings.Name = "gbxDrawings"
@@ -623,6 +661,64 @@ Partial Class Main
         Me.chkSubFiles.ReadOnly = True
         Me.chkSubFiles.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
         Me.chkSubFiles.TrueValue = "1"
+        '
+        'DrawingName
+        '
+        Me.DrawingName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.DrawingName.FillWeight = 121.8274!
+        Me.DrawingName.HeaderText = "Drawing Name"
+        Me.DrawingName.MinimumWidth = 15
+        Me.DrawingName.Name = "DrawingName"
+        Me.DrawingName.ReadOnly = True
+        Me.DrawingName.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        '
+        'DrawingNameAlpha
+        '
+        Me.DrawingNameAlpha.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.DrawingNameAlpha.HeaderText = "Drawing Name Alpha"
+        Me.DrawingNameAlpha.Name = "DrawingNameAlpha"
+        Me.DrawingNameAlpha.ReadOnly = True
+        Me.DrawingNameAlpha.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DrawingNameAlpha.Visible = False
+        '
+        'DrawingSource
+        '
+        Me.DrawingSource.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
+        Me.DrawingSource.FillWeight = 121.8274!
+        Me.DrawingSource.HeaderText = "Drawing Source"
+        Me.DrawingSource.Name = "DrawingSource"
+        Me.DrawingSource.ReadOnly = True
+        Me.DrawingSource.Visible = False
+        Me.DrawingSource.Width = 5
+        '
+        'DrawingLocation
+        '
+        Me.DrawingLocation.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
+        Me.DrawingLocation.FillWeight = 121.8274!
+        Me.DrawingLocation.HeaderText = "Drawing Location"
+        Me.DrawingLocation.Name = "DrawingLocation"
+        Me.DrawingLocation.ReadOnly = True
+        Me.DrawingLocation.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DrawingLocation.Visible = False
+        Me.DrawingLocation.Width = 5
+        '
+        'Comments
+        '
+        Me.Comments.FillWeight = 121.8274!
+        Me.Comments.HeaderText = "Comments"
+        Me.Comments.Name = "Comments"
+        Me.Comments.ReadOnly = True
+        Me.Comments.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.Comments.Visible = False
+        Me.Comments.Width = 43
+        '
+        'Order
+        '
+        Me.Order.HeaderText = "Order"
+        Me.Order.Name = "Order"
+        Me.Order.ReadOnly = True
+        Me.Order.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.Order.Visible = False
         '
         'CMSSubFiles
         '
@@ -880,6 +976,12 @@ Partial Class Main
         Me.TutorialsToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
         Me.TutorialsToolStripMenuItem.Text = "Tutorials"
         '
+        'DebugLogToolStripMenuItem
+        '
+        Me.DebugLogToolStripMenuItem.Name = "DebugLogToolStripMenuItem"
+        Me.DebugLogToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
+        Me.DebugLogToolStripMenuItem.Text = "Debug Log"
+        '
         'ContextMenuStrip1
         '
         Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
@@ -991,7 +1093,6 @@ Partial Class Main
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
         Me.DataGridViewTextBoxColumn7.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
         Me.DataGridViewTextBoxColumn7.Visible = False
-        Me.DataGridViewTextBoxColumn7.Width = 5
         '
         'DataGridViewTextBoxColumn8
         '
@@ -1002,7 +1103,6 @@ Partial Class Main
         Me.DataGridViewTextBoxColumn8.ReadOnly = True
         Me.DataGridViewTextBoxColumn8.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
         Me.DataGridViewTextBoxColumn8.Visible = False
-        Me.DataGridViewTextBoxColumn8.Width = 5
         '
         'DataGridViewTextBoxColumn9
         '
@@ -1037,108 +1137,6 @@ Partial Class Main
         Me.pgbMain.Size = New System.Drawing.Size(536, 23)
         Me.pgbMain.TabIndex = 62
         Me.pgbMain.Visible = False
-        '
-        'DrawingName
-        '
-        Me.DrawingName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.DrawingName.FillWeight = 121.8274!
-        Me.DrawingName.HeaderText = "Drawing Name"
-        Me.DrawingName.MinimumWidth = 15
-        Me.DrawingName.Name = "DrawingName"
-        Me.DrawingName.ReadOnly = True
-        Me.DrawingName.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        '
-        'DrawingNameAlpha
-        '
-        Me.DrawingNameAlpha.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.DrawingNameAlpha.HeaderText = "Drawing Name Alpha"
-        Me.DrawingNameAlpha.Name = "DrawingNameAlpha"
-        Me.DrawingNameAlpha.ReadOnly = True
-        Me.DrawingNameAlpha.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DrawingNameAlpha.Visible = False
-        '
-        'DrawingSource
-        '
-        Me.DrawingSource.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
-        Me.DrawingSource.FillWeight = 121.8274!
-        Me.DrawingSource.HeaderText = "Drawing Source"
-        Me.DrawingSource.Name = "DrawingSource"
-        Me.DrawingSource.ReadOnly = True
-        Me.DrawingSource.Visible = False
-        Me.DrawingSource.Width = 5
-        '
-        'DrawingLocation
-        '
-        Me.DrawingLocation.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
-        Me.DrawingLocation.FillWeight = 121.8274!
-        Me.DrawingLocation.HeaderText = "Drawing Location"
-        Me.DrawingLocation.Name = "DrawingLocation"
-        Me.DrawingLocation.ReadOnly = True
-        Me.DrawingLocation.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DrawingLocation.Visible = False
-        Me.DrawingLocation.Width = 5
-        '
-        'Comments
-        '
-        Me.Comments.FillWeight = 121.8274!
-        Me.Comments.HeaderText = "Comments"
-        Me.Comments.Name = "Comments"
-        Me.Comments.ReadOnly = True
-        Me.Comments.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.Comments.Visible = False
-        Me.Comments.Width = 43
-        '
-        'Order
-        '
-        Me.Order.HeaderText = "Order"
-        Me.Order.Name = "Order"
-        Me.Order.ReadOnly = True
-        Me.Order.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.Order.Visible = False
-        '
-        'PartName
-        '
-        Me.PartName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.PartName.FillWeight = 121.8274!
-        Me.PartName.HeaderText = "Part Name"
-        Me.PartName.MinimumWidth = 15
-        Me.PartName.Name = "PartName"
-        Me.PartName.ReadOnly = True
-        Me.PartName.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        '
-        'PartSource
-        '
-        Me.PartSource.FillWeight = 121.8274!
-        Me.PartSource.HeaderText = "Part Source"
-        Me.PartSource.Name = "PartSource"
-        Me.PartSource.ReadOnly = True
-        Me.PartSource.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.PartSource.Visible = False
-        Me.PartSource.Width = 43
-        '
-        'PartLocation
-        '
-        Me.PartLocation.FillWeight = 121.8274!
-        Me.PartLocation.HeaderText = "Part Location"
-        Me.PartLocation.Name = "PartLocation"
-        Me.PartLocation.ReadOnly = True
-        Me.PartLocation.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.PartLocation.Visible = False
-        Me.PartLocation.Width = 42
-        '
-        'PartOrder
-        '
-        Me.PartOrder.HeaderText = "Order"
-        Me.PartOrder.Name = "PartOrder"
-        Me.PartOrder.ReadOnly = True
-        Me.PartOrder.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.PartOrder.Visible = False
-        '
-        'DebugLogToolStripMenuItem
-        '
-        Me.DebugLogToolStripMenuItem.Name = "DebugLogToolStripMenuItem"
-        Me.DebugLogToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
-        Me.DebugLogToolStripMenuItem.Text = "Debug Log"
         '
         'Main
         '
@@ -1196,7 +1194,7 @@ Partial Class Main
     Friend WithEvents chkDwgExport As System.Windows.Forms.CheckBox
     Friend WithEvents chkDXF As System.Windows.Forms.CheckBox
     Friend WithEvents chkPrint As System.Windows.Forms.CheckBox
-    Friend WithEvents chkCheck As System.Windows.Forms.CheckBox
+    Friend WithEvents chkEditRev As System.Windows.Forms.CheckBox
     Friend WithEvents chkOpen As System.Windows.Forms.CheckBox
     Friend WithEvents chkiProp As System.Windows.Forms.CheckBox
     Friend WithEvents chkAssy As System.Windows.Forms.CheckBox

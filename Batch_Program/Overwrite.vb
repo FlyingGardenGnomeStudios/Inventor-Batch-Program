@@ -53,8 +53,8 @@ Public Class Overwrite
                     ElseIf sReadableType = "" Then
                         Main.CloseLater(IO.Path.GetFileName(oDoc.FullDocumentName), oDoc)
                     End If
-                    If Main.chkCheck.CheckState = Windows.Forms.CheckState.Indeterminate Then
-                        Main.chkCheck.CheckState = Windows.Forms.CheckState.Unchecked
+                    If Main.chkEditRev.CheckState = Windows.Forms.CheckState.Indeterminate Then
+                        Main.chkEditRev.CheckState = Windows.Forms.CheckState.Unchecked
                     End If
                 ElseIf My.Computer.FileSystem.FileExists(Strings.Replace(DrawSource, "idw", "iam")) = False Then
                     NotMade = DrawingName & vbNewLine

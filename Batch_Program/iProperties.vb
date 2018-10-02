@@ -567,7 +567,6 @@ Public Class iProperties
 
                 End If
                 Main.CloseLater(DrawingName, oDoc)
-                Main.MatchDrawing(DrawSource, DrawingName, Y)
                 ''oDoc = _invApp.Documents.Open(DrawSource, False)
                 'If Read = True Then
                 '    'Call SetDrawingProps(oDoc, Warning)
@@ -585,7 +584,7 @@ Public Class iProperties
                 Try
                     Main.CloseLater(oDoc.DisplayName, oDoc)
                 Catch
-                    Main.writeDebug("Couldn't close " & DrawingName & ". Could already be closed")
+                    Main.writeDebug("Couldn't close " & Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingName").Index, Y).Value & ". Could already be closed")
                 End Try
                 X += 1
                 ProgressBar2.Value = (X / Total) * 100
@@ -818,13 +817,19 @@ Public Class iProperties
             oPoint = _invApp.TransientGeometry.CreatePoint2d(Sheet.Width, Sheet.Height)
         End If
         'Define the revision table from the active sheet
-        oRevTable = Sheet.RevisionTables(1)
-        If Err.Number = 5 Then
-            oRevTable = oDoc.ActiveSheet.Revisiontables.Add2(oPoint, False, True, False, 0)
-            'clear the error for future code.
-            Err.Clear()
-            Exit Sub
-        End If
+        Try
+            oRevTable = Sheet.RevisionTables(1)
+        Catch
+            If Err.Number = 5 Then
+                Try
+                    oRevTable = oDoc.ActiveSheet.Revisiontables.Add2(oPoint, False, True, False, My.Settings.StartVal)
+                    Err.Clear()
+                    Exit Sub
+                Catch ex2 As Exception
+                    oRevTable = oDoc.ActiveSheet.Revisiontables.Add(oPoint)
+                End Try
+            End If
+        End Try
         'retrieve the data from the revision table
         Dim RevNo As String = oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
         Dim tg As TransientGeometry = _invApp.TransientGeometry
@@ -1628,13 +1633,19 @@ Public Class iProperties
         'If Trim(Main.lstSubfiles.Items.Item(X)) = strFile Then
         oDoc = _invApp.Documents.Open(strPath, True)
         Sheet = oDoc.ActiveSheet
-        On Error Resume Next
-        shtRevTable = Sheet.RevisionTables(1)
         Dim oRevTable As RevisionTable
-        If Err.Number = 5 Then
-            oRevTable = oDoc.ActiveSheet.Revisiontables.Add2(oPoint, False, True, False, 0)
-            Err.Clear()
-        End If
+        Try
+            shtRevTable = Sheet.RevisionTables(1)
+        Catch
+            If Err.Number = 5 Then
+                Try
+                    oRevTable = oDoc.ActiveSheet.Revisiontables.Add2(oPoint, False, True, False, My.Settings.StartVal)
+                    Err.Clear()
+                Catch ex2 As Exception
+                    oRevTable = oDoc.ActiveSheet.Revisiontables.Add(oPoint)
+                End Try
+            End If
+        End Try
         Col = shtRevTable.RevisionTableColumns.Count
         Row = shtRevTable.RevisionTableRows.Count
         Rev = oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value

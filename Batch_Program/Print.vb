@@ -235,8 +235,8 @@ Public Class Print
             For X = PStart To PEnd Step Direction
                 If Main.bgwRun.CancellationPending = True Then Exit Sub
                 If Main.dgvSubFiles(Main.dgvSubFiles.Columns("chkSubFiles").Index, X).Value = True Then
-                    Main.MatchDrawing(DrawSource, DrawingName, X)
-                    dDoc = _invApp.Documents.Open(DrawSource, True)
+                    DrawingName = Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingName").Index, X).Value
+                    dDoc = _invApp.Documents.Open(Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingLocation").Index, X).Value, True)
                     'For Each oDoc In dDoc.ReferencedFiles
                     'Mass = oDoc.ComponentDefinition.MassProperties.mass
                     Try

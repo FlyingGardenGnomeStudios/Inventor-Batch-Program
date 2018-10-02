@@ -33,23 +33,26 @@ Partial Class Rev_Table_Settings
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.dgvRevTableLayout = New System.Windows.Forms.DataGridView()
         Me.chk = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.Item = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ColumnName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataType = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.DeleteRowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Item = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ColumnName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.nudStartVal = New System.Windows.Forms.NumericUpDown()
         Me.GroupBox2.SuspendLayout()
         CType(Me.dgvRevTableLayout, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
+        CType(Me.nudStartVal, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'btnOK
         '
-        Me.btnOK.Location = New System.Drawing.Point(327, 329)
+        Me.btnOK.Location = New System.Drawing.Point(327, 354)
         Me.btnOK.Name = "btnOK"
         Me.btnOK.Size = New System.Drawing.Size(75, 23)
         Me.btnOK.TabIndex = 4
@@ -58,7 +61,7 @@ Partial Class Rev_Table_Settings
         '
         'btnCancel
         '
-        Me.btnCancel.Location = New System.Drawing.Point(246, 329)
+        Me.btnCancel.Location = New System.Drawing.Point(246, 354)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(75, 23)
         Me.btnCancel.TabIndex = 5
@@ -76,7 +79,7 @@ Partial Class Rev_Table_Settings
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(6, 20)
+        Me.Label1.Location = New System.Drawing.Point(6, 16)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(147, 13)
         Me.Label1.TabIndex = 7
@@ -85,7 +88,7 @@ Partial Class Rev_Table_Settings
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(6, 45)
+        Me.Label2.Location = New System.Drawing.Point(6, 55)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(158, 13)
         Me.Label2.TabIndex = 9
@@ -93,7 +96,7 @@ Partial Class Rev_Table_Settings
         '
         'txtAlphaRev
         '
-        Me.txtAlphaRev.Location = New System.Drawing.Point(170, 38)
+        Me.txtAlphaRev.Location = New System.Drawing.Point(170, 52)
         Me.txtAlphaRev.Name = "txtAlphaRev"
         Me.txtAlphaRev.Size = New System.Drawing.Size(220, 20)
         Me.txtAlphaRev.TabIndex = 8
@@ -101,13 +104,15 @@ Partial Class Rev_Table_Settings
         '
         'GroupBox2
         '
+        Me.GroupBox2.Controls.Add(Me.nudStartVal)
+        Me.GroupBox2.Controls.Add(Me.Label3)
         Me.GroupBox2.Controls.Add(Me.Label1)
         Me.GroupBox2.Controls.Add(Me.txtNumRev)
         Me.GroupBox2.Controls.Add(Me.Label2)
         Me.GroupBox2.Controls.Add(Me.txtAlphaRev)
         Me.GroupBox2.Location = New System.Drawing.Point(12, 254)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(396, 69)
+        Me.GroupBox2.Size = New System.Drawing.Size(396, 94)
         Me.GroupBox2.TabIndex = 11
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Change Revision"
@@ -135,20 +140,6 @@ Partial Class Rev_Table_Settings
         Me.chk.HeaderText = ""
         Me.chk.Name = "chk"
         Me.chk.Width = 21
-        '
-        'Item
-        '
-        Me.Item.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.Item.FillWeight = 34.04429!
-        Me.Item.HeaderText = "Revision Item"
-        Me.Item.Name = "Item"
-        '
-        'ColumnName
-        '
-        Me.ColumnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.ColumnName.FillWeight = 53.71433!
-        Me.ColumnName.HeaderText = "Rev Table Column Name"
-        Me.ColumnName.Name = "ColumnName"
         '
         'DataType
         '
@@ -196,11 +187,41 @@ Partial Class Rev_Table_Settings
         Me.DataGridViewTextBoxColumn2.HeaderText = "Rev Table Column Name"
         Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
         '
+        'Item
+        '
+        Me.Item.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.Item.FillWeight = 34.04429!
+        Me.Item.HeaderText = "Revision Item"
+        Me.Item.Name = "Item"
+        '
+        'ColumnName
+        '
+        Me.ColumnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.ColumnName.FillWeight = 53.71433!
+        Me.ColumnName.HeaderText = "Rev Table Column Name"
+        Me.ColumnName.Name = "ColumnName"
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(26, 35)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(73, 13)
+        Me.Label3.TabIndex = 10
+        Me.Label3.Text = "Starting Value"
+        '
+        'nudStartVal
+        '
+        Me.nudStartVal.Location = New System.Drawing.Point(106, 33)
+        Me.nudStartVal.Name = "nudStartVal"
+        Me.nudStartVal.Size = New System.Drawing.Size(37, 20)
+        Me.nudStartVal.TabIndex = 11
+        '
         'Rev_Table_Settings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(420, 364)
+        Me.ClientSize = New System.Drawing.Size(420, 389)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.btnCancel)
@@ -214,6 +235,7 @@ Partial Class Rev_Table_Settings
         CType(Me.dgvRevTableLayout, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ContextMenuStrip1.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
+        CType(Me.nudStartVal, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -234,4 +256,6 @@ Partial Class Rev_Table_Settings
     Friend WithEvents DataType As Windows.Forms.DataGridViewComboBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn1 As Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents nudStartVal As Windows.Forms.NumericUpDown
+    Friend WithEvents Label3 As Windows.Forms.Label
 End Class

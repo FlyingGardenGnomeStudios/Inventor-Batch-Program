@@ -47,6 +47,12 @@ Partial Class CheckNeeded
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.VisibleRowsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EmptyValuesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EmptyCellsOnlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CellsInColumnToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.VisibleCellsInColumnToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EmptyCellsInColumnToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.cmsApplyValues.SuspendLayout()
         CType(Me.tgvCheckNeeded, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -103,36 +109,38 @@ Partial Class CheckNeeded
         '
         Me.cmsApplyValues.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ApplyRowValuesToAllRowsToolStripMenuItem, Me.ApplyCellValueToEntireColumnToolStripMenuItem, Me.ClearCellToolStripMenuItem, Me.RemoveRevisionToolStripMenuItem, Me.AddRevisionToolStripMenuItem})
         Me.cmsApplyValues.Name = "ContextMenuStrip1"
-        Me.cmsApplyValues.Size = New System.Drawing.Size(331, 114)
+        Me.cmsApplyValues.Size = New System.Drawing.Size(243, 136)
         '
         'ApplyRowValuesToAllRowsToolStripMenuItem
         '
+        Me.ApplyRowValuesToAllRowsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.VisibleRowsToolStripMenuItem, Me.EmptyValuesToolStripMenuItem, Me.EmptyCellsOnlyToolStripMenuItem})
         Me.ApplyRowValuesToAllRowsToolStripMenuItem.Name = "ApplyRowValuesToAllRowsToolStripMenuItem"
-        Me.ApplyRowValuesToAllRowsToolStripMenuItem.Size = New System.Drawing.Size(330, 22)
-        Me.ApplyRowValuesToAllRowsToolStripMenuItem.Text = "Apply selected row values to all visible rows"
+        Me.ApplyRowValuesToAllRowsToolStripMenuItem.Size = New System.Drawing.Size(242, 22)
+        Me.ApplyRowValuesToAllRowsToolStripMenuItem.Text = "Apply selected row values to all:"
         '
         'ApplyCellValueToEntireColumnToolStripMenuItem
         '
+        Me.ApplyCellValueToEntireColumnToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CellsInColumnToolStripMenuItem, Me.VisibleCellsInColumnToolStripMenuItem, Me.EmptyCellsInColumnToolStripMenuItem})
         Me.ApplyCellValueToEntireColumnToolStripMenuItem.Name = "ApplyCellValueToEntireColumnToolStripMenuItem"
-        Me.ApplyCellValueToEntireColumnToolStripMenuItem.Size = New System.Drawing.Size(330, 22)
-        Me.ApplyCellValueToEntireColumnToolStripMenuItem.Text = "Apply selected cell value to entire visible column"
+        Me.ApplyCellValueToEntireColumnToolStripMenuItem.Size = New System.Drawing.Size(242, 22)
+        Me.ApplyCellValueToEntireColumnToolStripMenuItem.Text = "Apply selected cell value to all:"
         '
         'ClearCellToolStripMenuItem
         '
         Me.ClearCellToolStripMenuItem.Name = "ClearCellToolStripMenuItem"
-        Me.ClearCellToolStripMenuItem.Size = New System.Drawing.Size(330, 22)
+        Me.ClearCellToolStripMenuItem.Size = New System.Drawing.Size(242, 22)
         Me.ClearCellToolStripMenuItem.Text = "Clear Cell"
         '
         'RemoveRevisionToolStripMenuItem
         '
         Me.RemoveRevisionToolStripMenuItem.Name = "RemoveRevisionToolStripMenuItem"
-        Me.RemoveRevisionToolStripMenuItem.Size = New System.Drawing.Size(330, 22)
+        Me.RemoveRevisionToolStripMenuItem.Size = New System.Drawing.Size(242, 22)
         Me.RemoveRevisionToolStripMenuItem.Text = "Remove Revision"
         '
         'AddRevisionToolStripMenuItem
         '
         Me.AddRevisionToolStripMenuItem.Name = "AddRevisionToolStripMenuItem"
-        Me.AddRevisionToolStripMenuItem.Size = New System.Drawing.Size(330, 22)
+        Me.AddRevisionToolStripMenuItem.Size = New System.Drawing.Size(242, 22)
         Me.AddRevisionToolStripMenuItem.Text = "Add Revision"
         '
         'tgvCheckNeeded
@@ -220,6 +228,42 @@ Partial Class CheckNeeded
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
         Me.DataGridViewTextBoxColumn6.Width = 69
         '
+        'VisibleRowsToolStripMenuItem
+        '
+        Me.VisibleRowsToolStripMenuItem.Name = "VisibleRowsToolStripMenuItem"
+        Me.VisibleRowsToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.VisibleRowsToolStripMenuItem.Text = "Rows"
+        '
+        'EmptyValuesToolStripMenuItem
+        '
+        Me.EmptyValuesToolStripMenuItem.Name = "EmptyValuesToolStripMenuItem"
+        Me.EmptyValuesToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.EmptyValuesToolStripMenuItem.Text = "Visible Rows"
+        '
+        'EmptyCellsOnlyToolStripMenuItem
+        '
+        Me.EmptyCellsOnlyToolStripMenuItem.Name = "EmptyCellsOnlyToolStripMenuItem"
+        Me.EmptyCellsOnlyToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.EmptyCellsOnlyToolStripMenuItem.Text = "Empty Cells"
+        '
+        'CellsInColumnToolStripMenuItem
+        '
+        Me.CellsInColumnToolStripMenuItem.Name = "CellsInColumnToolStripMenuItem"
+        Me.CellsInColumnToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.CellsInColumnToolStripMenuItem.Text = "Cells in Column"
+        '
+        'VisibleCellsInColumnToolStripMenuItem
+        '
+        Me.VisibleCellsInColumnToolStripMenuItem.Name = "VisibleCellsInColumnToolStripMenuItem"
+        Me.VisibleCellsInColumnToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.VisibleCellsInColumnToolStripMenuItem.Text = "Visible Cells in Column"
+        '
+        'EmptyCellsInColumnToolStripMenuItem
+        '
+        Me.EmptyCellsInColumnToolStripMenuItem.Name = "EmptyCellsInColumnToolStripMenuItem"
+        Me.EmptyCellsInColumnToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.EmptyCellsInColumnToolStripMenuItem.Text = "Empty Cells in Column"
+        '
         'CheckNeeded
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -269,4 +313,10 @@ Partial Class CheckNeeded
     Friend WithEvents RemoveRevisionToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem1 As Windows.Forms.ToolStripMenuItem
     Friend WithEvents AddRevisionToolStripMenuItem As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents VisibleRowsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents EmptyValuesToolStripMenuItem As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents EmptyCellsOnlyToolStripMenuItem As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents CellsInColumnToolStripMenuItem As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents VisibleCellsInColumnToolStripMenuItem As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents EmptyCellsInColumnToolStripMenuItem As Windows.Forms.ToolStripMenuItem
 End Class
