@@ -309,6 +309,7 @@ Public Class CheckNeeded
         'Iterate through checkneeded table to get drawing name
         Dim Flag As Boolean = False
         DrawSource = Nothing
+        Dim Q As Boolean = False
         For Each node In tgvCheckNeeded.Nodes
             Dim TotRevs As Integer = 1
             If node.HasChildren Then
@@ -355,10 +356,41 @@ Public Class CheckNeeded
                         RevTable.RevisionTableRows.Add()
                     Loop
                 ElseIf RevTable.RevisionTableRows.Count > TotRevs Then
+                    Rev = tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTSRevCol).Index, node.RowIndex).Value
+                    If Q = False Then Ans = MsgBox("Removing revisions will cause all revision tags to be deleted" & vbNewLine &
+                                 "Inventor currently does not support revision tag maintenance through the API" & vbNewLine &
+                                 "Do you wish to continue?", vbYesNo)
+                    If Ans = vbNo Then
+                        Exit Sub
+                    Else
+                        Q = True
+                    End If
+
                     RevTable.RevisionTableRows.Add()
-                    Do Until RevTable.RevisionTableRows.Count = TotRevs
-                        RevTable.RevisionTableRows(RevTable.RevisionTableRows.Count - 1).Delete()
+                    Do Until RevTable.RevisionTableRows.Count = 1
+                        If RevTable.RevisionTableRows.Item(RevTable.RevisionTableRows.Count).IsActiveRow = True Then
+                            RevTable.RevisionTableRows.Item(RevTable.RevisionTableRows.Count - 1).IsActiveRow = True
+                        End If
+                        RevTable.RevisionTableRows.Item(RevTable.RevisionTableRows.Count).Delete()
                     Loop
+                    Dim Alpha As Boolean = False
+                    If IsNumeric(Rev) Then
+                        Rev += My.Settings.StartVal
+                    Else
+                        Rev = GetAlphaString(Asc(My.Settings.StartVal) - 63)
+                        Alpha = True
+                    End If
+
+                    Dim Point As Point2d = _invApp.TransientGeometry.CreatePoint2d(RevTable.RangeBox.MinPoint.X, RevTable.RangeBox.MinPoint.Y)
+                    RevTable.Delete()
+                    Sheet.RevisionTables.Add2(Point, False, True, Alpha, Rev)
+                    RevTable = Sheet.RevisionTables(1)
+                    RevTable.Position = _invApp.TransientGeometry.CreatePoint2d(RevTable.RangeBox.MinPoint.X,
+                                                                               RevTable.RangeBox.MaxPoint.Y + RevTable.RangeBox.MaxPoint.Y - RevTable.RangeBox.MinPoint.Y)
+                    Do Until RevTable.RevisionTableRows.Count = TotRevs
+                        RevTable.RevisionTableRows.Add()
+                    Loop
+
                 End If
 
                 Col = RevTable.RevisionTableColumns.Count
@@ -866,6 +898,7 @@ Public Class CheckNeeded
                                 Rev = GetAlphaString(Asc(Rev) - 63)
                             End If
                             childnode.Cells(Column).Value = Rev
+                            'Exit For
                         Next
                     End If
 
