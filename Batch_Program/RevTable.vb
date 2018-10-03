@@ -223,6 +223,8 @@ Public Class RevTable
         RevisionTable = Sheet.RevisionTables(1)
         If Err.Number = 5 Then
             oRevTable = oDoc.ActiveSheet.Revisiontables.Add2(oPoint, False, True, False, 0)
+            Main.RevTable_Location(Sheet, oRevTable, oPoint)
+            oRevTable.Position = oPoint
             'clear the error for future code.
             Err.Clear()
             Exit Sub

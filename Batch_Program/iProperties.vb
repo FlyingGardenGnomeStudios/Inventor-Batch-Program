@@ -823,10 +823,14 @@ Public Class iProperties
             If Err.Number = 5 Then
                 Try
                     oRevTable = oDoc.ActiveSheet.Revisiontables.Add2(oPoint, False, True, False, My.Settings.StartVal)
+                    Main.RevTable_Location(Sheet, oRevTable, oPoint)
+                    oRevTable.Position = oPoint
                     Err.Clear()
                     Exit Sub
                 Catch ex2 As Exception
                     oRevTable = oDoc.ActiveSheet.Revisiontables.Add(oPoint)
+                    Main.RevTable_Location(Sheet, oRevTable, oPoint)
+                    oRevTable.Position = oPoint
                 End Try
             End If
         End Try
@@ -1640,9 +1644,13 @@ Public Class iProperties
             If Err.Number = 5 Then
                 Try
                     oRevTable = oDoc.ActiveSheet.Revisiontables.Add2(oPoint, False, True, False, My.Settings.StartVal)
+                    Main.RevTable_Location(Sheet, oRevTable, oPoint)
+                    oRevTable.Position = oPoint
                     Err.Clear()
                 Catch ex2 As Exception
                     oRevTable = oDoc.ActiveSheet.Revisiontables.Add(oPoint)
+                    Main.RevTable_Location(Sheet, oRevTable, oPoint)
+                    oRevTable.Position = oPoint
                 End Try
             End If
         End Try

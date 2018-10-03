@@ -1182,6 +1182,8 @@ Public Class Main
                         writeDebug("Rev table missing on page " & Sheet.Name & vbNewLine &
                                     "Adding new revision table")
                         oRevTable = Sheet.RevisionTables.Add(Point)
+                        RevTable_Location(Sheet, oRevTable, Point)
+                        oRevTable.Position = Point
                     End Try
                     Tx(S) = oRevTable.Position.X
                     Ty(S) = oRevTable.Position.Y
@@ -1984,6 +1986,40 @@ Public Class Main
             OpenDocs.Add(DocName)
         Next
         writeDebug("Created Open Document List :" & OpenDocs.Count & " documents")
+    End Sub
+    Public Sub RevTable_Location(ByVal Sheet As Sheet, ByRef Revtable As RevisionTable, ByRef oPoint As Point2d)
+        Dim oBorder As Border = Sheet.Border
+        Dim Xmax, Xmin, Ymax, Ymin As Decimal
+        If Not oBorder Is Nothing Then
+            Xmax = oBorder.RangeBox.MaxPoint.X
+            Xmin = oBorder.RangeBox.MinPoint.X
+            Ymax = oBorder.RangeBox.MaxPoint.Y
+            Ymin = oBorder.RangeBox.MinPoint.Y
+        Else
+            Xmax = Sheet.Width
+            Xmin = 0
+            Ymax = Sheet.Height
+            Ymin = 0
+        End If
+        Select Case My.Settings.DefRevLoc
+            Case "TL"
+                oPoint = _invApp.TransientGeometry.CreatePoint2d(Xmin, Ymax)
+                Revtable.TableDirection = TableDirectionEnum.kTopDownDirection
+                If Not Revtable.HeadingPlacement = HeadingPlacementEnum.kNoHeading Then Revtable.HeadingPlacement = HeadingPlacementEnum.kHeadingAtTop
+            Case "TR"
+                oPoint = _invApp.TransientGeometry.CreatePoint2d(Xmax - Revtable.RangeBox.MaxPoint.X - Revtable.RangeBox.MinPoint.X, Ymax)
+                Revtable.TableDirection = TableDirectionEnum.kTopDownDirection
+                If Not Revtable.HeadingPlacement = HeadingPlacementEnum.kNoHeading Then Revtable.HeadingPlacement = HeadingPlacementEnum.kHeadingAtTop
+            Case "BL"
+                oPoint = _invApp.TransientGeometry.CreatePoint2d(Xmin, Ymin + Revtable.RangeBox.MaxPoint.Y - Revtable.RangeBox.MinPoint.Y)
+                Revtable.TableDirection = TableDirectionEnum.kBottomUpDirection
+                If Not Revtable.HeadingPlacement = HeadingPlacementEnum.kNoHeading Then Revtable.HeadingPlacement = HeadingPlacementEnum.kHeadingAtBottom
+            Case "BR"
+                oPoint = _invApp.TransientGeometry.CreatePoint2d(Xmax - Revtable.RangeBox.MaxPoint.X - Revtable.RangeBox.MinPoint.X,
+                                                                Ymin + Revtable.RangeBox.MaxPoint.Y - Revtable.RangeBox.MinPoint.Y)
+                Revtable.TableDirection = TableDirectionEnum.kBottomUpDirection
+                If Not Revtable.HeadingPlacement = HeadingPlacementEnum.kNoHeading Then Revtable.HeadingPlacement = HeadingPlacementEnum.kHeadingAtBottom
+        End Select
     End Sub
     'Public Sub MatchDrawing(ByRef DrawSource As String, ByRef DrawingName As String, Y As Integer)
     '    'If CMSHeirarchical.Checked = True Then

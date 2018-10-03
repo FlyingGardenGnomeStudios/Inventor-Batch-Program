@@ -381,19 +381,19 @@ Public Class CheckNeeded
                         Alpha = True
                     End If
 
-                    Dim Point As Point2d = _invApp.TransientGeometry.CreatePoint2d(RevTable.RangeBox.MinPoint.X, RevTable.RangeBox.MinPoint.Y)
+                    Dim oPoint As Point2d = RevTable.Position
                     RevTable.Delete()
-                    Sheet.RevisionTables.Add2(Point, False, True, Alpha, Rev)
+                    Sheet.RevisionTables.Add2(oPoint, False, True, Alpha, Rev)
                     RevTable = Sheet.RevisionTables(1)
                     RevTable.Position = _invApp.TransientGeometry.CreatePoint2d(RevTable.RangeBox.MinPoint.X,
                                                                                RevTable.RangeBox.MaxPoint.Y + RevTable.RangeBox.MaxPoint.Y - RevTable.RangeBox.MinPoint.Y)
                     Do Until RevTable.RevisionTableRows.Count = TotRevs
-                        RevTable.RevisionTableRows.Add()
-                    Loop
+                            RevTable.RevisionTableRows.Add()
+                        Loop
 
-                End If
+                    End If
 
-                Col = RevTable.RevisionTableColumns.Count
+                    Col = RevTable.RevisionTableColumns.Count
                 Row = RevTable.RevisionTableRows.Count
                 Rev = oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
                 'Iterate through rev table and populate from the userform
@@ -571,11 +571,15 @@ Public Class CheckNeeded
                     If Err.Number = 5 Then
                         Try
                             oRevTable = Sheet.RevisionTables.Add2(oPoint, False, True, False, My.Settings.StartVal)
+                            Main.RevTable_Location(Sheet, oRevTable, oPoint)
+                            oRevTable.Position = oPoint
                             'clear the error for future code.
                             Err.Clear()
                             Exit Sub
                         Catch ex2 As Exception
                             oRevTable = Sheet.RevisionTables.Add(oPoint)
+                            Main.RevTable_Location(Sheet, oRevTable, oPoint)
+                            oRevTable.Position = oPoint
                             'clear the error for future code.
                             Err.Clear()
                         End Try

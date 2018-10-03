@@ -35,6 +35,16 @@ Public Class Rev_Table_Settings
         txtNumRev.Text = My.Settings.NumRev
         txtAlphaRev.Text = My.Settings.AlphaRev
         nudStartVal.Value = My.Settings.StartVal
+        Select Case My.Settings.DefRevLoc
+            Case "BL"
+                rdbBL.Checked = True
+            Case "BR"
+                rdbBR.Checked = True
+            Case "TL"
+                rdbTL.Checked = True
+            Case "TR"
+                rdbTR.Checked = True
+        End Select
     End Sub
 
 
@@ -135,6 +145,15 @@ Public Class Rev_Table_Settings
         My.Settings.StartVal = nudStartVal.Value
         My.Settings.Save()
         Me.Close()
+        If rdbBL.Checked = True Then
+            My.Settings.DefRevLoc = "BL"
+        ElseIf rdbBR.Checked = True Then
+            My.Settings.DefRevLoc = "BR"
+        ElseIf rdbTL.Checked = True Then
+            My.Settings.DefRevLoc = "TL"
+        ElseIf rdbTR.Checked = True Then
+            My.Settings.DefRevLoc = "TR"
+        End If
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click

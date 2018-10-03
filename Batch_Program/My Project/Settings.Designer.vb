@@ -1289,6 +1289,18 @@ Namespace My
                 Me("StartVal") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("BL")>  _
+        Public Property DefRevLoc() As String
+            Get
+                Return CType(Me("DefRevLoc"),String)
+            End Get
+            Set
+                Me("DefRevLoc") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
