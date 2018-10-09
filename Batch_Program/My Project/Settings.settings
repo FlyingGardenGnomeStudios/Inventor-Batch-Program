@@ -314,5 +314,11 @@
     <Setting Name="DefRevLoc" Type="System.String" Scope="User">
       <Value Profile="(Default)">BL</Value>
     </Setting>
+    <Setting Name="RenameParentAssy" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RenameTemp" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

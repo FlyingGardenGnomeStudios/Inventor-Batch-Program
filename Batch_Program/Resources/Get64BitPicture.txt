@@ -1,5 +1,6 @@
 Attribute VB_Name = "Get64BitPicture"
 Public Sub Thumbnail()
+On Error Resume Next
 Dim FSO As Object, TmpFolder As Object
 Set FSO = CreateObject("scripting.filesystemobject")
 Set TmpFolder = FSO.GetSpecialFolder(2)

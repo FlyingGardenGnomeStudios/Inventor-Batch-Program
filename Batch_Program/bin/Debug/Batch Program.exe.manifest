@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Batch Program.exe" size="3632592">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Batch Program.exe" size="3633616">
       <assemblyIdentity name="Batch Program" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>bQMyir+ui9dKmdDScl2jFeOFApQ=</dsig:DigestValue>
+        <dsig:DigestValue>E8mSM3zFWxu0g7jRsAzpB0sXz+o=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -87,13 +87,13 @@
       <dsig:DigestValue>gcRGdtaT8cnqbE7npFEJewc0uqs=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Batch Program.exe.config" size="14417">
+  <file name="Batch Program.exe.config" size="14649">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>wFW/tnwAbRjYv2SODSydTSQyhrs=</dsig:DigestValue>
+      <dsig:DigestValue>xeEdKFiMLjN5DX1Z3htImktdJls=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Batch_Program.Addin" size="767">

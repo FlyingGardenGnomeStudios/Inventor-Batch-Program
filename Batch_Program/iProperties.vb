@@ -806,7 +806,7 @@ Public Class iProperties
         CheckedBy = oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10").Value
         DateChecked = CDate(oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value)
         Dim oPoint As Point2d
-        Dim oRevTable As RevisionTable
+        Dim oRevTable As RevisionTable = Nothing
         'RevTable.PopMain(Me)
         'Set the active sheet
         Dim Sheet As Sheet = oDoc.Activesheet
@@ -1619,7 +1619,7 @@ Public Class iProperties
         'End Try
     End Sub
     Private Sub WriteRevTable(ByRef oDoc As Document, Opendocs As ArrayList)
-        Dim shtRevTable As RevisionTable
+        Dim shtRevTable As RevisionTable = Nothing
         'RevTable.PopiProperties(Me)
         'Dim Path As Documents
         'Path = _invApp.Documents

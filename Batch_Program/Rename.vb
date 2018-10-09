@@ -305,7 +305,7 @@ Public Class Rename
                 Exit Sub
             End If
             For X = 0 To DGVRename.RowCount - 1
-                If DGVRename.Rows(X).Cells("Part").Value = txtParent.Text Then
+                If DGVRename.Rows(X).Cells("Part").Value = IO.Path.GetFileName(My.Settings.RenameParentAssy) Then
                     TempLoc = DGVRename.Rows(X).Cells("FileLocation").Value & "Temp\"
                     Main.writeDebug("Temp location set to :" & TempLoc)
                     If Not My.Computer.FileSystem.DirectoryExists(TempLoc) Then
@@ -319,9 +319,9 @@ Public Class Rename
             MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End Try
         CopyFiles(TempLoc, SaveLoc)
-        If txtParentSource.Text = SaveLoc Then
+        If IO.Path.GetFileName(My.Settings.RenameParentAssy) = SaveLoc Then
             Main.writeDebug("Updating references")
-            MsgBox(txtParent.Text & " needs to be closed in order to update part references")
+            MsgBox(IO.Path.GetFileName(My.Settings.RenameParentAssy) & " needs to be closed in order to update part references")
             ' _invapp.Documents.ItemByName(IO.Path.Combine(txtParentSource.Text, txtParent.Text)).Save()
             ' _invapp.Documents.ItemByName(IO.Path.Combine(txtParentSource.Text, txtParent.Text)).Close()
             For Each Doc As Document In _invapp.Documents
@@ -398,20 +398,25 @@ Public Class Rename
         Dim Z As Integer = 0
         Dim DWGError As String = "The following drawing were copied but with errors:" & vbNewLine & vbNewLine
         _invapp.SilentOperation = True
-        If txtParentSource.Text <> SaveLoc Then
+        If IO.Path.GetDirectoryName(My.Settings.RenameParentAssy) = SaveLoc Then
             ans = MsgBox("Do you wish to make a backup of the original assembly?", vbYesNoCancel)
             Main.writeDebug("Backing up original documents")
         Else
             ans = vbYes
         End If
         If ans = vbYes Then
-            If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(txtParentSource.Text), IO.Path.GetFileNameWithoutExtension(txtParent.Text)) & "-Backup.zip") Then
-                Kill(IO.Path.Combine(IO.Path.GetDirectoryName(txtParentSource.Text), IO.Path.GetFileNameWithoutExtension(txtParent.Text)) & "-Backup.zip")
-            End If
-            Dim ZipPath As String = IO.Path.Combine(IO.Path.GetDirectoryName(txtParentSource.Text), IO.Path.GetFileNameWithoutExtension(txtParent.Text)) & "-Backup.zip"
-            AddtoZip(ZipPath)
-            Main.writeDebug("Backup saved in " & ZipPath)
-            Backup = True
+            Try
+                If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(My.Settings.RenameParentAssy), IO.Path.GetFileNameWithoutExtension(My.Settings.RenameParentAssy)) & "-Backup.zip") Then
+                    Kill(IO.Path.Combine(IO.Path.GetDirectoryName(My.Settings.RenameParentAssy), IO.Path.GetFileNameWithoutExtension(My.Settings.RenameParentAssy)) & "-Backup.zip")
+                End If
+                Dim ZipPath As String = IO.Path.Combine(IO.Path.GetDirectoryName(My.Settings.RenameParentAssy), IO.Path.GetFileNameWithoutExtension(My.Settings.RenameParentAssy)) & "-Backup.zip"
+                AddtoZip(ZipPath)
+                Main.writeDebug("Backup saved in " & ZipPath)
+                Backup = True
+            Catch ex As Exception
+                Main.writeDebug("An error occurred while zipping the assembly" & vbNewLine & ex.Message)
+                MsgBox("An error occurred while zipping the assembly" & vbNewLine & ex.Message)
+            End Try
         ElseIf ans = vbNo Then
         Else
             Exit Sub
@@ -423,8 +428,8 @@ Public Class Rename
                     Source = DGVRename.Rows.Item(X).Cells("FileLocation").Value & DGVRename.Rows(X).Cells("Part").Value
                     Main.writeDebug("Selected file to be copied: " & Source)
                     If chkStructure.Checked = True Then
-                        If InStr(Source, txtParentSource.Text) <> 0 Then
-                            TagLoc = Strings.Replace(Strings.Left(Source, (InStrRev(Source, "\"))), txtParentSource.Text, "")
+                        If InStr(IO.Path.GetDirectoryName(Source), IO.Path.GetDirectoryName(My.Settings.RenameParentAssy)) <> 0 Then
+                            TagLoc = Strings.Replace(IO.Path.GetDirectoryName(Source), IO.Path.GetDirectoryName(My.Settings.RenameParentAssy), "")
                         Else
                             TagLoc = "Transferred Files\"
                         End If
@@ -456,12 +461,6 @@ Public Class Rename
                         My.Computer.FileSystem.CreateDirectory(TempLoc & "Transferred Files\")
                     End If
                     If Overwrite = True And My.Computer.FileSystem.FileExists(IO.Path.Combine(TempLoc, TagLoc, DGVRename.Rows(X).Cells("NewName").Value)) Then
-                        Main.writeDebug(IO.Path.Combine(TempLoc, TagLoc, DGVRename.Rows(X).Cells("NewName").Value) & " already exists" & vbNewLine &
-                            "Deleting file")
-                        My.Computer.FileSystem.DeleteFile(IO.Path.Combine(TempLoc, TagLoc, DGVRename.Rows(X).Cells("NewName").Value))
-                    End If
-                    Try
-                        Debug.Print(IO.Path.Combine(TempLoc, TagLoc, DGVRename.Rows(X).Cells("NewName").Value))
                         If isReadOnly(IO.Path.Combine(TempLoc, TagLoc, DGVRename.Rows(X).Cells("NewName").Value)) = True Then
                             Main.writeDebug("Destination file: " & IO.Path.Combine(TempLoc, TagLoc, DGVRename.Rows(X).Cells("NewName").Value) & " is read-only")
                             ans = MsgBox("The file " & IO.Path.Combine(TempLoc, TagLoc, DGVRename.Rows(X).Cells("NewName").Value) & " is read-only or currently open in another context" & vbNewLine &
@@ -475,10 +474,16 @@ Public Class Rename
                                 Exit Try
                             End If
                         End If
+                        Main.writeDebug(IO.Path.Combine(TempLoc, TagLoc, DGVRename.Rows(X).Cells("NewName").Value) & " already exists" & vbNewLine &
+                            "Deleting file")
+                        My.Computer.FileSystem.DeleteFile(IO.Path.Combine(TempLoc, TagLoc, DGVRename.Rows(X).Cells("NewName").Value))
+                    End If
+                    Try
+                        Debug.Print(IO.Path.Combine(TempLoc, TagLoc, DGVRename.Rows(X).Cells("NewName").Value))
                         oDoc.SaveAs(TempLoc & TagLoc & DGVRename.Rows(X).Cells("NewName").Value, True)
                     Catch ex As Exception
                         If ex.Message <> "Unspecified error (Exception from HRESULT: 0x80004005 (E_FAIL))" Then
-                            Main.writeDebug("Error occurred while saving " & DGVRename.Rows(X).Cells("OldName").Value & " to " &
+                            Main.writeDebug("Error occurred while saving " & DGVRename.Rows(X).Cells("Part").Value & " to " &
                                             vbNewLine & IO.Path.Combine(TempLoc, TagLoc, DGVRename.Rows(X).Cells("NewName").Value))
                             MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                         End If
@@ -543,14 +548,14 @@ Public Class Rename
             Main.writeDebug("An unknown error occurred during the rename operation " & ex.Message)
             MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End Try
+        Dim ReplaceParent As String = Nothing
         For Each Row In DGVRename.Rows
-            If DGVRename(DGVRename.Columns("Part").Index, Row.index).Value = txtParent.Text AndAlso DGVRename(DGVRename.Columns("NewName").Index, Row.index).Value <> "" Then
-                txtParent.Text = DGVRename(DGVRename.Columns("NewName").Index, Row.index).Value
-                txtParentSource.Text = TempLoc
+            If DGVRename(DGVRename.Columns("Part").Index, Row.index).Value = IO.Path.GetFileName(My.Settings.RenameParentAssy) AndAlso DGVRename(DGVRename.Columns("NewName").Index, Row.index).Value <> "" Then
+                ReplaceParent = IO.Path.Combine(TempLoc, DGVRename(DGVRename.Columns("NewName").Index, Row.index).Value)
                 Exit For
             End If
         Next
-        ReplaceReferences(oDoc, TempLoc, IO.Path.Combine(txtParentSource.Text, txtParent.Text))
+        ReplaceReferences(oDoc, TempLoc, ReplaceParent)
 
         Try
             Dim atts As System.IO.FileAttributes = System.IO.File.GetAttributes(oDoc.FullFileName)
@@ -661,8 +666,8 @@ Public Class Rename
                     DGVRename.Rows(X).Cells("Reuse").Value = Nothing Then
                     Source = DGVRename.Rows.Item(X).Cells("FileLocation").Value & DGVRename.Rows(X).Cells("NewName").Value
                     If chkStructure.Checked = True Then
-                        If InStr(Source, txtParentSource.Text) <> 0 Then
-                            TagLoc = Strings.Replace(Strings.Left(Source, (InStrRev(Source, "\"))), txtParentSource.Text, "")
+                        If InStr(IO.Path.GetDirectoryName(Source), IO.Path.GetDirectoryName(My.Settings.RenameParentAssy)) <> 0 Then
+                            TagLoc = Strings.Replace(IO.Path.GetDirectoryName(Source), IO.Path.GetDirectoryName(My.Settings.RenameParentAssy), "")
                         Else
                             TagLoc = "Transferred Files\"
                         End If

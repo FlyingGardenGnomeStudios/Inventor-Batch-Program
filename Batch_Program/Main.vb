@@ -252,7 +252,7 @@ Public Class Main
             For Each oDoc In _invApp.Documents.VisibleDocuments
                 Exists = False
                 For Each item In dgvOpenFiles.Rows
-                    If IO.Path.GetFileName(oDoc.DisplayName) = dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, item.index).Value Then
+                    If IO.Path.GetFileName(oDoc.DisplayName).Contains(dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, item.index).Value) Then
                         Exists = True
                         Exit For
                     End If
@@ -604,8 +604,9 @@ Public Class Main
         Try
             For Each Entry As List(Of String) In RenameTable
                 If X = 0 Then
-                    Rename.txtParent.Text = Entry.Item(2).ToString
-                    Rename.txtParentSource.Text = Entry.Item(0).ToString
+                    My.Settings.RenameParentAssy = IO.Path.Combine(Entry.Item(0).ToString, Entry.Item(2).ToString)
+                    'Rename.txtParent.Text = Entry.Item(2).ToString
+                    'Rename.txtParentSource.Text = Entry.Item(0).ToString
                 End If
                 Rename.DGVRename.Rows.Add(Entry.Item(0).ToString, Entry.Item(1).ToString, Entry.Item(2).ToString, "", ThumbList(X), Entry.Item(3).ToString)
                 Elog = Elog & Entry.Item(2).ToString & ": Added to Rename Table" & vbNewLine
@@ -1635,7 +1636,7 @@ Public Class Main
                     For Each oDoc As Document In _invApp.Documents.VisibleDocuments
                         exists = False
                         For Each item In dgvOpenFiles.Rows
-                            If IO.Path.GetFileName(oDoc.DisplayName) = dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, item.index).Value Then
+                            If IO.Path.GetFileName(oDoc.FullFileName).Contains(dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, item.index).Value) Then
                                 exists = True
                                 Exit For
                             End If
@@ -1755,7 +1756,8 @@ Public Class Main
         'AddtoRenameTable(Partsource, DrawingName, DrawingSource, True, "")
 
     End Sub
-    Private Sub CheckForDev(PartSource As String, ByRef Total As Integer, ByRef Counter As Integer, OpenDocs As ArrayList, Elog As String, ByVal Level As Integer)
+    Private Sub CheckForDev(PartSource As String, ByRef Total As Integer, ByRef Counter As Integer, OpenDocs As ArrayList,
+                            Elog As String, ByVal Level As Integer, ByRef Err As Boolean)
         If chkDerived.Checked = False Then Exit Sub
         Dim oAsmDoc As AssemblyDocument = Nothing
         Dim oDoc, oDerived As Document
@@ -1781,7 +1783,7 @@ Public Class Main
                         End Try
                     End If
 
-                    TraverseAssembly(oAsmDoc.ComponentDefinition.Occurrences, PartSource, Level, Total, Counter, OpenDocs, Elog, True)
+                    TraverseAssembly(oAsmDoc.ComponentDefinition.Occurrences, PartSource, Level, Total, Counter, OpenDocs, Elog, True, Err)
                 Else
                     TestForDrawing(PartSource, Level, Total, Counter, OpenDocs, Elog, False)
                 End If
@@ -1789,8 +1791,8 @@ Public Class Main
         End If
         'CloseLater(Strings.Right(PartSource, (Strings.Len(PartSource) - InStrRev(PartSource, "\"))), oDoc)
     End Sub
-    Private Sub TraverseAssemblyLoad(PartSource As String, Level As Integer, ByRef Total As Integer,
-                                     ByRef Counter As Integer, Opendocs As ArrayList, ByRef Elog As String, ByRef Dev As Boolean)
+    Private Sub TraverseAssemblyLoad(PartSource As String, Level As Integer, ByRef Total As Integer, ByRef Counter As Integer, Opendocs As ArrayList,
+                                     ByRef Elog As String, ByRef Dev As Boolean, ByRef Err As Boolean)
         Dim oAsmDoc As AssemblyDocument = Nothing
         Dim strFile, DrawingName, ID As String
         Dim Add As String = "True"
@@ -1826,7 +1828,7 @@ Public Class Main
             ID = "DP"
         End If
 
-        AddtoRenameTable(PartSource, DrawingName, strFile, Add, ID)
+        AddtoRenameTable(PartSource, DrawingName, strFile, Add, ID, Err)
         'End If
         'Check to see if the drawing exists and add to the list
         TestForDrawing(PartSource, Level, Total, Counter, Opendocs, Elog, False)
@@ -1840,11 +1842,11 @@ Public Class Main
         For Each oRefDoc In oRefDocs
             Total = Total + 1
         Next
-        TraverseAssembly(oAsmDoc.ComponentDefinition.Occurrences, PartSource, Level + 1, Total, Counter, Opendocs, Elog, Dev)
+        TraverseAssembly(oAsmDoc.ComponentDefinition.Occurrences, PartSource, Level + 1, Total, Counter, Opendocs, Elog, Dev, Err)
         CloseLater(strFile, oAsmDoc)
     End Sub
     Private Sub TraverseAssembly(Occurrences As ComponentOccurrences, PartSource As String, Level As Integer, ByRef Total As Integer, ByRef Counter As Integer,
-                                 OpenDocs As ArrayList, ByRef Elog As String, ByVal Dev As Boolean)
+                                 OpenDocs As ArrayList, ByRef Elog As String, ByVal Dev As Boolean, ByRef Err As Boolean)
 
         'Count the level of the sub-component
         Dim Add As Boolean = True
@@ -1887,13 +1889,13 @@ Public Class Main
                     Else
                         ID = "DP"
                     End If
-                    AddtoRenameTable(PartSource, DrawingName, strFile, Add, ID)
+                    AddtoRenameTable(PartSource, DrawingName, strFile, Add, ID, Err)
                     'If the sub assembly is an assembly itself, redo the iteration until all parts have been found.
                     If oOcc.DefinitionDocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
                         'Level += 1
-                        TraverseAssembly(oOcc.SubOccurrences, PartSource, Level + 1, Total, Counter, OpenDocs, Elog, Dev)
+                        TraverseAssembly(oOcc.SubOccurrences, PartSource, Level + 1, Total, Counter, OpenDocs, Elog, Dev, Err)
                     ElseIf oOcc.DefinitionDocumentType = DocumentTypeEnum.kPartDocumentObject Then
-                        CheckForDev(PartSource, Total, Counter, OpenDocs, Elog, Level + 1)
+                        CheckForDev(PartSource, Total, Counter, OpenDocs, Elog, Level + 1, Err)
                     End If
 
                 Catch ex As Exception
@@ -1903,7 +1905,7 @@ Public Class Main
         Next
     End Sub
     Private Sub AddtoRenameTable(ByVal PartSource As String, ByVal DrawingName As String, ByVal strFile As String,
-                                 ByVal add As Boolean, ByVal ID As String)
+                                 ByVal add As Boolean, ByVal ID As String, ByRef Err As Boolean)
         Dim oDoc As Document = Nothing
         Dim exists As Boolean
         Dim RenameList As New List(Of String)
@@ -1941,7 +1943,22 @@ Public Class Main
                                     End If
 
                                     IO.File.WriteAllText(My.Computer.FileSystem.SpecialDirectories.Temp & "\PartSource.txt", PartSource)
-                                    oM.Execute()
+                                    Try
+                                        oM.Execute()
+                                    Catch ex As Exception
+                                        If Err = False Then
+                                            writeDebug("Get64BitPicture code failed to run on part " & PartSource)
+                                            If IO.File.Exists(My.Computer.FileSystem.SpecialDirectories.Temp & "\Get64BitPicture.bas") Then
+                                                Kill(My.Computer.FileSystem.SpecialDirectories.Temp & "\Get64BitPicture.txt")
+                                                IO.File.WriteAllText(My.Computer.FileSystem.SpecialDirectories.Temp & "\Get64BitPicture.txt", My.Resources.Get64BitPicture)
+                                                FileSystem.Rename(My.Computer.FileSystem.SpecialDirectories.Temp & "\Get64BitPicture.txt", My.Computer.FileSystem.SpecialDirectories.Temp & "\Get64BitPicture.bas")
+                                            End If
+                                            MsgBox("An error occurred while creating the thumbnail files" & vbNewLine & ex.Message &
+                                                   "Please try updating the VBA code Get64BitPicture in the editor with the file stored at: " & vbNewLine &
+                                                   My.Computer.FileSystem.SpecialDirectories.Temp & "\Get64BitPicture.bas")
+                                            Err = True
+                                        End If
+                                    End Try
                                     Kill(My.Computer.FileSystem.SpecialDirectories.Temp & "\PartSource.txt")
                                     Exit For
                                 End If
@@ -3786,7 +3803,7 @@ Public Class Main
         Dim Level As Integer = 0
         Dim Total As Integer = 1
         Dim Counter As Integer = 1
-
+        Dim Err As Boolean = False
         bgwUpdateSub.ReportProgress((Counter / Total) * 100, "Found: ")
 
         CreateOpenDocs()
@@ -3814,11 +3831,11 @@ Public Class Main
                     ElseIf oDoc.DocumentType = DocumentTypeEnum.kPartDocumentObject Or oDoc.DocumentType = DocumentTypeEnum.kPresentationDocumentObject Then
                         'Test to see if assumed drawing name exists
                         TestForDrawing(PartSource, 0, Total, Counter, OpenDocs, Elog, False)
-                        CheckForDev(PartSource, Total, Counter, OpenDocs, Elog, Level + 1)
+                        CheckForDev(PartSource, Total, Counter, OpenDocs, Elog, Level + 1, Err)
                         'Assembly documents require a search for subfiles
                     ElseIf oDoc.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
                         'Total = Total + oDoc.ReferencedDocuments.Count 
-                        TraverseAssemblyLoad(PartSource, 0, Total, Counter, OpenDocs, Elog, Dev:=False)
+                        TraverseAssemblyLoad(PartSource, 0, Total, Counter, OpenDocs, Elog, Dev:=False, err:=Err)
                     End If
                     'Catch ex As Exception
 

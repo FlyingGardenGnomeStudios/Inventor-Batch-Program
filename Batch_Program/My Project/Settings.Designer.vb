@@ -1301,6 +1301,30 @@ Namespace My
                 Me("DefRevLoc") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property RenameParentAssy() As String
+            Get
+                Return CType(Me("RenameParentAssy"),String)
+            End Get
+            Set
+                Me("RenameParentAssy") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property RenameTemp() As String
+            Get
+                Return CType(Me("RenameTemp"),String)
+            End Get
+            Set
+                Me("RenameTemp") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
