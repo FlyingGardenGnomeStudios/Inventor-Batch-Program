@@ -1,0 +1,350 @@
+<?xml version="1.0"?>
+<configuration>
+    <configSections>
+        <sectionGroup name="userSettings" type="System.Configuration.UserSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" >
+            <section name="My.MySettings" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false" />
+        </sectionGroup>
+    </configSections>
+    <system.diagnostics>
+        <sources>
+            <!-- This section defines the logging configuration for My.Application.Log -->
+            <source name="DefaultSource" switchName="DefaultSwitch">
+                <listeners>
+                    <add name="FileLog"/>
+                    <!-- Uncomment the below section to write to the Application Event Log -->
+                    <!--<add name="EventLog"/>-->
+                </listeners>
+            </source>
+        </sources>
+        <switches>
+            <add name="DefaultSwitch" value="Information"/>
+        </switches>
+        <sharedListeners>
+            <add name="FileLog" type="Microsoft.VisualBasic.Logging.FileLogTraceListener, Microsoft.VisualBasic, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" initializeData="FileLogWriter"/>
+            <!-- Uncomment the below section and replace APPLICATION_NAME with the name of your application to write to the Application Event Log -->
+            <!--<add name="EventLog" type="System.Diagnostics.EventLogTraceListener" initializeData="APPLICATION_NAME"/> -->
+        </sharedListeners>
+    </system.diagnostics>
+<startup><supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/></startup><userSettings>
+        <My.MySettings>
+            <setting name="PDFSaveLoc" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="DXFSaveLoc" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="DWGSaveLoc" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="PDFTag" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="DXFTag" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="DWGTag" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="PDFSaveNewLoc" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="PDFSaveTag" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="DXFSaveNewLoc" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="DXFSaveTag" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="DWGSaveNewLoc" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="DWGSaveTag" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="PDFRev" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="DXFRev" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="DWGRev" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="DupName" serializeAs="String">
+                <value>.iam</value>
+            </setting>
+            <setting name="Title" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="Subject" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="Author" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="Manager" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="Company" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="Category" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="Keywords" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="Comments" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="Location" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="Subtype" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="PPartNumber" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="PStockNumber" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="Description" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="Revision" serializeAs="String">
+                <value>Drawing</value>
+            </setting>
+            <setting name="Project" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="Designer" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="Engineer" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="Vendor" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="SPartNumber" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="SStockNumber" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="Status" serializeAs="String">
+                <value>Drawing</value>
+            </setting>
+            <setting name="ModelDate" serializeAs="String">
+                <value>Model</value>
+            </setting>
+            <setting name="DrawingDate" serializeAs="String">
+                <value>Drawing</value>
+            </setting>
+            <setting name="DrawingBy" serializeAs="String">
+                <value>Drawing</value>
+            </setting>
+            <setting name="DesignState" serializeAs="String">
+                <value>Drawing</value>
+            </setting>
+            <setting name="CheckedBy" serializeAs="String">
+                <value>Drawing</value>
+            </setting>
+            <setting name="CheckedDate" serializeAs="String">
+                <value>Drawing</value>
+            </setting>
+            <setting name="Custom" serializeAs="String">
+                <value>Drawing</value>
+            </setting>
+            <setting name="RenameShowMe" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="DonateShowMe" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="Donated" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="DonateCount" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="FirstRun" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="BadFileTypeWarning" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="RTSRev" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="RTSDate" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="RTSDesc" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="RTSName" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="RTSApproved" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="RTS1" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="RTS1Value" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RTS2" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="RTS2Value" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RTS3" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="RTS3Value" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RTS4" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="RTS4Value" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RTS5" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="RTS5Value" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RTS1Item" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RTS1Col" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RTS2Item" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RTS2Col" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RTS3Item" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RTS3Col" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RTS4Item" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RTS4Col" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RTS5Item" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RTS5Col" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RTSRevCol" serializeAs="String">
+                <value>Rev</value>
+            </setting>
+            <setting name="RTSDateCol" serializeAs="String">
+                <value>Date</value>
+            </setting>
+            <setting name="RTSDescCol" serializeAs="String">
+                <value>Description</value>
+            </setting>
+            <setting name="RTSNameCol" serializeAs="String">
+                <value>Name</value>
+            </setting>
+            <setting name="RTSApprovedCol" serializeAs="String">
+                <value>Approved</value>
+            </setting>
+            <setting name="RTSCheckedBy" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="RTSCheckedDate" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="AlphaRev" serializeAs="String">
+                <value>ISSUED FOR REVIEW</value>
+            </setting>
+            <setting name="NumRev" serializeAs="String">
+                <value>APPROVED FOR MANUFACTURING</value>
+            </setting>
+            <setting name="ArchiveExport" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="DWGini" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="DXFini" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="DWGiniLoc" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="DXFiniLoc" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="PDFLineWeights" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="PDFColoursBlack" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="PDFRange" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="PDFRes" serializeAs="String">
+                <value>400</value>
+            </setting>
+            <setting name="CustomDXFExportLoc" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="CustomPDFExportLoc" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="CustomDWGExportLoc" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="DWGLoc" serializeAs="String">
+                <value>BR</value>
+            </setting>
+            <setting name="PrintRange" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="PrintSize" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="PrintColour" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="PrintReverse" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="PrintDwgLoc" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="StartVal" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="DefRevLoc" serializeAs="String">
+                <value>BL</value>
+            </setting>
+            <setting name="RenameParentAssy" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="RenameTemp" serializeAs="String">
+                <value />
+            </setting>
+        </My.MySettings>
+    </userSettings>
+</configuration>
