@@ -1,4 +1,6 @@
 ﻿
+Version 2.0.0.16 (10/16/18)
+	-Corrected issue with copying associated drawing files that are read-only/checked in
 Version 2.0.0.15 (9/26/18)
 	- Added export support for parts with no drawings in drawing menu
 	- More fine tuning to rename process. (Vault intetgration required)

@@ -481,6 +481,7 @@ Public Class Rename
                     Try
                         Debug.Print(IO.Path.Combine(TempLoc, TagLoc, DGVRename.Rows(X).Cells("NewName").Value))
                         oDoc.SaveAs(TempLoc & TagLoc & DGVRename.Rows(X).Cells("NewName").Value, True)
+                        Main.writeDebug("File saved: " & TempLoc & TagLoc & DGVRename.Rows(X).Cells("NewName").Value)
                     Catch ex As Exception
                         If ex.Message <> "Unspecified error (Exception from HRESULT: 0x80004005 (E_FAIL))" Then
                             Main.writeDebug("Error occurred while saving " & DGVRename.Rows(X).Cells("Part").Value & " to " &
@@ -494,16 +495,16 @@ Public Class Rename
                         Try
                             Source = IO.Path.Combine(DGVRename.Rows.Item(X).Cells("FileLocation").Value, DGVRename.Rows(X).Cells("Drawing").Value)
                             dDoc = _invapp.Documents.Open(Source, False)
-                            If isReadOnly(IO.Path.Combine(TempLoc, TagLoc, IO.Path.GetFileNameWithoutExtension(DGVRename.Rows(X).Cells("NewName").Value)) & ".idw") = True Then
-                                Main.writeDebug("Destination file: " & IO.Path.Combine(TempLoc, TagLoc, IO.Path.GetFileNameWithoutExtension(DGVRename.Rows(X).Cells("NewName").Value)) & ".idw" & " is read-only")
-                                ans = MsgBox("The file " & IO.Path.Combine(TempLoc, TagLoc, IO.Path.GetFileNameWithoutExtension(DGVRename.Rows(X).Cells("NewName").Value)) & ".idw" & " is read-only or currently open in another context" & vbNewLine &
+                            If isReadOnly(Source) = True Then
+                                Main.writeDebug("Destination file: " & Source & " is read-only")
+                                ans = MsgBox("The file " & Source & " is read-only or currently open in another context" & vbNewLine &
                                 "The file needs to be closed or checked out of vault before performing the rename operation" & vbNewLine &
                                 "Do you wish to continue with the current process?", vbYesNo)
                                 If ans = vbNo Then
                                     Main.writeDebug("User exited rename operation")
                                     Exit Sub
                                 Else
-                                    Main.writeDebug("Skipping file " & IO.Path.Combine(TempLoc, TagLoc, IO.Path.GetFileNameWithoutExtension(DGVRename.Rows(X).Cells("NewName").Value)) & ".idw")
+                                    Main.writeDebug("Skipping file " & Source)
                                     Exit Try
                                 End If
                             End If
