@@ -241,6 +241,7 @@ Public Class Main
         Control.CheckForIllegalCrossThreadCalls = False
         'Clear the Open Documents listbox
         OpenFiles.Clear()
+        Busy = True
         'lstOpenFiles.Items.Clear()
         dgvOpenFiles.Rows.Clear()
         dgvSubFiles.Rows.Clear()
@@ -341,6 +342,7 @@ Public Class Main
 
         Next
         dgvSubFiles.ClearSelection()
+        Busy = False
         'dgvSubFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
     End Sub
     Private Sub CheckboxReorder()
@@ -754,12 +756,10 @@ Public Class Main
                 End If
 
                 DrawingName = Trim(GridView(GridView.Columns(PDTitle & "Name").Index, X).Value)
-                If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(DrawSource), IO.Path.GetFileNameWithoutExtension(DrawSource)) & ".iam") = True AndAlso chkSkipAssy.Checked = True Then
 
-                Else
-                    'If chkSkipAssy.Checked = True Then
-                    'iterate through opend documents to find the selected file
-                    If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+                'If chkSkipAssy.Checked = True Then
+                'iterate through opend documents to find the selected file
+                If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
                         Destin = My.Settings("Custom" & ExportType & "ExportLoc")
                     ElseIf My.Settings(ExportType & "SaveNewLoc") = True Then
                         Destin = My.Settings(ExportType & "SaveLoc")
@@ -787,81 +787,60 @@ Public Class Main
                         oDoc = _invApp.Documents.Open(Archive, True)
                         SheetMetalTest(oDoc, sReadableType)
                     End If
-                    If chkFlatPattern.Checked = True AndAlso sReadableType <> "S" Then
-                    Else
-                        If ExportType = "PDF" Then
-                            If chkPDF.CheckState = CheckState.Checked Then
-                                If My.Computer.FileSystem.FileExists(SaveLoc) Then
-                                    Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "PDF", RevNo)
-                                    ' overwrite.Add(New KeyValuePair(Of String, String)(IO.Path.GetFileNameWithoutExtension(DrawingName) & ".pdf", PDFSource))
-                                    'OWCounter += 1
-                                End If
-                            End If
-                        ElseIf ExportType = "dwg" Then
-                            If chkDWG.CheckState = CheckState.Checked Then
-                                If My.Computer.FileSystem.FileExists(SaveLoc) Or
-                                My.Computer.FileSystem.FileExists(SaveLoc.Insert(SaveLoc.LastIndexOf("."), "_Sheet_1")) Then
-                                    Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "DWG", RevNo)
-                                    'Overwrite.dgvOverwrite.Rows.Add(True, IO.Path.GetFileNameWithoutExtension(DrawingName) & ".dwg", DWGSource)
-                                    'OWCounter += 1
-                                End If
-                            End If
-                        ElseIf ExportType = "dxf" Then
+                'If chkFlatPattern.Checked = True AndAlso sReadableType <> "S" Then
+                'Else
+                If ExportType = "PDF" Then
+                    If chkPDF.CheckState = CheckState.Checked Then
+                        If My.Computer.FileSystem.FileExists(SaveLoc) Then
+                            Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "PDF", RevNo)
+                            ' overwrite.Add(New KeyValuePair(Of String, String)(IO.Path.GetFileNameWithoutExtension(DrawingName) & ".pdf", PDFSource))
+                            'OWCounter += 1
+                        End If
+                    ElseIf ExportType = "dwg" AndAlso
+                        My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(DrawSource), IO.Path.GetFileNameWithoutExtension(DrawSource)) & ".iam") = True AndAlso
+                        chkSkipAssy.Checked = True Then
+                        If chkDWG.CheckState = CheckState.Checked Then
                             If My.Computer.FileSystem.FileExists(SaveLoc) Or
-                        My.Computer.FileSystem.FileExists(SaveLoc.Insert(SaveLoc.LastIndexOf("."), "_Sheet_1")) Then
-                                Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "DXF", RevNo)
-                                'Overwrite.dgvOverwrite.Rows.Add(True, IO.Path.GetFileNameWithoutExtension(DrawingName) & ".dxf", DXFSource)
+                                My.Computer.FileSystem.FileExists(SaveLoc.Insert(SaveLoc.LastIndexOf("."), "_Sheet_1")) Then
+                                Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "DWG", RevNo)
+                                'Overwrite.dgvOverwrite.Rows.Add(True, IO.Path.GetFileNameWithoutExtension(DrawingName) & ".dwg", DWGSource)
                                 'OWCounter += 1
                             End If
                         End If
-
-                        CloseLater(DrawingName, oDoc)
-                        'Counter += 1
-                        ' Title = "Checking"
-                        bgwRun.ReportProgress((Counter / Total) * 100, "Checking: " & DrawingName)
-                        ' ProgressBar(Total, Counter, Title, DrawingName)
-                        'Display any files that will be overwritten
-                        'End If
+                    ElseIf ExportType = "dxf" AndAlso
+                        My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(DrawSource), IO.Path.GetFileNameWithoutExtension(DrawSource)) & ".iam") = True AndAlso
+                        chkSkipAssy.Checked = True Then
+                        If My.Computer.FileSystem.FileExists(SaveLoc) Or
+                        My.Computer.FileSystem.FileExists(SaveLoc.Insert(SaveLoc.LastIndexOf("."), "_Sheet_1")) Then
+                            Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "DXF", RevNo)
+                            'Overwrite.dgvOverwrite.Rows.Add(True, IO.Path.GetFileNameWithoutExtension(DrawingName) & ".dxf", DXFSource)
+                            'OWCounter += 1
+                        End If
                     End If
+
+                    CloseLater(DrawingName, oDoc)
+                    'Counter += 1
+                    ' Title = "Checking"
+                    bgwRun.ReportProgress((Counter / Total) * 100, "Checking: " & DrawingName)
+                    ' ProgressBar(Total, Counter, Title, DrawingName)
+                    'Display any files that will be overwritten
+                    'End If
                 End If
+
             End If
         Next
         Counter = 1
-        If Overwrite.dgvOverwrite.RowCount = 0 AndAlso ExportType = "PDF" Then
-            PDFCreator(Destin, Total, Counter)
-        ElseIf Overwrite.dgvOverwrite.RowCount = 0 AndAlso ExportType = "dxf" Then
-            DXFDWGCreator(Destin, DrawSource, OpenDocs, Total, Counter, "dxf", GridView, chkcolumn, PDTitle)
-        ElseIf Overwrite.dgvOverwrite.RowCount = 0 AndAlso ExportType = "dwg" Then
-            DXFDWGCreator(Destin, DrawSource, OpenDocs, Total, Counter, "dwg", GridView, chkcolumn, PDTitle)
-            'ElseIf OWCounter > 10 Then
-            '    Ans = MsgBox("More than 10 files" & vbNewLine & "will be overwritten." _
-            '               & vbNewLine & " Do you wish to continue?", vbOKCancel, "Overwrite")
-            '    If Ans = vbOK And ExportType = "PDF" Then
-            '        PDFCreator(Destin, OpenDocs, Total, Counter)
-            '    ElseIf Ans = vbOK And ExportType = "dxf" Then
-            '        DXFDWGCreator(Destin, DrawSource, OpenDocs, Total, Counter, "dwg", GridView, chkcolumn, PDTitle)
-            '    Else
-            '        chkCheck.CheckState = CheckState.Unchecked
-            '        ' MsVistaProgressBar.Visible = False
-            '        Exit Sub
-            '    End If
-        Else
+        If Not Overwrite.dgvOverwrite.RowCount = 0 Then
             Overwrite.PopMain(Me)
             Overwrite.ShowDialog(Me)
+        End If
 
-
-            'Ans = MsgBox("The following files will be overwritten:" _
-            '             & vbNewLine & vbNewLine & Overwrite, vbOKCancel, "Overwrite")
-            'writeDebug("Notify user of files to be overwritten: " & vbNewLine & Overwrite)
-            'If Ans = vbOK And ExportType = "PDF" Then
-            '    PDFCreator(Destin, OpenDocs, Total, Counter)
-            'ElseIf Ans = vbOK And ExportType = "dxf" Then
-            '    DXFDWGCreator(Destin, DrawSource, OpenDocs, Total, Counter, "dxf", GridView, chkcolumn, PDTitle)
-            'ElseIf Ans = vbOK And ExportType = "dwg" Then
-            '    DXFDWGCreator(Destin, DrawSource, OpenDocs, Total, Counter, "dwg", GridView, chkcolumn, PDTitle)
-            'Else
-            '    chkCheck.CheckState = CheckState.Unchecked
-            'Exit Sub
+        If ExportType = "PDF" Then
+            PDFCreator(Destin, Total, Counter)
+        ElseIf ExportType = "dxf" Then
+            DXFDWGCreator(Destin, DrawSource, OpenDocs, Total, Counter, "dxf", GridView, chkcolumn, PDTitle)
+        ElseIf ExportType = "dwg" Then
+            DXFDWGCreator(Destin, DrawSource, OpenDocs, Total, Counter, "dwg", GridView, chkcolumn, PDTitle)
         End If
         'End If
     End Sub
@@ -3835,7 +3814,7 @@ Public Class Main
                         'Assembly documents require a search for subfiles
                     ElseIf oDoc.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
                         'Total = Total + oDoc.ReferencedDocuments.Count 
-                        TraverseAssemblyLoad(PartSource, 0, Total, Counter, OpenDocs, Elog, Dev:=False, err:=Err)
+                        TraverseAssemblyLoad(PartSource, 0, Total, Counter, OpenDocs, Elog, Dev:=False, Err:=Err)
                     End If
                     'Catch ex As Exception
 
@@ -3966,15 +3945,20 @@ Public Class Main
             Folder.Description = "Choose the location you wish to save the " & UCase(ExportType)
             Folder.RootFolder = System.Environment.SpecialFolder.Desktop
             Folder.ShowNewFolderButton = False
-            If Drawsource = "" Then
-                Folder.SelectedPath = System.Environment.SpecialFolder.Desktop
-            Else
+            If Not My.Settings.RecentSaveLoc = "" Then
+                Folder.SelectedPath = My.Settings.RecentSaveLoc
+            ElseIf Not Drawsource = "" Then
                 Folder.SelectedPath = Drawsource
+            Else
+                Folder.SelectedPath = System.Environment.SpecialFolder.Desktop
             End If
             If My.Settings("Custom" & ExportType & "ExportLoc") = "" Then
                 Try
                     If Folder.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                        My.Settings.RecentSaveLoc = Folder.SelectedPath
+                        My.Settings.Save()
                         Return Folder.SelectedPath
+
                     Else
                         Return Nothing
                     End If
