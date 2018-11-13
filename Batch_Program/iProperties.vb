@@ -24,7 +24,7 @@ Public Class iProperties
     Dim cmbYesNo As DataGridViewComboBoxCell
     Dim InvStringDic As New Dictionary(Of String, String)
     Dim InvDateDic As New Dictionary(Of String, Date)
-    Dim materiallist As New List(Of String)
+    ' Dim materiallist As New List(Of String)
     Dim dpControl As String = ""
     Dim dgvRevControl As DataGridView
     Dim dgvcmbcell As DataGridViewComboBoxCell
@@ -35,7 +35,7 @@ Public Class iProperties
     Dim InvEngineer, InvStatus, InvRevision, InvDesignerState, InvCheckedBy, InvCheckDate
     Dim InvRef As New Dictionary(Of String, String)
     Dim InvRefProp(0 To 9) As Inventor.Property
-    Dim MaterialCell As DataGridViewComboBoxCell = New DataGridViewComboBoxCell
+    'Dim MaterialCell As DataGridViewComboBoxCell = New DataGridViewComboBoxCell
     Dim CurrentCell As DataGridViewCell
     Dim CurrentGrid As DataGridView
 #End Region
@@ -221,9 +221,9 @@ Public Class iProperties
         dgvSummary.Rows.Add("Category:")
         dgvSummary.Rows.Add("Keywords:")
         dgvSummary.Rows.Add("Comments:")
-        dgvSummary.Rows.Add("Material:")
-        dgvSummary(dgvSummary.Columns("SumModel").Index, dgvSummary.RowCount - 1) = New DataGridViewComboBoxCell
-        dgvcmbcell = dgvSummary(dgvSummary.Columns("SumModel").Index, dgvSummary.RowCount - 1)
+        'dgvSummary.Rows.Add("Material:")
+        ' dgvSummary(dgvSummary.Columns("SumModel").Index, dgvSummary.RowCount - 1) = New DataGridViewComboBoxCell
+        'dgvcmbcell = dgvSummary(dgvSummary.Columns("SumModel").Index, dgvSummary.RowCount - 1)
         SumDicRows.Add("Title:", dgvSummary.Rows(0))
         SumDicRows.Add("Subject:", dgvSummary.Rows(1))
         SumDicRows.Add("Author:", dgvSummary.Rows(2))
@@ -232,14 +232,14 @@ Public Class iProperties
         SumDicRows.Add("Category:", dgvSummary.Rows(5))
         SumDicRows.Add("Keywords:", dgvSummary.Rows(6))
         SumDicRows.Add("Comments:", dgvSummary.Rows(7))
-        SumDicRows.Add("Material:", dgvSummary.Rows(8))
+        'SumDicRows.Add("Material:", dgvSummary.Rows(8))
         Dim cmbwidth As Integer = Nothing
-        For x = 1 To _invApp.ActiveMaterialLibrary.MaterialAssets.Count - 1
-            materiallist.Add(_invApp.ActiveMaterialLibrary.MaterialAssets.Item(x).DisplayName)
-        Next
+        'For x = 1 To _invApp.ActiveMaterialLibrary.MaterialAssets.Count - 1
+        '    materiallist.Add(_invApp.ActiveMaterialLibrary.MaterialAssets.Item(x).DisplayName)
+        'Next
 
-        materiallist.Sort()
-        dgvcmbcell.Items.AddRange(materiallist.ToArray)
+        'materiallist.Sort()
+        'dgvcmbcell.Items.AddRange(materiallist.ToArray)
 
         dgvProject.Rows.Add("Location:")
         dgvProject.Rows.Item(dgvProject.RowCount - 1).ReadOnly = True
@@ -637,12 +637,12 @@ Public Class iProperties
                    .DrawingValue = invDrawDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("15").Value})
         SumDic.Add("Comments:", New Items With {.ModelValue = invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("6").Value,
                    .DrawingValue = invDrawDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("6").Value})
-        Try
-            SumDic.Add("Material:", New Items With {.ModelValue = invModelDoc.ComponentDefinition.Material.Name,
-                   .DrawingValue = Nothing})
-        Catch
-            SumDic.Add("Material:", New Items With {.ModelValue = Nothing, .DrawingValue = Nothing})
-        End Try
+        'Try
+        '    SumDic.Add("Material:", New Items With {.ModelValue = invModelDoc.ComponentDefinition.Material.Name,
+        '           .DrawingValue = Nothing})
+        'Catch
+        '    SumDic.Add("Material:", New Items With {.ModelValue = Nothing, .DrawingValue = Nothing})
+        'End Try
         ProjDic.Clear()
         ProjDic.Add("Location:", New Items With {.ModelValue = invModelDoc.FullFileName,
                     .DrawingValue = invDrawDoc.FullFileName})
@@ -727,7 +727,7 @@ Public Class iProperties
         SumDic.Add("Author:", New Items With {.ModelValue = invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("4").Value})
         SumDic.Add("Company:", New Items With {.ModelValue = invModelDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("15").Value})
         SumDic.Add("Comments:", New Items With {.ModelValue = invModelDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("6").Value})
-        SumDic.Add("Material:", New Items With {.ModelValue = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("20").Value})
+        'SumDic.Add("Material:", New Items With {.ModelValue = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("20").Value})
         ProjDic.Clear()
         ProjDic.Add("Location:", New Items With {.ModelValue = invModelDoc.FullFileName})
         ProjDic.Add("File Subtype:", New Items With {.ModelValue = invModelDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("32").Value})
@@ -1095,23 +1095,23 @@ Public Class iProperties
         'Go through each iProperty in both the part and drawing and assign them to their respective output strings
         'When the values between documents are different, display *Varies* as the output.
         Dim Type, Status, DateString As String
-        Dim cmbMaterial As DataGridViewComboBoxCell = dgvSummary(1, dgvSummary.RowCount - 1)
+        'Dim cmbMaterial As DataGridViewComboBoxCell = dgvSummary(1, dgvSummary.RowCount - 1)
         For Row = 0 To dgvSummary.RowCount - 1
             dgvSummary(dgvSummary.Columns("SummaryIsDirty").Index, Row).Value = "False"
-            If dgvSummary("SumItem", Row).Value = "Material:" Then
-                If SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue = Nothing Then
-                ElseIf cmbMaterial.Value <> "*Varies*" AndAlso SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue <> cmbMaterial.Value Then
-                    If cmbMaterial.Items.Contains(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue) Then
-                        cmbMaterial.Items.Add(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue)
-                    End If
-                    If cmbMaterial.Value Is Nothing Then
-                        cmbMaterial.Value = SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue
-                    ElseIf cmbMaterial.Value IsNot Nothing Then
-                        cmbMaterial.Items.Add("*Varies*")
-                        cmbMaterial.Value = "*Varies*"
-                    End If
-                End If
-            ElseIf SumDicRows(dgvSummary("SumItem", Row).Value).Cells("SumModel").Value = "" Then
+            'If dgvSummary("SumItem", Row).Value = "Material:" Then
+            '    If SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue = Nothing Then
+            '    ElseIf cmbMaterial.Value <> "*Varies*" AndAlso SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue <> cmbMaterial.Value Then
+            '        If cmbMaterial.Items.Contains(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue) Then
+            '            cmbMaterial.Items.Add(SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue)
+            '        End If
+            '        If cmbMaterial.Value Is Nothing Then
+            '            cmbMaterial.Value = SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue
+            '        ElseIf cmbMaterial.Value IsNot Nothing Then
+            '            cmbMaterial.Items.Add("*Varies*")
+            '            cmbMaterial.Value = "*Varies*"
+            '        End If
+            '    End If
+            If SumDicRows(dgvSummary("SumItem", Row).Value).Cells("SumModel").Value = "" Then
                 SumDicRows(dgvSummary("SumItem", Row).Value).Cells("SumModel").Value = SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue
             ElseIf SumDicRows(dgvSummary("SumItem", Row).Value).Cells("SumModel").Value <> SumDic.Item(dgvSummary("SumItem", Row).Value).ModelValue Then
                 SumDicRows(dgvSummary("SumItem", Row).Value).Cells("SumModel").Value = "*Varies*"
@@ -1329,137 +1329,143 @@ Public Class iProperties
     End Sub
 #Region "Write iProperties"
     Private Sub WriteProps(ByRef oDoc As Document, ByRef Document As String)
-        For Each row In dgvSummary.Rows
-            If Main.bgwRun.CancellationPending = True Then Exit Sub
-            Try
-                If dgvSummary(dgvSummary.Columns("SummaryIsDirty").Index, row.index).Value = "True" Then
-                    ' If dgvSummary(dgvSummary.Columns(Document).Index, row.index).Value <> "*Varies*" Then
-                    If dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value Is Nothing Then dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value = ""
-                    Select Case dgvSummary(0, row.index).Value
-                        Case "Title:"
-                            oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("2").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                        Case "Subject:"
-                            oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("3").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                        Case "Author:"
-                            oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("4").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                        Case "Manager:"
-                            oDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("14").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                        Case "Company:"
-                            oDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("15").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                        Case "Category:"
-                            oDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("2").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                        Case "Keywords:"
-                            oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("5").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                        Case "Comments:"
-                            oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("6").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                        Case "Material:"
-                            If dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value <> "*Varies*" AndAlso
-                                dgvSummary.Columns("Sum" & Document).Index = 1 AndAlso
-                                dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value <> "" Then
-                                Try
-                                    oDoc.componentdefinition.material.name = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
-                                Catch ex As Exception
-                                    MessageBox.Show(ex.Message)
-                                End Try
+        Try
+            For Each row In dgvSummary.Rows
+                If Main.bgwRun.CancellationPending = True Then Exit Sub
+                Try
+                    If dgvSummary(dgvSummary.Columns("SummaryIsDirty").Index, row.index).Value = "True" Then
+                        ' If dgvSummary(dgvSummary.Columns(Document).Index, row.index).Value <> "*Varies*" Then
+                        If dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value Is Nothing Then dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value = ""
+                        Select Case dgvSummary(0, row.index).Value
+                            Case "Title:"
+                                oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("2").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                            Case "Subject:"
+                                oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("3").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                            Case "Author:"
+                                oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("4").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                            Case "Manager:"
+                                oDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("14").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                            Case "Company:"
+                                oDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("15").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                            Case "Category:"
+                                oDoc.PropertySets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("2").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                            Case "Keywords:"
+                                oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("5").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                            Case "Comments:"
+                                oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("6").Value = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                                'Case "Material:"
+                                '    If dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value <> "*Varies*" AndAlso
+                                '    dgvSummary.Columns("Sum" & Document).Index = 1 AndAlso
+                                '    dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value <> "" Then
+                                '        Try
+                                '            oDoc.componentdefinition.material.name = dgvSummary(dgvSummary.Columns("Sum" & Document).Index, row.index).Value
+                                '        Catch ex As Exception
+                                '            MessageBox.Show(ex.Message)
+                                '        End Try
+                                '    End If
+                        End Select
+                    End If
+                Catch ex As Exception
+                    Main.writeDebug("Error writing iProperty" & vbNewLine & ex.Message)
+                End Try
+            Next
+            For Each row In dgvProject.Rows
+                If dgvProject(dgvProject.Columns("ProjectIsDirty").Index, row.index).Value = "True" Then
+                    If dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value Is Nothing Then dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value = ""
+                    'If dgvProject(1, row.index).Value <> "*Varies*" Then
+                    Select Case dgvProject(0, row.index).Value
+                        Case "Part Number:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("5").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
+                        Case "Stock Number:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("55").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
+                        Case "Description:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("29").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
+                        Case "Revision Number:"
+                            oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
+                        Case "Project:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("7").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
+                        Case "Designer:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("41").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
+                        Case "Engineer:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("42").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
+                        Case "Authority:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("43").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
+                        Case "Cost Center:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("9").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
+                        Case "Estimated Cost:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("36").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
+                        Case "Creation Date:"
+                            If dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value = "" Then
+                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4").Value = #1/1/1601#
+                            Else
+                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
+                            End If
+                        Case "Vendor:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
+                        Case "Vendor:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("30").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
+                        Case "WEB Link:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("23").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
+                    End Select
+                End If
+            Next
+            For Each row In dgvStatus.Rows
+                If dgvStatus(dgvStatus.Columns("StatusIsDirty").Index, row.index).Value = "True" Then
+                    If dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value Is Nothing Then dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value = ""
+                    ' If dgvStatus(1, row.index).Value <> "*Varies*" Then
+                    Select Case dgvStatus(0, row.index).Value
+                        Case "Part Number:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("5").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
+                        Case "Stock Number:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("55").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
+                        Case "Status:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("17").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
+                        Case "Design State:"
+                            Select Case dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
+                                Case "Work In Progress"
+                                    oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("40").Value = 0
+                                Case "Pending"
+                                    oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("40").Value = 2
+                                Case "Released"
+                                    oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("40").Value = 3
+                            End Select
+                        Case "Checked By:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
+                        Case "Checked Date:"
+                            If dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value = "" Then
+                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value = #1/1/1601#
+                            Else
+                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
+                            End If
+                        Case "Eng. Approved By:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("12").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
+                        Case "Eng. Approved Date:"
+                            If dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value = "" Then
+                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("13").Value = #1/1/1601#
+                            Else
+                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("13").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
+                            End If
+                        Case "Mfg. Approved By:"
+                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("34").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
+                        Case "Mfg. Approved Date:"
+                            If dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value = "" Then
+                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("35").Value = #1/1/1601#
+                            Else
+                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("35").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
                             End If
                     End Select
                 End If
-            Catch ex As Exception
-                Main.writeDebug("Error writing iProperty" & vbNewLine & ex.Message)
-            End Try
-        Next
-        For Each row In dgvProject.Rows
-            If dgvProject(dgvProject.Columns("ProjectIsDirty").Index, row.index).Value = "True" Then
-                If dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value Is Nothing Then dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value = ""
-                'If dgvProject(1, row.index).Value <> "*Varies*" Then
-                Select Case dgvProject(0, row.index).Value
-                    Case "Part Number:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("5").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
-                    Case "Stock Number:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("55").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
-                    Case "Description:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("29").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
-                    Case "Revision Number:"
-                        oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
-                    Case "Project:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("7").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
-                    Case "Designer:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("41").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
-                    Case "Engineer:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("42").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
-                    Case "Authority:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("43").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
-                    Case "Cost Center:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("9").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
-                    Case "Estimated Cost:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("36").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
-                    Case "Creation Date:"
-                        If dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value = "" Then
-                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4").Value = #1/1/1601#
-                        Else
-                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
-                        End If
-                    Case "Vendor:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("4").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
-                    Case "Vendor:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("30").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
-                    Case "WEB Link:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("23").Value = dgvProject(dgvProject.Columns("Proj" & Document).Index, row.index).Value
-                End Select
+            Next
+            If Not oDoc.DocumentType = DocumentTypeEnum.kDrawingDocumentObject Then
+                CheckCustomiProps(oDoc, dgvCustomModel, "ModelIsDirty", "PCusValue", "PCusName", "PCusType")
+            Else
+                CheckCustomiProps(oDoc, dgvCustomDrawing, "DrawingIsDirty", "DCusValue", "DCusName", "DCusType")
             End If
-        Next
-        For Each row In dgvStatus.Rows
-            If dgvStatus(dgvStatus.Columns("StatusIsDirty").Index, row.index).Value = "True" Then
-                If dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value Is Nothing Then dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value = ""
-                ' If dgvStatus(1, row.index).Value <> "*Varies*" Then
-                Select Case dgvStatus(0, row.index).Value
-                    Case "Part Number:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("5").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
-                    Case "Stock Number:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("55").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
-                    Case "Status:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("17").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
-                    Case "Design State:"
-                        Select Case dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
-                            Case "Work In Progress"
-                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("40").Value = 0
-                            Case "Pending"
-                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("40").Value = 2
-                            Case "Released"
-                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("40").Value = 3
-                        End Select
-                    Case "Checked By:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
-                    Case "Checked Date:"
-                        If dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value = "" Then
-                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value = #1/1/1601#
-                        Else
-                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
-                        End If
-                    Case "Eng. Approved By:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("12").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
-                    Case "Eng. Approved Date:"
-                        If dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value = "" Then
-                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("13").Value = #1/1/1601#
-                        Else
-                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("13").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
-                        End If
-                    Case "Mfg. Approved By:"
-                        oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("34").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
-                    Case "Mfg. Approved Date:"
-                        If dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value = "" Then
-                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("35").Value = #1/1/1601#
-                        Else
-                            oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("35").Value = dgvStatus(dgvStatus.Columns("Status" & Document).Index, row.index).Value
-                        End If
-                End Select
-            End If
-        Next
-        If Not oDoc.DocumentType = DocumentTypeEnum.kDrawingDocumentObject Then
-            CheckCustomiProps(oDoc, dgvCustomModel, "ModelIsDirty", "PCusValue", "PCusName", "PCusType")
-        Else
-            CheckCustomiProps(oDoc, dgvCustomDrawing, "DrawingIsDirty", "DCusValue", "DCusName", "DCusType")
-        End If
+        Catch ex As Exception
+            MessageBox.Show("An error occurred while modifying " & oDoc.DisplayName & ". " & vbNewLine &
+                             "Ensure the file is not read-only." & vbNewLine & ex.Message)
+            Main.writeDebug("An error occurred while modifying " & oDoc.DisplayName & ". " & vbNewLine & ex.Message)
+        End Try
     End Sub
     Private Sub CheckCustomiProps(oDoc As Document, Grid As DataGridView, Dirty As String, CusValue As String, CusName As String, CusType As String)
         For Each iProp As [Property] In oDoc.PropertySets.Item("Inventor User Defined Properties")

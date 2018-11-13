@@ -20,6 +20,7 @@ Public Class CheckNeeded
     Dim oDateTimePicker As New DateTimePicker
     Dim LastCell As DataGridViewCell
     Dim ChangeFlag As Boolean = False
+    Dim Pop As Boolean = False
     Dim SelectedCell As DataGridViewCell
     Public Sub New()
         ' This call is required by the designer.
@@ -236,9 +237,11 @@ Public Class CheckNeeded
             For Each ParentNode As TreeGridNode In tgvCheckNeeded.Nodes
                 Remove = True
                 For Each Cell In ParentNode.Cells
-                    If Cell.Value = "" Then
-                        Remove = False
-                        Exit For
+                    If Not Cell.value = True And Not Cell.value = False Then
+                        If Cell.Value = "" Then
+                            Remove = False
+                            Exit For
+                        End If
                     End If
                 Next
                 If Remove = True AndAlso ParentNode.HasChildren Then
@@ -311,136 +314,138 @@ Public Class CheckNeeded
         DrawSource = Nothing
         Dim Q As Boolean = False
         For Each node In tgvCheckNeeded.Nodes
-            Dim TotRevs As Integer = 1
-            If node.HasChildren Then
-                For Each ChildNode In node.Nodes
-                    TotRevs += 1
-                Next
-            End If
-            'For Each row In dgvCheckNeeded.Rows
-            'If tgvCheckNeeded.IsCurrentRowDirty Then
-            DrawingName = tgvCheckNeeded(tgvCheckNeeded.Columns("DrawingName").Index, node.RowIndex).Value
-            For Each X In Main.dgvSubFiles.Rows
-                If DrawingName = Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingName").Index, X.index).Value Then
-                    DrawSource = Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingLocation").Index, X.index).Value
-                    Exit For
+            If node.Cells.Item(tgvCheckNeeded.Columns("IsDirty").Index).Value = "True" Then
+                Dim TotRevs As Integer = 1
+                If node.HasChildren Then
+                    For Each ChildNode In node.Nodes
+                        TotRevs += 1
+                    Next
                 End If
-            Next
-            If DrawSource = Nothing Then MsgBox("The drawing could not be found." & vbNewLine & "If the drawing is saved in a different location" & vbNewLine &
-                                   "than the model, this can cause an error.")
-            'Open the related drawing in the background
-            Try
-                oDoc = _invApp.Documents.Open(DrawSource, False)
-
-                'MsgBox("An error occurred in opening " & DrawSource & vbNewLine & "The values for this drawing will not be updated")
-                For Each Column In tgvCheckNeeded.Columns
-                    Select Case Column.name
-                        Case "CheckedBy"
-                            If tgvCheckNeeded(Column.index, node.RowIndex).Value = "" Then
-                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10").Value = ""
-                            Else
-                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10").Value = tgvCheckNeeded(Column.index, node.RowIndex).Value
-                            End If
-                        Case "CheckDate"
-                            If tgvCheckNeeded(Column.index, node.RowIndex).Value = "" Then
-                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value = #1/1/1601#
-                            Else
-                                oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value = tgvCheckNeeded(Column.index, node.RowIndex).Value
-                            End If
-                    End Select
+                'For Each row In dgvCheckNeeded.Rows
+                'If tgvCheckNeeded.IsCurrentRowDirty Then
+                DrawingName = tgvCheckNeeded(tgvCheckNeeded.Columns("DrawingName").Index, node.RowIndex).Value
+                For Each X In Main.dgvSubFiles.Rows
+                    If DrawingName = Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingName").Index, X.index).Value Then
+                        DrawSource = Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingLocation").Index, X.index).Value
+                        Exit For
+                    End If
                 Next
-                Sheet = oDoc.ActiveSheet
-                RevTable = Sheet.RevisionTables(1)
-                If RevTable.RevisionTableRows.Count < TotRevs Then
-                    Do Until RevTable.RevisionTableRows.Count = TotRevs
-                        RevTable.RevisionTableRows.Add()
-                    Loop
-                ElseIf RevTable.RevisionTableRows.Count > TotRevs Then
-                    Rev = tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTSRevCol).Index, node.RowIndex).Value
-                    If Q = False Then Ans = MsgBox("Removing revisions will cause all revision tags to be deleted" & vbNewLine &
-                                 "Inventor currently does not support revision tag maintenance through the API" & vbNewLine &
-                                 "Do you wish to continue?", vbYesNo)
-                    If Ans = vbNo Then
-                        Exit Sub
-                    Else
-                        Q = True
-                    End If
+                If DrawSource = Nothing Then MsgBox("The drawing could not be found." & vbNewLine & "If the drawing is saved in a different location" & vbNewLine &
+                                       "than the model, this can cause an error.")
+                'Open the related drawing in the background
+                Try
+                    oDoc = _invApp.Documents.Open(DrawSource, False)
 
-                    RevTable.RevisionTableRows.Add()
-                    Do Until RevTable.RevisionTableRows.Count = 1
-                        If RevTable.RevisionTableRows.Item(RevTable.RevisionTableRows.Count).IsActiveRow = True Then
-                            RevTable.RevisionTableRows.Item(RevTable.RevisionTableRows.Count - 1).IsActiveRow = True
-                        End If
-                        RevTable.RevisionTableRows.Item(RevTable.RevisionTableRows.Count).Delete()
-                    Loop
-                    Dim Alpha As Boolean = False
-                    If IsNumeric(Rev) Then
-                        Rev += My.Settings.StartVal
-                    Else
-                        Rev = GetAlphaString(Asc(My.Settings.StartVal) - 63)
-                        Alpha = True
-                    End If
-
-                    Dim oPoint As Point2d = RevTable.Position
-                    RevTable.Delete()
-                    Sheet.RevisionTables.Add2(oPoint, False, True, Alpha, Rev)
+                    'MsgBox("An error occurred in opening " & DrawSource & vbNewLine & "The values for this drawing will not be updated")
+                    For Each Column In tgvCheckNeeded.Columns
+                        Select Case Column.name
+                            Case "CheckedBy"
+                                If tgvCheckNeeded(Column.index, node.RowIndex).Value = "" Then
+                                    oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10").Value = ""
+                                Else
+                                    oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("10").Value = tgvCheckNeeded(Column.index, node.RowIndex).Value
+                                End If
+                            Case "CheckDate"
+                                If tgvCheckNeeded(Column.index, node.RowIndex).Value = "" Then
+                                    oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value = #1/1/1601#
+                                Else
+                                    oDoc.PropertySets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("11").Value = tgvCheckNeeded(Column.index, node.RowIndex).Value
+                                End If
+                        End Select
+                    Next
+                    Sheet = oDoc.ActiveSheet
                     RevTable = Sheet.RevisionTables(1)
-                    RevTable.Position = _invApp.TransientGeometry.CreatePoint2d(RevTable.RangeBox.MinPoint.X,
-                                                                               RevTable.RangeBox.MaxPoint.Y + RevTable.RangeBox.MaxPoint.Y - RevTable.RangeBox.MinPoint.Y)
-                    Do Until RevTable.RevisionTableRows.Count = TotRevs
+                    If RevTable.RevisionTableRows.Count < TotRevs Then
+                        Do Until RevTable.RevisionTableRows.Count = TotRevs
+                            RevTable.RevisionTableRows.Add()
+                        Loop
+                    ElseIf RevTable.RevisionTableRows.Count > TotRevs Then
+                        Rev = tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTSRevCol).Index, node.RowIndex).Value
+                        If Q = False Then Ans = MsgBox("Removing revisions will cause all revision tags to be deleted" & vbNewLine &
+                                     "Inventor currently does not support revision tag maintenance through the API" & vbNewLine &
+                                     "Do you wish to continue?", vbYesNo)
+                        If Ans = vbNo Then
+                            Exit Sub
+                        Else
+                            Q = True
+                        End If
+
+                        RevTable.RevisionTableRows.Add()
+                        Do Until RevTable.RevisionTableRows.Count = 1
+                            If RevTable.RevisionTableRows.Item(RevTable.RevisionTableRows.Count).IsActiveRow = True Then
+                                RevTable.RevisionTableRows.Item(RevTable.RevisionTableRows.Count - 1).IsActiveRow = True
+                            End If
+                            RevTable.RevisionTableRows.Item(RevTable.RevisionTableRows.Count).Delete()
+                        Loop
+                        Dim Alpha As Boolean = False
+                        If IsNumeric(Rev) Then
+                            Rev += My.Settings.StartVal
+                        Else
+                            Rev = GetAlphaString(Asc(My.Settings.StartVal) - 63)
+                            Alpha = True
+                        End If
+
+                        Dim oPoint As Point2d = RevTable.Position
+                        RevTable.Delete()
+                        Sheet.RevisionTables.Add2(oPoint, False, True, Alpha, Rev)
+                        RevTable = Sheet.RevisionTables(1)
+                        RevTable.Position = _invApp.TransientGeometry.CreatePoint2d(RevTable.RangeBox.MinPoint.X,
+                                                                                   RevTable.RangeBox.MaxPoint.Y + RevTable.RangeBox.MaxPoint.Y - RevTable.RangeBox.MinPoint.Y)
+                        Do Until RevTable.RevisionTableRows.Count = TotRevs
                             RevTable.RevisionTableRows.Add()
                         Loop
 
                     End If
 
                     Col = RevTable.RevisionTableColumns.Count
-                Row = RevTable.RevisionTableRows.Count
-                Rev = oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
-                'Iterate through rev table and populate from the userform
-                Dim Contents(0 To Col * Row) As String
-                Dim J As Integer = 0
-                Dim Initials(0 To Row), RevCheckBy(0 To Row), RevDate(0 To Row) As String
+                    Row = RevTable.RevisionTableRows.Count
+                    Rev = oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
+                    'Iterate through rev table and populate from the userform
+                    Dim Contents(0 To Col * Row) As String
+                    Dim J As Integer = 0
+                    Dim Initials(0 To Row), RevCheckBy(0 To Row), RevDate(0 To Row) As String
 
-                For RevRow = 1 To RevTable.RevisionTableRows.Count
-                    Dim i As Integer = 1
-                    If RevRow > 1 Then
-                        RevNode = node.Nodes.Item(RevRow - 2)
-                    Else
-                        RevNode = node
-                    End If
-                    For Each rtc In RevTable.RevisionTableColumns
-                        Dim h As New DataGridViewTextBoxColumn
-                        Dim rtcell As RevisionTableCell = Nothing
-                        h.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(LCase(rtc.Title))
+                    For RevRow = 1 To RevTable.RevisionTableRows.Count
+                        Dim i As Integer = 1
+                        If RevRow > 1 Then
+                            RevNode = node.Nodes.Item(RevRow - 2)
+                        Else
+                            RevNode = node
+                        End If
+                        For Each rtc In RevTable.RevisionTableColumns
+                            Dim h As New DataGridViewTextBoxColumn
+                            Dim rtcell As RevisionTableCell = Nothing
+                            h.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(LCase(rtc.Title))
 
-                        WriteRevCase(RevNode, h.Name, RevRow, i, RevTable, oDoc)
-                        i = i + 1
+                            WriteRevCase(RevNode, h.Name, RevRow, i, RevTable, oDoc)
+                            i = i + 1
+                        Next
                     Next
-                Next
-                oDoc.Update()
-                _invApp.SilentOperation = True
-                Try
-                    oDoc.Save()
+                    oDoc.Update()
+                    _invApp.SilentOperation = True
+                    Try
+                        oDoc.Save()
+                    Catch ex As Exception
+                        Ans = MsgBox("Drawing " & DrawingName & " could not be saved." & vbNewLine _
+                                     & "Make sure the drawing is not read-only", MsgBoxStyle.OkCancel, "Error During Save")
+                        If Ans = vbCancel Then
+                            ProgressBar1.Hide()
+                            Exit Sub
+                        End If
+                    End Try
+                    Main.CloseLater(DrawingName, oDoc)
+                    _invApp.SilentOperation = False
+                    ProgressBar1.Value = (Row / tgvCheckNeeded.RowCount) * 100
+                    ProgressBar1.PerformStep()
+                    'Exit For
                 Catch ex As Exception
-                    Ans = MsgBox("Drawing " & DrawingName & " could not be saved." & vbNewLine _
-                                 & "Make sure the drawing is not read-only", MsgBoxStyle.OkCancel, "Error During Save")
-                    If Ans = vbCancel Then
-                        ProgressBar1.Hide()
-                        Exit Sub
-                    End If
                 End Try
-                Main.CloseLater(DrawingName, oDoc)
-                _invApp.SilentOperation = False
-                ProgressBar1.Value = (Row / tgvCheckNeeded.RowCount) * 100
-                ProgressBar1.PerformStep()
-                'Exit For
-            Catch ex As Exception
-            End Try
-            'End If
-            If node.HasChildren Then
-                For Each Childnode In node.Nodes
+                'End If
+                If node.HasChildren Then
+                    For Each Childnode In node.Nodes
 
-                Next
+                    Next
+                End If
             End If
         Next
         'Main.chkCheck.CheckState = CheckState.Indeterminate
@@ -524,7 +529,7 @@ Public Class CheckNeeded
     End Sub
     Public Sub PopulateCheckNeeded(Path As Documents, ByRef odoc As Document, ByRef Archive As String _
                                  , ByRef DrawingName As String, ByRef DrawSource As String, OpenDocs As ArrayList)
-
+        Pop = True
         Dim RevNo, CheckedBy, RevCheckBy, Initials As String
         Initials = ""
         RevCheckBy = ""
@@ -732,7 +737,8 @@ Public Class CheckNeeded
                                     tgvCheckNeeded.Columns(Column).HeaderText = "Check Date" Then
                                 node.Cells(Column).ReadOnly = True
                                 node.Cells(Column).Style.BackColor = Drawing.Color.LightGray
-
+                            ElseIf tgvCheckNeeded.Columns(Column).HeaderText = "IsDirty" Then
+                                node.Cells(Column).Value = True
                             End If
                         Next
                     Else
@@ -742,7 +748,10 @@ Public Class CheckNeeded
                                     tgvCheckNeeded.Columns(Column).HeaderText = "Check Date" Then
                                 node.Cells(Column).ReadOnly = True
                                 node.Cells(Column).Style.BackColor = Drawing.Color.LightGray
+                            ElseIf tgvCheckNeeded.Columns(Column).HeaderText = "IsDirty" Then
+                                node.Cells(Column).Value = True
                             End If
+
                         Next
                     End If
 
@@ -765,6 +774,7 @@ Public Class CheckNeeded
             tgvCheckNeeded.AutoSizeColumnsMode = DataGridViewAutoSizeColumnMode.DisplayedCells
             tgvCheckNeeded.AutoResizeColumns()
         End If
+        Pop = False
     End Sub
     Private Sub tgvCheckNeeded_MouseUp(sender As Object, e As MouseEventArgs) Handles tgvCheckNeeded.MouseUp
         Me.TopMost = True
@@ -940,6 +950,8 @@ Public Class CheckNeeded
                             Rev(Column) = _invApp.GeneralOptions.UserName
                         Case My.Settings.RTSDateCol
                             Rev(Column) = Today.ToShortDateString
+                        Case "IsDirty"
+                            Rev(Column) = "False"
                     End Select
 
                 Next
@@ -1071,4 +1083,10 @@ Public Class CheckNeeded
         Me.KeyPreview = True
     End Sub
 
+    Private Sub tgvCheckNeeded_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles tgvCheckNeeded.CellValueChanged
+        If e.RowIndex = -1 Then Exit Sub
+        If Pop = False Then
+            tgvCheckNeeded(tgvCheckNeeded.Columns("IsDirty").Index, e.RowIndex).Value = True
+        End If
+    End Sub
 End Class

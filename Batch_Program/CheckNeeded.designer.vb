@@ -32,12 +32,17 @@ Partial Class CheckNeeded
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.cmsApplyValues = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ApplyRowValuesToAllRowsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.VisibleRowsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EmptyValuesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EmptyCellsOnlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ApplyCellValueToEntireColumnToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CellsInColumnToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.VisibleCellsInColumnToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EmptyCellsInColumnToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClearCellToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RemoveRevisionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AddRevisionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tgvCheckNeeded = New AdvancedDataGridView.TreeGridView()
-        Me.DrawingName = New AdvancedDataGridView.TreeGridColumn()
         Me.Splitter1 = New System.Windows.Forms.Splitter()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -47,12 +52,8 @@ Partial Class CheckNeeded
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.VisibleRowsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EmptyValuesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EmptyCellsOnlyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CellsInColumnToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.VisibleCellsInColumnToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EmptyCellsInColumnToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DrawingName = New AdvancedDataGridView.TreeGridColumn()
+        Me.IsDirty = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.cmsApplyValues.SuspendLayout()
         CType(Me.tgvCheckNeeded, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -109,7 +110,7 @@ Partial Class CheckNeeded
         '
         Me.cmsApplyValues.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ApplyRowValuesToAllRowsToolStripMenuItem, Me.ApplyCellValueToEntireColumnToolStripMenuItem, Me.ClearCellToolStripMenuItem, Me.RemoveRevisionToolStripMenuItem, Me.AddRevisionToolStripMenuItem})
         Me.cmsApplyValues.Name = "ContextMenuStrip1"
-        Me.cmsApplyValues.Size = New System.Drawing.Size(243, 136)
+        Me.cmsApplyValues.Size = New System.Drawing.Size(243, 114)
         '
         'ApplyRowValuesToAllRowsToolStripMenuItem
         '
@@ -118,12 +119,48 @@ Partial Class CheckNeeded
         Me.ApplyRowValuesToAllRowsToolStripMenuItem.Size = New System.Drawing.Size(242, 22)
         Me.ApplyRowValuesToAllRowsToolStripMenuItem.Text = "Apply selected row values to all:"
         '
+        'VisibleRowsToolStripMenuItem
+        '
+        Me.VisibleRowsToolStripMenuItem.Name = "VisibleRowsToolStripMenuItem"
+        Me.VisibleRowsToolStripMenuItem.Size = New System.Drawing.Size(139, 22)
+        Me.VisibleRowsToolStripMenuItem.Text = "Rows"
+        '
+        'EmptyValuesToolStripMenuItem
+        '
+        Me.EmptyValuesToolStripMenuItem.Name = "EmptyValuesToolStripMenuItem"
+        Me.EmptyValuesToolStripMenuItem.Size = New System.Drawing.Size(139, 22)
+        Me.EmptyValuesToolStripMenuItem.Text = "Visible Rows"
+        '
+        'EmptyCellsOnlyToolStripMenuItem
+        '
+        Me.EmptyCellsOnlyToolStripMenuItem.Name = "EmptyCellsOnlyToolStripMenuItem"
+        Me.EmptyCellsOnlyToolStripMenuItem.Size = New System.Drawing.Size(139, 22)
+        Me.EmptyCellsOnlyToolStripMenuItem.Text = "Empty Cells"
+        '
         'ApplyCellValueToEntireColumnToolStripMenuItem
         '
         Me.ApplyCellValueToEntireColumnToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CellsInColumnToolStripMenuItem, Me.VisibleCellsInColumnToolStripMenuItem, Me.EmptyCellsInColumnToolStripMenuItem})
         Me.ApplyCellValueToEntireColumnToolStripMenuItem.Name = "ApplyCellValueToEntireColumnToolStripMenuItem"
         Me.ApplyCellValueToEntireColumnToolStripMenuItem.Size = New System.Drawing.Size(242, 22)
         Me.ApplyCellValueToEntireColumnToolStripMenuItem.Text = "Apply selected cell value to all:"
+        '
+        'CellsInColumnToolStripMenuItem
+        '
+        Me.CellsInColumnToolStripMenuItem.Name = "CellsInColumnToolStripMenuItem"
+        Me.CellsInColumnToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.CellsInColumnToolStripMenuItem.Text = "Cells in Column"
+        '
+        'VisibleCellsInColumnToolStripMenuItem
+        '
+        Me.VisibleCellsInColumnToolStripMenuItem.Name = "VisibleCellsInColumnToolStripMenuItem"
+        Me.VisibleCellsInColumnToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.VisibleCellsInColumnToolStripMenuItem.Text = "Visible Cells in Column"
+        '
+        'EmptyCellsInColumnToolStripMenuItem
+        '
+        Me.EmptyCellsInColumnToolStripMenuItem.Name = "EmptyCellsInColumnToolStripMenuItem"
+        Me.EmptyCellsInColumnToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.EmptyCellsInColumnToolStripMenuItem.Text = "Empty Cells in Column"
         '
         'ClearCellToolStripMenuItem
         '
@@ -149,7 +186,7 @@ Partial Class CheckNeeded
         Me.tgvCheckNeeded.AllowUserToDeleteRows = False
         Me.tgvCheckNeeded.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader
         Me.tgvCheckNeeded.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells
-        Me.tgvCheckNeeded.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DrawingName})
+        Me.tgvCheckNeeded.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DrawingName, Me.IsDirty})
         Me.tgvCheckNeeded.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.tgvCheckNeeded.ImageList = Nothing
         Me.tgvCheckNeeded.Location = New System.Drawing.Point(12, 25)
@@ -158,16 +195,6 @@ Partial Class CheckNeeded
         Me.tgvCheckNeeded.RowHeadersVisible = False
         Me.tgvCheckNeeded.Size = New System.Drawing.Size(596, 152)
         Me.tgvCheckNeeded.TabIndex = 23
-        '
-        'DrawingName
-        '
-        Me.DrawingName.DataPropertyName = "Drawing Name"
-        Me.DrawingName.DefaultNodeImage = Nothing
-        Me.DrawingName.HeaderText = "Drawing Name"
-        Me.DrawingName.Name = "DrawingName"
-        Me.DrawingName.ReadOnly = True
-        Me.DrawingName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DrawingName.Width = 83
         '
         'Splitter1
         '
@@ -228,41 +255,22 @@ Partial Class CheckNeeded
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
         Me.DataGridViewTextBoxColumn6.Width = 69
         '
-        'VisibleRowsToolStripMenuItem
+        'DrawingName
         '
-        Me.VisibleRowsToolStripMenuItem.Name = "VisibleRowsToolStripMenuItem"
-        Me.VisibleRowsToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.VisibleRowsToolStripMenuItem.Text = "Rows"
+        Me.DrawingName.DataPropertyName = "Drawing Name"
+        Me.DrawingName.DefaultNodeImage = Nothing
+        Me.DrawingName.HeaderText = "Drawing Name"
+        Me.DrawingName.Name = "DrawingName"
+        Me.DrawingName.ReadOnly = True
+        Me.DrawingName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DrawingName.Width = 83
         '
-        'EmptyValuesToolStripMenuItem
+        'IsDirty
         '
-        Me.EmptyValuesToolStripMenuItem.Name = "EmptyValuesToolStripMenuItem"
-        Me.EmptyValuesToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.EmptyValuesToolStripMenuItem.Text = "Visible Rows"
-        '
-        'EmptyCellsOnlyToolStripMenuItem
-        '
-        Me.EmptyCellsOnlyToolStripMenuItem.Name = "EmptyCellsOnlyToolStripMenuItem"
-        Me.EmptyCellsOnlyToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.EmptyCellsOnlyToolStripMenuItem.Text = "Empty Cells"
-        '
-        'CellsInColumnToolStripMenuItem
-        '
-        Me.CellsInColumnToolStripMenuItem.Name = "CellsInColumnToolStripMenuItem"
-        Me.CellsInColumnToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.CellsInColumnToolStripMenuItem.Text = "Cells in Column"
-        '
-        'VisibleCellsInColumnToolStripMenuItem
-        '
-        Me.VisibleCellsInColumnToolStripMenuItem.Name = "VisibleCellsInColumnToolStripMenuItem"
-        Me.VisibleCellsInColumnToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.VisibleCellsInColumnToolStripMenuItem.Text = "Visible Cells in Column"
-        '
-        'EmptyCellsInColumnToolStripMenuItem
-        '
-        Me.EmptyCellsInColumnToolStripMenuItem.Name = "EmptyCellsInColumnToolStripMenuItem"
-        Me.EmptyCellsInColumnToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.EmptyCellsInColumnToolStripMenuItem.Text = "Empty Cells in Column"
+        Me.IsDirty.HeaderText = "IsDirty"
+        Me.IsDirty.Name = "IsDirty"
+        Me.IsDirty.Visible = False
+        Me.IsDirty.Width = 42
         '
         'CheckNeeded
         '
@@ -308,7 +316,6 @@ Partial Class CheckNeeded
     Friend WithEvents Splitter1 As Windows.Forms.Splitter
     Friend WithEvents GridDateControl1 As GridDateControl
     Friend WithEvents GridDateControl2 As GridDateControl
-    Friend WithEvents DrawingName As AdvancedDataGridView.TreeGridColumn
     Friend WithEvents ClearCellToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents RemoveRevisionToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem1 As Windows.Forms.ToolStripMenuItem
@@ -319,4 +326,6 @@ Partial Class CheckNeeded
     Friend WithEvents CellsInColumnToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents VisibleCellsInColumnToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents EmptyCellsInColumnToolStripMenuItem As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents DrawingName As AdvancedDataGridView.TreeGridColumn
+    Friend WithEvents IsDirty As Windows.Forms.DataGridViewCheckBoxColumn
 End Class
