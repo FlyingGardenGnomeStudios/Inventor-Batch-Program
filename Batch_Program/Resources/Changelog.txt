@@ -2,6 +2,10 @@
 	- No tutorials yet
 	- Renaming function works but hasn't been thoroughly tested.
 
+Version 2.0.0.18 (11.16.18)
+	-Fixed issue where iProperties of drawing didn't pull from model correctly
+	-Fixed issue where unchecked referenced drawings couldn't be checked
+
 Version 2.0.0.17 (11.05.18)
 	-Made all msgboxes modal
 	-Added checkbox count

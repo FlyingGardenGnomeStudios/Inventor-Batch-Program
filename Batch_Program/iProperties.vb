@@ -306,41 +306,41 @@ Public Class iProperties
         StatusDicRows.Add("Mfg. Approved By:", dgvStatus.Rows(8))
         StatusDicRows.Add("Mfg. Approved Date:", dgvStatus.Rows(9))
 
-        If My.Settings.RTSCheckedBy = True Then
-            dgvRev1.Rows.Add("Checked By")
-        End If
-        If My.Settings.RTSCheckedDate = True Then
-            dgvRev1.Rows.Add("Check Date")
-        End If
-        If My.Settings.RTSDate = True Then
-            dgvRev1.Rows.Add(My.Settings.RTSDateCol)
-        End If
-        If My.Settings.RTSDesc = True Then
-            dgvRev1.Rows.Add(My.Settings.RTSDescCol)
-        End If
-        If My.Settings.RTSName = True Then
-            dgvRev1.Rows.Add(My.Settings.RTSNameCol)
-        End If
+        'If My.Settings.RTSCheckedBy = True Then
+        '    dgvRev1.Rows.Add("Checked By")
+        'End If
+        'If My.Settings.RTSCheckedDate = True Then
+        '    dgvRev1.Rows.Add("Check Date")
+        'End If
+        'If My.Settings.RTSDate = True Then
+        '    dgvRev1.Rows.Add(My.Settings.RTSDateCol)
+        'End If
+        'If My.Settings.RTSDesc = True Then
+        '    dgvRev1.Rows.Add(My.Settings.RTSDescCol)
+        'End If
+        'If My.Settings.RTSName = True Then
+        '    dgvRev1.Rows.Add(My.Settings.RTSNameCol)
+        'End If
 
-        If My.Settings.RTSApproved = True Then
-            dgvRev1.Rows.Add(My.Settings.RTSApprovedCol)
-        End If
+        'If My.Settings.RTSApproved = True Then
+        '    dgvRev1.Rows.Add(My.Settings.RTSApprovedCol)
+        'End If
 
-        If My.Settings.RTS1 = True Then
-            dgvRev1.Rows.Add(My.Settings.RTS1Item)
-        End If
-        If My.Settings.RTS2 = True Then
-            dgvRev1.Rows.Add(My.Settings.RTS2Item)
-        End If
-        If My.Settings.RTS3 = True Then
-            dgvRev1.Rows.Add(My.Settings.RTS3Item)
-        End If
-        If My.Settings.RTS4 = True Then
-            dgvRev1.Rows.Add(My.Settings.RTS4Item)
-        End If
-        If My.Settings.RTS5 = True Then
-            dgvRev1.Rows.Add(My.Settings.RTS5Item)
-        End If
+        'If My.Settings.RTS1 = True Then
+        '    dgvRev1.Rows.Add(My.Settings.RTS1Item)
+        'End If
+        'If My.Settings.RTS2 = True Then
+        '    dgvRev1.Rows.Add(My.Settings.RTS2Item)
+        'End If
+        'If My.Settings.RTS3 = True Then
+        '    dgvRev1.Rows.Add(My.Settings.RTS3Item)
+        'End If
+        'If My.Settings.RTS4 = True Then
+        '    dgvRev1.Rows.Add(My.Settings.RTS4Item)
+        'End If
+        'If My.Settings.RTS5 = True Then
+        '    dgvRev1.Rows.Add(My.Settings.RTS5Item)
+        'End If
     End Sub
 #Region "Adjust Combobox"
     Private Function dgvSummary_EditingContrtolShowing(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DataGridViewEditingControlShowingEventArgs) Handles dgvSummary.EditingControlShowing

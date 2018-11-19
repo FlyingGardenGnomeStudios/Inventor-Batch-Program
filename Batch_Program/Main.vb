@@ -666,7 +666,7 @@ Public Class Main
                 ' End If
             Next
 
-        Else
+        ElseIf chkDWGSelect.CheckState = CheckState.Unchecked Then
             For X = 0 To dgvSubFiles.RowCount - 1
                 dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, X).Value = False
             Next
@@ -3645,8 +3645,10 @@ Public Class Main
         For Each Row In dgvOpenFiles.Rows
             If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, Row.index).Value = True Then
                 If Strings.InStr(dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, Row.index).Value, "idw") <> 0 Then
-                    oDoc = _invApp.Documents.ItemByName(dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, Row.index).Value)
-                    TestForDrawing(dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, Row.index).Value, 0, Total, Counter, OpenDocs, Elog, False)
+                    ''' oDoc = _invApp.Documents.ItemByName(dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, Row.index).Value)
+                    oDoc = _invApp.Documents.ItemByName(dgvOpenFiles(dgvOpenFiles.Columns("PartLocation").Index, Row.index).Value)
+                    ''' TestForDrawing(dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, Row.index).Value, 0, Total, Counter, OpenDocs, Elog, False)
+                    TestForDrawing(dgvOpenFiles(dgvOpenFiles.Columns("PartLocation").Index, Row.index).Value, 0, Total, Counter, OpenDocs, Elog, False)
                     'dgvSubFiles.Rows.Add(New String() {True,
                     '                         dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, Row.index).Value,
                     '                         dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, Row.index).Value,
@@ -3699,12 +3701,13 @@ Public Class Main
         Me.pgbMain.DisplayText = e.UserState.ToString & " " & e.ProgressPercentage & "%"
     End Sub
     Private Sub dgvSubFiles_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvSubFiles.CellClick
-        If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True Then
-            dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = False
-        Else
-            dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True
-        End If
-        UpdateSubFiles()
+        'If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True Then
+        '    dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = False
+        'Else
+        '    dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True
+        'End If
+        'UpdateSubFiles()
+        'Me.Update
     End Sub
     Private Sub UpdateSubFiles()
         Dim Total As Integer = 0
@@ -3880,5 +3883,13 @@ Public Class Main
 
     Private Sub DebugLogToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DebugLogToolStripMenuItem.Click
         Process.Start(IO.Path.Combine(IO.Path.GetTempPath, "debug.txt"))
+    End Sub
+    Private Sub dgvSubFiles_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvSubFiles.CellContentClick
+        If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True Then
+            dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = False
+        Else
+            dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True
+            UpdateSubFiles()
+        End If
     End Sub
 End Class
