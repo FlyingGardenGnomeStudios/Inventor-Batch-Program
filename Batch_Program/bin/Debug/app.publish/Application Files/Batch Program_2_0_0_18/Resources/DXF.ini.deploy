@@ -1,0 +1,41 @@
+[EXPORT SELECT OPTIONS]
+AUTOCAD VERSION=AutoCAD 2010
+CREATE AUTOCAD MECHANICAL=No
+USE TRANSMITTAL=No
+USE CUSTOMIZE=No
+CUSTOMIZE FILE=C:\Users\Public\Documents\Autodesk\Inventor 2013\Design Data\DWG-DXF\FlatPattern.xml
+CREATE LAYER GROUP=No
+PARTS ONLY=No
+REPLACE SPLINE=No
+CHORD TOLERANCE=0.001000
+[EXPORT PROPERTIES]
+SELECTED PROPERTIES=
+[EXPORT DESTINATION]
+SPACE=Model
+SCALING=Geometry
+ALL SHEETS=Yes
+MAPPING=MapsBest
+MODEL GEOMETRY ONLY=No
+EXPLODE DIMENSIONS=No
+SYMBOLS ARE BLOCKED=Yes
+AUTOCAD TEMPLATE=
+DESTINATION DXF=Yes
+USE ACI FOR ENTITIES AND LAYERS=No
+ALLOW RASTER VIEWS=No
+[EXPORT LINE TYPE & LINE SCALE]
+LINE TYPE FILE=C:\Users\Public\Documents\Autodesk\Inventor 2013\COMPATIBILITY\Support\invANSI.lin
+Continuous=Continuous;0.
+Dashed=Continuous;0.
+Dashed Space=Continuous;0.
+Long Dash Dotted=Continuous;0.
+Long Dash Double Dot=Continuous;0.
+Long Dash Triple Dot=Continuous;0.
+Dotted=Continuous;0.
+Chain=Continuous;0.
+Double Dash Chain=Continuous;0.
+Dash Double Dot=Continuous;0.
+Dash Dot=Continuous;0.
+Double Dash Dot=Continuous;0.
+Double Dash Double Dot=Continuous;0.
+Dash Triple Dot=Continuous;0.
+Double Dash Triple Dot=Continuous;0.

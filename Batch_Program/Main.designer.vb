@@ -1119,7 +1119,6 @@ Partial Class Main
         Me.DrawingLocation.Name = "DrawingLocation"
         Me.DrawingLocation.ReadOnly = True
         Me.DrawingLocation.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DrawingLocation.Visible = False
         Me.DrawingLocation.Width = 5
         '
         'Comments
