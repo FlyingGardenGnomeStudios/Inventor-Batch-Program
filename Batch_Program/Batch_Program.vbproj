@@ -34,7 +34,7 @@
     <PublisherName>Flying Garden Gnome Studios</PublisherName>
     <MinimumRequiredVersion>2.1.1.0</MinimumRequiredVersion>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationRevision>4</ApplicationRevision>
     <ApplicationVersion>2.1.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -124,7 +124,7 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Batch Program - Beta.ico</ApplicationIcon>
+    <ApplicationIcon>Batch Program.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -301,6 +301,7 @@
     </None>
     <None Include="Resources\DWGLN.PNG" />
     <None Include="Resources\DWGLN.bmp" />
+    <None Include="Batch Program.ico" />
     <Content Include="Resources\List-Blank.xlsm" />
     <Content Include="Resources\Quote-Blank.xlsm" />
     <Content Include="Resources\Rename.xlsm" />

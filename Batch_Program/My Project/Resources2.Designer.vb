@@ -73,6 +73,16 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         '''</summary>
+        Friend ReadOnly Property Batch_Program() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Batch_Program", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        '''</summary>
         Friend ReadOnly Property Batch_Program___Beta() As System.Drawing.Icon
             Get
                 Dim obj As Object = ResourceManager.GetObject("Batch_Program___Beta", resourceCulture)
@@ -91,19 +101,21 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to Version 2.0.0.9 (6/29/18)
-        '''	- Added options to overwrite notification on dxf/pdf/dwg
-        '''	- Fixed part opening when drawing selected
-        '''	- Tweaked rename function and added backup option.
-        '''
-        '''	Items not currently functioning
-        '''	- Open parts list sometimes displays double on first run
+        '''  Looks up a localized string similar to 	Items not currently functioning
         '''	- No tutorials yet
         '''	- Renaming function works but hasn&apos;t been thoroughly tested.
         '''
-        '''Version 2.0.0.8 (6/18/18)
-        '''	- Fixed search function not operating properly with missing drawings
-        '''	- Added ability to select which files get overwr [rest of string was truncated]&quot;;.
+        '''Version 2.0.0.18 (11.16.18)
+        '''	-Fixed issue where iProperties of drawing didn&apos;t pull from model correctly
+        '''	-Fixed issue where unchecked referenced drawings couldn&apos;t be checked
+        '''
+        '''Version 2.0.0.17 (11.05.18)
+        '''	-Made all msgboxes modal
+        '''	-Added checkbox count
+        '''	-Modified a number of UI methods for more predictable operation
+        '''	
+        '''Version 2.0.0.16 (10/16/18)
+        '''	-Corrected issue with copying asso [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property Changelog() As String
             Get
@@ -156,7 +168,7 @@ Namespace My.Resources
         '''CREATE AUTOCAD MECHANICAL=No
         '''USE TRANSMITTAL=No
         '''USE CUSTOMIZE=No
-        '''CUSTOMIZE FILE=C:\_Vault Working Folder\Designs\Templates\Design Data\DWG-DXF\FlatPattern.xml
+        '''CUSTOMIZE FILE=C:\Users\Public\Documents\Autodesk\Inventor 2013\Design Data\DWG-DXF\FlatPattern.xml
         '''CREATE LAYER GROUP=No
         '''PARTS ONLY=No
         '''REPLACE SPLINE=No
@@ -171,7 +183,7 @@ Namespace My.Resources
         '''MODEL GEOMETRY ONLY=No
         '''EXPLODE DIMENSIONS=No
         '''SYMBOLS ARE BLOCKED=Yes
-        '''AUTOCAD T [rest of string was truncated]&quot;;.
+        '''AUT [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property DXF() As String
             Get
@@ -182,6 +194,7 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized string similar to Attribute VB_Name = &quot;Get64BitPicture&quot;
         '''Public Sub Thumbnail()
+        '''On Error Resume Next
         '''Dim FSO As Object, TmpFolder As Object
         '''Set FSO = CreateObject(&quot;scripting.filesystemobject&quot;)
         '''Set TmpFolder = FSO.GetSpecialFolder(2)
@@ -193,8 +206,7 @@ Namespace My.Resources
         '''        Line Input #1, strTextLine
         '''Loop
         '''        Close #iFile
-        '''&apos; Get the active document.
-        '''Dim doc As Document        ''' [rest of string was truncated]&quot;;.
+        '''&apos; Get the active document. [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property Get64BitPicture() As String
             Get
