@@ -639,13 +639,11 @@ Public Class Main
         Return Nothing
     End Function
     Private Sub chkPartSelect_CheckedChanged(sender As Object, e As EventArgs) Handles chkPartSelect.CheckedChanged
-        UpdateOpenFiles()
-
         If chkPartSelect.CheckState = CheckState.Checked Then
             For X = 0 To dgvOpenFiles.RowCount - 1
                 dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = True
             Next
-        Elseif chkPartSelect.CheckState = CheckState.Unchecked then
+        ElseIf chkPartSelect.CheckState = CheckState.Unchecked Then
             For X = 0 To dgvOpenFiles.RowCount - 1
                 dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = False
             Next
@@ -653,6 +651,7 @@ Public Class Main
         If bgwUpdateSub.IsBusy = False Then
             bgwUpdateSub.RunWorkerAsync()
         End If
+        UpdateOpenFiles()
     End Sub
     Private Sub chkDWGSelect_CheckedChanged(sender As Object, e As EventArgs) Handles chkDWGSelect.CheckedChanged
 
@@ -761,33 +760,33 @@ Public Class Main
                 'If chkSkipAssy.Checked = True Then
                 'iterate through opend documents to find the selected file
                 If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
-                        Destin = My.Settings("Custom" & ExportType & "ExportLoc")
-                    ElseIf My.Settings(ExportType & "SaveNewLoc") = True Then
-                        Destin = My.Settings(ExportType & "SaveLoc")
-                    ElseIf My.Settings(ExportType & "Tag") <> "" Then
-                        Destin = IO.Path.GetDirectoryName(DrawSource) & My.Settings(ExportType & "Tag")
-                    End If
-                    'open drawing
-                    oDoc = _invApp.Documents.Open(DrawSource, False)
-                    'Get revision number
-                    If My.Settings(ExportType & "Rev") = True Then
-                        RevNo = "-R" & oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
-                    Else
-                        RevNo = ""
-                    End If
-                    'Check for files that will be overwritten
-                    'Set the filename to be saved along with the revision
+                    Destin = My.Settings("Custom" & ExportType & "ExportLoc")
+                ElseIf My.Settings(ExportType & "SaveNewLoc") = True Then
+                    Destin = My.Settings(ExportType & "SaveLoc")
+                ElseIf My.Settings(ExportType & "Tag") <> "" Then
+                    Destin = IO.Path.GetDirectoryName(DrawSource) & My.Settings(ExportType & "Tag")
+                End If
+                'open drawing
+                oDoc = _invApp.Documents.Open(DrawSource, False)
+                'Get revision number
+                If My.Settings(ExportType & "Rev") = True Then
+                    RevNo = "-R" & oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
+                Else
+                    RevNo = ""
+                End If
+                'Check for files that will be overwritten
+                'Set the filename to be saved along with the revision
 
-                    'Set the PDF/DXF name and search to see if it exists
-                    SaveLoc = IO.Path.Combine(Destin, IO.Path.GetFileNameWithoutExtension(DrawingName.Insert(DrawingName.LastIndexOf("."), RevNo)) & "." & LCase(ExportType))
+                'Set the PDF/DXF name and search to see if it exists
+                SaveLoc = IO.Path.Combine(Destin, IO.Path.GetFileNameWithoutExtension(DrawingName.Insert(DrawingName.LastIndexOf("."), RevNo)) & "." & LCase(ExportType))
 
-                    'If the file exists, save it for display later
-                    Dim sReadableType As String = ""
-                    If IO.Path.GetExtension(DrawSource) = "ipt" Then
-                        Dim Archive As String = Strings.Replace(DrawSource, "idw", "ipt")
-                        oDoc = _invApp.Documents.Open(Archive, True)
-                        SheetMetalTest(oDoc, sReadableType)
-                    End If
+                'If the file exists, save it for display later
+                Dim sReadableType As String = ""
+                If IO.Path.GetExtension(DrawSource) = "ipt" Then
+                    Dim Archive As String = Strings.Replace(DrawSource, "idw", "ipt")
+                    oDoc = _invApp.Documents.Open(Archive, True)
+                    SheetMetalTest(oDoc, sReadableType)
+                End If
                 'If chkFlatPattern.Checked = True AndAlso sReadableType <> "S" Then
                 'Else
                 If ExportType = "PDF" Then
@@ -1601,12 +1600,33 @@ Public Class Main
         dgvSubFiles.Rows.Clear()
         RenameTable.Clear()
         ThumbList.Clear()
+        Dim Total As Integer = 0
+        If dgvOpenFiles.RowCount > 0 Then
+            For Each Row In dgvOpenFiles.Rows
+                If dgvOpenFiles(dgvOpenFiles.Columns("chkopenFiles").Index, Row.index).Value <> True Then
+                Else
+                    Total += 1
+                End If
+            Next
+        End If
+        If Total <> 0 AndAlso Total <> dgvOpenFiles.RowCount Then
+            chkPartSelect.CheckState = CheckState.Indeterminate
+        ElseIf Total = dgvOpenFiles.RowCount Then
+            chkPartSelect.CheckState = CheckState.Checked
+        Else
+            chkPartSelect.CheckState = CheckState.Unchecked
+        End If
+        If Total = 0 Then
+            gbxOpen.Text = "      Open Parts"
+        Else
+            gbxOpen.Text = "      Open Parts(" & Total & ")"
+        End If
         If bgwUpdateSub.IsBusy = False Then
             bgwUpdateSub.RunWorkerAsync()
         End If
     End Sub
     Private Sub dgvOpenFiles_MouseUp(sender As Object, e As MouseEventArgs) Handles dgvOpenFiles.MouseUp
-        UpdateOpenFiles()
+        ' UpdateOpenFiles()
     End Sub
     Private Sub runUpdateOpen()
         Do
@@ -3307,17 +3327,7 @@ Public Class Main
         Else
             dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, dgvOpenFiles.CurrentCell.RowIndex).Value = True
         End If
-        Dim Total As Integer = 0
-        If dgvOpenFiles.RowCount > 0 Then
-            Dim Check As Boolean = dgvOpenFiles(dgvOpenFiles.Columns("chkopenFiles").Index, 0).Value
-            Dim Diff As Boolean = False
-            For Each Row In dgvOpenFiles.Rows
-                If dgvOpenFiles(dgvOpenFiles.Columns("chkopenFiles").Index, Row.index).Value <> True Then
-                Else
-                    Total += 1
-                End If
-            Next
-        End If
+        UpdateOpenFiles()
     End Sub
 #End Region
 #Region "Top Menus"
@@ -3660,26 +3670,9 @@ Public Class Main
                     ' End Try
                 End If
             End If
-            If dgvOpenFiles.RowCount > 0 Then
-                If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, Row.index).Value = True Then
-                    ChkCount += 1
-                End If
-            End If
         Next
-        If ChkCount = 0 Then
-            gbxOpen.Text = "      Open Parts"
-        Else
-            gbxOpen.Text = "      Open Parts(" & ChkCount & ")"
-        End If
-        If ChkCount <> 0 AndAlso ChkCount <> dgvOpenFiles.RowCount Then
-            chkPartSelect.CheckState = CheckState.Indeterminate
-        ElseIf chkcount = dgvOpenFiles.RowCount Then
-            chkPartSelect.CheckState = CheckState.Checked
-        Else
-            chkPartSelect.CheckState = CheckState.Unchecked
-        End If
+
         writeDebug(Elog)
-        ' RunCompleted()
         Me.Update()
     End Sub
     Private Sub bgwUpdateSub_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles bgwUpdateSub.ProgressChanged
@@ -3876,7 +3869,8 @@ Public Class Main
             dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = False
         Else
             dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True
-            UpdateSubFiles()
+
         End If
+        UpdateSubFiles()
     End Sub
 End Class

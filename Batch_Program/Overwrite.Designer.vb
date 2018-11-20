@@ -22,8 +22,17 @@ Partial Class Overwrite
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Overwrite))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.dgvOverwrite = New System.Windows.Forms.DataGridView()
+        Me.chkOverwrite = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Total = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Counter = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Destin = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DrawingName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DrawSource = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Rev = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.btnOK = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -33,14 +42,6 @@ Partial Class Overwrite
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.chkOverwrite = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.Total = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Counter = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Destin = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DrawingName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DrawSource = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Rev = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvOverwrite, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -69,6 +70,68 @@ Partial Class Overwrite
         Me.dgvOverwrite.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvOverwrite.Size = New System.Drawing.Size(249, 150)
         Me.dgvOverwrite.TabIndex = 1
+        '
+        'chkOverwrite
+        '
+        Me.chkOverwrite.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader
+        Me.chkOverwrite.FalseValue = "False"
+        Me.chkOverwrite.FillWeight = 47.09408!
+        Me.chkOverwrite.HeaderText = "Overwrite"
+        Me.chkOverwrite.IndeterminateValue = "Overwrite"
+        Me.chkOverwrite.MinimumWidth = 25
+        Me.chkOverwrite.Name = "chkOverwrite"
+        Me.chkOverwrite.TrueValue = "True"
+        Me.chkOverwrite.Width = 58
+        '
+        'Total
+        '
+        Me.Total.HeaderText = "Total"
+        Me.Total.Name = "Total"
+        Me.Total.Visible = False
+        '
+        'Counter
+        '
+        Me.Counter.HeaderText = "Counter"
+        Me.Counter.Name = "Counter"
+        Me.Counter.Visible = False
+        '
+        'Destin
+        '
+        Me.Destin.HeaderText = "Destin"
+        Me.Destin.Name = "Destin"
+        Me.Destin.ReadOnly = True
+        Me.Destin.Visible = False
+        '
+        'DrawingName
+        '
+        Me.DrawingName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
+        Me.DrawingName.FillWeight = 131.0785!
+        Me.DrawingName.HeaderText = "DrawingName"
+        Me.DrawingName.Name = "DrawingName"
+        Me.DrawingName.Width = 99
+        '
+        'DrawSource
+        '
+        Me.DrawSource.HeaderText = "DrawSource"
+        Me.DrawSource.Name = "DrawSource"
+        Me.DrawSource.ReadOnly = True
+        Me.DrawSource.Visible = False
+        '
+        'Type
+        '
+        Me.Type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader
+        Me.Type.FillWeight = 121.8274!
+        Me.Type.HeaderText = "Export Type"
+        Me.Type.Name = "Type"
+        Me.Type.ReadOnly = True
+        Me.Type.Width = 89
+        '
+        'Rev
+        '
+        Me.Rev.HeaderText = "Rev"
+        Me.Rev.Name = "Rev"
+        Me.Rev.ReadOnly = True
+        Me.Rev.Visible = False
         '
         'btnOK
         '
@@ -144,68 +207,6 @@ Partial Class Overwrite
         Me.DataGridViewTextBoxColumn7.Visible = False
         Me.DataGridViewTextBoxColumn7.Width = 5
         '
-        'chkOverwrite
-        '
-        Me.chkOverwrite.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader
-        Me.chkOverwrite.FalseValue = "False"
-        Me.chkOverwrite.FillWeight = 47.09408!
-        Me.chkOverwrite.HeaderText = "Overwrite"
-        Me.chkOverwrite.IndeterminateValue = "Overwrite"
-        Me.chkOverwrite.MinimumWidth = 25
-        Me.chkOverwrite.Name = "chkOverwrite"
-        Me.chkOverwrite.TrueValue = "True"
-        Me.chkOverwrite.Width = 58
-        '
-        'Total
-        '
-        Me.Total.HeaderText = "Total"
-        Me.Total.Name = "Total"
-        Me.Total.Visible = False
-        '
-        'Counter
-        '
-        Me.Counter.HeaderText = "Counter"
-        Me.Counter.Name = "Counter"
-        Me.Counter.Visible = False
-        '
-        'Destin
-        '
-        Me.Destin.HeaderText = "Destin"
-        Me.Destin.Name = "Destin"
-        Me.Destin.ReadOnly = True
-        Me.Destin.Visible = False
-        '
-        'DrawingName
-        '
-        Me.DrawingName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
-        Me.DrawingName.FillWeight = 131.0785!
-        Me.DrawingName.HeaderText = "DrawingName"
-        Me.DrawingName.Name = "DrawingName"
-        Me.DrawingName.Width = 99
-        '
-        'DrawSource
-        '
-        Me.DrawSource.HeaderText = "DrawSource"
-        Me.DrawSource.Name = "DrawSource"
-        Me.DrawSource.ReadOnly = True
-        Me.DrawSource.Visible = False
-        '
-        'Type
-        '
-        Me.Type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader
-        Me.Type.FillWeight = 121.8274!
-        Me.Type.HeaderText = "Export Type"
-        Me.Type.Name = "Type"
-        Me.Type.ReadOnly = True
-        Me.Type.Width = 89
-        '
-        'Rev
-        '
-        Me.Rev.HeaderText = "Rev"
-        Me.Rev.Name = "Rev"
-        Me.Rev.ReadOnly = True
-        Me.Rev.Visible = False
-        '
         'Overwrite
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -215,6 +216,7 @@ Partial Class Overwrite
         Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.dgvOverwrite)
         Me.Controls.Add(Me.Label1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Overwrite"
         Me.Text = "Overwrite"
         CType(Me.dgvOverwrite, System.ComponentModel.ISupportInitialize).EndInit()

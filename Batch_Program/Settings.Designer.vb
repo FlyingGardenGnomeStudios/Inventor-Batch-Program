@@ -27,6 +27,12 @@ Partial Class Settings
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.tabSaveLoc = New System.Windows.Forms.TabControl()
         Me.tabPDF = New System.Windows.Forms.TabPage()
+        Me.numRes = New System.Windows.Forms.NumericUpDown()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.cmbSheets = New System.Windows.Forms.ComboBox()
+        Me.chkPDFBW = New System.Windows.Forms.CheckBox()
+        Me.chkLineWeights = New System.Windows.Forms.CheckBox()
         Me.chkPDFRev = New System.Windows.Forms.CheckBox()
         Me.txtPDFTag = New System.Windows.Forms.TextBox()
         Me.rdoPDFTag = New System.Windows.Forms.RadioButton()
@@ -59,18 +65,12 @@ Partial Class Settings
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
         Me.chkArchive = New System.Windows.Forms.CheckBox()
-        Me.chkPDFBW = New System.Windows.Forms.CheckBox()
-        Me.chkLineWeights = New System.Windows.Forms.CheckBox()
-        Me.cmbSheets = New System.Windows.Forms.ComboBox()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.numRes = New System.Windows.Forms.NumericUpDown()
         Me.GroupBox1.SuspendLayout()
         Me.tabSaveLoc.SuspendLayout()
         Me.tabPDF.SuspendLayout()
+        CType(Me.numRes, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabDXF.SuspendLayout()
         Me.tabDWG.SuspendLayout()
-        CType(Me.numRes, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'rdoPDFChoose
@@ -115,6 +115,47 @@ Partial Class Settings
         resources.ApplyResources(Me.tabPDF, "tabPDF")
         Me.tabPDF.Name = "tabPDF"
         Me.tabPDF.UseVisualStyleBackColor = True
+        '
+        'numRes
+        '
+        resources.ApplyResources(Me.numRes, "numRes")
+        Me.numRes.Maximum = New Decimal(New Integer() {800, 0, 0, 0})
+        Me.numRes.Minimum = New Decimal(New Integer() {10, 0, 0, 0})
+        Me.numRes.Name = "numRes"
+        Me.numRes.Value = New Decimal(New Integer() {400, 0, 0, 0})
+        '
+        'Label2
+        '
+        resources.ApplyResources(Me.Label2, "Label2")
+        Me.Label2.Name = "Label2"
+        '
+        'Label1
+        '
+        resources.ApplyResources(Me.Label1, "Label1")
+        Me.Label1.Name = "Label1"
+        '
+        'cmbSheets
+        '
+        Me.cmbSheets.AutoCompleteCustomSource.AddRange(New String() {resources.GetString("cmbSheets.AutoCompleteCustomSource"), resources.GetString("cmbSheets.AutoCompleteCustomSource1"), resources.GetString("cmbSheets.AutoCompleteCustomSource2")})
+        Me.cmbSheets.DisplayMember = "All Sheets"
+        Me.cmbSheets.FormattingEnabled = True
+        Me.cmbSheets.Items.AddRange(New Object() {resources.GetString("cmbSheets.Items"), resources.GetString("cmbSheets.Items1"), resources.GetString("cmbSheets.Items2")})
+        resources.ApplyResources(Me.cmbSheets, "cmbSheets")
+        Me.cmbSheets.Name = "cmbSheets"
+        '
+        'chkPDFBW
+        '
+        resources.ApplyResources(Me.chkPDFBW, "chkPDFBW")
+        Me.chkPDFBW.Name = "chkPDFBW"
+        Me.chkPDFBW.UseVisualStyleBackColor = True
+        '
+        'chkLineWeights
+        '
+        resources.ApplyResources(Me.chkLineWeights, "chkLineWeights")
+        Me.chkLineWeights.Checked = True
+        Me.chkLineWeights.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkLineWeights.Name = "chkLineWeights"
+        Me.chkLineWeights.UseVisualStyleBackColor = True
         '
         'chkPDFRev
         '
@@ -324,47 +365,6 @@ Partial Class Settings
         Me.chkArchive.Name = "chkArchive"
         Me.chkArchive.UseVisualStyleBackColor = True
         '
-        'chkPDFBW
-        '
-        resources.ApplyResources(Me.chkPDFBW, "chkPDFBW")
-        Me.chkPDFBW.Name = "chkPDFBW"
-        Me.chkPDFBW.UseVisualStyleBackColor = True
-        '
-        'chkLineWeights
-        '
-        resources.ApplyResources(Me.chkLineWeights, "chkLineWeights")
-        Me.chkLineWeights.Checked = True
-        Me.chkLineWeights.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkLineWeights.Name = "chkLineWeights"
-        Me.chkLineWeights.UseVisualStyleBackColor = True
-        '
-        'cmbSheets
-        '
-        Me.cmbSheets.AutoCompleteCustomSource.AddRange(New String() {resources.GetString("cmbSheets.AutoCompleteCustomSource"), resources.GetString("cmbSheets.AutoCompleteCustomSource1"), resources.GetString("cmbSheets.AutoCompleteCustomSource2")})
-        Me.cmbSheets.DisplayMember = "All Sheets"
-        Me.cmbSheets.FormattingEnabled = True
-        Me.cmbSheets.Items.AddRange(New Object() {resources.GetString("cmbSheets.Items"), resources.GetString("cmbSheets.Items1"), resources.GetString("cmbSheets.Items2")})
-        resources.ApplyResources(Me.cmbSheets, "cmbSheets")
-        Me.cmbSheets.Name = "cmbSheets"
-        '
-        'Label1
-        '
-        resources.ApplyResources(Me.Label1, "Label1")
-        Me.Label1.Name = "Label1"
-        '
-        'Label2
-        '
-        resources.ApplyResources(Me.Label2, "Label2")
-        Me.Label2.Name = "Label2"
-        '
-        'numRes
-        '
-        resources.ApplyResources(Me.numRes, "numRes")
-        Me.numRes.Maximum = New Decimal(New Integer() {800, 0, 0, 0})
-        Me.numRes.Minimum = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.numRes.Name = "numRes"
-        Me.numRes.Value = New Decimal(New Integer() {400, 0, 0, 0})
-        '
         'Settings
         '
         resources.ApplyResources(Me, "$this")
@@ -379,11 +379,11 @@ Partial Class Settings
         Me.tabSaveLoc.ResumeLayout(False)
         Me.tabPDF.ResumeLayout(False)
         Me.tabPDF.PerformLayout()
+        CType(Me.numRes, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabDXF.ResumeLayout(False)
         Me.tabDXF.PerformLayout()
         Me.tabDWG.ResumeLayout(False)
         Me.tabDWG.PerformLayout()
-        CType(Me.numRes, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

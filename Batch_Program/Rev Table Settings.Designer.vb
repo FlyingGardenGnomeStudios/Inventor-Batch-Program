@@ -31,30 +31,30 @@ Partial Class Rev_Table_Settings
         Me.Label2 = New System.Windows.Forms.Label()
         Me.txtAlphaRev = New System.Windows.Forms.TextBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.rdbBR = New System.Windows.Forms.RadioButton()
         Me.nudStartVal = New System.Windows.Forms.NumericUpDown()
+        Me.rdbBL = New System.Windows.Forms.RadioButton()
         Me.Label3 = New System.Windows.Forms.Label()
+        Me.rdbTR = New System.Windows.Forms.RadioButton()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.rdbTL = New System.Windows.Forms.RadioButton()
         Me.dgvRevTableLayout = New System.Windows.Forms.DataGridView()
         Me.chk = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Item = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ColumnName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataType = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.DeleteRowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.rdbBR = New System.Windows.Forms.RadioButton()
-        Me.rdbBL = New System.Windows.Forms.RadioButton()
-        Me.rdbTR = New System.Windows.Forms.RadioButton()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.rdbTL = New System.Windows.Forms.RadioButton()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Item = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ColumnName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.GroupBox2.SuspendLayout()
         CType(Me.nudStartVal, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvRevTableLayout, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'btnOK
@@ -130,12 +130,39 @@ Partial Class Rev_Table_Settings
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Change Revision"
         '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(242, 16)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(138, 13)
+        Me.Label4.TabIndex = 64
+        Me.Label4.Text = "Default Rev Table Location"
+        '
+        'rdbBR
+        '
+        Me.rdbBR.AutoSize = True
+        Me.rdbBR.Location = New System.Drawing.Point(334, 92)
+        Me.rdbBR.Name = "rdbBR"
+        Me.rdbBR.Size = New System.Drawing.Size(14, 13)
+        Me.rdbBR.TabIndex = 63
+        Me.rdbBR.UseVisualStyleBackColor = True
+        '
         'nudStartVal
         '
         Me.nudStartVal.Location = New System.Drawing.Point(103, 53)
         Me.nudStartVal.Name = "nudStartVal"
         Me.nudStartVal.Size = New System.Drawing.Size(37, 20)
         Me.nudStartVal.TabIndex = 11
+        '
+        'rdbBL
+        '
+        Me.rdbBL.AutoSize = True
+        Me.rdbBL.Location = New System.Drawing.Point(284, 92)
+        Me.rdbBL.Name = "rdbBL"
+        Me.rdbBL.Size = New System.Drawing.Size(14, 13)
+        Me.rdbBL.TabIndex = 62
+        Me.rdbBL.UseVisualStyleBackColor = True
         '
         'Label3
         '
@@ -145,6 +172,36 @@ Partial Class Rev_Table_Settings
         Me.Label3.Size = New System.Drawing.Size(73, 13)
         Me.Label3.TabIndex = 10
         Me.Label3.Text = "Starting Value"
+        '
+        'rdbTR
+        '
+        Me.rdbTR.AutoSize = True
+        Me.rdbTR.Location = New System.Drawing.Point(334, 38)
+        Me.rdbTR.Name = "rdbTR"
+        Me.rdbTR.Size = New System.Drawing.Size(14, 13)
+        Me.rdbTR.TabIndex = 61
+        Me.rdbTR.UseVisualStyleBackColor = True
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.ErrorImage = Nothing
+        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
+        Me.PictureBox1.InitialImage = Nothing
+        Me.PictureBox1.Location = New System.Drawing.Point(297, 55)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(36, 34)
+        Me.PictureBox1.TabIndex = 60
+        Me.PictureBox1.TabStop = False
+        Me.PictureBox1.WaitOnLoad = True
+        '
+        'rdbTL
+        '
+        Me.rdbTL.AutoSize = True
+        Me.rdbTL.Location = New System.Drawing.Point(284, 38)
+        Me.rdbTL.Name = "rdbTL"
+        Me.rdbTL.Size = New System.Drawing.Size(14, 13)
+        Me.rdbTL.TabIndex = 59
+        Me.rdbTL.UseVisualStyleBackColor = True
         '
         'dgvRevTableLayout
         '
@@ -169,6 +226,20 @@ Partial Class Rev_Table_Settings
         Me.chk.HeaderText = ""
         Me.chk.Name = "chk"
         Me.chk.Width = 21
+        '
+        'Item
+        '
+        Me.Item.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.Item.FillWeight = 34.04429!
+        Me.Item.HeaderText = "Revision Item"
+        Me.Item.Name = "Item"
+        '
+        'ColumnName
+        '
+        Me.ColumnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.ColumnName.FillWeight = 53.71433!
+        Me.ColumnName.HeaderText = "Rev Table Column Name"
+        Me.ColumnName.Name = "ColumnName"
         '
         'DataType
         '
@@ -202,63 +273,6 @@ Partial Class Rev_Table_Settings
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Check Items"
         '
-        'rdbBR
-        '
-        Me.rdbBR.AutoSize = True
-        Me.rdbBR.Location = New System.Drawing.Point(334, 92)
-        Me.rdbBR.Name = "rdbBR"
-        Me.rdbBR.Size = New System.Drawing.Size(14, 13)
-        Me.rdbBR.TabIndex = 63
-        Me.rdbBR.UseVisualStyleBackColor = True
-        '
-        'rdbBL
-        '
-        Me.rdbBL.AutoSize = True
-        Me.rdbBL.Location = New System.Drawing.Point(284, 92)
-        Me.rdbBL.Name = "rdbBL"
-        Me.rdbBL.Size = New System.Drawing.Size(14, 13)
-        Me.rdbBL.TabIndex = 62
-        Me.rdbBL.UseVisualStyleBackColor = True
-        '
-        'rdbTR
-        '
-        Me.rdbTR.AutoSize = True
-        Me.rdbTR.Location = New System.Drawing.Point(334, 38)
-        Me.rdbTR.Name = "rdbTR"
-        Me.rdbTR.Size = New System.Drawing.Size(14, 13)
-        Me.rdbTR.TabIndex = 61
-        Me.rdbTR.UseVisualStyleBackColor = True
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.ErrorImage = Nothing
-        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-        Me.PictureBox1.InitialImage = Nothing
-        Me.PictureBox1.Location = New System.Drawing.Point(297, 55)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(36, 34)
-        Me.PictureBox1.TabIndex = 60
-        Me.PictureBox1.TabStop = False
-        Me.PictureBox1.WaitOnLoad = True
-        '
-        'rdbTL
-        '
-        Me.rdbTL.AutoSize = True
-        Me.rdbTL.Location = New System.Drawing.Point(284, 38)
-        Me.rdbTL.Name = "rdbTL"
-        Me.rdbTL.Size = New System.Drawing.Size(14, 13)
-        Me.rdbTL.TabIndex = 59
-        Me.rdbTL.UseVisualStyleBackColor = True
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(242, 16)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(138, 13)
-        Me.Label4.TabIndex = 64
-        Me.Label4.Text = "Default Rev Table Location"
-        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
@@ -272,20 +286,6 @@ Partial Class Rev_Table_Settings
         Me.DataGridViewTextBoxColumn2.FillWeight = 53.71433!
         Me.DataGridViewTextBoxColumn2.HeaderText = "Rev Table Column Name"
         Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
-        '
-        'Item
-        '
-        Me.Item.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.Item.FillWeight = 34.04429!
-        Me.Item.HeaderText = "Revision Item"
-        Me.Item.Name = "Item"
-        '
-        'ColumnName
-        '
-        Me.ColumnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.ColumnName.FillWeight = 53.71433!
-        Me.ColumnName.HeaderText = "Rev Table Column Name"
-        Me.ColumnName.Name = "ColumnName"
         '
         'Rev_Table_Settings
         '
@@ -303,10 +303,10 @@ Partial Class Rev_Table_Settings
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         CType(Me.nudStartVal, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgvRevTableLayout, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ContextMenuStrip1.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
