@@ -3627,9 +3627,7 @@ Public Class Main
         For Each Row In dgvOpenFiles.Rows
             If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, Row.index).Value = True Then
                 If Strings.InStr(dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, Row.index).Value, "idw") <> 0 Then
-                    ''' oDoc = _invApp.Documents.ItemByName(dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, Row.index).Value)
                     oDoc = _invApp.Documents.ItemByName(dgvOpenFiles(dgvOpenFiles.Columns("PartLocation").Index, Row.index).Value)
-                    ''' TestForDrawing(dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, Row.index).Value, 0, Total, Counter, OpenDocs, Elog, False)
                     TestForDrawing(dgvOpenFiles(dgvOpenFiles.Columns("PartLocation").Index, Row.index).Value, 0, Total, Counter, OpenDocs, Elog, False)
                     'dgvSubFiles.Rows.Add(New String() {True,
                     '                         dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, Row.index).Value,
