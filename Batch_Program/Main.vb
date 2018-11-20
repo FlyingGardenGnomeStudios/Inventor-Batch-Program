@@ -645,7 +645,7 @@ Public Class Main
             For X = 0 To dgvOpenFiles.RowCount - 1
                 dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = True
             Next
-        Else
+        Elseif chkPartSelect.CheckState = CheckState.Unchecked then
             For X = 0 To dgvOpenFiles.RowCount - 1
                 dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = False
             Next
@@ -3313,29 +3313,11 @@ Public Class Main
             Dim Diff As Boolean = False
             For Each Row In dgvOpenFiles.Rows
                 If dgvOpenFiles(dgvOpenFiles.Columns("chkopenFiles").Index, Row.index).Value <> True Then
-                    ' Diff = True
-                    ' Exit Sub
                 Else
                     Total += 1
                 End If
             Next
-            'If Diff = False Then chkDWGSelect.Checked = Check
         End If
-        'dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Style.ForeColor = Me.dgvSubFiles.DefaultCellStyle.ForeColor
-        'dgvSubFiles.ClearSelection()
-        'If Not Total = 0 Then
-        '    gbxOpen.Text = "                Open Parts (" & Total & ")"
-        'Else
-        '    gbxOpen.Text = "                Open Parts"
-        'End If
-        'If Total <> 0 AndAlso Total <> dgvOpenFiles.RowCount Then
-        '    chkPartSelect.CheckState = CheckState.Indeterminate
-        'ElseIf Total = dgvopenFiles.RowCount Then
-        '    chkPartSelect.CheckState = CheckState.Checked
-        'Else
-        '    chkPartSelect.CheckState = CheckState.Unchecked
-        'End If
-        ' dgvSubFiles.ClearSelection()
     End Sub
 #End Region
 #Region "Top Menus"
@@ -3690,6 +3672,13 @@ Public Class Main
             gbxOpen.Text = "      Open Parts"
         Else
             gbxOpen.Text = "      Open Parts(" & ChkCount & ")"
+        End If
+        If ChkCount <> 0 AndAlso ChkCount <> dgvOpenFiles.RowCount Then
+            chkPartSelect.CheckState = CheckState.Indeterminate
+        ElseIf chkcount = dgvOpenFiles.RowCount Then
+            chkPartSelect.CheckState = CheckState.Checked
+        Else
+            chkPartSelect.CheckState = CheckState.Unchecked
         End If
         writeDebug(Elog)
         ' RunCompleted()
