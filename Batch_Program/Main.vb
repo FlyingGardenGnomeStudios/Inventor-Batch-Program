@@ -351,21 +351,21 @@ Public Class Main
             chkDerived.Top = chkAssy.Location.Y + 15
             chkPres.Top = chkDerived.Location.Y + 15
             gbxSelection.Height = 95
-            gbxUtilities.Top = gbxParts.Top + 80
+            gbxUtilities.Top = gbxSelection.Top + gbxSelection.Height + 5
         ElseIf chkAssy.Checked = False And chkParts.Checked = True Then
             chkDerived.Visible = True
             chkDerived.Top = chkParts.Location.Y + 15
             chkAssy.Top = chkDerived.Location.Y + 15
             chkPres.Top = chkAssy.Location.Y + 15
             gbxSelection.Height = 95
-            gbxUtilities.Top = gbxParts.Top + 80
+            gbxUtilities.Top = gbxSelection.Top + gbxSelection.Height + 5
         ElseIf chkAssy.Checked = True And chkParts.Checked = True Then
             chkDerived.Visible = True
             chkAssy.Top = chkParts.Location.Y + 15
             chkDerived.Top = chkAssy.Location.Y + 15
             chkPres.Top = chkDerived.Location.Y + 15
             gbxSelection.Height = 95
-            gbxUtilities.Top = gbxParts.Top + 80
+            gbxUtilities.Top = gbxSelection.Top + gbxSelection.Height + 5
         Else
             chkAssy.Checked = False And chkParts.Checked = False
             chkDerived.Visible = False
@@ -374,7 +374,7 @@ Public Class Main
             chkAssy.Top = chkParts.Location.Y + 15
             chkPres.Top = chkAssy.Location.Y + 15
             gbxSelection.Height = 80
-            gbxUtilities.Top = gbxParts.Top + 65
+            gbxUtilities.Top = gbxSelection.Top + gbxSelection.Height + 5
         End If
     End Sub
 #End Region
@@ -1526,26 +1526,9 @@ Public Class Main
     Private Sub chkDXF_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkDXF.CheckedChanged
         If chkDWG.Checked = True Then Exit Sub
         If chkDXF.CheckState = CheckState.Checked Then
-            chkUseDrawings.CheckState = CheckState.Unchecked
-            chkUseDrawings.Visible = True
-            chkSkipAssy.CheckState = CheckState.Checked
-            chkSkipAssy.Visible = True
-            chkFlatPattern.Visible = True
-            chkFlatPattern.Checked = True
-            chkDwgClose.Top = chkDwgClose.Top + 45
-            gbxDrawings.Height = gbxDrawings.Size.Height.ToString + 40
-            Me.MinimumSize = New System.Drawing.Size(Me.MinimumSize.Width, Me.MinimumSize.Height + 40)
-
+            chkDXFDWG_order()
         Else
-            chkUseDrawings.CheckState = CheckState.Checked
-            chkUseDrawings.Visible = False
-            chkSkipAssy.Visible = False
-            chkDwgClose.Top = chkDwgClose.Top - 45
-            gbxDrawings.Height = gbxDrawings.Size.Height.ToString - 40
-            chkFlatPattern.Visible = False
-            chkFlatPattern.Checked = False
-            Me.MinimumSize = New System.Drawing.Size(Me.MinimumSize.Width, Me.MinimumSize.Height - 40)
-            If Me.MinimumSize.Height = Me.Height - 30 Then Me.Height = Me.Height - 30
+            chkDXFDWG_reorder()
         End If
     End Sub
     Private Sub chkExport_CheckedChanged(sender As Object, e As EventArgs) Handles chkDwgExport.CheckedChanged
@@ -1575,28 +1558,35 @@ Public Class Main
         End If
     End Sub
     Private Sub chkDWG_CheckedChanged(sender As Object, e As EventArgs) Handles chkDWG.CheckedChanged
-        If chkDXF.CheckState = CheckState.Checked Then Exit Sub
+        If chkDXF.Checked = True Then Exit Sub
         If chkDWG.CheckState = CheckState.Checked Then
-            chkUseDrawings.CheckState = CheckState.Unchecked
-            chkUseDrawings.Visible = True
-            chkSkipAssy.CheckState = CheckState.Checked
-            chkSkipAssy.Visible = True
-            chkDwgClose.Top = chkDwgClose.Top + 30
-            gbxDrawings.Height = gbxDrawings.Size.Height.ToString + 30
-            Me.MinimumSize = New System.Drawing.Size(Me.MinimumSize.Width, Me.MinimumSize.Height + 30)
-
+            chkDXFDWG_order()
         Else
-            chkUseDrawings.CheckState = CheckState.Checked
-            chkUseDrawings.Visible = False
-            chkSkipAssy.Visible = False
-            chkDwgClose.Top = chkDwgClose.Top - 30
-            gbxDrawings.Height = gbxDrawings.Size.Height.ToString - 30
-
-            Me.MinimumSize = New System.Drawing.Size(Me.MinimumSize.Width, Me.MinimumSize.Height - 30)
-            If Me.MinimumSize.Height = Me.Height - 30 Then Me.Height = Me.Height - 30
+            chkDXFDWG_reorder()
         End If
     End Sub
-
+    Private Sub chkDXFDWG_order()
+        chkUseDrawings.CheckState = CheckState.Unchecked
+        chkUseDrawings.Visible = True
+        chkSkipAssy.CheckState = CheckState.Checked
+        chkSkipAssy.Visible = True
+        chkFlatPattern.Visible = True
+        chkFlatPattern.Checked = True
+        chkDwgClose.Top = chkDwgClose.Top + 45
+        gbxDrawings.Height = gbxDrawings.Size.Height.ToString + 40
+        Me.MinimumSize = New System.Drawing.Size(Me.MinimumSize.Width, Me.MinimumSize.Height + 40)
+    End Sub
+    Private Sub chkDXFDWG_reorder()
+        chkUseDrawings.CheckState = CheckState.Checked
+        chkUseDrawings.Visible = False
+        chkSkipAssy.Visible = False
+        chkDwgClose.Top = chkDwgClose.Top - 45
+        gbxDrawings.Height = gbxDrawings.Size.Height.ToString - 40
+        chkFlatPattern.Visible = False
+        chkFlatPattern.Checked = False
+        Me.MinimumSize = New System.Drawing.Size(Me.MinimumSize.Width, Me.MinimumSize.Height - 40)
+        If Me.MinimumSize.Height = Me.Height - 30 Then Me.Height = Me.Height - 30
+    End Sub
 #End Region
 #Region "Background Calls"
     Private Sub UpdateOpenFiles()
@@ -2573,7 +2563,7 @@ Public Class Main
         dgvSubFiles.Width = gbxSub.Width - 22
         pgbMain.Location = New Drawing.Point(12, Me.Height - 67)
         pgbMain.Width = Me.Width - 226
-        gbxUtilities.Location = New Drawing.Point(12, gbxSelection.Location.Y + 85)
+        gbxUtilities.Top = gbxSelection.Top + gbxSelection.Height + 5
         txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, dgvSubFiles.Location.Y + dgvSubFiles.Height + 5)
         If dgvSubFiles.Controls.OfType(Of VScrollBar).SingleOrDefault.Visible = False Then
             txtSearch.Visible = False
@@ -3051,7 +3041,6 @@ Public Class Main
         If txtSearch.ForeColor = Drawing.Color.Gray Then
             txtSearch.ForeColor = Drawing.Color.Black
             txtSearch.Text = ""
-
         End If
     End Sub
     Private Sub txtSearch_LostFocus(sender As Object, e As EventArgs) Handles txtSearch.LostFocus
@@ -3743,17 +3732,15 @@ Public Class Main
         btnExit.Enabled = True
         gbxSelection.Enabled = True
         gbxUtilities.Enabled = True
-        If SubfilesData.Rows.Count > 10 Then ' dgvSubFiles.RowCount > 10 Then
-            dgvSubFiles.Height = gbxOpen.Height - 49
-            txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, Me.Height - 135)
-            txtSearch.Width = dgvSubFiles.Width
-            txtSearch.Visible = True
-            txtSearch.Text = "Search"
-            txtSearch.ForeColor = Drawing.Color.Gray
-        Else
-            dgvSubFiles.Height = dgvOpenFiles.Height
-
+        txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, dgvSubFiles.Location.Y + dgvSubFiles.Height + 5)
+        If dgvSubFiles.Controls.OfType(Of VScrollBar).SingleOrDefault.Visible = False Then
             txtSearch.Visible = False
+            dgvSubFiles.Height = dgvOpenFiles.Height
+        Else
+            txtSearch.Visible = True
+            dgvSubFiles.Height = gbxOpen.Height - 49
+            txtSearch.Width = dgvSubFiles.Width
+            txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, Me.Height - 135)
         End If
         For i = 0 To SubfilesData.Rows.Count - 1
             dgvSubFiles.Rows.Add(New String() {True, Space(SubfilesData.Rows(i).Item(0) * 3) & SubfilesData.Rows(i).Item(1), SubfilesData.Rows(i).Item(1), SubfilesData.Rows(i).Item(2), SubfilesData.Rows(i).Item(3), SubfilesData.Rows(i).Item(4), dgvSubFiles.RowCount})

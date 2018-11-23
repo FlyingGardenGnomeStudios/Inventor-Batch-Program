@@ -2,6 +2,8 @@
 	- No tutorials yet
 	- Renaming function works but hasn't been thoroughly tested.
 
+Version 2.1.1.8 (11.23.18)
+	Minor UI tweaks
 Version 2.1.1.7 (11.23.18)
 	Improved search for drawing locations in referenced documents list
 	High level debugging for spreadsheet creation
