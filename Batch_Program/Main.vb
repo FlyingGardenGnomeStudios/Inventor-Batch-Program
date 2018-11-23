@@ -123,15 +123,15 @@ Public Class Main
             End If
         End If
         ControlPanelIcon.SetAddRemoveProgramsIcon()
-        'If My.Settings.DonateShowMe = True Then
-        '    If My.Settings.DonateCount = 0 Then
-        '        Warning.Donate()
-        '    ElseIf My.Settings.DonateCount < 4 Then
-        '        My.Settings.DonateCount = My.Settings.DonateCount + 1
-        '    ElseIf My.Settings.DonateCount = 4 Then
-        '        My.Settings.DonateCount = 0
-        '    End If
-        'End If
+        If My.Settings.DonateShowMe = True Then
+            If My.Settings.DonateCount = 0 Then
+                Warning.Donate()
+            ElseIf My.Settings.DonateCount < 4 Then
+                My.Settings.DonateCount = My.Settings.DonateCount + 1
+            ElseIf My.Settings.DonateCount = 4 Then
+                My.Settings.DonateCount = 0
+            End If
+        End If
 
         'Add any initialization after the InitializeComponent() call.
         Try
@@ -351,18 +351,21 @@ Public Class Main
             chkDerived.Top = chkAssy.Location.Y + 15
             chkPres.Top = chkDerived.Location.Y + 15
             gbxSelection.Height = 95
+            gbxUtilities.Top = gbxParts.Top + 80
         ElseIf chkAssy.Checked = False And chkParts.Checked = True Then
             chkDerived.Visible = True
             chkDerived.Top = chkParts.Location.Y + 15
             chkAssy.Top = chkDerived.Location.Y + 15
             chkPres.Top = chkAssy.Location.Y + 15
             gbxSelection.Height = 95
+            gbxUtilities.Top = gbxParts.Top + 80
         ElseIf chkAssy.Checked = True And chkParts.Checked = True Then
             chkDerived.Visible = True
             chkAssy.Top = chkParts.Location.Y + 15
             chkDerived.Top = chkAssy.Location.Y + 15
             chkPres.Top = chkDerived.Location.Y + 15
             gbxSelection.Height = 95
+            gbxUtilities.Top = gbxParts.Top + 80
         Else
             chkAssy.Checked = False And chkParts.Checked = False
             chkDerived.Visible = False
@@ -371,6 +374,7 @@ Public Class Main
             chkAssy.Top = chkParts.Location.Y + 15
             chkPres.Top = chkAssy.Location.Y + 15
             gbxSelection.Height = 80
+            gbxUtilities.Top = gbxParts.Top + 65
         End If
     End Sub
 #End Region
@@ -462,7 +466,7 @@ Public Class Main
         Dim _ExcelApp As New Excel.Application
         For X = 0 To dgvOpenFiles.RowCount - 1
             If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = True Then
-                If IO.Path.GetExtension(dgvOpenFiles(dgvOpenFiles.Columns("PartLocation").Index, X).Value) = ".iam" Then
+                If IO.Path.GetExtension(dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, X).Value) = ".iam" Then
                     C += 1
                 End If
             End If
@@ -534,24 +538,26 @@ Public Class Main
                             KillAllExcels(StartTime)
 
                         Catch ex As Exception
-                            writeDebug(ex.StackTrace & " " & ex.Message)
-                            MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                        writeDebug(ex.StackTrace & " " & ex.Message)
+                        KillAllExcels(StartTime)
+                        MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                         Finally
-                            Ans = MsgBox("A spreadsheet of all part properties has been created" & vbNewLine &
-                                             "Do you wish to open the file?", vbYesNo, "Finished")
-                            If Ans = vbYes Then
-                                System.Diagnostics.Process.Start(SaveName & "Vendor Quotes\" & PreSave)
-                                '_ExcelApp = Marshal.GetActiveObject("Excel.application")
-                                '_ExcelApp.Workbooks.Open(SaveName & "Vendor Quotes\" & PreSave)
-                                '_ExcelApp.Visible = True
-                            Else
-                                '_ExcelApp.Visible = True
 
-                                '_ExcelApp.Quit()
-                                '_ExcelApp.DisplayAlerts = True
-                                '_ExcelApp = Nothing
-                                'KillAllExcels(StartTime)
-                            End If
+                        Ans = MsgBox("A spreadsheet of all part properties has been created" & vbNewLine &
+                                         "Do you wish to open the file?", vbYesNo, "Finished")
+                        If Ans = vbYes Then
+                            System.Diagnostics.Process.Start(SaveName & "Vendor Quotes\" & PreSave)
+                            '_ExcelApp = Marshal.GetActiveObject("Excel.application")
+                            '_ExcelApp.Workbooks.Open(SaveName & "Vendor Quotes\" & PreSave)
+                            '_ExcelApp.Visible = True
+                        Else
+                            '_ExcelApp.Visible = True
+
+                            '_ExcelApp.Quit()
+                            '_ExcelApp.DisplayAlerts = True
+                            '_ExcelApp = Nothing
+                            'KillAllExcels(StartTime)
+                        End If
                         End Try
                         Exit Sub
                     End If
@@ -1070,7 +1076,7 @@ Public Class Main
                         Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, ExportType, RevNo)
                     End If
                     bgwRun.ReportProgress((Counter / Total) * 100, "Saving: " & Replace(DrawingName, ".idw", "." & ExportType))
-                    CloseLater(DrawSource, oDoc)
+                    CloseLater(oDoc.FullDocumentName, oDoc)
                     'Title = "Saving:  "
                     ' ProgressBar(Total, Counter, Title, Replace(DrawingName, ".idw", "." & ExportType))
                     Counter += 1
@@ -1684,16 +1690,21 @@ Public Class Main
             Threading.Thread.Sleep(1000)
         Loop
     End Sub
-    Private Sub TestForDrawing(Partsource As String, ByVal Level As Integer, ByRef Total As Integer,
+    Private Sub TestForDrawing(Partsource As String, DrawingSource As String, ByVal Level As Integer, ByRef Total As Integer,
                                ByRef Counter As Integer, OpenDocs As ArrayList, ByRef Elog As String, Ref As Boolean)
         Dim Dup As Boolean = False
-        Dim DrawingSource, DrawingName As String
+        Dim DrawingName As String
         'Extract the file name from the full file path
-        DrawingName = IO.Path.GetFileNameWithoutExtension(Partsource) & ".idw"
-        If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)) Then
-            DrawingSource = IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)
+
+        If DrawingSource = "" Then
+            DrawingName = IO.Path.GetFileNameWithoutExtension(Partsource) & ".idw"
+            If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)) Then
+                DrawingSource = IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)
+            Else
+                DrawingSource = ""
+            End If
         Else
-            DrawingSource = ""
+            DrawingName = IO.Path.GetFileName(DrawingSource)
         End If
 
         'Assume drawing is stored in same location as part/assembly (same inherent procedure as Inventor)
@@ -1704,7 +1715,7 @@ Public Class Main
         Dim Comments As String = ""
         If Not My.Computer.FileSystem.FileExists(Partsource) Then
             Comments = "PPM"
-        ElseIf Not My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)) Then
+        ElseIf Not My.Computer.FileSystem.FileExists(DrawingSource) Then
             Comments = "DNE"
         ElseIf Ref = True Then
             Comments = "REF"
@@ -1787,7 +1798,7 @@ Public Class Main
 
                     TraverseAssembly(oAsmDoc.ComponentDefinition.Occurrences, PartSource, Level, Total, Counter, OpenDocs, Elog, True, Err)
                 Else
-                    TestForDrawing(PartSource, Level, Total, Counter, OpenDocs, Elog, False)
+                    TestForDrawing(PartSource, "", Level, Total, Counter, OpenDocs, Elog, False)
                 End If
             Next
         End If
@@ -1817,7 +1828,7 @@ Public Class Main
         'Create a drawing name assuming the name/location is the same as the part
         strFile = IO.Path.GetFileName(PartSource)
         DrawingName = IO.Path.GetFileNameWithoutExtension(PartSource) & ".idw"
-        'If Strings.InStr(PartSource, "Content Center") = 0 Then
+        'If Strings.InStr(PartSource, "Content Center") = 0 ThenTestForDrawing(PartSource, Level,
         If Dev = False Then
             If LCase(oAsmDoc.File.FullFileName).Contains("purchased parts") Or oAsmDoc.ComponentDefinition.BOMStructure = BOMStructureEnum.kPurchasedBOMStructure Then
                 ID = "PP"
@@ -1833,7 +1844,7 @@ Public Class Main
         AddtoRenameTable(PartSource, DrawingName, strFile, Add, ID, Err)
         'End If
         'Check to see if the drawing exists and add to the list
-        TestForDrawing(PartSource, Level, Total, Counter, Opendocs, Elog, False)
+        TestForDrawing(PartSource, "", Level, Total, Counter, Opendocs, Elog, False)
         'If the part is an assembly, go through recursively and retrieve the sub-components
         ' Get all of the referenced documents. 
         Dim oRefDocs As DocumentsEnumerator
@@ -1875,7 +1886,7 @@ Public Class Main
                     'ProgressBar(Total, Counter, "Found:  ", DrawingName)
                     'FindWorker.ReportProgress(CInt((Counter / Total) * 100))
                     'Add to list if the drawing exists
-                    TestForDrawing(PartSource, Level, Total, Counter, OpenDocs, Elog, Ref)
+                    TestForDrawing(PartSource, "", Level, Total, Counter, OpenDocs, Elog, Ref)
                     'iterate through again for each sub-assembly found 
                     'Counter += 1
                     'Create a list of sub parts for use in the renaming section. this saves time having to recreate it again later.
@@ -2116,7 +2127,7 @@ Public Class Main
         Dim CloseLater As Boolean = True
         'Go through string of originally open documents to see if document has been opened by the program
         For Each Str As String In OpenDocs
-            If Str.Contains(Name) Then
+            If Name.Contains(Str) Then
                 'If found, don't close
                 CloseLater = False
                 Exit For
@@ -2163,206 +2174,224 @@ Public Class Main
     Private Sub GetProperties(ByRef oDoc As Document, ByVal Occurrences As ComponentOccurrences, ByRef Properties As Double, ByRef Counter As Integer, ExcelDoc As Excel.Workbook, Total As Integer)
         Dim Occ As ComponentOccurrence
         Dim oPartDef As ComponentDefinition
-        Dim PropSets, customPropSet, UserDefProps As Inventor.PropertySets
-        Dim Process, StockNo, Material, PartNo, Description, Vendor, Length, Width, Thk, Area, Title As String
+        Dim PropSets As Inventor.PropertySets ', customPropSet, UserDefProps As Inventor.PropertySets
+        Dim Process, StockNo, Material, PartNo, Description, Vendor, Length, Width, Thk, Title As String
+        Dim Area As String = ""
         Dim Offset As Integer = 1
         Title = "Extracting"
         For Each Occ In Occurrences
             Counter += 1
-            'Check if the document is a part or assembly
-            If Occ.DefinitionDocumentType = DocumentTypeEnum.kPartDocumentObject Or
+            'Check if the document is a part or assembly 
+            If Occ.Suppressed = False Then
+                If Occ.DefinitionDocumentType = DocumentTypeEnum.kPartDocumentObject Or
                 DocumentTypeEnum.kAssemblyDocumentObject And Occ.BOMStructure = BOMStructureEnum.kPurchasedBOMStructure Then
-                'Get iProperties for this document
-                PropSets = Occ.Definition.Document.PropertySets()
-                Process = PropSets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("2").Value.ToString
+                    'Get iProperties for this document
+                    Try
+                        PropSets = Occ.Definition.Document.PropertySets()
+                        Process = PropSets.Item("{D5CDD502-2E9C-101B-9397-08002B2CF9AE}").ItemByPropId("2").Value.ToString
 
-                If Occ.BOMStructure = BOMStructureEnum.kPurchasedBOMStructure Then
-                    Process = "PP"
-                ElseIf Occ.BOMStructure = BOMStructureEnum.kReferenceBOMStructure Then
-                    Process = "Ref"
-                ElseIf Occ.BOMStructure = BOMStructureEnum.kPhantomBOMStructure Then
-                    Process = "PH"
-                ElseIf TypeOf Occ.Definition Is VirtualComponentDefinition = True Then
-                    Process = "VP"
-                End If
-                StockNo = PropSets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("55").Value.ToString
-                Material = PropSets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("20").Value.ToString
-                PartNo = PropSets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("5").Value.ToString
-                Description = PropSets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("29").Value.ToString
-                Vendor = PropSets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("30").Value.ToString
-                oPartDef = Occ.Definition
-                On Error Resume Next
-                'Dim ExcelDoc As Excel.Workbook
-                Offset += 1
-                Length = oPartDef.Parameters.Item("Length").Value / 30.48
-                Width = oPartDef.Parameters.Item("Width").Value / 30.48
-                Thk = oPartDef.Parameters.Item("Thickness").Value / 2.54
-                oDoc = _invApp.Documents.Open(Occ.Definition.Document.FullFileName, False)
-                Dim sReadablefiletype As String = ""
-                SheetMetalTest(oDoc, sReadablefiletype)
-                If Process = "SC" AndAlso sReadablefiletype = "S" Then
-                    Dim oDef As PartComponentDefinition = oDoc.componentdefinition
-                    Dim oPath As Inventor.Path = Nothing
-                    Dim TotalLength As Double = 0
-                    For X = 1 To oDef.Features.Count
-                        oPath = oDef.Features.Item(X).path
-                        Length = 0
-                        Dim oCurve As Object
-                        Dim i As Integer
-                        For i = 1 To oPath.Count
-                            oCurve = oPath.Item(i).Curve
-                            Dim oCurveEval As CurveEvaluator = oCurve.evaluator
-                            Dim MinParam As Double
-                            Dim MaxParam As Double
-                            Call oCurveEval.GetParamExtents(MinParam, MaxParam)
-                            Call oCurveEval.GetLengthAtParam(MinParam, MaxParam, Length)
-                            TotalLength = TotalLength + Length / 30.48
-                        Next
-                    Next
-                    Length = TotalLength
-                ElseIf sReadablefiletype = "S" Then
-                    CreateFlatPattern(oDoc.ComponentDefinition, oDoc.DisplayName, oDoc, False)
-                End If
-                Area = AreaCalculate(oDoc, Occ)
-                If Process = "SC" Or Process = "EX" Then
-                    ExcelDoc.Worksheets("Saw Cut").activate()
-                    Do Until ExcelDoc.ActiveSheet.Range("F" & Offset).Value = ""
-                        Offset = Offset + 1
-                        If CStr(ExcelDoc.ActiveSheet.Range("F" & Offset).Value) = CStr(StockNo) And
+                        If Occ.BOMStructure = BOMStructureEnum.kPurchasedBOMStructure Then
+                            Process = "PP"
+                        ElseIf Occ.BOMStructure = BOMStructureEnum.kReferenceBOMStructure Then
+                            Process = "Ref"
+                        ElseIf Occ.BOMStructure = BOMStructureEnum.kPhantomBOMStructure Then
+                            Process = "PH"
+                        ElseIf TypeOf Occ.Definition Is VirtualComponentDefinition = True Then
+                            Process = "VP"
+                        End If
+                        StockNo = PropSets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("55").Value.ToString
+                        Material = PropSets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("20").Value.ToString
+                        PartNo = PropSets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("5").Value.ToString
+                        Description = PropSets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("29").Value.ToString
+                        Vendor = PropSets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("30").Value.ToString
+                        oPartDef = Occ.Definition
+                        'Dim ExcelDoc As Excel.Workbook
+                        Offset += 1
+                        Try
+                            Length = oPartDef.Parameters.Item("Length").Value / 30.48
+                        Catch ex As Exception
+                            Length = ""
+                        End Try
+                        Try
+                            Width = oPartDef.Parameters.Item("Width").Value / 30.48
+                        Catch ex As Exception
+                            Width = ""
+                        End Try
+                        Try
+                            Thk = oPartDef.Parameters.Item("Thickness").Value / 2.54
+                        Catch ex As Exception
+                            Thk = ""
+                        End Try
+                        oDoc = _invApp.Documents.Open(Occ.Definition.Document.FullFileName, False)
+                        Dim sReadablefiletype As String = ""
+                        SheetMetalTest(oDoc, sReadablefiletype)
+                        If Process = "SC" AndAlso sReadablefiletype = "S" Then
+                            Dim oDef As PartComponentDefinition = oDoc.componentdefinition
+                            Dim oPath As Inventor.Path = Nothing
+                            Dim TotalLength As Double = 0
+                            For X = 1 To oDef.Features.Count
+                                oPath = oDef.Features.Item(X).path
+                                Length = 0
+                                Dim oCurve As Object
+                                Dim i As Integer
+                                For i = 1 To oPath.Count
+                                    oCurve = oPath.Item(i).Curve
+                                    Dim oCurveEval As CurveEvaluator = oCurve.evaluator
+                                    Dim MinParam As Double
+                                    Dim MaxParam As Double
+                                    Call oCurveEval.GetParamExtents(MinParam, MaxParam)
+                                    Call oCurveEval.GetLengthAtParam(MinParam, MaxParam, Length)
+                                    TotalLength = TotalLength + Length / 30.48
+                                Next
+                            Next
+                            Length = TotalLength
+                        ElseIf sReadablefiletype = "S" Then
+                            CreateFlatPattern(oDoc.ComponentDefinition, oDoc.DisplayName, oDoc, False)
+                            Area = AreaCalculate(oDoc, Occ)
+                        End If
+
+                        If Process = "SC" Or Process = "EX" Then
+                            ExcelDoc.Worksheets("Saw Cut").activate()
+                            Do Until ExcelDoc.ActiveSheet.Range("F" & Offset).Value = ""
+                                Offset = Offset + 1
+                                If CStr(ExcelDoc.ActiveSheet.Range("F" & Offset).Value) = CStr(StockNo) And
                             CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = CStr(Material) Then
-                            ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length)
-                            If InStrRev(ExcelDoc.ActiveSheet.Range("G" & Offset).Value, PartNo) = "" And
+                                    ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length)
+                                    If InStrRev(ExcelDoc.ActiveSheet.Range("G" & Offset).Value, PartNo) = "" And
                                 ExcelDoc.ActiveSheet.Range("G" & Offset).Value <> "" And
                                 InStr(ExcelDoc.ActiveSheet.range("G" & Offset).value, PartNo) = 0 Then
-                                ExcelDoc.ActiveSheet.Range("G" & Offset).Value = ExcelDoc.ActiveSheet.Range("G" & Offset).Value & ", " & PartNo
-                            End If
-                            Exit Do
-                        ElseIf ExcelDoc.ActiveSheet.Range("F" & Offset).Value = Nothing Then
-                            ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length)
-                            ExcelDoc.ActiveSheet.Range("B" & Offset).Value = "Ft."
-                            ExcelDoc.ActiveSheet.Range("F" & Offset).Value = StockNo
-                            ExcelDoc.ActiveSheet.Range("E" & Offset).Value = Material
-                            ExcelDoc.ActiveSheet.Range("G" & Offset).Value = PartNo
-                            Exit Do
-                        Else
-                            'MsgBox "Jump to next line"
-                        End If
-                    Loop
-                    Offset = 1
-                    ExcelDoc.Worksheets("Saw Cut Lengths").Activate()
-                    Do Until ExcelDoc.ActiveSheet.Range("C" & Offset).Value = ""
-                        Offset = Offset + 1
+                                        ExcelDoc.ActiveSheet.Range("G" & Offset).Value = ExcelDoc.ActiveSheet.Range("G" & Offset).Value & ", " & PartNo
+                                    End If
+                                    Exit Do
+                                ElseIf ExcelDoc.ActiveSheet.Range("F" & Offset).Value = Nothing Then
+                                    ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length)
+                                    ExcelDoc.ActiveSheet.Range("B" & Offset).Value = "Ft."
+                                    ExcelDoc.ActiveSheet.Range("F" & Offset).Value = StockNo
+                                    ExcelDoc.ActiveSheet.Range("E" & Offset).Value = Material
+                                    ExcelDoc.ActiveSheet.Range("G" & Offset).Value = PartNo
+                                    Exit Do
+                                Else
+                                    'MsgBox "Jump to next line"
+                                End If
+                            Loop
+                            Offset = 1
+                            ExcelDoc.Worksheets("Saw Cut Lengths").Activate()
+                            Do Until ExcelDoc.ActiveSheet.Range("C" & Offset).Value = ""
+                                Offset = Offset + 1
 
-                        If ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Nothing Then
-                            ExcelDoc.ActiveSheet.Range("A" & Offset).Value = Length
-                            ExcelDoc.ActiveSheet.Range("B" & Offset).Value = "Ft."
-                            ExcelDoc.ActiveSheet.Range("D" & Offset).Value = StockNo
-                            ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Material
-                            ExcelDoc.ActiveSheet.Range("E" & Offset).Value = PartNo
-                            Exit Do
-                        End If
-                    Loop
-                ElseIf Process = "LC" Then
-                    ExcelDoc.Worksheets("Profile Cut").Activate()
-                    Do Until ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ""
-                        Offset = Offset + 1
-                        If CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = CStr(StockNo) Then
-                            ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + Area
-                            If InStrRev(ExcelDoc.ActiveSheet.Range("E" & Offset).Value, PartNo) = "" And
+                                If ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Nothing Then
+                                    ExcelDoc.ActiveSheet.Range("A" & Offset).Value = Length
+                                    ExcelDoc.ActiveSheet.Range("B" & Offset).Value = "Ft."
+                                    ExcelDoc.ActiveSheet.Range("D" & Offset).Value = StockNo
+                                    ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Material
+                                    ExcelDoc.ActiveSheet.Range("E" & Offset).Value = PartNo
+                                    Exit Do
+                                End If
+                            Loop
+                        ElseIf Process = "LC" Then
+                            ExcelDoc.Worksheets("Profile Cut").Activate()
+                            Do Until ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ""
+                                Offset = Offset + 1
+                                If CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = CStr(StockNo) Then
+                                    ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + Area
+                                    If InStrRev(ExcelDoc.ActiveSheet.Range("E" & Offset).Value, PartNo) = "" And
                                 ExcelDoc.ActiveSheet.Range("E" & Offset).Value <> "" Then
-                                ExcelDoc.ActiveSheet.Range("E" & Offset).Value = ExcelDoc.ActiveSheet.Range("E" & Offset).Value & ", " & PartNo
-                            End If
-                            Exit Do
-                        ElseIf ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Nothing Then
+                                        ExcelDoc.ActiveSheet.Range("E" & Offset).Value = ExcelDoc.ActiveSheet.Range("E" & Offset).Value & ", " & PartNo
+                                    End If
+                                    Exit Do
+                                ElseIf ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Nothing Then
 
-                            ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + Area
-                            ExcelDoc.ActiveSheet.Range("B" & Offset).Value = "Sq Ft."
-                            ExcelDoc.ActiveSheet.Range("D" & Offset).Value = StockNo
-                            ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Material
-                            ExcelDoc.ActiveSheet.Range("E" & Offset).Value = PartNo
-                            Exit Do
-                        Else
-                            'MsgBox "Jump to next line"
-                        End If
-                    Loop
-                ElseIf Process = "HC" Then
-                    ExcelDoc.Worksheets("Torch Cut").Activate()
-                    Do Until ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ""
-                        Offset = Offset + 1
-                        If CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = CStr(StockNo) Then
-                            ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length * Width)
-                            If InStrRev(ExcelDoc.ActiveSheet.Range("E" & Offset).Value, PartNo) = "" Then
-                                ExcelDoc.ActiveSheet.Range("E" & Offset).Value = ExcelDoc.ActiveSheet.Range("E" & Offset).Value & ", " & PartNo
-                            End If
-                            Exit Do
-                        ElseIf ExcelDoc.ActiveSheet.Range("D" & Offset).Value = Nothing Then
-                            ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length * Width)
-                            ExcelDoc.ActiveSheet.Range("B" & Offset).Value = "Sq Ft."
-                            ExcelDoc.ActiveSheet.Range("D" & Offset).Value = StockNo
-                            ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Material
-                            ExcelDoc.ActiveSheet.Range("E" & Offset).Value = PartNo
-                            Exit Do
-                        Else
-                            'MsgBox "Jump to next line"
-                        End If
-                    Loop
-                ElseIf Process = "PP" Then
-                    ExcelDoc.Worksheets("Purchased Parts").Activate()
-                    Do Until ExcelDoc.ActiveSheet.Range("B" & Offset).Value = ""
-                        Offset = Offset + 1
-                        If CStr(ExcelDoc.ActiveSheet.Range("B" & Offset).Value) = CStr(Description) And
+                                    ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + Area
+                                    ExcelDoc.ActiveSheet.Range("B" & Offset).Value = "Sq Ft."
+                                    ExcelDoc.ActiveSheet.Range("D" & Offset).Value = StockNo
+                                    ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Material
+                                    ExcelDoc.ActiveSheet.Range("E" & Offset).Value = PartNo
+                                    Exit Do
+                                Else
+                                    'MsgBox "Jump to next line"
+                                End If
+                            Loop
+                        ElseIf Process = "HC" Then
+                            ExcelDoc.Worksheets("Torch Cut").Activate()
+                            Do Until ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ""
+                                Offset = Offset + 1
+                                If CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = CStr(StockNo) Then
+                                    ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length * Width)
+                                    If InStrRev(ExcelDoc.ActiveSheet.Range("E" & Offset).Value, PartNo) = "" Then
+                                        ExcelDoc.ActiveSheet.Range("E" & Offset).Value = ExcelDoc.ActiveSheet.Range("E" & Offset).Value & ", " & PartNo
+                                    End If
+                                    Exit Do
+                                ElseIf ExcelDoc.ActiveSheet.Range("D" & Offset).Value = Nothing Then
+                                    ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length * Width)
+                                    ExcelDoc.ActiveSheet.Range("B" & Offset).Value = "Sq Ft."
+                                    ExcelDoc.ActiveSheet.Range("D" & Offset).Value = StockNo
+                                    ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Material
+                                    ExcelDoc.ActiveSheet.Range("E" & Offset).Value = PartNo
+                                    Exit Do
+                                Else
+                                    'MsgBox "Jump to next line"
+                                End If
+                            Loop
+                        ElseIf Process = "PP" Then
+                            ExcelDoc.Worksheets("Purchased Parts").Activate()
+                            Do Until ExcelDoc.ActiveSheet.Range("B" & Offset).Value = ""
+                                Offset = Offset + 1
+                                If CStr(ExcelDoc.ActiveSheet.Range("B" & Offset).Value) = CStr(Description) And
                             CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = CStr(PartNo) Then
-                            ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + 1
-                            Exit Do
-                        ElseIf ExcelDoc.ActiveSheet.Range("B" & Offset).Value = Nothing Then
-                            ExcelDoc.ActiveSheet.Range("A" & Offset).Value = 1
-                            ExcelDoc.ActiveSheet.Range("D" & Offset).Value = PartNo
-                            ExcelDoc.ActiveSheet.Range("B" & Offset).Value = Description
-                            ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Vendor
-                            Exit Do
-                        Else
-                            'MsgBox "Jump to next line"
+                                    ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + 1
+                                    Exit Do
+                                ElseIf ExcelDoc.ActiveSheet.Range("B" & Offset).Value = Nothing Then
+                                    ExcelDoc.ActiveSheet.Range("A" & Offset).Value = 1
+                                    ExcelDoc.ActiveSheet.Range("D" & Offset).Value = PartNo
+                                    ExcelDoc.ActiveSheet.Range("B" & Offset).Value = Description
+                                    ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Vendor
+                                    Exit Do
+                                Else
+                                    'MsgBox "Jump to next line"
+                                End If
+                            Loop
+                        ElseIf Process = "" And Occ.DefinitionDocumentType = DocumentTypeEnum.kPartDocumentObject Then
+                            ExcelDoc.Worksheets("Other Parts").Activate()
+                            Do Until ExcelDoc.ActiveSheet.Range("B" & Offset).Value = ""
+                                Offset = Offset + 1
+                                If CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = CStr(Description) AndAlso Not CStr(Description) = "" Then
+                                    ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + 1
+                                    ExcelDoc.ActiveSheet.Range("B" & Offset).Value = ExcelDoc.ActiveSheet.Range("B" & Offset).Value + (Length)
+                                    'ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ExcelDoc.ActiveSheet.Range("D" & Offset).Value + (Length * Width)
+                                    Dim AddPart As String = ExcelDoc.ActiveSheet.Range("G" & Offset).Value
+                                    If AddPart.Contains(PartNo) AndAlso ExcelDoc.ActiveSheet.Range("G" & Offset).Value <> "" Then
+                                        ExcelDoc.ActiveSheet.Range("G" & Offset).Value = ExcelDoc.ActiveSheet.Range("G" & Offset).Value & ", " & PartNo
+                                    End If
+                                    Exit Do
+                                ElseIf ExcelDoc.ActiveSheet.Range("B" & Offset).Value = Nothing Then
+                                    ExcelDoc.ActiveSheet.Range("A" & Offset).Value = 1
+                                    'ExcelDoc.ActiveSheet.Range("B" & Offset).Value = ExcelDoc.ActiveSheet.Range("B" & Offset).Value + (Length)
+                                    ExcelDoc.ActiveSheet.Range("B" & Offset).Value = "Ea."
+                                    'ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ExcelDoc.ActiveSheet.Range("D" & Offset).Value + (Length * Width)
+                                    'ExcelDoc.ActiveSheet.Range("E" & Offset).Value = "Sq Ft."
+                                    ExcelDoc.ActiveSheet.Range("E" & Offset).Value = Description
+                                    ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Material
+                                    ExcelDoc.ActiveSheet.Range("D" & Offset).Value = StockNo
+                                    ExcelDoc.ActiveSheet.Range("G" & Offset).Value = PartNo
+                                    ExcelDoc.ActiveSheet.Range("F" & Offset).Value = Vendor
+                                    Exit Do
+                                Else
+                                    'MsgBox "Jump to next line"
+                                End If
+                            Loop
                         End If
-                    Loop
-                ElseIf Process = "" And Occ.DefinitionDocumentType = DocumentTypeEnum.kPartDocumentObject Then
-                    ExcelDoc.Worksheets("Other Parts").Activate()
-                    Do Until ExcelDoc.ActiveSheet.Range("B" & Offset).Value = ""
-                        Offset = Offset + 1
-                        If CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = CStr(Description) Then
-                            ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + 1
-                            ExcelDoc.ActiveSheet.Range("B" & Offset).Value = ExcelDoc.ActiveSheet.Range("B" & Offset).Value + (Length)
-                            'ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ExcelDoc.ActiveSheet.Range("D" & Offset).Value + (Length * Width)
-                            If InStrRev(ExcelDoc.ActiveSheet.Range("G" & Offset).Value, PartNo) = "" And
-                                ExcelDoc.ActiveSheet.Range("G" & Offset).Value <> "" Then
-                                ExcelDoc.ActiveSheet.Range("G" & Offset).Value = ExcelDoc.ActiveSheet.Range("G" & Offset).Value & ", " & PartNo
-                            End If
-                            Exit Do
-                        ElseIf ExcelDoc.ActiveSheet.Range("B" & Offset).Value = Nothing Then
-                            ExcelDoc.ActiveSheet.Range("A" & Offset).Value = 1
-                            'ExcelDoc.ActiveSheet.Range("B" & Offset).Value = ExcelDoc.ActiveSheet.Range("B" & Offset).Value + (Length)
-                            ExcelDoc.ActiveSheet.Range("B" & Offset).Value = "Ea."
-                            'ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ExcelDoc.ActiveSheet.Range("D" & Offset).Value + (Length * Width)
-                            'ExcelDoc.ActiveSheet.Range("E" & Offset).Value = "Sq Ft."
-                            ExcelDoc.ActiveSheet.Range("E" & Offset).Value = Description
-                            ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Material
-                            ExcelDoc.ActiveSheet.Range("D" & Offset).Value = StockNo
-                            ExcelDoc.ActiveSheet.Range("G" & Offset).Value = PartNo
-                            ExcelDoc.ActiveSheet.Range("F" & Offset).Value = Vendor
-                            Exit Do
-                        Else
-                            'MsgBox "Jump to next line"
-                        End If
-                    Loop
+                        Offset = 1
+                        'ProgressBar(Total, Counter, Title, Occ.Name)
+                        bgwRun.ReportProgress((Counter / Total) * 100, "Extracting: " & Occ.Name)
+                    Catch ex As Exception
+                        MsgBox("An error occurred while adding " & Occ._DisplayName & " to the spreadsheet" & vbNewLine &
+                                ex.Message)
+                        writeDebug("An error occurred while adding " & Occ._DisplayName & " to the spreadsheet" & vbNewLine &
+                                    ex.Message)
+                    End Try
+                Else
+                    GetProperties(oDoc, Occ.SubOccurrences, Properties, Counter, ExcelDoc, Total)
                 End If
-                Offset = 1
-                'ProgressBar(Total, Counter, Title, Occ.Name)
-                bgwRun.ReportProgress((Counter / Total) * 100, "Extracting: " & Occ.Name)
-                If Err.Number = 0 Then
-                    Properties = Properties + Length
-                End If
-                On Error GoTo 0
-            Else
-                GetProperties(oDoc, Occ.SubOccurrences, Properties, Counter, ExcelDoc, Total)
             End If
         Next
         ExcelDoc.Worksheets("Saw Cut").activate()
@@ -2511,7 +2540,6 @@ Public Class Main
                     Dim p As New Process
                     p.StartInfo = Inv
                     p.Start()
-                    'p.WaitForInputIdle()
                     While p.MainWindowTitle = Nothing
                         System.Threading.Thread.Sleep(1000)
                         p.Refresh()
@@ -2543,24 +2571,20 @@ Public Class Main
         dgvOpenFiles.Height = gbxOpen.Height - 24
         dgvOpenFiles.Width = gbxOpen.Width - 22
         dgvSubFiles.Width = gbxSub.Width - 22
-        '  dgvSubFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
         pgbMain.Location = New Drawing.Point(12, Me.Height - 67)
         pgbMain.Width = Me.Width - 226
-        gbxUtilities.Location = New Drawing.Point(12, Me.Height - 195)
+        gbxUtilities.Location = New Drawing.Point(12, gbxSelection.Location.Y + 85)
         txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, dgvSubFiles.Location.Y + dgvSubFiles.Height + 5)
-        If dgvSubFiles.RowCount < dgvSubFiles.Height / 18 And txtSearch.ForeColor = Drawing.Color.Gray Or dgvSubFiles.RowCount = 0 Then
+        If dgvSubFiles.Controls.OfType(Of VScrollBar).SingleOrDefault.Visible = False Then
             txtSearch.Visible = False
-            dgvSubFiles.Height = gbxOpen.Height - 24
+            dgvSubFiles.Height = dgvOpenFiles.Height
         Else
             txtSearch.Visible = True
             dgvSubFiles.Height = gbxOpen.Height - 49
             txtSearch.Width = dgvSubFiles.Width
             txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, Me.Height - 135)
-
         End If
         PictureBox2.Location = New Drawing.Point(gbxSub.Location.X + 21, 27)
-    End Sub
-    Private Sub btnFlatPattern_Click(sender As Object, e As EventArgs) Handles btnFlatPattern.Click
     End Sub
     Private Sub ExportPart()
         Dim Archive As String = ""
@@ -3638,7 +3662,7 @@ Public Class Main
             If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, Row.index).Value = True Then
                 If Strings.InStr(dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, Row.index).Value, "idw") <> 0 Then
                     oDoc = _invApp.Documents.ItemByName(dgvOpenFiles(dgvOpenFiles.Columns("PartLocation").Index, Row.index).Value)
-                    TestForDrawing(dgvOpenFiles(dgvOpenFiles.Columns("PartLocation").Index, Row.index).Value, 0, Total, Counter, OpenDocs, Elog, False)
+                    TestForDrawing(dgvOpenFiles(dgvOpenFiles.Columns("PartLocation").Index, Row.index).Value, dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, Row.index).Value, 0, Total, Counter, OpenDocs, Elog, False)
                     'dgvSubFiles.Rows.Add(New String() {True,
                     '                         dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, Row.index).Value,
                     '                         dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, Row.index).Value,
@@ -3654,11 +3678,11 @@ Public Class Main
                     'oDoc = _invApp.Documents.ItemByName(OpenFiles.Item(lstOpenFiles.Items.IndexOf(lstOpenFiles.CheckedItems(X))).Value)
                     PartSource = oDoc.FullFileName
                     If oDoc.DocumentType = DocumentTypeEnum.kDrawingDocumentObject Then
-                        TestForDrawing(PartSource, 0, Total, Counter, OpenDocs, Elog, False)
+                        TestForDrawing(PartSource, "", 0, Total, Counter, OpenDocs, Elog, False)
                         'Part/Presentation documents require a search for the associated drawings
                     ElseIf oDoc.DocumentType = DocumentTypeEnum.kPartDocumentObject Or oDoc.DocumentType = DocumentTypeEnum.kPresentationDocumentObject Then
                         'Test to see if assumed drawing name exists
-                        TestForDrawing(PartSource, 0, Total, Counter, OpenDocs, Elog, False)
+                        TestForDrawing(PartSource, "", 0, Total, Counter, OpenDocs, Elog, False)
                         CheckForDev(PartSource, Total, Counter, OpenDocs, Elog, Level + 1, Err)
                         'Assembly documents require a search for subfiles
                     ElseIf oDoc.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then

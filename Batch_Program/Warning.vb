@@ -8,6 +8,7 @@ Public Class Warning
     Public Sub Donate()
         Me.Height = 111
         Label1.Height = 30
+        Label1.Top = Label2.Top - 43
         Label1.Text = "Developing takes time and money. " & vbNewLine & "If this program has saved you either, consider saying thanks."
         PicDonate.Visible = True
         If My.Settings.Donated = True Then
@@ -34,8 +35,9 @@ Public Class Warning
         chkDontShow.Location = New Drawing.Point(chkDontShow.Location.X, chkDontShow.Location.Y + 40)
         Label2.Text = "FirstRun"
         Label1.Height = 65
+        Label1.Top = Label1.Top - 10
         btnOK.Location = New Drawing.Point(btnOK.Location.X, btnOK.Location.Y + 40)
-        Label1.Text = "Batch Program is a program created to automate many tasks in Inventor. This beta version of the program is in a constant state of developement so bugs are likely. If you find any errors/bugs let me know by emailing a description of how to replicate the error to flyinggardengnomestudios@gmail.com. Please include a pack and go if possible and the error log which is saved in: " & My.Computer.FileSystem.SpecialDirectories.Temp & "\debug.txt"
+        Label1.Text = "Batch Program is a program created to automate many tasks in Inventor. If you find any errors/bugs let me know by emailing a description of how to replicate the error to flyinggardengnomestudios@gmail.com. Please include a pack and go if possible and the error log which is saved in: " & My.Computer.FileSystem.SpecialDirectories.Temp & "\debug.txt"
     End Sub
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
         Select Case Label2.Text

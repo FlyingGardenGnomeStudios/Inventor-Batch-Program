@@ -60,7 +60,6 @@ Partial Class Main
         Me.chkDWG = New System.Windows.Forms.CheckBox()
         Me.chkPDF = New System.Windows.Forms.CheckBox()
         Me.btnRename = New System.Windows.Forms.Button()
-        Me.btnFlatPattern = New System.Windows.Forms.Button()
         Me.btnSpreadsheet = New System.Windows.Forms.Button()
         Me.gbxSub = New System.Windows.Forms.GroupBox()
         Me.txtSearch = New System.Windows.Forms.TextBox()
@@ -511,17 +510,6 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.btnRename, "Rename the components of a selected assembly")
         Me.btnRename.UseVisualStyleBackColor = True
         '
-        'btnFlatPattern
-        '
-        Me.btnFlatPattern.Enabled = False
-        Me.btnFlatPattern.Location = New System.Drawing.Point(6, 90)
-        Me.btnFlatPattern.Name = "btnFlatPattern"
-        Me.btnFlatPattern.Size = New System.Drawing.Size(130, 23)
-        Me.btnFlatPattern.TabIndex = 1
-        Me.btnFlatPattern.Text = "Export Flat Pattern"
-        Me.ToolTip1.SetToolTip(Me.btnFlatPattern, "Add the parent drawing name to the Reference table in each drawing")
-        Me.btnFlatPattern.UseVisualStyleBackColor = True
-        '
         'btnSpreadsheet
         '
         Me.btnSpreadsheet.Location = New System.Drawing.Point(6, 15)
@@ -718,7 +706,7 @@ Partial Class Main
         Me.btnRef.Size = New System.Drawing.Size(130, 23)
         Me.btnRef.TabIndex = 3
         Me.btnRef.Text = "Update Ref Table"
-        Me.ToolTip1.SetToolTip(Me.btnRef, "Add the parent drawing name to the Reference table in each drawing")
+        Me.ToolTip1.SetToolTip(Me.btnRef, "Add the parent drawing name to the Custom iProperties in each drawing")
         Me.btnRef.UseVisualStyleBackColor = True
         '
         'chkPartClose
@@ -806,11 +794,10 @@ Partial Class Main
         Me.gbxUtilities.Controls.Add(Me.btnRef)
         Me.gbxUtilities.Controls.Add(Me.btnRename)
         Me.gbxUtilities.Controls.Add(Me.btnSpreadsheet)
-        Me.gbxUtilities.Controls.Add(Me.btnFlatPattern)
         Me.gbxUtilities.Cursor = System.Windows.Forms.Cursors.Default
-        Me.gbxUtilities.Location = New System.Drawing.Point(12, 123)
+        Me.gbxUtilities.Location = New System.Drawing.Point(12, 112)
         Me.gbxUtilities.Name = "gbxUtilities"
-        Me.gbxUtilities.Size = New System.Drawing.Size(142, 118)
+        Me.gbxUtilities.Size = New System.Drawing.Size(142, 95)
         Me.gbxUtilities.TabIndex = 60
         Me.gbxUtilities.TabStop = False
         Me.gbxUtilities.Text = "Utilities"
@@ -1209,7 +1196,6 @@ Partial Class Main
     Friend WithEvents gbxDrawings As System.Windows.Forms.GroupBox
     Friend WithEvents chkSkipAssy As System.Windows.Forms.CheckBox
     Friend WithEvents btnRename As System.Windows.Forms.Button
-    Friend WithEvents btnFlatPattern As System.Windows.Forms.Button
     Friend WithEvents btnSpreadsheet As System.Windows.Forms.Button
     Friend WithEvents gbxSub As System.Windows.Forms.GroupBox
     Friend WithEvents tmr As System.Windows.Forms.Timer

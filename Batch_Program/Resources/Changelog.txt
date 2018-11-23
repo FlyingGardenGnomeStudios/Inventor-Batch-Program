@@ -2,75 +2,10 @@
 	- No tutorials yet
 	- Renaming function works but hasn't been thoroughly tested.
 
-Version 2.0.0.18 (11.16.18)
-	-Fixed issue where iProperties of drawing didn't pull from model correctly
-	-Fixed issue where unchecked referenced drawings couldn't be checked
+Version 2.1.1.7 (11.23.18)
+	Improved search for drawing locations in referenced documents list
+	High level debugging for spreadsheet creation
+	Fixed bug where part would close after dxf creation
 
-Version 2.0.0.17 (11.05.18)
-	-Made all msgboxes modal
-	-Added checkbox count
-	-Modified a number of UI methods for more predictable operation
-	
-Version 2.0.0.16 (10/16/18)
-	-Corrected issue with copying associated drawing files that are read-only/checked in
-
-Version 2.0.0.15 (9/26/18)
-	- Added export support for parts with no drawings in drawing menu
-	- More fine tuning to rename process. (Vault intetgration required)
-	- Added debug lines to rename code
-	- Fixed bugs when dealing with revision table and multiple drawings
-
-Version 2.0.0.14 (9/11/18)
-	- Derived references incorrectly replaced in original assembly rather than renamed
-	- More robust check for Purchased Part ID during rename
-
-Version 2.0.0.11 (8/21/18)
-	- Corrected a missed DXF.ini translate command during sheet metal export
-
-Version 2.0.0.10 (8/20/18)
-	- Modified DXF/DWG export
-	- Reset export location to drawing file location before each export
-
-Version 2.0.0.9 (6/29/18)
-	- Added options to overwrite notification on dxf/pdf/dwg
-	- Fixed part opening when drawing selected
-	- Tweaked rename function and added backup option.
-	- Added part location option to drawing print
-
-Version 2.0.0.8 (6/18/18)
-	- Fixed search function not operating properly with missing drawings
-	- Added ability to select which files get overwritten
-	- Enabled ability to open parts as well as drawings
-	- Stopped drawings from closing when program closed
-
-Version 2.0.0.7 (6/15/18)
-	- Minor UI tweaks
-
-Version 2.0.0.6 (6/12/08)
-	- Continuous running openfile list so newly open documents won't be closed when Batch Program closes
-	- Added Flat Pattern only option for export
-	- Close drawings option working
-
-Version 2.0.0.5 (6/07/08)
-	- Corrected bug that skipped exports depending on settings
-	- Fixed ini layer visibility and color settings for dxf & dwg flat pattern outputs
-		
-Version 2.0.0.4 (6/08/18)
-	- Added option for custom ini export files
-	- Added custom options for PDF
-	- Fixed dialog issue with custom export locations
-	- Added cancellation support to Exports, Prints, iProperties
-
-Version 2.0.0.3 (6/07/18)
-	-Fixed issue where revision changes to multiple drawings wasn't working
-
-Version 2.0.0.2 (6/06/18)
-	-Fixed custom iProperties
-
-Version 2.0.0.1 (6/05/18)
-	- Removed revision control from iProperties
-	- Enabled full revision control in Drawing Actions
-	- Fixed iProperty read/write
-	
-Version 2.0.0 (4/25/18)
-	-Complete Batch Program overhaul
+Version 2.1.1.1 (11.20.18)
+	Merged Beta version with original

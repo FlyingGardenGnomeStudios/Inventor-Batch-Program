@@ -1,23 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartAction>Project</StartAction>
-    <StartProgram>C:\Program Files\Autodesk\Inventor 2017\Bin\Inventor.exe</StartProgram>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <StartProgram>C:\Program Files\Autodesk\Inventor 2015\bin\inventor.exe</StartProgram>
-    <StartAction>Project</StartAction>
-  </PropertyGroup>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PublishUrlHistory>\\server03\users%24\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\Publish\|\\server03\users%24\tfehr\My Documents\GitHub\Inventor-Batch-Program\Publish\|\\server03\users%24\tfehr\My Documents\GitHub\Inventor-Batch-Program\Inventor-Batch-Program\Batch_Program\Publish\|C:\Users\tfehr\Google Drive\Programs\Batch Program - Beta\Publish\|C:\Users\tfehr\Google Drive\Programs\Batch Program - Beta\</PublishUrlHistory>
-    <InstallUrlHistory>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/|https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/Beta/Batch_Program/Publish/|https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/Master/Batch_Program/Publish/|https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/Beta/Inventor-Batch-Program/Batch_Program/Publish/|https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program---Beta/master/Publish/</InstallUrlHistory>
+    <PublishUrlHistory>\\server03\users%24\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\Publish\|C:\Users\Luther\Documents\Visual Studio 2015\Projects\Batch Program\</PublishUrlHistory>
+    <InstallUrlHistory>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/|https://github.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/blob/master/Batch_Program/Publish/</InstallUrlHistory>
     <SupportUrlHistory />
-    <UpdateUrlHistory>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/|https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/Master/Batch_Program/Publish/|https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/Beta/Batch_Program/Publish/|https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/Beta/Inventor-Batch-Program/Batch_Program/Publish/|https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program---Beta/master/Publish/</UpdateUrlHistory>
+    <UpdateUrlHistory />
     <BootstrapperUrlHistory />
     <ErrorReportUrlHistory />
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
-    <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
   <PropertyGroup>
     <EnableSecurityDebugging>false</EnableSecurityDebugging>
