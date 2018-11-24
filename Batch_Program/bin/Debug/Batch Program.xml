@@ -42,23 +42,26 @@ Batch Program
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="P:My.Resources.Resources.BugFound">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:My.Resources.Resources.Changelog">
 <summary>
   Looks up a localized string similar to 	Items not currently functioning
 	- No tutorials yet
 	- Renaming function works but hasn&apos;t been thoroughly tested.
 
-Version 2.0.0.18 (11.16.18)
-	-Fixed issue where iProperties of drawing didn&apos;t pull from model correctly
-	-Fixed issue where unchecked referenced drawings couldn&apos;t be checked
+Version 2.1.1.8 (11.23.18)
+	Minor UI tweaks
+Version 2.1.1.7 (11.23.18)
+	Improved search for drawing locations in referenced documents list
+	High level debugging for spreadsheet creation
+	Fixed bug where part would close after dxf creation
 
-Version 2.0.0.17 (11.05.18)
-	-Made all msgboxes modal
-	-Added checkbox count
-	-Modified a number of UI methods for more predictable operation
-	
-Version 2.0.0.16 (10/16/18)
-	-Corrected issue with copying asso [rest of string was truncated]&quot;;.
+Version 2.1.1.1 (11.20.18)
+	Merged Beta version with original.
 </summary>
 </member>
 <member name="P:My.Resources.Resources.dwg">

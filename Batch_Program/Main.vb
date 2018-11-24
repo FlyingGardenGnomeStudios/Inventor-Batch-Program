@@ -974,8 +974,6 @@ Public Class Main
     End Sub
     Public Sub DXFDWGCreator(ByRef Destin As String, ByRef DrawSource As String, OpenDocs As ArrayList _
                              , Total As Integer, Counter As Integer, ExportType As String, Gridview As DataGridView, ChkColumn As String, PDTitle As String)
-
-        ''' DXF Creation closes model error needs to be fixed
         Dim sReadableType As String = ""
         Dim RevNo As String
         Dim oDoc As Document
@@ -3434,8 +3432,7 @@ Public Class Main
         'TODO: re-enable all the features of the program
     End Sub
     Private Sub IFoundABugToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles IFoundABugToolStripMenuItem.Click
-        MessageBox.Show("Issues with the program can be sent to flyinggardengnomestudios@gmail.com. Please include a description of the problem and how to re-create it. You can attach the error-log which is located in: " & My.Computer.FileSystem.SpecialDirectories.Temp & "\debug.txt. " & "If possible, it is always helpful to include a pack-and-go of the assembly/part that created the error.")
-
+        BugFound.ShowDialog()
     End Sub
     Private Sub AboutBatchProgramToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutBatchProgramToolStripMenuItem.Click
         About.ShowDialog()
