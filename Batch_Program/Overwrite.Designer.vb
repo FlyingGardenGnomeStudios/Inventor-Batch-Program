@@ -218,6 +218,7 @@ Partial Class Overwrite
         Me.Controls.Add(Me.Label1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Overwrite"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Overwrite"
         CType(Me.dgvOverwrite, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)

@@ -809,15 +809,15 @@ Public Class Main
                 'If chkFlatPattern.Checked = True AndAlso sReadableType <> "S" Then
                 'Else
                 If ExportType = "PDF" Then
-                    If chkPDF.CheckState = CheckState.Checked Then
-                        If My.Computer.FileSystem.FileExists(SaveLoc) Then
-                            Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "PDF", RevNo)
-                            ' overwrite.Add(New KeyValuePair(Of String, String)(IO.Path.GetFileNameWithoutExtension(DrawingName) & ".pdf", PDFSource))
-                            'OWCounter += 1
-                        End If
-                    ElseIf ExportType = "dwg" AndAlso
-                        My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(DrawSource), IO.Path.GetFileNameWithoutExtension(DrawSource)) & ".iam") = True AndAlso
-                        chkSkipAssy.Checked = True Then
+                    'If chkPDF.CheckState = CheckState.Checked Then
+                    If My.Computer.FileSystem.FileExists(SaveLoc) Then
+                        Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "PDF", RevNo)
+                        ' overwrite.Add(New KeyValuePair(Of String, String)(IO.Path.GetFileNameWithoutExtension(DrawingName) & ".pdf", PDFSource))
+                        'OWCounter += 1
+                    End If
+                ElseIf My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(DrawSource), IO.Path.GetFileNameWithoutExtension(DrawSource)) & ".iam") = True AndAlso
+                        chkSkipAssy.Checked = True OrElse IO.Path.GetExtension(GridView(GridView.Columns(PDTitle & "Source").Index, X).Value) = ".ipt" Then
+                    If ExportType = "dwg" Then
                         If chkDWG.CheckState = CheckState.Checked Then
                             If My.Computer.FileSystem.FileExists(SaveLoc) Or
                                 My.Computer.FileSystem.FileExists(SaveLoc.Insert(SaveLoc.LastIndexOf("."), "_Sheet_1")) Then
@@ -826,27 +826,25 @@ Public Class Main
                                 'OWCounter += 1
                             End If
                         End If
-                    ElseIf ExportType = "dxf" AndAlso
-                        My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(DrawSource), IO.Path.GetFileNameWithoutExtension(DrawSource)) & ".iam") = True AndAlso
-                        chkSkipAssy.Checked = True Then
+                    ElseIf ExportType = "dxf" Then
                         If My.Computer.FileSystem.FileExists(SaveLoc) Or
                         My.Computer.FileSystem.FileExists(SaveLoc.Insert(SaveLoc.LastIndexOf("."), "_Sheet_1")) Then
-                            Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "DXF", RevNo)
-                            'Overwrite.dgvOverwrite.Rows.Add(True, IO.Path.GetFileNameWithoutExtension(DrawingName) & ".dxf", DXFSource)
-                            'OWCounter += 1
-                        End If
+                        Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "DXF", RevNo)
+                        'Overwrite.dgvOverwrite.Rows.Add(True, IO.Path.GetFileNameWithoutExtension(DrawingName) & ".dxf", DXFSource)
+                        'OWCounter += 1
                     End If
-
-                    CloseLater(DrawingName, oDoc)
-                    'Counter += 1
-                    ' Title = "Checking"
-                    bgwRun.ReportProgress((Counter / Total) * 100, "Checking: " & DrawingName)
-                    ' ProgressBar(Total, Counter, Title, DrawingName)
-                    'Display any files that will be overwritten
-                    'End If
                 End If
 
+                CloseLater(DrawingName, oDoc)
+                'Counter += 1
+                ' Title = "Checking"
+                bgwRun.ReportProgress((Counter / Total) * 100, "Checking: " & DrawingName)
+                ' ProgressBar(Total, Counter, Title, DrawingName)
+                'Display any files that will be overwritten
             End If
+            End If
+
+            'End If
         Next
         Counter = 1
         If Not Overwrite.dgvOverwrite.RowCount = 0 Then
