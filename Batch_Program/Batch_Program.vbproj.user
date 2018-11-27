@@ -2,7 +2,7 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <PublishUrlHistory>\\server03\users%24\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\Publish\|C:\Users\Luther\Documents\Visual Studio 2015\Projects\Batch Program\</PublishUrlHistory>
-    <InstallUrlHistory>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/Beta/Batch_Program/Publish/|https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/|https://github.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/blob/master/Batch_Program/Publish/</InstallUrlHistory>
+    <InstallUrlHistory>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/|https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/Master/Batch_Program/Publish/|https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/Beta/Batch_Program/Publish/|https://github.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/blob/master/Batch_Program/Publish/</InstallUrlHistory>
     <SupportUrlHistory />
     <UpdateUrlHistory>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/Beta/Batch_Program/Publish/|https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/</UpdateUrlHistory>
     <BootstrapperUrlHistory />
