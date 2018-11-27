@@ -15,7 +15,7 @@ Public Class About
 
             End With
         Else
-            lblPublish.Text = "Test Mode" & " Build Date: " '& fecha.ToShortDateString.ToString
+            lblPublish.Text = "Test Mode" & " Build Date: " & fecha.ToShortDateString.ToString
         End If
 
     End Sub

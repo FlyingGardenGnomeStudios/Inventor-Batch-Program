@@ -158,6 +158,19 @@ Public Class Main
         If My.Computer.FileSystem.FileExists(My.Computer.FileSystem.SpecialDirectories.Temp & "\Debug.txt") Then
             Kill(My.Computer.FileSystem.SpecialDirectories.Temp & "\Debug.txt")
         End If
+        Dim Version As String
+        If My.Application.IsNetworkDeployed Then
+            With CurrentDeployment.CurrentVersion
+                Version = "Inventor Batch Program " & .Major.ToString() & "." &
+            .Minor.ToString() & "." &
+            .Build.ToString() & "." &
+            .Revision.ToString() '& " Build Date: " & fecha.ToShortDateString.ToString
+            End With
+        Else
+            Version = "Test Mode" & " Build Date: " & IO.File.GetCreationTime(Reflection.Assembly.GetExecutingAssembly().Location).ToShortDateString.ToString
+        End If
+
+        writeDebug("Batch Program Version: " & Version)
         writeDebug("Inventor Accessed")
         Dim idLevel As DataColumn
         idLevel = New DataColumn("Level", Type.GetType("System.String"))
@@ -2876,7 +2889,12 @@ Public Class Main
                         'replace syntax
                         Title = Replace(Title, ".", ",")
                         'trim off units
-                        Title = "&SplineTolerance =" & Strings.Left(Title, InStr(Title, " ") - 1)
+                        If Title.Contains(" ") Then
+                            Title = "&SplineTolerance =" & Strings.Left(Title, InStr(Title, " ") - 1)
+                        Else
+                            Title = "&SplineTolerance =" & Title
+                        End If
+
                 End Select
                 'Split the line into its individual components
                 Dim SplitArray As String() = line.Split(";")
