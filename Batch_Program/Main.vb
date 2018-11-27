@@ -815,8 +815,8 @@ Public Class Main
                         ' overwrite.Add(New KeyValuePair(Of String, String)(IO.Path.GetFileNameWithoutExtension(DrawingName) & ".pdf", PDFSource))
                         'OWCounter += 1
                     End If
-                ElseIf My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(DrawSource), IO.Path.GetFileNameWithoutExtension(DrawSource)) & ".iam") = True AndAlso
-                        chkSkipAssy.Checked = True OrElse IO.Path.GetExtension(GridView(GridView.Columns(PDTitle & "Source").Index, X).Value) = ".ipt" Then
+                ElseIf IO.Path.GetExtension(GridView(GridView.Columns(PDTitle & "Source").Index, X).Value) = ".iam" And
+                        chkSkipAssy.Checked = False OrElse IO.Path.GetExtension(GridView(GridView.Columns(PDTitle & "Source").Index, X).Value) = ".ipt" Then
                     If ExportType = "dwg" Then
                         If chkDWG.CheckState = CheckState.Checked Then
                             If My.Computer.FileSystem.FileExists(SaveLoc) Or
