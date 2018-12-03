@@ -27,8 +27,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/</InstallUrl>
-    <UpdateUrl>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/master/Batch_Program/Publish/</UpdateUrl>
+    <InstallUrl>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/Beta/Batch_Program/Publish/</InstallUrl>
+    <UpdateUrl>https://raw.githubusercontent.com/FlyingGardenGnomeStudios/Inventor-Batch-Program/Beta/Batch_Program/Publish/</UpdateUrl>
     <TargetCulture>en-CA</TargetCulture>
     <ProductName>Inventor Batch Program</ProductName>
     <PublisherName>Flying Garden Gnome Studios</PublisherName>
