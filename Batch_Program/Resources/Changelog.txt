@@ -1,13 +1,17 @@
-﻿	Items not currently functioning
+﻿Items not currently functioning
 	- No tutorials yet
 	- Renaming function works but hasn't been thoroughly tested.
 
+Version 2.1.2.3 (12.03.18)
+	Modified how export options validate assemblies and flat patterns before export
+	Modified cleanup command to remove all documents opened in background.
+
 Version 2.1.2.2 (11.27.18)
 	Fixed DXF/DWG Overwrite window not populating correctly.
-	Modified how export options validate assemblies and flat patterns before export
 
 Version 2.1.1.8 (11.23.18)
 	Minor UI tweaks
+
 Version 2.1.1.7 (11.23.18)
 	Improved search for drawing locations in referenced documents list
 	High level debugging for spreadsheet creation

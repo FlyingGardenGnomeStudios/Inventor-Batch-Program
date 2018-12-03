@@ -789,7 +789,11 @@ Public Class Main
                 oDoc = _invApp.Documents.Open(DrawSource, False)
                 'Get revision number
                 If My.Settings(ExportType & "Rev") = True Then
-                    RevNo = "-R" & oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
+                    If oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value = Nothing Then
+                        RevNo = "-R0"
+                    Else
+                        RevNo = "-R" & oDoc.PropertySets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("9").Value
+                    End If
                 Else
                     RevNo = ""
                 End If
@@ -835,10 +839,10 @@ Public Class Main
                     End If
                 End If
 
-                CloseLater(DrawingName, oDoc)
-                'Counter += 1
-                ' Title = "Checking"
-                bgwRun.ReportProgress((Counter / Total) * 100, "Checking: " & DrawingName)
+                    CloseLater(DrawSource, oDoc)
+                    'Counter += 1
+                    ' Title = "Checking"
+                    bgwRun.ReportProgress((Counter / Total) * 100, "Checking: " & DrawingName)
                 ' ProgressBar(Total, Counter, Title, DrawingName)
                 'Display any files that will be overwritten
             End If
@@ -993,6 +997,7 @@ Public Class Main
         Dim Source As String = ""
         Dim DrawingName As String = ""
         _invApp.SilentOperation = True
+        Dim iniflag As Boolean = False
         'Go through drawings to see which ones are selected
         For X = 0 To Gridview.RowCount - 1
             'Look through all sub files in open documents to get the part sourcefile
@@ -1058,17 +1063,17 @@ Public Class Main
                                    "Flat Patterns Only: " & chkFlatPattern.Checked)
                         If sReadableType = "P" And ExportType <> "PDF" And chkFlatPattern.Checked = False Then
                             writeDebug("Exporting")
-                            Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, ExportType, RevNo)
+                            Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, ExportType, RevNo, iniflag)
                         ElseIf sReadableType = "S" And ExportType <> "PDF" And chkUseDrawings.Checked = False Then
                             writeDebug("Exporting")
-                            Call SMDXF(oDoc, Source, True, Replace(DrawingName, ".idw", "." & ExportType))
+                            Call SMDXF(oDoc, Source, True, Replace(DrawingName, ".idw", "." & ExportType), iniflag)
                             CloseLater(Strings.Left(DrawingName, Len(DrawingName) - 3) & "ipt", oDoc)
                         ElseIf sReadableType = "S" And ExportType <> "PDF" And chkUseDrawings.Checked = True Then
                             writeDebug("Exporting")
-                            Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, ExportType, RevNo)
+                            Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, ExportType, RevNo, iniflag)
                         ElseIf sReadableType <> "" And ExportType <> "PDF" And chkFlatPattern.Checked = False Then
                             writeDebug("Exporting")
-                            Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, ExportType, RevNo)
+                            Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, ExportType, RevNo, iniflag)
                         ElseIf sReadableType = "" And chkFlatPattern.Checked = False Then
                             writeDebug("Exporting")
                             CloseLater(Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\")), oDoc)
@@ -1082,7 +1087,7 @@ Public Class Main
                         NotMade = DrawingName & vbNewLine
                     ElseIf My.Computer.FileSystem.FileExists(Strings.Replace(DrawSource, "idw", "iam")) = True AndAlso
                    chkSkipAssy.Checked = False Then
-                        Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, ExportType, RevNo)
+                        Call ExportPart(DrawSource, Archive, False, Destin, DrawingName, ExportType, RevNo, iniflag)
                     End If
                     bgwRun.ReportProgress((Counter / Total) * 100, "Saving: " & Replace(DrawingName, ".idw", "." & ExportType))
                     CloseLater(oDoc.FullDocumentName, oDoc)
@@ -1598,6 +1603,108 @@ Public Class Main
     End Sub
 #End Region
 #Region "Background Calls"
+    Private Sub btnExit_Click(sender As System.Object, e As System.EventArgs) Handles btnExit.Click
+        If btnExit.Text = "Exit" Then
+            writeDebug("Batch Program closed")
+            Me.Close()
+            End
+        End If
+    End Sub
+    Public Sub btnOK_Click(sender As System.Object, e As System.EventArgs) Handles btnOK.Click
+        If btnOK.Text = "Cancel" Then
+            bgwUpdateSub.CancelAsync()
+            bgwUpdateSub.Dispose()
+            bgwRun.CancelAsync()
+            bgwRun.Dispose()
+            Exit Sub
+        End If
+        Dim ExportType As String
+        If chkPartExport.Checked = True Or chkDXF.Checked = True Then
+            writeDebug("Accessing DXF creation")
+            ExportType = "DXF"
+            If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+                My.Settings.CustomDXFExportLoc = ExportLocation(ExportType)
+                If My.Settings.CustomDXFExportLoc = Nothing Then Exit Sub
+            End If
+        End If
+        If chkPDF.Checked = True Then
+            writeDebug("Accessing PDF creation")
+            ExportType = "PDF"
+            If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+                My.Settings.CustomPDFExportLoc = ExportLocation(ExportType)
+                If My.Settings.CustomPDFExportLoc = Nothing Then Exit Sub
+            End If
+        End If
+        If chkDWG.Checked = True Then
+            writeDebug("Accessing DWG creation")
+            ExportType = "DWG"
+            If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+                My.Settings.CustomDWGExportLoc = ExportLocation(ExportType)
+                If My.Settings.CustomDWGExportLoc = Nothing Then Exit Sub
+            End If
+        End If
+
+        FormBusy(True)
+        btnOK.Text = "Cancel"
+        btnExit.Enabled = False
+        pgbMain.Visible = True
+        bgwRun.RunWorkerAsync()
+    End Sub
+    Function ExportLocation(ExportType)
+        Dim Drawsource As String = ""
+        If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+            For Each row In dgvSubFiles.Rows
+                If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.index).Value = True AndAlso
+                    dgvSubFiles.Rows(row.index).Visible = True Then
+                    Drawsource = IO.Path.GetDirectoryName(dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, row.index).Value)
+                End If
+            Next
+            Dim Folder As FolderBrowserDialog = New FolderBrowserDialog
+            Folder.Description = "Choose the location you wish to save the " & UCase(ExportType)
+            Folder.RootFolder = System.Environment.SpecialFolder.Desktop
+            Folder.ShowNewFolderButton = False
+            If Not My.Settings.RecentSaveLoc = "" Then
+                Folder.SelectedPath = My.Settings.RecentSaveLoc
+            ElseIf Not Drawsource = "" Then
+                Folder.SelectedPath = Drawsource
+            Else
+                Folder.SelectedPath = System.Environment.SpecialFolder.Desktop
+            End If
+            If My.Settings("Custom" & ExportType & "ExportLoc") = "" Then
+                Try
+                    If Folder.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                        My.Settings.RecentSaveLoc = Folder.SelectedPath
+                        My.Settings.Save()
+                        Return Folder.SelectedPath
+
+                    Else
+                        Return Nothing
+                    End If
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                End Try
+            End If
+        End If
+        Return Nothing
+    End Function
+    Private Sub Main_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        MainClosed = True
+    End Sub
+    Private Sub dgvSubFiles_SelectionChanged(sender As Object, e As EventArgs) Handles dgvSubFiles.SelectionChanged
+        dgvSubFiles.ClearSelection()
+    End Sub
+    Private Sub DebugLogToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DebugLogToolStripMenuItem.Click
+        Process.Start(IO.Path.Combine(IO.Path.GetTempPath, "debug.txt"))
+    End Sub
+    Private Sub dgvSubFiles_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvSubFiles.CellContentClick
+        If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True Then
+            dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = False
+        Else
+            dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True
+
+        End If
+        UpdateSubFiles()
+    End Sub
     Private Sub UpdateOpenFiles()
         SubfilesData.Clear()
         SubFiles.Clear()
@@ -2123,6 +2230,7 @@ Public Class Main
         End Select
     End Sub
     Public Sub CloseLater(Name As String, oDoc As Document)
+        If Name = "" Then MsgBox("Blank name sent to closelater")
         Dim CloseLater As Boolean = True
         'Go through string of originally open documents to see if document has been opened by the program
         For Each Str As String In OpenDocs
@@ -2585,7 +2693,7 @@ Public Class Main
         End If
         PictureBox2.Location = New Drawing.Point(gbxSub.Location.X + 21, 27)
     End Sub
-    Private Sub ExportPart()
+    Private Sub PreExportPart()
         Dim Archive As String = ""
         Dim PartName As String = ""
         Dim PartSource As String = ""
@@ -2619,7 +2727,7 @@ Public Class Main
         pgbMain.Visible = False
     End Sub
     Public Sub ExportPart(DrawSource As String, Archive As String, FlatPattern As Boolean, Destin As String, DrawingName As String,
-              Output As String, RevNo As String)
+              Output As String, RevNo As String, ByRef iniflag As Boolean)
 
         Dim odoc As Document = _invApp.ActiveDocument
         If FlatPattern = False Then
@@ -2659,9 +2767,10 @@ Public Class Main
                     If My.Settings.DXFini = True Then
                         If IO.File.Exists(My.Settings.DXFiniLoc) Then
                             strIniFile = My.Settings.DXFiniLoc
-                        Else
+                        ElseIf iniflag = False Then
                             MsgBox("Could not locate the DXF .ini file." & vbNewLine & "The default .ini file will be used", MsgBoxStyle.SystemModal)
                             strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dxf.ini")
+                            iniflag = True
                         End If
                     Else
                         IO.File.WriteAllText(IO.Path.Combine(IO.Path.GetTempPath, "DXF.ini"), My.Resources.DXF)
@@ -2674,10 +2783,11 @@ Public Class Main
                     oDWGAddIn = _invApp.ApplicationAddIns.Item(i)
                     If My.Settings.DWGini = True Then
                         If IO.File.Exists(My.Settings.DWGiniLoc) Then
-                            strIniFile = My.Settings.DWGiniLoc
-                        Else
-                            strIniFile = My.Settings.DWGiniLoc
+                            strIniFile = IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath & "\Resources\dwg.ini")
+                        ElseIf iniflag = False Then
+                            strIniFile = My.Resources.dwg
                             MsgBox("Could not locate the DWG .ini file." & vbNewLine & "The default .ini file will be used", MsgBoxStyle.SystemModal)
+                            iniflag = True
                         End If
                     Else
                         IO.File.WriteAllText(IO.Path.Combine(IO.Path.GetTempPath, "DWG.ini"), My.Resources.dwg)
@@ -2751,9 +2861,10 @@ Public Class Main
             End Try
         End If
     End Sub
-    Public Sub SMDXF(oDoc As Document, DXFSource As String, Flatpattern As Boolean, DrawingName As String)
+    Public Sub SMDXF(oDoc As Document, DXFSource As String, Flatpattern As Boolean, DrawingName As String, ByRef iniflag As Boolean)
         'Dim oPartDoc As Document = _invApp.ActiveDocument
         _invApp.SilentOperation = True
+        Dim strIniFile As String
         CreateFlatPattern(oDoc.ComponentDefinition, DrawingName, oDoc, True)
 
         If My.Computer.FileSystem.DirectoryExists(Strings.Left(DXFSource, InStrRev(DXFSource, "\"))) = False Then
@@ -2770,10 +2881,21 @@ Public Class Main
 
         Dim sOut As String
         If My.Settings.DXFini = True Then
-            sOut = Translate_ini(My.Settings.DXFiniLoc)
+            If Not IO.File.Exists(My.Settings.DXFiniLoc) Then
+                'IO.File.WriteAllText(IO.Path.Combine(IO.Path.GetTempPath, "DXF.ini"), My.Resources.DXF)
+                strIniFile = IO.Path.Combine(IO.Path.GetTempPath, "DXF.ini")
+                If iniflag = False Then
+                    MsgBox("Could not locate the DXF .ini file." & vbNewLine & "The default .ini file will be used", MsgBoxStyle.SystemModal)
+                    iniflag = True
+                End If
+                sOut = Translate_ini(strIniFile)
+            Else
+                sOut = Translate_ini(My.Settings.DXFiniLoc)
+            End If
+
         Else
-            IO.File.WriteAllText(IO.Path.Combine(IO.Path.GetTempPath, "DXF.ini"), My.Resources.DXF)
-            sOut = Translate_ini(IO.Path.Combine(IO.Path.GetTempPath, "DXF.ini"))
+            strIniFile = IO.Path.Combine(IO.Path.GetTempPath, "DXF.ini")
+            sOut = Translate_ini(strIniFile)
         End If
 
         Try
@@ -3542,7 +3664,7 @@ Public Class Main
             iProperties.PopulateiProps(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs, True)
         End If
         If chkPartExport.Checked = True Then
-            ExportPart()
+            PreExportPart()
         End If
         If ChkRevType.Checked = True Then
             writeDebug("Accessing RevType")
@@ -3636,6 +3758,11 @@ Public Class Main
         If bgwRun.CancellationPending = True Then Exit Sub
         If chkiProp.Checked = True Then iProperties.ShowDialog(Me)
         chkiProp.CheckState = CheckState.Unchecked
+        For Each document As Inventor.Document In _invApp.Documents
+            If Not OpenDocs.Contains(document.DisplayName) Then
+                CloseLater(document.FullFileName, document)
+            End If
+        Next
     End Sub
     Private Sub bgwUpdate_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwUpdateSub.DoWork
         btnOK.Text = "Cancel"
@@ -3793,108 +3920,5 @@ Public Class Main
         Me.Update()
     End Sub
 #End Region
-    Private Sub btnExit_Click(sender As System.Object, e As System.EventArgs) Handles btnExit.Click
-        If btnExit.Text = "Exit" Then
-            writeDebug("Batch Program closed")
-            Me.Close()
-            End
-        End If
-    End Sub
-    Public Sub btnOK_Click(sender As System.Object, e As System.EventArgs) Handles btnOK.Click
-        If btnOK.Text = "Cancel" Then
-            bgwUpdateSub.CancelAsync()
-            bgwUpdateSub.Dispose()
-            bgwRun.CancelAsync()
-            bgwRun.Dispose()
-            Exit Sub
-        End If
-        Dim ExportType As String
-        If chkPartExport.Checked = True Or chkDXF.Checked = True Then
-            writeDebug("Accessing DXF creation")
-            ExportType = "DXF"
-            If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
-                My.Settings.CustomDXFExportLoc = ExportLocation(ExportType)
-                If My.Settings.CustomDXFExportLoc = Nothing Then Exit Sub
-            End If
-        End If
-        If chkPDF.Checked = True Then
-            writeDebug("Accessing PDF creation")
-            ExportType = "PDF"
-            If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
-                My.Settings.CustomPDFExportLoc = ExportLocation(ExportType)
-                If My.Settings.CustomPDFExportLoc = Nothing Then Exit Sub
-            End If
-        End If
-        If chkDWG.Checked = True Then
-            writeDebug("Accessing DWG creation")
-            ExportType = "DWG"
-            If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
-                My.Settings.CustomDWGExportLoc = ExportLocation(ExportType)
-                If My.Settings.CustomDWGExportLoc = Nothing Then Exit Sub
-            End If
-        End If
 
-        FormBusy(True)
-        btnOK.Text = "Cancel"
-        btnExit.Enabled = False
-        pgbMain.Visible = True
-        bgwRun.RunWorkerAsync()
-    End Sub
-    Function ExportLocation(ExportType)
-        Dim Drawsource As String = ""
-        If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
-            For Each row In dgvSubFiles.Rows
-                If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.index).Value = True AndAlso
-                    dgvSubFiles.Rows(row.index).Visible = True Then
-                    Drawsource = IO.Path.GetDirectoryName(dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, row.index).Value)
-                End If
-            Next
-            Dim Folder As FolderBrowserDialog = New FolderBrowserDialog
-            Folder.Description = "Choose the location you wish to save the " & UCase(ExportType)
-            Folder.RootFolder = System.Environment.SpecialFolder.Desktop
-            Folder.ShowNewFolderButton = False
-            If Not My.Settings.RecentSaveLoc = "" Then
-                Folder.SelectedPath = My.Settings.RecentSaveLoc
-            ElseIf Not Drawsource = "" Then
-                Folder.SelectedPath = Drawsource
-            Else
-                Folder.SelectedPath = System.Environment.SpecialFolder.Desktop
-            End If
-            If My.Settings("Custom" & ExportType & "ExportLoc") = "" Then
-                Try
-                    If Folder.ShowDialog() = Windows.Forms.DialogResult.OK Then
-                        My.Settings.RecentSaveLoc = Folder.SelectedPath
-                        My.Settings.Save()
-                        Return Folder.SelectedPath
-
-                    Else
-                        Return Nothing
-                    End If
-                Catch ex As Exception
-                    MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                End Try
-            End If
-        End If
-        Return Nothing
-    End Function
-    Private Sub Main_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        MainClosed = True
-    End Sub
-
-    Private Sub dgvSubFiles_SelectionChanged(sender As Object, e As EventArgs) Handles dgvSubFiles.SelectionChanged
-        dgvSubFiles.ClearSelection()
-    End Sub
-
-    Private Sub DebugLogToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DebugLogToolStripMenuItem.Click
-        Process.Start(IO.Path.Combine(IO.Path.GetTempPath, "debug.txt"))
-    End Sub
-    Private Sub dgvSubFiles_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvSubFiles.CellContentClick
-        If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True Then
-            dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = False
-        Else
-            dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, dgvSubFiles.CurrentCell.RowIndex).Value = True
-
-        End If
-        UpdateSubFiles()
-    End Sub
 End Class

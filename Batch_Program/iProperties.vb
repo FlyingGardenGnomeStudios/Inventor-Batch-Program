@@ -534,6 +534,7 @@ Public Class iProperties
         If Read = False Then Call RevTable.iPropRevTable(oDoc)
         'Go through drawings to see which ones are selected
         Dim Warning As Boolean = False
+        ProgressBar2.Visible = True
         For Y = 0 To Main.dgvSubFiles.RowCount - 1
             If Main.bgwRun.CancellationPending = True Then Exit Sub
             'Look through all sub files in open documents to get the part sourcefile
@@ -564,9 +565,9 @@ Public Class iProperties
                         dDoc.Update()
                     End If
                     ' Call ModifyRevTable(dDoc, False)
-
                 End If
-                Main.CloseLater(DrawingName, oDoc)
+                Main.CloseLater(Modelsource, oDoc)
+                Main.CloseLater(DrawSource, oDoc)
                 ''oDoc = _invApp.Documents.Open(DrawSource, False)
                 'If Read = True Then
                 '    'Call SetDrawingProps(oDoc, Warning)

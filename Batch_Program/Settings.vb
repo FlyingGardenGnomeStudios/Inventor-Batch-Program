@@ -91,7 +91,7 @@ Public Class Settings
             txtPDFSaveLoc.Enabled = True
             btnPDFLocBrowse.Enabled = True
             txtPDFTag.Enabled = False
-            txtPDFTag.Text = "ex: \Drawings\PDF"
+            If txtPDFTag.Text = "" Then txtPDFTag.Text = "ex: \Drawings\PDF"
         End If
     End Sub
 
@@ -102,7 +102,7 @@ Public Class Settings
             txtPDFSaveLoc.Enabled = False
             btnPDFLocBrowse.Enabled = False
             txtPDFTag.Enabled = False
-            txtPDFTag.Text = "ex: \Drawings\PDF"
+            If txtPDFTag.Text = "" Then txtPDFTag.Text = "ex: \Drawings\PDF"
         End If
     End Sub
     Private Sub rdoPDFSub_CheckedChanged(sender As Object, e As EventArgs) Handles rdoPDFTag.CheckedChanged
@@ -111,7 +111,7 @@ Public Class Settings
             rdoPDFSaveLoc.Checked = False
             txtPDFSaveLoc.Enabled = False
             txtPDFTag.Enabled = True
-            txtPDFTag.Text = ""
+            If txtPDFTag.Text.Contains("ex:") Then txtPDFTag.Text = ""
         End If
     End Sub
     Private Sub rdoDXFChoose_CheckedChanged(sender As Object, e As EventArgs) Handles rdoDXFChoose.CheckedChanged
@@ -120,7 +120,7 @@ Public Class Settings
             rdoDXFTag.Checked = False
             txtDXFTag.Enabled = False
             txtDXFSaveLoc.Enabled = False
-            txtDXFTag.Text = "ex: \Drawings\DXF"
+            If txtDXFTag.Text = "" Then txtDXFTag.Text = "ex: \Drawings\DXF"
         End If
     End Sub
     Private Sub rdoDXFSaveLoc_CheckedChanged(sender As Object, e As EventArgs) Handles rdoDXFSaveLoc.CheckedChanged
@@ -129,7 +129,7 @@ Public Class Settings
             rdoDXFTag.Checked = False
             txtDXFSaveLoc.Enabled = True
             txtDXFTag.Enabled = False
-            txtDXFTag.Text = "ex: \Drawings\DXF"
+            If txtDXFTag.Text = "" Then txtDXFTag.Text = "ex: \Drawings\DXF"
         End If
     End Sub
 
@@ -139,7 +139,7 @@ Public Class Settings
             rdoDXFSaveLoc.Checked = False
             txtDXFSaveLoc.Enabled = False
             txtDXFTag.Enabled = True
-            txtDXFTag.Text = ""
+            If txtDXFTag.Text.Contains("ex:") Then txtDXFTag.Text = ""
         End If
     End Sub
 
@@ -149,7 +149,7 @@ Public Class Settings
             rdoDWGTag.Checked = False
             txtDWGTag.Enabled = False
             txtDWGSaveLoc.Enabled = False
-            txtDWGTag.Text = "ex: \Drawings\DWG"
+            If txtDWGTag.Text = "" Then txtDWGTag.Text = "ex: \Drawings\DWG"
         End If
     End Sub
     Private Sub rdoDWGSaveLoc_CheckedChanged(sender As Object, e As EventArgs) Handles rdoDWGSaveLoc.CheckedChanged
@@ -158,7 +158,7 @@ Public Class Settings
             rdoDWGTag.Checked = False
             txtDWGSaveLoc.Enabled = True
             txtDWGTag.Enabled = False
-            txtDWGTag.Text = "ex: \Drawings\DWG"
+            If txtDWGTag.Text = "" Then txtDWGTag.Text = "ex: \Drawings\DWG"
         End If
     End Sub
 
@@ -168,7 +168,7 @@ Public Class Settings
             rdoDWGSaveLoc.Checked = False
             txtDWGSaveLoc.Enabled = False
             txtDWGTag.Enabled = True
-            txtDWGTag.Text = ""
+            If txtDWGTag.Text.Contains("ex:") Then txtDWGTag.Text = ""
         End If
     End Sub
 
