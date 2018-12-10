@@ -12,8 +12,6 @@
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\ExpandableGridView.pdb
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\WinControls.ListView.pdb
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\WinControls.ListView.xml
-\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Interop.Shell32.dll
-\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch_Program.vbproj.ResolveComReference.cache
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\About.resources
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\CheckNeeded.resources
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Rev_Table_Settings.resources
@@ -86,3 +84,4 @@ C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\
 C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch Program.xml
 C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch Program.pdb
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\BugFound.resources
+\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Select_Template.resources

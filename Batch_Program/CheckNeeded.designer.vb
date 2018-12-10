@@ -43,8 +43,6 @@ Partial Class CheckNeeded
         Me.RemoveRevisionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AddRevisionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tgvCheckNeeded = New AdvancedDataGridView.TreeGridView()
-        Me.DrawingName = New AdvancedDataGridView.TreeGridColumn()
-        Me.IsDirty = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Splitter1 = New System.Windows.Forms.Splitter()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -54,6 +52,8 @@ Partial Class CheckNeeded
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DrawingName = New AdvancedDataGridView.TreeGridColumn()
+        Me.IsDirty = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.cmsApplyValues.SuspendLayout()
         CType(Me.tgvCheckNeeded, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -196,23 +196,6 @@ Partial Class CheckNeeded
         Me.tgvCheckNeeded.Size = New System.Drawing.Size(596, 152)
         Me.tgvCheckNeeded.TabIndex = 23
         '
-        'DrawingName
-        '
-        Me.DrawingName.DataPropertyName = "Drawing Name"
-        Me.DrawingName.DefaultNodeImage = Nothing
-        Me.DrawingName.HeaderText = "Drawing Name"
-        Me.DrawingName.Name = "DrawingName"
-        Me.DrawingName.ReadOnly = True
-        Me.DrawingName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DrawingName.Width = 83
-        '
-        'IsDirty
-        '
-        Me.IsDirty.HeaderText = "IsDirty"
-        Me.IsDirty.Name = "IsDirty"
-        Me.IsDirty.Visible = False
-        Me.IsDirty.Width = 42
-        '
         'Splitter1
         '
         Me.Splitter1.Location = New System.Drawing.Point(0, 0)
@@ -271,6 +254,22 @@ Partial Class CheckNeeded
         Me.DataGridViewTextBoxColumn6.HeaderText = "MoreRevs"
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
         Me.DataGridViewTextBoxColumn6.Width = 69
+        '
+        'DrawingName
+        '
+        Me.DrawingName.DataPropertyName = "Drawing Name"
+        Me.DrawingName.DefaultNodeImage = Nothing
+        Me.DrawingName.HeaderText = "Drawing Name"
+        Me.DrawingName.Name = "DrawingName"
+        Me.DrawingName.ReadOnly = True
+        Me.DrawingName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DrawingName.Width = 83
+        '
+        'IsDirty
+        '
+        Me.IsDirty.HeaderText = "IsDirty"
+        Me.IsDirty.Name = "IsDirty"
+        Me.IsDirty.Width = 42
         '
         'CheckNeeded
         '
