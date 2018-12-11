@@ -339,7 +339,7 @@ Public Class CheckNeeded
         Dim Opendocs As New ArrayList
         Main.CreateOpenDocs()
         ProgressBar1.Visible = True
-
+        Dim SaveWarning As Boolean = False
         Dim Flag As Boolean = False
         DrawSource = Nothing
         Dim Q As Boolean = False
@@ -361,7 +361,7 @@ Public Class CheckNeeded
             oDoc = _invApp.Documents.Open(DrawSource, False)
 
             'MsgBox("An error occurred in opening " & DrawSource & vbNewLine & "The values for this drawing will not be updated")
-            If Childnode.Index = Nothing Then
+            If Childnode Is Nothing Then
                 For Each Column In tgvCheckNeeded.Columns
                     Select Case Column.name
                         Case "CheckedBy"
@@ -379,7 +379,6 @@ Public Class CheckNeeded
                     End Select
                 Next
             End If
-            If Childnode.Index <> Nothing Then Node = Childnode
             Sheet = oDoc.ActiveSheet
             RevTable = Sheet.RevisionTables(1)
             If RevTable.RevisionTableRows.Count < TotRevs Then
@@ -413,14 +412,27 @@ Public Class CheckNeeded
                 End If
 
                 Dim oPoint As Point2d = RevTable.Position
-                RevTable.Delete()
-                Sheet.RevisionTables.Add2(oPoint, False, True, Alpha, Rev)
+
+
+
+
+
+                'RevTable.RangeBox.MaxPoint.Y + RevTable.RangeBox.MaxPoint.Y - RevTable.RangeBox.MinPoint.Y)
+                For Each Sheet In oDoc.sheets
+                    Sheet.RevisionTables(1).Delete()
+                Next
+                For Each Sheet In oDoc.sheets
+                    Sheet.Activate()
+                    Sheet.RevisionTables.Add2(oPoint, False, True, Alpha, Rev)
+                Next
                 RevTable = Sheet.RevisionTables(1)
-                RevTable.Position = _invApp.TransientGeometry.CreatePoint2d(RevTable.RangeBox.MinPoint.X,
-                                                                                   RevTable.RangeBox.MaxPoint.Y + RevTable.RangeBox.MaxPoint.Y - RevTable.RangeBox.MinPoint.Y)
                 Do Until RevTable.RevisionTableRows.Count = TotRevs
+
+
+                    'RevTable.Position = _invApp.TransientGeometry.CreatePoint2d(RevTable.RangeBox.MinPoint.X, RevTable.RangeBox.MinPoint.Y)
                     RevTable.RevisionTableRows.Add()
                 Loop
+
 
             End If
 
@@ -435,6 +447,7 @@ Public Class CheckNeeded
             ' For RevRow = 1 To RevTable.RevisionTableRows.Count
             Dim i As Integer = 1
 
+
             'If RevRow > 1 Then
             '    RevNode = Node.Nodes.Item(RevRow - 2)
             'Else
@@ -444,8 +457,12 @@ Public Class CheckNeeded
                 Dim h As New DataGridViewTextBoxColumn
                 Dim rtcell As RevisionTableCell = Nothing
                 h.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(LCase(rtc.Title))
+                If Not Childnode Is Nothing Then
+                    WriteRevCase(Childnode, h.Name, Childnode.Level, i, RevTable, oDoc)
+                Else
+                    WriteRevCase(Node, h.Name, Node.Level, i, RevTable, oDoc)
+                End If
 
-                WriteRevCase(Node, h.Name, Node.Index, i, RevTable, oDoc)
                 i = i + 1
             Next
             'Next
@@ -454,11 +471,14 @@ Public Class CheckNeeded
             Try
                 oDoc.Save()
             Catch ex As Exception
-                Ans = MsgBox("Drawing " & DrawingName & " could not be saved." & vbNewLine _
+                If SaveWarning = False Then
+                    Ans = MsgBox("Drawing " & DrawingName & " could not be saved." & vbNewLine _
                                      & "Make sure the drawing is not read-only", MsgBoxStyle.OkCancel, "Error During Save")
-                If Ans = vbCancel Then
-                    ProgressBar1.Hide()
-                    Exit Sub
+                    If Ans = vbCancel Then
+                        ProgressBar1.Hide()
+                        Exit Sub
+                    End If
+                    SaveWarning = True
                 End If
             End Try
             Main.CloseLater(DrawingName, oDoc)
@@ -914,7 +934,9 @@ Public Class CheckNeeded
         For Each node As TreeGridNode In tgvCheckNeeded.Nodes
             If tgvCheckNeeded(0, SelectedCell.RowIndex).Value = tgvCheckNeeded(0, node.RowIndex).Value Then
                 Rev = tgvCheckNeeded(tgvCheckNeeded.Columns(My.Settings.RTSRevCol).Index, node.RowIndex).Value
+                node.Cells.Item(tgvCheckNeeded.Columns("IsDirty").Index).Value = "True"
                 For Each childnode As TreeGridNode In node.Nodes
+                    childnode.Cells.Item(tgvCheckNeeded.Columns("IsDirty").Index).Value = "True"
                     If childnode.RowIndex = SelectedCell.RowIndex Then
                         node.Nodes.Remove(childnode)
                         Exit For
