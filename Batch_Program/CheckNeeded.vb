@@ -576,7 +576,7 @@ Public Class CheckNeeded
         Dim Sheet As Sheet
         Dim RevisionTable As RevisionTable
         Dim i, j As Integer
-        Dim RevCheckNameColNum, RevCheckDateColNum, RevCheckRevColNum, RevCheckDescColNum, RevCheckApproveColNum As Integer
+
         Dim RevCheck1ColNum, RevCheck2ColNum, RevCheck3ColNum, RevCheck4ColNum, RevCheck5ColNum As Integer
         Dim More As Boolean = False
         Main.pgbMain.ProgressBarStyle = MSVistaProgressBar.BarStyle.Continuous
@@ -584,7 +584,11 @@ Public Class CheckNeeded
         For Y = 0 To Main.dgvSubFiles.RowCount - 1
             'get the checkbox state of each item
             Dim k As Integer = 0
-
+            Dim RevCheckNameColNum As String = Nothing
+            Dim RevCheckDateColNum As String = Nothing
+            Dim RevCheckRevColNum As String = Nothing
+            Dim RevCheckDescColNum As String = Nothing
+            Dim RevCheckApproveColNum As String = Nothing
             If Main.dgvSubFiles(Main.dgvSubFiles.Columns("chkSubFiles").Index, Y).Value = True AndAlso
                Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingLocation").Index, Y).Value = DrawSource OrElse
                Main.dgvSubFiles(Main.dgvSubFiles.Columns("chkSubFiles").Index, Y).Value = True AndAlso DrawSource = "" Then
@@ -646,8 +650,8 @@ Public Class CheckNeeded
                 For Each rtc In rt.RevisionTableColumns
                     Dim h As New DataGridViewTextBoxColumn 'ColumnHeader
                     h.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(LCase(rtc.Title))
-                    If FirstRun = True Then
-                        Select Case UCase(h.Name)
+                    ' If FirstRun = True Then
+                    Select Case UCase(h.Name)
                             Case UCase(My.Settings.RTSRevCol)
                                 If My.Settings.RTSRev = True Then
                                     RevCheckRevColNum = i
@@ -690,7 +694,7 @@ Public Class CheckNeeded
                                 End If
                         End Select
                         i = i + 1
-                    End If
+                    'End If
 
                 Next
                 FirstRun = False
@@ -730,21 +734,23 @@ Public Class CheckNeeded
                                     End If
                                 End If
                             Case UCase(My.Settings.RTSRevCol)
-                                Rev(z) = contents((k * rt.RevisionTableColumns.Count) + RevCheckRevColNum)
+                                If Not RevCheckRevColNum = Nothing Then Rev(z) = contents((k * rt.RevisionTableColumns.Count) + RevCheckRevColNum)
                             Case UCase(My.Settings.RTSDescCol)
-                                Rev(z) = contents((k * rt.RevisionTableColumns.Count) + RevCheckDescColNum)
+                                If Not RevCheckDescColNum = Nothing Then Rev(z) = contents((k * rt.RevisionTableColumns.Count) + RevCheckDescColNum)
                             Case UCase(My.Settings.RTSDateCol)
-                                If contents((k * rt.RevisionTableColumns.Count) + RevCheckDateColNum) = "" Then
-                                    Rev(z) = ""
-                                ElseIf contents((k * rt.RevisionTableColumns.Count) + RevCheckDateColNum) = #1/1/1601# Then
-                                    Rev(z) = ""
-                                Else
-                                    Rev(z) = CStr(DateTime.Parse(contents((k * rt.RevisionTableColumns.Count) + RevCheckDateColNum)))
+                                If Not RevCheckDateColNum = Nothing Then
+                                    If contents((k * rt.RevisionTableColumns.Count) + RevCheckDateColNum) = "" Then
+                                        Rev(z) = ""
+                                    ElseIf contents((k * rt.RevisionTableColumns.Count) + RevCheckDateColNum) = #1/1/1601# Then
+                                        Rev(z) = ""
+                                    Else
+                                        Rev(z) = CStr(DateTime.Parse(contents((k * rt.RevisionTableColumns.Count) + RevCheckDateColNum)))
+                                    End If
                                 End If
                             Case UCase(My.Settings.RTSNameCol)
-                                Rev(z) = contents((k * rt.RevisionTableColumns.Count) + RevCheckNameColNum)
+                                If Not RevCheckNameColNum = Nothing Then Rev(z) = contents((k * rt.RevisionTableColumns.Count) + RevCheckNameColNum)
                             Case UCase(My.Settings.RTSApprovedCol)
-                                Rev(z) = contents((k * rt.RevisionTableColumns.Count) + RevCheckApproveColNum)
+                                If Not RevCheckApproveColNum = Nothing Then Rev(z) = contents((k * rt.RevisionTableColumns.Count) + RevCheckApproveColNum)
                             Case UCase(My.Settings.RTS1Item)
                                 If RevCheck1ColNum <> 0 Then Rev(z) = contents((k * rt.RevisionTableColumns.Count) + RevCheck1ColNum)
                             Case UCase(My.Settings.RTS2Item)

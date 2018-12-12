@@ -1389,11 +1389,16 @@ Public Class Main
 
         If DrawingSource = "" Then
             DrawingName = IO.Path.GetFileNameWithoutExtension(Partsource) & ".idw"
-            If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)) Then
-                DrawingSource = IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)
-            Else
-                DrawingSource = ""
-            End If
+            Dim dir As DirectoryInfo = New DirectoryInfo(IO.Path.GetDirectoryName(Partsource))
+            For Each file In dir.GetFiles(DrawingName, SearchOption.AllDirectories)
+                DrawingSource = file.FullName
+            Next
+            ' If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)) Then
+            'If My.Computer.FileSystem.FileExists(DrawingSource) Then
+            '    DrawingSource = IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)
+            'Else
+            '    DrawingSource = ""
+            'End If
         Else
             DrawingName = IO.Path.GetFileName(DrawingSource)
         End If
@@ -3474,8 +3479,10 @@ Public Class Main
             dgvSubFiles.Height = dgvOpenFiles.Height
         Else
             txtSearch.Visible = True
-            dgvSubFiles.Height = gbxOpen.Height - 49
+            txtSearch.Text = "Search"
+            txtSearch.ForeColor = Drawing.Color.Gray
             txtSearch.Width = dgvSubFiles.Width
+            dgvSubFiles.Height = gbxOpen.Height - 49
             txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, Me.Height - 135)
         End If
         For Each row In dgvSubFiles.Rows
