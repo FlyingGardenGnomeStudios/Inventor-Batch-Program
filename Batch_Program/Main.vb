@@ -4007,8 +4007,10 @@ Public Class Main
         'RenameTable.Clear()
     End Sub
     Private Sub btnCreateDwg_Click(sender As Object, e As EventArgs) Handles btnCreateDwg.Click
+        Dim DrawWarning As Boolean = False
         For Each Row In dgvSubFiles.Rows
-            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, Row.Index).Value = True Then
+            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, Row.Index).Value = True AndAlso
+                dgvSubFiles(dgvSubFiles.Columns("Comments").Index, Row.index).Value = "DNE" Then
                 Dim oDrawDoc As DrawingDocument
                 Dim dir As DirectoryInfo = New DirectoryInfo(_invApp.DesignProjectManager.ActiveDesignProject.TemplatesPath)
                 Dim SelectTemplate As New Select_Template
@@ -4217,6 +4219,14 @@ Public Class Main
                 'oLeaderNote = oSheet.DrawingNotes.LeaderNotes.Add(oObjColl, "Text with a leader")
 
                 'oLeaderNote.DimensionStyle = oLeaderNote.DimensionStyle
+            ElseIf DrawWarning = False Then
+                Dim ans As Boolean
+                ans = MsgBox("Only parts with missing drawings can be created" & vbNewLine & "Would you like to create drawings for the remaining items?", vbYesNo)
+                If ans = vbYes Then
+                    DrawWarning = True
+                Else
+                    Exit Sub
+                End If
             End If
         Next
     End Sub
