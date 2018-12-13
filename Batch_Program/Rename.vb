@@ -747,7 +747,7 @@ Public Class Rename
 
     Private Sub chkPParts_CheckedChanged(sender As Object, e As EventArgs) Handles chkPParts.CheckedChanged
         For X = 0 To DGVRename.RowCount - 1
-            If DGVRename.Rows(X).Cells("ID").Value = "PP" Then
+            If DGVRename.Rows(X).Cells("ID").Value = "PP" Or DGVRename.Rows(X).Cells("FileLocation").Value.contains("Purchased") Then
                 If chkPParts.Checked = False Then
                     DGVRename.Rows(X).ReadOnly = True
                     DGVRename.Rows(X).DefaultCellStyle.BackColor = System.Drawing.Color.LightGray

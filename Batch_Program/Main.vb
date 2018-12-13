@@ -1,7 +1,6 @@
 ﻿Imports System.Runtime.InteropServices
 Imports Inventor
 Imports System.Windows.Forms
-Imports Microsoft.Office.Interop
 Imports System.Drawing
 Imports System.Text.RegularExpressions
 Imports System.ComponentModel
@@ -10,6 +9,7 @@ Imports AdvancedDataGridView
 Imports System.Deployment.Application.ApplicationDeployment
 Imports System.IO
 Imports Microsoft.Win32
+Imports Microsoft.Office.Interop
 
 Module ControlPanelIcon
     ' Call this method as soon as possible
@@ -38,7 +38,6 @@ Module ControlPanelIcon
         Return False
     End Function
 End Module
-
 Public Class Main
     Dim _invApp As Inventor.Application
     Dim _started As Boolean = False
@@ -460,192 +459,8 @@ Public Class Main
             End If
         Next
     End Sub
-    Private Sub btnSpreadsheet_Click(sender As System.Object, e As System.EventArgs) Handles btnSpreadsheet.Click
-        VBAFlag = "NA"
-        Dim C, Total, Ans As Integer
-        Dim Counter As Integer = 1
-        Total = 0
-        Dim AssyName, SaveName, PreSave As String
-        SaveName = "" : PreSave = ""
-        Dim AsmDoc As AssemblyDocument
-        Dim oDoc As Document = Nothing
-        Dim AsmDef As AssemblyComponentDefinition
-        Dim PropSets As PropertySets
-        Dim ExcelDoc As Excel.Workbook = Nothing
-        Dim OpenDocs As New ArrayList
-        CreateOpenDocs()
-        Dim Elog As String = ""
-        Dim StartTime As Date = Now
-        Dim _ExcelApp As New Excel.Application
-        For X = 0 To dgvOpenFiles.RowCount - 1
-            If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = True Then
-                If IO.Path.GetExtension(dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, X).Value) = ".iam" Then
-                    C += 1
-                End If
-            End If
-        Next
-        'For X = 0 To lstOpenFiles.Items.Count - 1
-        '    If lstOpenFiles.GetItemCheckState(X) = CheckState.Checked Then
-        '        If Strings.Right(lstOpenFiles.Items.Item(X).ToString, 3) = "iam" Then
-        '            C += 1
-        '        End If
-        '    End If
-        'Next
-        If C = 0 Then
-            MsgBox("Please select an assembly", MsgBoxStyle.SystemModal)
-            Exit Sub
-        End If
-        If C > 1 Then
-            MsgBox("Please only select one assembly", MsgBoxStyle.SystemModal)
-            Exit Sub
-        End If
-        For X = 0 To dgvOpenFiles.RowCount - 1
-            If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = True Then
-                'For X = 0 To lstOpenFiles.Items.Count - 1
-                'If lstOpenFiles.GetItemCheckState(X) = CheckState.Checked Then
-                AssyName = Trim(dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, X).Value)
-                ' AssyName = Trim(lstOpenFiles.Items.Item(X).ToString)
-                For Each oDoc In _invApp.Documents
-                    If InStr(oDoc.FullFileName, AssyName) <> 0 Then
-                        oDoc.Activate()
-                        If oDoc.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
-                            AsmDoc = _invApp.ActiveDocument
-                        Else
-                            MsgBox("The assembly must be active.", MsgBoxStyle.SystemModal)
-                            Exit Sub
-                        End If
-                        Try
-                            ' MsVistaProgressBar.Visible = True
-                            AsmDef = AsmDoc.ComponentDefinition
-                            CountParts(Total)
-                            If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetTempPath, "List-Blank.xlsm")) Then
-                                Kill(IO.Path.Combine(IO.Path.GetTempPath, "List-Blank.xlsm"))
-                            End If
-                            If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetTempPath, "Quote-Blank.xlsm")) Then
-                                Kill(IO.Path.Combine(IO.Path.GetTempPath, "Quote-Blank.xlsm"))
-                            End If
-                            IO.File.WriteAllBytes(IO.Path.Combine(IO.Path.GetTempPath, "List-Blank.xlsm"), My.Resources.List_Blank)
-                            IO.File.WriteAllBytes(IO.Path.Combine(IO.Path.GetTempPath, "Quote-Blank.xlsm"), My.Resources.Quote_Blank)
-                            Dim xlPath = IO.Path.Combine(IO.Path.GetTempPath, "List-Blank.xlsm")
-                            _ExcelApp.Workbooks.Open(xlPath)
-                            _ExcelApp.Visible = False
-                            ExcelDoc = _ExcelApp.ActiveWorkbook
-                            'ShowParameters(oDoc)
-                            GetProperties(oDoc, AsmDef.Occurrences, 0, 0, ExcelDoc, Total)
-                            'MsVistaProgressBar.Visible = False
-                            ExcelDoc.Worksheets("Saw Cut Lengths").visible = False
-                            'UpdateCustomiProperty(oDoc, "", "")
-                            PropSets = AsmDoc.PropertySets
-                            'SaveName = Strings.Left(AsmDoc.FullFileName, InStrRev(AsmDoc.FullFileName, "\") - 1)
-                            SaveName = Strings.Left(AsmDoc.FullFileName, InStrRev(AsmDoc.FullFileName, "\"))
-                            PreSave = Strings.Left(Strings.Right(AsmDoc.FullFileName, Len(AsmDoc.FullFileName) - InStrRev(AsmDoc.FullFileName, "\")),
-                                                       Strings.Len(Strings.Right(AsmDoc.FullFileName, Len(AsmDoc.FullFileName) - InStrRev(AsmDoc.FullFileName, "\"))) - 4) & "-List.xlsm"
-                            If My.Computer.FileSystem.DirectoryExists(SaveName & "Vendor Quotes\") Then
-                            Else
-                                My.Computer.FileSystem.CreateDirectory(SaveName & "Vendor Quotes\")
-                            End If
-                            _ExcelApp.ActiveWorkbook.SaveCopyAs(SaveName & "Vendor Quotes\" & PreSave)
-                            _ExcelApp.DisplayAlerts = False
-                            ExcelDoc.Close()
-                            _ExcelApp.Quit()
-                            KillAllExcels(StartTime)
 
-                        Catch ex As Exception
-                        writeDebug(ex.StackTrace & " " & ex.Message)
-                        KillAllExcels(StartTime)
-                        MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                        Finally
 
-                        Ans = MsgBox("A spreadsheet of all part properties has been created" & vbNewLine &
-                                         "Do you wish to open the file?", vbYesNo, "Finished")
-                        If Ans = vbYes Then
-                            System.Diagnostics.Process.Start(SaveName & "Vendor Quotes\" & PreSave)
-                            '_ExcelApp = Marshal.GetActiveObject("Excel.application")
-                            '_ExcelApp.Workbooks.Open(SaveName & "Vendor Quotes\" & PreSave)
-                            '_ExcelApp.Visible = True
-                        Else
-                            '_ExcelApp.Visible = True
-
-                            '_ExcelApp.Quit()
-                            '_ExcelApp.DisplayAlerts = True
-                            '_ExcelApp = Nothing
-                            'KillAllExcels(StartTime)
-                        End If
-                        End Try
-                        Exit Sub
-                    End If
-                Next
-            End If
-        Next
-    End Sub
-    Private Sub btnRename_Click(sender As System.Object, e As System.EventArgs) Handles btnRename.Click
-        'If lstOpenFiles.CheckedItems.Count = 0 Then
-        '    MsgBox("Please select an item to rename")
-        '    Exit Sub
-        'ElseIf lstOpenFiles.CheckedItems.Count > 1 Then
-        '    MsgBox("Only select only one item to be renamed")
-        '    Exit Sub
-        'End If
-        'If InStr(lstOpenFiles.CheckedItems.Item(0).ToString, ".ipt") <> 0 Then
-        '    MsgBox("Rename currently only supports assemblies")
-        '    Exit Sub
-        'End If
-        Dim Parts As Integer = 0
-        Dim Part As String = Nothing
-        For Each Row In dgvOpenFiles.Rows
-            If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, Row.index).Value = True Then
-                Part = dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, Row.index).Value
-                Parts += 1
-            End If
-        Next
-        If Parts = 0 Then
-            MsgBox("Please select an item to rename", MsgBoxStyle.SystemModal)
-            Exit Sub
-        ElseIf Parts > 1 Then
-            MsgBox("Only select only one item to be renamed", MsgBoxStyle.SystemModal)
-            Exit Sub
-        End If
-        If IO.Path.GetExtension(Part) = ".ipt" Then
-            MsgBox("Rename currently only supports assemblies", MsgBoxStyle.SystemModal)
-            Exit Sub
-        End If
-        Dim Infoform As New Warning
-        If My.Settings.RenameShowMe = True Then
-            Infoform.ShowDialog()
-        End If
-        CreateOpenDocs()
-        Dim ErrList As String = ""
-        Dim Elog As String = ""
-        If VBAFlag = "False" Then CreateVBA()
-        Dim Rename As New Rename
-
-        Dim X As Integer = 0
-        Rename.PopMain(Me)
-        Try
-            For Each Entry As List(Of String) In RenameTable
-                If X = 0 Then
-                    My.Settings.RenameParentAssy = IO.Path.Combine(Entry.Item(0).ToString, Entry.Item(2).ToString)
-                    'Rename.txtParent.Text = Entry.Item(2).ToString
-                    'Rename.txtParentSource.Text = Entry.Item(0).ToString
-                End If
-                Rename.DGVRename.Rows.Add(Entry.Item(0).ToString, Entry.Item(1).ToString, Entry.Item(2).ToString, "", ThumbList(X), Entry.Item(3).ToString)
-                Elog = Elog & Entry.Item(2).ToString & ": Added to Rename Table" & vbNewLine
-                X += 1
-            Next
-        Catch
-            ErrList = Err.Description & vbNewLine
-            Err.Clear()
-        Finally
-            If ErrList.Length > 0 Then
-                MsgBox("The following occurred during the creation of the rename table" & vbNewLine & ErrList, MsgBoxStyle.SystemModal)
-            End If
-            writeDebug(Elog)
-        End Try
-        Rename.chkCCParts.Checked = False
-
-        Rename.Show()
-        'RenameTable.Clear()
-    End Sub
 
 #End Region
 #Region "Right side buttons"
@@ -833,19 +648,19 @@ Public Class Main
                     ElseIf ExportType = "dxf" Then
                         If My.Computer.FileSystem.FileExists(SaveLoc) Or
                         My.Computer.FileSystem.FileExists(SaveLoc.Insert(SaveLoc.LastIndexOf("."), "_Sheet_1")) Then
-                        Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "DXF", RevNo)
-                        'Overwrite.dgvOverwrite.Rows.Add(True, IO.Path.GetFileNameWithoutExtension(DrawingName) & ".dxf", DXFSource)
-                        'OWCounter += 1
+                            Overwrite.dgvOverwrite.Rows.Add(True, Total, Counter, Destin, DrawingName, DrawSource, "DXF", RevNo)
+                            'Overwrite.dgvOverwrite.Rows.Add(True, IO.Path.GetFileNameWithoutExtension(DrawingName) & ".dxf", DXFSource)
+                            'OWCounter += 1
+                        End If
                     End If
-                End If
 
                     CloseLater(DrawSource, oDoc)
                     'Counter += 1
                     ' Title = "Checking"
                     bgwRun.ReportProgress((Counter / Total) * 100, "Checking: " & DrawingName)
-                ' ProgressBar(Total, Counter, Title, DrawingName)
-                'Display any files that will be overwritten
-            End If
+                    ' ProgressBar(Total, Counter, Title, DrawingName)
+                    'Display any files that will be overwritten
+                End If
             End If
 
             'End If
@@ -1350,190 +1165,7 @@ Public Class Main
         _invApp.SilentOperation = False
         'MsVistaProgressBar.Visible = False
     End Sub
-    Private Sub btnRef_Click(sender As System.Object, e As System.EventArgs) Handles btnRef.Click
-        Dim Written As Boolean = False
-        Dim Warning As Boolean = False
-        Dim Warning2 As Boolean = False
-        Dim PropExists As Boolean = True
-        Dim Fix As String = "The following files have more references" & vbNewLine &
-                            "than the titleblock permits: " & vbNewLine & vbNewLine
-        Dim C, X, Y, R, P, Maxlayer, Layer, Col As Integer
-        Col = R = P = 0
-        Layer = 0
-        'Dim Parent As New ArrayList
-        Dim Parent As New List(Of List(Of String))
-        Dim Total As Integer = 0
-        For Each row In dgvSubFiles.Rows
-            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.index).Value = True AndAlso
-                dgvSubFiles.Rows(row.index).Visible = True Then
-                Total += 1
-            End If
-        Next
-        Dim Counter As Integer = 1
-        Parent.Clear()
-        Dim oDoc As Document
-        Dim OpenDocs As New ArrayList
-        Dim AsmDoc As AssemblyDocument
-        Dim DocType As DocumentTypeEnum
-        Dim Ans, strFile, PartName As String
-        Dim DrawingName As String = ""
-        Dim test, ChildFile, ParentFile As String
-        ChildFile = ""
-        Dim Path As Documents
-        Path = _invApp.Documents
-        'Go through drawings to see which ones are selected
-        For X = 0 To dgvOpenFiles.RowCount - 1
-            'Look through all sub files in open documents to get the part sourcefile
-            If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = True Then
-                'iterate through opend documents to find the selected file
-                If IO.Path.GetExtension(dgvOpenFiles(dgvOpenFiles.Columns("OpenFiles").Index, X).Value) = ".iam" Then
-                    C += 1
-                End If
-            End If
-        Next
-        'For X = 0 To lstOpenFiles.Items.Count - 1
-        '    'Look through all sub files in open documents to get the part sourcefile
-        '    If lstOpenFiles.GetItemCheckState(X) = CheckState.Checked Then
-        '        'iterate through opend documents to find the selected file
-        '        If Strings.Right(lstOpenFiles.Items.Item(X), 3) = "iam" Then
-        '            C += 1
-        '        End If
-        '    End If
-        'Next
-        If C = 0 Then
-            MsgBox("Please select an assembly", MsgBoxStyle.SystemModal)
-            Exit Sub
-        End If
-        If C > 1 Then
-            MsgBox("Please only select one assembly", MsgBoxStyle.SystemModal)
-            Exit Sub
-        End If
-        'Go through drawings to see which ones are selected
-        For X = 0 To dgvOpenFiles.RowCount - 1
-            'For X = 0 To lstOpenFiles.CheckedItems.Count - 1
-            'Look through all sub files in open documents to get the part sourcefile
-            If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = True Then
-                'iterate through opend documents to find the selected file
-                'For Y = 1 To _invApp.Documents.Count
-                'If selected document = Found document
-                'If InStr(_invApp.Documents.Item(Y).FullFileName, lstOpenFiles.Items.Item(X)) <> 0 Then
-                oDoc = _invApp.Documents.ItemByName(dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, X).Value)
 
-                oDoc = _invApp.Documents.Open(_invApp.Documents.Item(Y).FullFileName)
-                Ans = MsgBox("This action will overwrite" & vbNewLine & "all previous references." _
-                                & vbNewLine & "Do you wish to continue?", vbYesNo, "Overwrite References")
-                If Ans = vbNo Then
-                    Exit Sub
-                Else
-                    ' activate matching document
-                    AsmDoc = _invApp.ActiveDocument
-                    DocType = AsmDoc.DocumentType
-                    strFile = Strings.Left(AsmDoc.FullFileName, Strings.Len(AsmDoc.FullFileName) - 4)
-                    strFile = Strings.Right(strFile, Strings.Len(strFile) - InStrRev(strFile, "\"))
-                    'Add list to the array for new Parent
-                    Parent.Add(New List(Of String))
-                    Parent(Layer).Add(strFile)
-                    'call recursive sub to go through all sub files
-                    WriteChildren(AsmDoc.ComponentDefinition.Occurrences, Layer + 1, R, Col, Maxlayer, Parent, strFile, Total, Counter)
-                    Exit For
-                End If
-            End If
-            'Next
-            'End If
-        Next
-        Counter = 1
-        For X = 0 To dgvSubFiles.RowCount - 1
-            Counter += 1
-            For Y = 1 To _invApp.Documents.Count - 1
-                'oDoc = Path.Item(Y)
-                'Archive = oDoc.FullFileName
-                'Use the Partsource file to create the drawingsource file
-                'DrawSource = Strings.Left(Archive, Strings.Len(Archive) - 3) & "idw"
-                'If My.Computer.FileSystem.FileExists(DrawSource) Then
-                ' DrawingName = Strings.Right(DrawSource, Strings.Len(DrawSource) - Strings.InStrRev(DrawSource, "\"))
-                'If the drawing file is listed, open the drawing in Inventor
-                'If Trim(LVSubFiles.Items.Item(X).Text) = DrawingName Then
-                oDoc = _invApp.Documents.ItemByName(dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, Y).Value)
-                'oDoc = _invApp.Documents.Open(DrawSource, False)
-                CustomPropSet = oDoc.PropertySets.Item("{D5CDD505-2E9C-101B-9397-08002B2CF9AE}")
-                PartName = Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\"))
-
-
-                For P = 0 To 9
-                    Try
-                        InvRef(P) = CustomPropSet.Item("Reference" & P)
-                    Catch
-                        SetiProp(InvRef(P), "Reference" & P)
-                        InvRef(P) = CustomPropSet.Item("Reference" & P)
-                    End Try
-                Next
-                For P = 0 To 9
-                    InvRef(P).Value = ""
-                Next
-                P = 0
-                Dim Fullstring As New List(Of String)
-                For Each l As List(Of String) In Parent
-                    For M = 0 To l.Count - 1
-                        test = l(M)
-                        If InStr(test, ",") = 0 Then
-                            ParentFile = test
-                            ChildFile = ""
-                        Else
-                            ChildFile = Strings.Right(test, Len(test) - (InStrRev(test, ",")))
-                            ParentFile = Strings.Left(test, (InStr(test, ",") - 1))
-                        End If
-                        If (Strings.Left(PartName, Len(PartName) - 4) = ChildFile) And ChildFile <> "" Then
-                            If P = 7 Then
-                                Warning2 = True
-                                If InStr(Fix, ChildFile) = 0 Then
-                                    Fix = Fix & ChildFile & vbNewLine
-                                End If
-                            ElseIf P = 6 Then
-                                MsgBox("The current titleblock holds 6 references." & vbNewLine &
-                                            "All following references will be added, but the Titleblock needs to be updated before they can be shown.", MsgBoxStyle.SystemModal)
-                            ElseIf P = 10 Then
-                                MsgBox("Currently the program can only keep 10 references." & vbNewLine &
-                                            "All following references will not be added.", MsgBoxStyle.SystemModal)
-                            End If
-                            Try
-                                InvRef(P) = CustomPropSet.Item("Reference" & P)
-                                InvRef(P).Value = ParentFile
-                            Catch
-                                InvRef(P) = CustomPropSet.Add("", "Reference" & P)
-                                InvRef(P).Value = ParentFile
-                            End Try
-                            P += 1
-                            Written = True
-                        End If
-                    Next
-                Next
-                _invApp.SilentOperation = True
-                oDoc.Update()
-                Try
-                    oDoc.Save2()
-                Catch ex As Exception
-                    MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                End Try
-                CloseLater(DrawingName, oDoc)
-                _invApp.SilentOperation = False
-                'End If
-                ' End If
-                'MsVistaProgressBar.ProgressBarStyle = MSVistaProgressBar.BarStyle.Marquee
-                bgwRun.ReportProgress((Counter / Total) * 100, "Writing Reference: " & DrawingName)
-                ' ProgressBar(Total, Counter, "Writing Reference: ", DrawingName)
-                If Written = True Then
-                    Written = False
-                    Exit For
-                End If
-            Next
-        Next
-        ' MsVistaProgressBar.Visible = False
-        If Warning2 = True Then
-            MsgBox(Fix & vbNewLine & "These drawings need to be updated manually.", MsgBoxStyle.SystemModal)
-        End If
-
-        MsgBox("All the references have been updated", MsgBoxStyle.SystemModal)
-    End Sub
     Private Sub SetiProp(InvRef As Inventor.Property, Ref As String)
         InvRef = CustomPropSet.Add("", Ref)
     End Sub
@@ -1603,53 +1235,6 @@ Public Class Main
     End Sub
 #End Region
 #Region "Background Calls"
-    Private Sub btnExit_Click(sender As System.Object, e As System.EventArgs) Handles btnExit.Click
-        If btnExit.Text = "Exit" Then
-            writeDebug("Batch Program closed")
-            Me.Close()
-            End
-        End If
-    End Sub
-    Public Sub btnOK_Click(sender As System.Object, e As System.EventArgs) Handles btnOK.Click
-        If btnOK.Text = "Cancel" Then
-            bgwUpdateSub.CancelAsync()
-            bgwUpdateSub.Dispose()
-            bgwRun.CancelAsync()
-            bgwRun.Dispose()
-            Exit Sub
-        End If
-        Dim ExportType As String
-        If chkPartExport.Checked = True Or chkDXF.Checked = True Then
-            writeDebug("Accessing DXF creation")
-            ExportType = "DXF"
-            If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
-                My.Settings.CustomDXFExportLoc = ExportLocation(ExportType)
-                If My.Settings.CustomDXFExportLoc = Nothing Then Exit Sub
-            End If
-        End If
-        If chkPDF.Checked = True Then
-            writeDebug("Accessing PDF creation")
-            ExportType = "PDF"
-            If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
-                My.Settings.CustomPDFExportLoc = ExportLocation(ExportType)
-                If My.Settings.CustomPDFExportLoc = Nothing Then Exit Sub
-            End If
-        End If
-        If chkDWG.Checked = True Then
-            writeDebug("Accessing DWG creation")
-            ExportType = "DWG"
-            If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
-                My.Settings.CustomDWGExportLoc = ExportLocation(ExportType)
-                If My.Settings.CustomDWGExportLoc = Nothing Then Exit Sub
-            End If
-        End If
-
-        FormBusy(True)
-        btnOK.Text = "Cancel"
-        btnExit.Enabled = False
-        pgbMain.Visible = True
-        bgwRun.RunWorkerAsync()
-    End Sub
     Function ExportLocation(ExportType)
         Dim Drawsource As String = ""
         If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
@@ -1804,11 +1389,16 @@ Public Class Main
 
         If DrawingSource = "" Then
             DrawingName = IO.Path.GetFileNameWithoutExtension(Partsource) & ".idw"
-            If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)) Then
-                DrawingSource = IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)
-            Else
-                DrawingSource = ""
-            End If
+            Dim dir As DirectoryInfo = New DirectoryInfo(IO.Path.GetDirectoryName(Partsource))
+            For Each file In dir.GetFiles(DrawingName, SearchOption.AllDirectories)
+                DrawingSource = file.FullName
+            Next
+            ' If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)) Then
+            'If My.Computer.FileSystem.FileExists(DrawingSource) Then
+            '    DrawingSource = IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)
+            'Else
+            '    DrawingSource = ""
+            'End If
         Else
             DrawingName = IO.Path.GetFileName(DrawingSource)
         End If
@@ -2124,7 +1714,7 @@ Public Class Main
         writeDebug("Created Open Document List :" & OpenDocs.Count & " documents")
     End Sub
     Public Sub RevTable_Location(ByVal Sheet As Sheet, ByRef Revtable As RevisionTable, ByRef oPoint As Point2d)
-        Dim oBorder As Border = Sheet.Border
+        Dim oBorder As Inventor.Border = Sheet.Border
         Dim Xmax, Xmin, Ymax, Ymin As Decimal
         If Not oBorder Is Nothing Then
             Xmax = oBorder.RangeBox.MaxPoint.X
@@ -2230,7 +1820,7 @@ Public Class Main
         End Select
     End Sub
     Public Sub CloseLater(Name As String, oDoc As Document)
-        If Name = "" Then MsgBox("Blank name sent to closelater")
+        If Name = "" Then Exit Sub
         Dim CloseLater As Boolean = True
         'Go through string of originally open documents to see if document has been opened by the program
         For Each Str As String In OpenDocs
@@ -2363,8 +1953,7 @@ Public Class Main
                                 Offset = Offset + 1
                                 If CStr(ExcelDoc.ActiveSheet.Range("F" & Offset).Value) = CStr(StockNo) And
                             CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = CStr(Material) Then
-                                    ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length)
-                                    If InStrRev(ExcelDoc.ActiveSheet.Range("G" & Offset).Value, PartNo) = "" And
+                                    If InStrRev(ExcelDoc.ActiveSheet.Range("G" & Offset).Value, PartNo) = 0 And
                                 ExcelDoc.ActiveSheet.Range("G" & Offset).Value <> "" And
                                 InStr(ExcelDoc.ActiveSheet.range("G" & Offset).value, PartNo) = 0 Then
                                         ExcelDoc.ActiveSheet.Range("G" & Offset).Value = ExcelDoc.ActiveSheet.Range("G" & Offset).Value & ", " & PartNo
@@ -2401,7 +1990,7 @@ Public Class Main
                                 Offset = Offset + 1
                                 If CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = CStr(StockNo) Then
                                     ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + Area
-                                    If InStrRev(ExcelDoc.ActiveSheet.Range("E" & Offset).Value, PartNo) = "" And
+                                    If InStrRev(ExcelDoc.ActiveSheet.Range("E" & Offset).Value, PartNo) = 0 And
                                 ExcelDoc.ActiveSheet.Range("E" & Offset).Value <> "" Then
                                         ExcelDoc.ActiveSheet.Range("E" & Offset).Value = ExcelDoc.ActiveSheet.Range("E" & Offset).Value & ", " & PartNo
                                     End If
@@ -2503,32 +2092,57 @@ Public Class Main
         Next
         ExcelDoc.Worksheets("Saw Cut").activate()
     End Sub
-    Function AreaCalculate(ByRef oDoc As Document, ByRef Occ As ComponentOccurrence) As Decimal
+    Function AreaCalculate(ByRef oDoc As PartDocument, ByRef Occ As ComponentOccurrence) As Decimal
 
         Dim oDef As SheetMetalComponentDefinition
         oDef = oDoc.ComponentDefinition
         Dim oFlatPattern As FlatPattern
         oFlatPattern = oDef.FlatPattern
         Dim oTransaction As Transaction
-        oTransaction = _invApp.TransactionManager.StartTransaction(oDoc, "Find area")
         Dim oSketch As PlanarSketch
-        oSketch = oFlatPattern.Sketches.Add(oFlatPattern.TopFace)
-        Dim oEdgeLoop As EdgeLoop = Nothing
-        For Each oEdgeLoop In oFlatPattern.TopFace.EdgeLoops
-            If oEdgeLoop.IsOuterEdgeLoop Then
-                Exit For
-            End If
-        Next
-        Dim oEdge As Edge
-        For Each oEdge In oEdgeLoop.Edges
-            Call oSketch.AddByProjectingEntity(oEdge)
-        Next
+        oTransaction = _invApp.TransactionManager.StartTransaction(oDoc, "Find area")
+        Try
+
+            oSketch = oFlatPattern.Sketches.Add(oFlatPattern.TopFace)
+        Catch ex As Exception
+            Debug.WriteLine("Error calculating area" & vbNewLine &
+                            "Failure to create sketch in flat pattern on " & oDoc.DisplayName)
+            oTransaction.Abort()
+            Exit Function
+        End Try
+        Try
+            Dim oEdgeLoop As EdgeLoop = Nothing
+            For Each oEdgeLoop In oFlatPattern.TopFace.EdgeLoops
+                If oEdgeLoop.IsOuterEdgeLoop Then
+                    Exit For
+                End If
+            Next
+            Dim oEdge As Edge
+            For Each oEdge In oEdgeLoop.Edges
+                Call oSketch.AddByProjectingEntity(oEdge)
+            Next
+        Catch ex As Exception
+            Debug.WriteLine("Error calculating area" & vbNewLine &
+                            "Failure to find perimeter edge " & oDoc.DisplayName)
+            oTransaction.Abort()
+            Exit Function
+        End Try
         Dim oProfile As Profile
-        oProfile = oSketch.Profiles.AddForSolid
+        Try
+            oProfile = oSketch.Profiles.AddForSolid
+
+        Catch ex As Exception
+            Debug.WriteLine("Error calculating area" & vbNewLine &
+                            "Failure to create perimiter profile " & oDoc.DisplayName)
+            oTransaction.Abort()
+        End Try
         Dim dArea As Double
         dArea = oProfile.RegionProperties.Area
         oTransaction.Abort()
-        AreaCalculate = dArea / (12 * 2.54) ^ 2
+
+        AreaCalculate = dArea / (2.54 ^ 2) / 144
+        Dim oParameter As UserParameter
+
     End Function
     Public Sub ExtractThumb(ByRef PartName As String, ByRef Thumbnail As Image)
         Dim X As Integer = 0
@@ -3873,15 +3487,7 @@ Public Class Main
         gbxSelection.Enabled = True
         gbxUtilities.Enabled = True
         txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, dgvSubFiles.Location.Y + dgvSubFiles.Height + 5)
-        If dgvSubFiles.Controls.OfType(Of VScrollBar).SingleOrDefault.Visible = False Then
-            txtSearch.Visible = False
-            dgvSubFiles.Height = dgvOpenFiles.Height
-        Else
-            txtSearch.Visible = True
-            dgvSubFiles.Height = gbxOpen.Height - 49
-            txtSearch.Width = dgvSubFiles.Width
-            txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, Me.Height - 135)
-        End If
+
         For i = 0 To SubfilesData.Rows.Count - 1
             dgvSubFiles.Rows.Add(New String() {True, Space(SubfilesData.Rows(i).Item(0) * 3) & SubfilesData.Rows(i).Item(1), SubfilesData.Rows(i).Item(1), SubfilesData.Rows(i).Item(2), SubfilesData.Rows(i).Item(3), SubfilesData.Rows(i).Item(4), dgvSubFiles.RowCount})
             If SubfilesData.Rows(i).Item(4) = "PPM" Then
@@ -3892,11 +3498,21 @@ Public Class Main
                 dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = Drawing.Color.Blue
             End If
         Next
-
+        If dgvSubFiles.Controls.OfType(Of VScrollBar).SingleOrDefault.Visible = False Then
+            txtSearch.Visible = False
+            dgvSubFiles.Height = dgvOpenFiles.Height
+        Else
+            txtSearch.Visible = True
+            txtSearch.Text = "Search"
+            txtSearch.ForeColor = Drawing.Color.Gray
+            txtSearch.Width = dgvSubFiles.Width
+            dgvSubFiles.Height = gbxOpen.Height - 49
+            txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, Me.Height - 135)
+        End If
         For Each row In dgvSubFiles.Rows
             If dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Gray Or
                 dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Red Then
-                dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.Index).Value = True = False
+                dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.Index).Value = False
             End If
         Next
         UpdateSubFiles()
@@ -3919,6 +3535,690 @@ Public Class Main
         dgvSubFiles.ClearSelection()
         Me.Update()
     End Sub
-#End Region
 
+
+    Private Function SelectScale(Size)
+        Select Case Size
+            Case > 1250
+                Return 1 / 750
+            Case 750 To 1250
+                Return 1 / 500
+            Case 500 To 750
+                Return 1 / 250
+            Case 300 To 500
+                Return 1 / 150
+            Case 200 To 300
+                Return 1 / 100
+            Case 150 To 200
+                Return 1 / 75
+            Case 100 To 150
+                Return 1 / 50
+            Case 60 To 100
+                Return 1 / 35
+            Case 40 To 60
+                Return 1 / 25
+            Case 25 To 40
+                Return 1 / 15
+            Case 20 To 25
+                Return 1 / 10
+            Case 15 To 20
+                Return 1 / 8
+            Case 10 To 15
+                Return 1 / 6
+            Case 8 To 10
+                Return 1 / 4
+            Case 6 To 8
+                Return 1 / 3
+            Case 4 To 6
+                Return 1 / 2
+            Case 3 To 4
+                Return 2 / 3
+            Case 1.5 To 3
+                Return 1
+            Case 0.5 To 1.5
+                Return 2
+            Case 0.25 To 0.5
+                Return 4
+            Case 0.125 To 0.25
+                Return 8
+            Case 0.0625 To 0.125
+                Return 16
+            Case Else
+                Return 1
+        End Select
+    End Function
+#End Region
+#Region "Buttons"
+    Private Sub btnExit_Click(sender As System.Object, e As System.EventArgs) Handles btnExit.Click
+        If btnExit.Text = "Exit" Then
+            writeDebug("Batch Program closed")
+            Me.Close()
+            End
+        End If
+    End Sub
+    Public Sub btnOK_Click(sender As System.Object, e As System.EventArgs) Handles btnOK.Click
+        If btnOK.Text = "Cancel" Then
+            bgwUpdateSub.CancelAsync()
+            bgwUpdateSub.Dispose()
+            bgwRun.CancelAsync()
+            bgwRun.Dispose()
+            Exit Sub
+        End If
+        Dim ExportType As String
+        If chkPartExport.Checked = True Or chkDXF.Checked = True Then
+            writeDebug("Accessing DXF creation")
+            ExportType = "DXF"
+            If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+                My.Settings.CustomDXFExportLoc = ExportLocation(ExportType)
+                If My.Settings.CustomDXFExportLoc = Nothing Then Exit Sub
+            End If
+        End If
+        If chkPDF.Checked = True Then
+            writeDebug("Accessing PDF creation")
+            ExportType = "PDF"
+            If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+                My.Settings.CustomPDFExportLoc = ExportLocation(ExportType)
+                If My.Settings.CustomPDFExportLoc = Nothing Then Exit Sub
+            End If
+        End If
+        If chkDWG.Checked = True Then
+            writeDebug("Accessing DWG creation")
+            ExportType = "DWG"
+            If My.Settings(ExportType & "SaveNewLoc") = False And My.Settings(ExportType & "SaveTag") = False Then
+                My.Settings.CustomDWGExportLoc = ExportLocation(ExportType)
+                If My.Settings.CustomDWGExportLoc = Nothing Then Exit Sub
+            End If
+        End If
+
+        FormBusy(True)
+        btnOK.Text = "Cancel"
+        btnExit.Enabled = False
+        pgbMain.Visible = True
+        bgwRun.RunWorkerAsync()
+    End Sub
+    Private Sub btnSpreadsheet_Click(sender As System.Object, e As System.EventArgs) Handles btnSpreadsheet.Click
+        VBAFlag = "NA"
+        Dim C, Total, Ans As Integer
+        Dim Counter As Integer = 1
+        Total = 0
+        Dim AssyName, SaveName, PreSave As String
+        SaveName = "" : PreSave = ""
+        Dim AsmDoc As AssemblyDocument
+        Dim oDoc As Document = Nothing
+        Dim AsmDef As AssemblyComponentDefinition
+        Dim PropSets As PropertySets
+        Dim ExcelDoc As Excel.Workbook = Nothing
+        Dim OpenDocs As New ArrayList
+        CreateOpenDocs()
+        Dim Elog As String = ""
+        Dim StartTime As Date = Now
+        Dim _ExcelApp As New Excel.Application
+        For X = 0 To dgvOpenFiles.RowCount - 1
+            If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = True Then
+                If IO.Path.GetExtension(dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, X).Value) = ".iam" Then
+                    C += 1
+                End If
+            End If
+        Next
+        'For X = 0 To lstOpenFiles.Items.Count - 1
+        '    If lstOpenFiles.GetItemCheckState(X) = CheckState.Checked Then
+        '        If Strings.Right(lstOpenFiles.Items.Item(X).ToString, 3) = "iam" Then
+        '            C += 1
+        '        End If
+        '    End If
+        'Next
+        If C = 0 Then
+            MsgBox("Please select an assembly", MsgBoxStyle.SystemModal)
+            Exit Sub
+        End If
+        If C > 1 Then
+            MsgBox("Please only select one assembly", MsgBoxStyle.SystemModal)
+            Exit Sub
+        End If
+        For X = 0 To dgvOpenFiles.RowCount - 1
+            If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = True Then
+                'For X = 0 To lstOpenFiles.Items.Count - 1
+                'If lstOpenFiles.GetItemCheckState(X) = CheckState.Checked Then
+                AssyName = Trim(dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, X).Value)
+                ' AssyName = Trim(lstOpenFiles.Items.Item(X).ToString)
+                For Each oDoc In _invApp.Documents
+                    If InStr(oDoc.FullFileName, AssyName) <> 0 Then
+                        oDoc.Activate()
+                        If oDoc.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
+                            AsmDoc = _invApp.ActiveDocument
+                        Else
+                            MsgBox("The assembly must be active.", MsgBoxStyle.SystemModal)
+                            Exit Sub
+                        End If
+                        Try
+                            ' MsVistaProgressBar.Visible = True
+                            AsmDef = AsmDoc.ComponentDefinition
+                            CountParts(Total)
+                            If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetTempPath, "List-Blank.xlsm")) Then
+                                Kill(IO.Path.Combine(IO.Path.GetTempPath, "List-Blank.xlsm"))
+                            End If
+                            If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetTempPath, "Quote-Blank.xlsm")) Then
+                                Kill(IO.Path.Combine(IO.Path.GetTempPath, "Quote-Blank.xlsm"))
+                            End If
+                            IO.File.WriteAllBytes(IO.Path.Combine(IO.Path.GetTempPath, "List-Blank.xlsm"), My.Resources.List_Blank)
+                            IO.File.WriteAllBytes(IO.Path.Combine(IO.Path.GetTempPath, "Quote-Blank.xlsm"), My.Resources.Quote_Blank)
+                            Dim xlPath = IO.Path.Combine(IO.Path.GetTempPath, "List-Blank.xlsm")
+                            _ExcelApp.Workbooks.Open(xlPath)
+                            _ExcelApp.Visible = True
+                            ExcelDoc = _ExcelApp.ActiveWorkbook
+                            'ShowParameters(oDoc)
+                            GetProperties(oDoc, AsmDef.Occurrences, 0, 0, ExcelDoc, Total)
+                            'MsVistaProgressBar.Visible = False
+                            ExcelDoc.Worksheets("Saw Cut Lengths").visible = False
+                            'UpdateCustomiProperty(oDoc, "", "")
+                            PropSets = AsmDoc.PropertySets
+                            'SaveName = Strings.Left(AsmDoc.FullFileName, InStrRev(AsmDoc.FullFileName, "\") - 1)
+                            SaveName = Strings.Left(AsmDoc.FullFileName, InStrRev(AsmDoc.FullFileName, "\"))
+                            PreSave = Strings.Left(Strings.Right(AsmDoc.FullFileName, Len(AsmDoc.FullFileName) - InStrRev(AsmDoc.FullFileName, "\")),
+                                                       Strings.Len(Strings.Right(AsmDoc.FullFileName, Len(AsmDoc.FullFileName) - InStrRev(AsmDoc.FullFileName, "\"))) - 4) & "-List.xlsm"
+                            If My.Computer.FileSystem.DirectoryExists(SaveName & "Vendor Quotes\") Then
+                            Else
+                                My.Computer.FileSystem.CreateDirectory(SaveName & "Vendor Quotes\")
+                            End If
+                            _ExcelApp.ActiveWorkbook.SaveCopyAs(SaveName & "Vendor Quotes\" & PreSave)
+                            _ExcelApp.DisplayAlerts = False
+                            ExcelDoc.Close()
+                            _ExcelApp.Quit()
+                            KillAllExcels(StartTime)
+
+                        Catch ex As Exception
+                            writeDebug(ex.StackTrace & " " & ex.Message)
+                            KillAllExcels(StartTime)
+                            MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                        Finally
+
+                            Ans = MsgBox("A spreadsheet of all part properties has been created" & vbNewLine &
+                                             "Do you wish to open the file?", vbYesNo, "Finished")
+                            If Ans = vbYes Then
+                                System.Diagnostics.Process.Start(SaveName & "Vendor Quotes\" & PreSave)
+                                '_ExcelApp = Marshal.GetActiveObject("Excel.application")
+                                '_ExcelApp.Workbooks.Open(SaveName & "Vendor Quotes\" & PreSave)
+                                '_ExcelApp.Visible = True
+                            Else
+                                '_ExcelApp.Visible = True
+
+                                '_ExcelApp.Quit()
+                                '_ExcelApp.DisplayAlerts = True
+                                '_ExcelApp = Nothing
+                                'KillAllExcels(StartTime)
+                            End If
+                        End Try
+                        Exit Sub
+                    End If
+                Next
+            End If
+        Next
+    End Sub
+    Private Sub btnRef_Click(sender As System.Object, e As System.EventArgs) Handles btnRef.Click
+        Dim Written As Boolean = False
+        Dim Warning As Boolean = False
+        Dim Warning2 As Boolean = False
+        Dim PropExists As Boolean = True
+        Dim Fix As String = "The following files have more references" & vbNewLine &
+                            "than the titleblock permits: " & vbNewLine & vbNewLine
+        Dim C, X, Y, R, P, Maxlayer, Layer, Col As Integer
+        Col = R = P = 0
+        Layer = 0
+        'Dim Parent As New ArrayList
+        Dim Parent As New List(Of List(Of String))
+        Dim Total As Integer = 0
+        For Each row In dgvSubFiles.Rows
+            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.index).Value = True AndAlso
+                dgvSubFiles.Rows(row.index).Visible = True Then
+                Total += 1
+            End If
+        Next
+        Dim Counter As Integer = 1
+        Parent.Clear()
+        Dim oDoc As Document
+        Dim OpenDocs As New ArrayList
+        Dim AsmDoc As AssemblyDocument
+        Dim DocType As DocumentTypeEnum
+        Dim Ans, strFile, PartName As String
+        Dim DrawingName As String = ""
+        Dim test, ChildFile, ParentFile As String
+        ChildFile = ""
+        Dim Path As Documents
+        Path = _invApp.Documents
+        'Go through drawings to see which ones are selected
+        For X = 0 To dgvOpenFiles.RowCount - 1
+            'Look through all sub files in open documents to get the part sourcefile
+            If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = True Then
+                'iterate through opend documents to find the selected file
+                If IO.Path.GetExtension(dgvOpenFiles(dgvOpenFiles.Columns("OpenFiles").Index, X).Value) = ".iam" Then
+                    C += 1
+                End If
+            End If
+        Next
+        'For X = 0 To lstOpenFiles.Items.Count - 1
+        '    'Look through all sub files in open documents to get the part sourcefile
+        '    If lstOpenFiles.GetItemCheckState(X) = CheckState.Checked Then
+        '        'iterate through opend documents to find the selected file
+        '        If Strings.Right(lstOpenFiles.Items.Item(X), 3) = "iam" Then
+        '            C += 1
+        '        End If
+        '    End If
+        'Next
+        If C = 0 Then
+            MsgBox("Please select an assembly", MsgBoxStyle.SystemModal)
+            Exit Sub
+        End If
+        If C > 1 Then
+            MsgBox("Please only select one assembly", MsgBoxStyle.SystemModal)
+            Exit Sub
+        End If
+        'Go through drawings to see which ones are selected
+        For X = 0 To dgvOpenFiles.RowCount - 1
+            'For X = 0 To lstOpenFiles.CheckedItems.Count - 1
+            'Look through all sub files in open documents to get the part sourcefile
+            If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = True Then
+                'iterate through opend documents to find the selected file
+                'For Y = 1 To _invApp.Documents.Count
+                'If selected document = Found document
+                'If InStr(_invApp.Documents.Item(Y).FullFileName, lstOpenFiles.Items.Item(X)) <> 0 Then
+                oDoc = _invApp.Documents.ItemByName(dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, X).Value)
+
+                oDoc = _invApp.Documents.Open(_invApp.Documents.Item(Y).FullFileName)
+                Ans = MsgBox("This action will overwrite" & vbNewLine & "all previous references." _
+                                & vbNewLine & "Do you wish to continue?", vbYesNo, "Overwrite References")
+                If Ans = vbNo Then
+                    Exit Sub
+                Else
+                    ' activate matching document
+                    AsmDoc = _invApp.ActiveDocument
+                    DocType = AsmDoc.DocumentType
+                    strFile = Strings.Left(AsmDoc.FullFileName, Strings.Len(AsmDoc.FullFileName) - 4)
+                    strFile = Strings.Right(strFile, Strings.Len(strFile) - InStrRev(strFile, "\"))
+                    'Add list to the array for new Parent
+                    Parent.Add(New List(Of String))
+                    Parent(Layer).Add(strFile)
+                    'call recursive sub to go through all sub files
+                    WriteChildren(AsmDoc.ComponentDefinition.Occurrences, Layer + 1, R, Col, Maxlayer, Parent, strFile, Total, Counter)
+                    Exit For
+                End If
+            End If
+            'Next
+            'End If
+        Next
+        Counter = 1
+        For X = 0 To dgvSubFiles.RowCount - 1
+            Counter += 1
+            For Y = 1 To _invApp.Documents.Count - 1
+                'oDoc = Path.Item(Y)
+                'Archive = oDoc.FullFileName
+                'Use the Partsource file to create the drawingsource file
+                'DrawSource = Strings.Left(Archive, Strings.Len(Archive) - 3) & "idw"
+                'If My.Computer.FileSystem.FileExists(DrawSource) Then
+                ' DrawingName = Strings.Right(DrawSource, Strings.Len(DrawSource) - Strings.InStrRev(DrawSource, "\"))
+                'If the drawing file is listed, open the drawing in Inventor
+                'If Trim(LVSubFiles.Items.Item(X).Text) = DrawingName Then
+                oDoc = _invApp.Documents.ItemByName(dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, Y).Value)
+                'oDoc = _invApp.Documents.Open(DrawSource, False)
+                CustomPropSet = oDoc.PropertySets.Item("{D5CDD505-2E9C-101B-9397-08002B2CF9AE}")
+                PartName = Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\"))
+
+
+                For P = 0 To 9
+                    Try
+                        InvRef(P) = CustomPropSet.Item("Reference" & P)
+                    Catch
+                        SetiProp(InvRef(P), "Reference" & P)
+                        InvRef(P) = CustomPropSet.Item("Reference" & P)
+                    End Try
+                Next
+                For P = 0 To 9
+                    InvRef(P).Value = ""
+                Next
+                P = 0
+                Dim Fullstring As New List(Of String)
+                For Each l As List(Of String) In Parent
+                    For M = 0 To l.Count - 1
+                        test = l(M)
+                        If InStr(test, ",") = 0 Then
+                            ParentFile = test
+                            ChildFile = ""
+                        Else
+                            ChildFile = Strings.Right(test, Len(test) - (InStrRev(test, ",")))
+                            ParentFile = Strings.Left(test, (InStr(test, ",") - 1))
+                        End If
+                        If (Strings.Left(PartName, Len(PartName) - 4) = ChildFile) And ChildFile <> "" Then
+                            If P = 7 Then
+                                Warning2 = True
+                                If InStr(Fix, ChildFile) = 0 Then
+                                    Fix = Fix & ChildFile & vbNewLine
+                                End If
+                            ElseIf P = 6 Then
+                                MsgBox("The current titleblock holds 6 references." & vbNewLine &
+                                            "All following references will be added, but the Titleblock needs to be updated before they can be shown.", MsgBoxStyle.SystemModal)
+                            ElseIf P = 10 Then
+                                MsgBox("Currently the program can only keep 10 references." & vbNewLine &
+                                            "All following references will not be added.", MsgBoxStyle.SystemModal)
+                            End If
+                            Try
+                                InvRef(P) = CustomPropSet.Item("Reference" & P)
+                                InvRef(P).Value = ParentFile
+                            Catch
+                                InvRef(P) = CustomPropSet.Add("", "Reference" & P)
+                                InvRef(P).Value = ParentFile
+                            End Try
+                            P += 1
+                            Written = True
+                        End If
+                    Next
+                Next
+                _invApp.SilentOperation = True
+                oDoc.Update()
+                Try
+                    oDoc.Save2()
+                Catch ex As Exception
+                    MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                End Try
+                CloseLater(DrawingName, oDoc)
+                _invApp.SilentOperation = False
+                'End If
+                ' End If
+                'MsVistaProgressBar.ProgressBarStyle = MSVistaProgressBar.BarStyle.Marquee
+                bgwRun.ReportProgress((Counter / Total) * 100, "Writing Reference: " & DrawingName)
+                ' ProgressBar(Total, Counter, "Writing Reference: ", DrawingName)
+                If Written = True Then
+                    Written = False
+                    Exit For
+                End If
+            Next
+        Next
+        ' MsVistaProgressBar.Visible = False
+        If Warning2 = True Then
+            MsgBox(Fix & vbNewLine & "These drawings need to be updated manually.", MsgBoxStyle.SystemModal)
+        End If
+
+        MsgBox("All the references have been updated", MsgBoxStyle.SystemModal)
+    End Sub
+    Private Sub btnRename_Click(sender As System.Object, e As System.EventArgs) Handles btnRename.Click
+        'If lstOpenFiles.CheckedItems.Count = 0 Then
+        '    MsgBox("Please select an item to rename")
+        '    Exit Sub
+        'ElseIf lstOpenFiles.CheckedItems.Count > 1 Then
+        '    MsgBox("Only select only one item to be renamed")
+        '    Exit Sub
+        'End If
+        'If InStr(lstOpenFiles.CheckedItems.Item(0).ToString, ".ipt") <> 0 Then
+        '    MsgBox("Rename currently only supports assemblies")
+        '    Exit Sub
+        'End If
+        Dim Parts As Integer = 0
+        Dim Part As String = Nothing
+        For Each Row In dgvOpenFiles.Rows
+            If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, Row.index).Value = True Then
+                Part = dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, Row.index).Value
+                Parts += 1
+            End If
+        Next
+        If Parts = 0 Then
+            MsgBox("Please select an item to rename", MsgBoxStyle.SystemModal)
+            Exit Sub
+        ElseIf Parts > 1 Then
+            MsgBox("Only select only one item to be renamed", MsgBoxStyle.SystemModal)
+            Exit Sub
+        End If
+        If IO.Path.GetExtension(Part) = ".ipt" Then
+            MsgBox("Rename currently only supports assemblies", MsgBoxStyle.SystemModal)
+            Exit Sub
+        End If
+        Dim Infoform As New Warning
+        If My.Settings.RenameShowMe = True Then
+            Infoform.ShowDialog()
+        End If
+        CreateOpenDocs()
+        Dim ErrList As String = ""
+        Dim Elog As String = ""
+        If VBAFlag = "False" Then CreateVBA()
+        Dim Rename As New Rename
+
+        Dim X As Integer = 0
+        Rename.PopMain(Me)
+        Try
+            For Each Entry As List(Of String) In RenameTable
+                If X = 0 Then
+                    My.Settings.RenameParentAssy = IO.Path.Combine(Entry.Item(0).ToString, Entry.Item(2).ToString)
+                    'Rename.txtParent.Text = Entry.Item(2).ToString
+                    'Rename.txtParentSource.Text = Entry.Item(0).ToString
+                End If
+                Rename.DGVRename.Rows.Add(Entry.Item(0).ToString, Entry.Item(1).ToString, Entry.Item(2).ToString, "", ThumbList(X), Entry.Item(3).ToString)
+                Elog = Elog & Entry.Item(2).ToString & ": Added to Rename Table" & vbNewLine
+                X += 1
+            Next
+        Catch
+            ErrList = Err.Description & vbNewLine
+            Err.Clear()
+        Finally
+            If ErrList.Length > 0 Then
+                MsgBox("The following occurred during the creation of the rename table" & vbNewLine & ErrList, MsgBoxStyle.SystemModal)
+            End If
+            writeDebug(Elog)
+        End Try
+        Rename.chkCCParts.Checked = False
+
+        Rename.Show()
+        'RenameTable.Clear()
+    End Sub
+    Private Sub btnCreateDwg_Click(sender As Object, e As EventArgs) Handles btnCreateDwg.Click
+        For Each Row In dgvSubFiles.Rows
+            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, Row.Index).Value = True Then
+                Dim oDrawDoc As DrawingDocument
+                Dim dir As DirectoryInfo = New DirectoryInfo(_invApp.DesignProjectManager.ActiveDesignProject.TemplatesPath)
+                Dim SelectTemplate As New Select_Template
+                SelectTemplate.PopMain(Me)
+                For Each File As FileInfo In dir.GetFiles("*.idw")
+                    SelectTemplate.cmbTemplate.Items.Add(File.Name)
+                Next
+                Dim TemplateString As String
+                If SelectTemplate.chkUseTemplate.Checked = True Then
+                    If SelectTemplate.cmbTemplate.Items.Count > 1 Then
+                        Overwrite.dgvOverwrite.Rows.Add()
+                        SelectTemplate.ShowDialog()
+                        TemplateString = IO.Path.Combine(_invApp.DesignProjectManager.ActiveDesignProject.TemplatesPath, SelectTemplate.cmbTemplate.DisplayMember)
+                    Else
+                        TemplateString = IO.Path.Combine(_invApp.DesignProjectManager.ActiveDesignProject.TemplatesPath, SelectTemplate.cmbTemplate.Items.Item(0))
+                    End If
+                Else
+                    TemplateString = IO.Path.Combine(_invApp.DesignProjectManager.ActiveDesignProject.TemplatesPath, SelectTemplate.cmbTemplate.Items.Item(0))
+                End If
+                oDrawDoc = _invApp.Documents.Add(DocumentTypeEnum.kDrawingDocumentObject, TemplateString)
+
+                Dim oSheet As Sheet = oDrawDoc.ActiveSheet
+
+                ' Open the part to be inserted into the drawing.
+
+                Dim oPartDoc As Document
+
+                oPartDoc = _invApp.Documents.Open(dgvSubFiles(dgvSubFiles.Columns("DrawingSource").Index, Row.index).Value, False)
+                Dim Border As Decimal = oSheet.Border.RangeBox.MaxPoint.Y - oSheet.Border.RangeBox.MinPoint.Y
+                Dim TBSpace As Decimal = oSheet.TitleBlock.RangeBox.MaxPoint.Y - oSheet.TitleBlock.RangeBox.MinPoint.Y
+                Dim oTG As TransientGeometry = _invApp.TransientGeometry
+                Dim Scale As Double
+                ' Place the base front view.
+                Dim H As Double = oPartDoc.componentdefinition.rangebox.maxpoint.x - oPartDoc.componentdefinition.rangebox.minpoint.x
+                Dim V As Double = oPartDoc.componentdefinition.rangebox.maxpoint.y - oPartDoc.componentdefinition.rangebox.minpoint.y
+                Dim D As Double = oPartDoc.componentdefinition.rangebox.maxpoint.Z - oPartDoc.componentdefinition.rangebox.minpoint.Z
+                If H > V AndAlso H > D Then
+                    Scale = SelectScale(H / 2.54)
+                ElseIf V > H AndAlso V > D Then
+                    Scale = SelectScale(V / 2.54)
+                Else
+                    Scale = SelectScale(D / 2.54)
+                End If
+
+                Dim oFrontView As DrawingView = oSheet.DrawingViews.AddBaseView(oPartDoc, oTG.CreatePoint2d(oSheet.Width / 3,
+                                                                                 (TBSpace + oSheet.Height / 4)),
+                                                                                Scale, ViewOrientationTypeEnum.kFrontViewOrientation,
+                                                                                DrawingViewStyleEnum.kHiddenLineRemovedDrawingViewStyle)
+                ' Create the top, right and iso views.
+                Dim oTopView As DrawingView = oSheet.DrawingViews.AddProjectedView(oFrontView, oTG.CreatePoint2d(oSheet.Width / 3,
+                                                                                   (TBSpace + oSheet.Height * 2 / 3)),
+                                                                                   DrawingViewStyleEnum.kFromBaseDrawingViewStyle)
+                Dim oRightView As DrawingView = oSheet.DrawingViews.AddProjectedView(oFrontView, oTG.CreatePoint2d(oSheet.Width * (2 / 3),
+                                                                                    (TBSpace + oSheet.Height / 4)),
+                                                                                     DrawingViewStyleEnum.kFromBaseDrawingViewStyle)
+                Dim oIsoView As DrawingView = oSheet.DrawingViews.AddProjectedView(oFrontView, oTG.CreatePoint2d(oSheet.Width * (3 / 4),
+                                                                                    (oSheet.Height * 3 / 4)),
+                                                                                   DrawingViewStyleEnum.kHiddenLineRemovedDrawingViewStyle, Scale * 0.75)
+
+                'MsgBox("Create section view.")
+
+                '' Create a front section view by
+
+                '' defining a section line in the front view.
+
+                'Dim oSectionSketch As DrawingSketch
+
+                'oSectionSketch = oFrontView.Sketches.Add
+
+                'oSectionSketch.Edit()
+                '' Get the circular edge of the top of the part.
+
+                'Dim oObjs As ObjectCollection
+
+                'oObjs = oPartDoc.AttributeManager.FindObjects("Name", "Name", "Edge13")
+
+                'Dim oCircularEdge As Edge
+
+                'oCircularEdge = oObjs.Item(1)
+
+
+
+                '' Get the associated drawingcurve.
+
+                'Dim oDrawViewCurves As DrawingCurvesEnumerator
+
+                'oDrawViewCurves = oFrontView.DrawingCurves(oCircularEdge)
+
+                'Dim oCircularCurve As DrawingCurve
+
+                'oCircularCurve = oDrawViewCurves.Item(1)
+
+
+
+                'Dim oCircularEntity As SketchEntity
+
+                'oCircularEntity = oSectionSketch.AddByProjectingEntity(oCircularCurve)
+
+
+
+                '' Draw the section line.
+
+                'Dim oSectionLine As SketchLine
+
+                'oSectionLine = oSectionSketch.SketchLines.AddByTwoPoints(oTG.CreatePoint2d(0, 0.9), oTG.CreatePoint2d(0, -0.9))
+
+
+
+                '' Create a constraint to the projected circle center point and the line.
+
+                'Call oSectionSketch.GeometricConstraints.AddCoincident(oSectionLine, oCircularEntity.CenterSketchPoint)
+                'oSectionSketch.ExitEdit()
+
+
+
+                '' Create the section view.
+
+                'Dim oSectionView As SectionDrawingView
+
+                'oSectionView = oSheet.DrawingViews.AddSectionView(oFrontView, oSectionSketch, oTG.CreatePoint2d(34, 10), DrawingViewStyleEnum.kHiddenLineRemovedDrawingViewStyle, Nothing, False)
+
+                'MsgBox("Create detail view.")
+
+
+
+                '' Create the detail view.
+
+                'Dim oDetailView As DetailDrawingView
+
+                'oDetailView = oSheet.DrawingViews.AddDetailView(oSectionView, oTG.CreatePoint2d(35, 15), DrawingViewStyleEnum.kFromBaseDrawingViewStyle, False, oTG.CreatePoint2d(21, 16), oTG.CreatePoint2d(24, 18), , 10, , "A")
+
+                '' Get the various edges of the model.
+
+                'Dim aoEdges(0 To 13) As Edge
+
+                'Dim i As Integer
+
+                'For i = 1 To 13
+                '    oObjs = oPartDoc.AttributeManager.FindObjects("Name", "Name", "Edge" & i)
+                '    aoEdges(i) = oObjs.Item(1)
+                'Next
+
+
+
+                '' Get the equivalent drawing curves.
+
+                'Dim aoDrawCurves(0 To 13) As DrawingCurve
+
+                'For i = 1 To 13
+                '    oDrawViewCurves = oFrontView.DrawingCurves(aoEdges(i))
+                '    aoDrawCurves(i) = oDrawViewCurves.Item(1)
+                'Next
+
+                'MsgBox("Create dimensions to the curves in the view.")
+
+                '' Create some dimensions
+
+                'Dim oGeneralDims As GeneralDimensions
+
+                'oGeneralDims = oSheet.DrawingDimensions.GeneralDimensions
+
+
+
+                'Dim oDim As GeneralDimension
+
+
+
+                'oDim = oGeneralDims.AddLinear(oTG.CreatePoint2d(15.5, 13), oSheet.CreateGeometryIntent(aoDrawCurves(1)), oSheet.CreateGeometryIntent(aoDrawCurves(3)), DimensionTypeEnum.kVerticalDimensionType)
+
+                'oDim = oGeneralDims.AddLinear(oTG.CreatePoint2d(16, 9), oSheet.CreateGeometryIntent(aoDrawCurves(2)), oSheet.CreateGeometryIntent(aoDrawCurves(4)), DimensionTypeEnum.kHorizontalDimensionType)
+
+                'oDim = oGeneralDims.AddRadius(oTG.CreatePoint2d(17, 19), oSheet.CreateGeometryIntent(aoDrawCurves(13)))
+
+                'oDim = oGeneralDims.AddDiameter(oTG.CreatePoint2d(8, 20), oSheet.CreateGeometryIntent(aoDrawCurves(13)), True, False)
+
+
+
+                'MsgBox("Create a text box with a leader.")
+
+
+
+                '' Place a text box with a leader.
+
+                'Dim oObjColl As ObjectCollection
+
+                'oObjColl = _invApp.TransientObjects.CreateObjectCollection
+
+                'Call oObjColl.Add(oTG.CreatePoint2d(17.5, 11))
+
+                'Dim oEval As Curve2dEvaluator
+
+                'oEval = aoDrawCurves(4).Evaluator2D
+
+                'Dim adParams(0) As Double
+
+                'adParams(0) = 0.6
+
+                'Dim adPoints(0 To 1) As Double
+
+                'Call oEval.GetPointAtParam(adParams, adPoints)
+
+                'Call oObjColl.Add(oTG.CreatePoint2d(adPoints(0), adPoints(1)))
+
+                'Dim oLeaderNote As LeaderNote
+
+                'oLeaderNote = oSheet.DrawingNotes.LeaderNotes.Add(oObjColl, "Text with a leader")
+
+                'oLeaderNote.DimensionStyle = oLeaderNote.DimensionStyle
+            End If
+        Next
+    End Sub
+#End Region
 End Class

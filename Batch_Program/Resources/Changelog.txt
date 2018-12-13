@@ -2,6 +2,10 @@
 	- No tutorials yet
 	- Renaming function works but hasn't been thoroughly tested.
 
+Version 2.1.2.4 (12.11.18)
+	Added ability to delete/change childnodes in revtable
+	Added capability to modify varying revision tables
+
 Version 2.1.2.3 (12.03.18)
 	Modified how export options validate assemblies and flat patterns before export
 	Modified cleanup command to remove all documents opened in background.
