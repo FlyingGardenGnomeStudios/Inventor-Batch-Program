@@ -5,6 +5,7 @@
 Version 2.1.2.4 (12.11.18)
 	Added ability to delete/change childnodes in revtable
 	Added capability to modify varying revision tables
+	Fixed issue causing conversion error in sawcut & profile cut spreadsheet calculations
 
 Version 2.1.2.3 (12.03.18)
 	Modified how export options validate assemblies and flat patterns before export
