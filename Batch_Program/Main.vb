@@ -1820,7 +1820,7 @@ Public Class Main
         End Select
     End Sub
     Public Sub CloseLater(Name As String, oDoc As Document)
-        If Name = "" Then MsgBox("Blank name sent to closelater")
+        If Name = "" Then Exit Sub
         Dim CloseLater As Boolean = True
         'Go through string of originally open documents to see if document has been opened by the program
         For Each Str As String In OpenDocs
@@ -1953,8 +1953,7 @@ Public Class Main
                                 Offset = Offset + 1
                                 If CStr(ExcelDoc.ActiveSheet.Range("F" & Offset).Value) = CStr(StockNo) And
                             CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = CStr(Material) Then
-                                    ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length)
-                                    If InStrRev(ExcelDoc.ActiveSheet.Range("G" & Offset).Value, PartNo) = "" And
+                                    If InStrRev(ExcelDoc.ActiveSheet.Range("G" & Offset).Value, PartNo) = 0 And
                                 ExcelDoc.ActiveSheet.Range("G" & Offset).Value <> "" And
                                 InStr(ExcelDoc.ActiveSheet.range("G" & Offset).value, PartNo) = 0 Then
                                         ExcelDoc.ActiveSheet.Range("G" & Offset).Value = ExcelDoc.ActiveSheet.Range("G" & Offset).Value & ", " & PartNo
@@ -1991,7 +1990,7 @@ Public Class Main
                                 Offset = Offset + 1
                                 If CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = CStr(StockNo) Then
                                     ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + Area
-                                    If InStrRev(ExcelDoc.ActiveSheet.Range("E" & Offset).Value, PartNo) = "" And
+                                    If InStrRev(ExcelDoc.ActiveSheet.Range("E" & Offset).Value, PartNo) = 0 And
                                 ExcelDoc.ActiveSheet.Range("E" & Offset).Value <> "" Then
                                         ExcelDoc.ActiveSheet.Range("E" & Offset).Value = ExcelDoc.ActiveSheet.Range("E" & Offset).Value & ", " & PartNo
                                     End If
@@ -2093,32 +2092,57 @@ Public Class Main
         Next
         ExcelDoc.Worksheets("Saw Cut").activate()
     End Sub
-    Function AreaCalculate(ByRef oDoc As Document, ByRef Occ As ComponentOccurrence) As Decimal
+    Function AreaCalculate(ByRef oDoc As PartDocument, ByRef Occ As ComponentOccurrence) As Decimal
 
         Dim oDef As SheetMetalComponentDefinition
         oDef = oDoc.ComponentDefinition
         Dim oFlatPattern As FlatPattern
         oFlatPattern = oDef.FlatPattern
         Dim oTransaction As Transaction
-        oTransaction = _invApp.TransactionManager.StartTransaction(oDoc, "Find area")
         Dim oSketch As PlanarSketch
-        oSketch = oFlatPattern.Sketches.Add(oFlatPattern.TopFace)
-        Dim oEdgeLoop As EdgeLoop = Nothing
-        For Each oEdgeLoop In oFlatPattern.TopFace.EdgeLoops
-            If oEdgeLoop.IsOuterEdgeLoop Then
-                Exit For
-            End If
-        Next
-        Dim oEdge As Edge
-        For Each oEdge In oEdgeLoop.Edges
-            Call oSketch.AddByProjectingEntity(oEdge)
-        Next
+        oTransaction = _invApp.TransactionManager.StartTransaction(oDoc, "Find area")
+        Try
+
+            oSketch = oFlatPattern.Sketches.Add(oFlatPattern.TopFace)
+        Catch ex As Exception
+            Debug.WriteLine("Error calculating area" & vbNewLine &
+                            "Failure to create sketch in flat pattern on " & oDoc.DisplayName)
+            oTransaction.Abort()
+            Exit Function
+        End Try
+        Try
+            Dim oEdgeLoop As EdgeLoop = Nothing
+            For Each oEdgeLoop In oFlatPattern.TopFace.EdgeLoops
+                If oEdgeLoop.IsOuterEdgeLoop Then
+                    Exit For
+                End If
+            Next
+            Dim oEdge As Edge
+            For Each oEdge In oEdgeLoop.Edges
+                Call oSketch.AddByProjectingEntity(oEdge)
+            Next
+        Catch ex As Exception
+            Debug.WriteLine("Error calculating area" & vbNewLine &
+                            "Failure to find perimeter edge " & oDoc.DisplayName)
+            oTransaction.Abort()
+            Exit Function
+        End Try
         Dim oProfile As Profile
-        oProfile = oSketch.Profiles.AddForSolid
+        Try
+            oProfile = oSketch.Profiles.AddForSolid
+
+        Catch ex As Exception
+            Debug.WriteLine("Error calculating area" & vbNewLine &
+                            "Failure to create perimiter profile " & oDoc.DisplayName)
+            oTransaction.Abort()
+        End Try
         Dim dArea As Double
         dArea = oProfile.RegionProperties.Area
         oTransaction.Abort()
-        AreaCalculate = dArea / (12 * 2.54) ^ 2
+
+        AreaCalculate = dArea / (2.54 ^ 2) / 144
+        Dim oParameter As UserParameter
+
     End Function
     Public Sub ExtractThumb(ByRef PartName As String, ByRef Thumbnail As Image)
         Dim X As Integer = 0
@@ -3680,7 +3704,7 @@ Public Class Main
                             IO.File.WriteAllBytes(IO.Path.Combine(IO.Path.GetTempPath, "Quote-Blank.xlsm"), My.Resources.Quote_Blank)
                             Dim xlPath = IO.Path.Combine(IO.Path.GetTempPath, "List-Blank.xlsm")
                             _ExcelApp.Workbooks.Open(xlPath)
-                            _ExcelApp.Visible = False
+                            _ExcelApp.Visible = True
                             ExcelDoc = _ExcelApp.ActiveWorkbook
                             'ShowParameters(oDoc)
                             GetProperties(oDoc, AsmDef.Occurrences, 0, 0, ExcelDoc, Total)

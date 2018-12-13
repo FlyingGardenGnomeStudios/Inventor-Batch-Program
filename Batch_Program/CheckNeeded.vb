@@ -284,7 +284,6 @@ Public Class CheckNeeded
         For Each node As TreeGridNode In tgvCheckNeeded.Rows
             node.Expand()
         Next
-        Dim TotRevs As Integer = 1
 
         'For each drawing name, find the drawing source related to it
         'If Me.btnIgnore.Visible = True Then
@@ -305,6 +304,7 @@ Public Class CheckNeeded
         'Iterate through checkneeded table to get drawing name
 
         For Each node In tgvCheckNeeded.Nodes
+            Dim TotRevs As Integer = 1
             If node.HasChildren Then
                 For Each ChildNode In node.Nodes
                     TotRevs += 1
@@ -458,7 +458,7 @@ Public Class CheckNeeded
                 Dim rtcell As RevisionTableCell = Nothing
                 h.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(LCase(rtc.Title))
                 If Not Childnode Is Nothing Then
-                    WriteRevCase(Childnode, h.Name, Childnode.Level, i, RevTable, oDoc)
+                    WriteRevCase(Childnode, h.Name, Childnode.RowIndex - Childnode.Parent.RowIndex + 1, i, RevTable, oDoc)
                 Else
                     WriteRevCase(Node, h.Name, Node.Level, i, RevTable, oDoc)
                 End If
@@ -1080,7 +1080,7 @@ Public Class CheckNeeded
     Private Sub EmptyCellsOnlyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EmptyCellsOnlyToolStripMenuItem.Click
         tgvCheckNeeded.CurrentCell = Nothing
         tgvCheckNeeded.ClearSelection()
-        For Column = 0 To tgvCheckNeeded.ColumnCount - 1
+        For Column = 1 To tgvCheckNeeded.ColumnCount - 1
             If tgvCheckNeeded.Columns(Column).ReadOnly = False Then
                 For Each Node As TreeGridNode In tgvCheckNeeded.Rows
                     If Node.Cells(Column).Value = "" AndAlso Node.Cells(Column).ReadOnly = False Then Node.Cells(Column).Value = tgvCheckNeeded(Column, SelectedCell.RowIndex).Value
