@@ -237,24 +237,48 @@ Public Class CheckNeeded
             For Each ParentNode As TreeGridNode In tgvCheckNeeded.Nodes
                 Remove = True
                 For Each Cell In ParentNode.Cells
-                    If Not Cell.value = True And Not Cell.value = False Then
-                        If Cell.Value = "" Then
-                            Remove = False
-                            Exit For
+                    If Cell.READONLY = True Then Exit For
+                    Try
+                        If Not Cell.value.ToString = "True" And Not Cell.value.ToString = "False" Then
+                            If Cell.Value = "" Then
+                                Remove = False
+                                Exit For
+                            End If
                         End If
-                    End If
+                    Catch ex As Exception
+                        Try
+                            If Cell.Value = "" Then
+                                Remove = False
+                                Exit For
+                            End If
+                        Catch ex2 As Exception
+                            MsgBox("Error occurred in reading rev table data" & vbNewLine & "This is the fault of the designer not you")
+                        End Try
+                    End Try
+
                 Next
                 If Remove = True AndAlso ParentNode.HasChildren Then
                     For Each ChildNode In ParentNode.Nodes
+
                         For Each Childcell In ChildNode.Cells
-                            If Childcell.value = Nothing Then
-                                If Childcell.readonly = False Then
-                                    '     If tgvCheckNeeded.Columns(Childcell.columnindex).headertext <> "Checked By" AndAlso
-                                    '      tgvCheckNeeded.Columns(Childcell.columnindex).headertext <> "Check Date" Then
-                                    Remove = False
-                                    Exit For
+                            If Childcell.ReadOnly = True Then Exit For
+                            Try
+                                If Not Childcell.Value.ToString = "True" And Not Childcell.Value.ToString = "False" Then
+                                    If Childcell.Value = "" Then
+                                        Remove = False
+                                        Exit For
+                                    End If
                                 End If
-                            End If
+                            Catch ex As Exception
+                                Try
+                                    If Childcell.Value = "" Then
+                                        Remove = False
+                                        Exit For
+                                    End If
+                                Catch ex2 As Exception
+                                    MsgBox("Error occurred in reading rev table data" & vbNewLine & "This is the fault of the designer not you")
+                                End Try
+                            End Try
 
                         Next
                     Next
