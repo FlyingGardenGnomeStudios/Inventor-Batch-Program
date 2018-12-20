@@ -257,6 +257,7 @@ Partial Class CheckNeeded
         '
         'DrawingName
         '
+        Me.DrawingName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
         Me.DrawingName.DataPropertyName = "Drawing Name"
         Me.DrawingName.DefaultNodeImage = Nothing
         Me.DrawingName.HeaderText = "Drawing Name"
