@@ -670,7 +670,7 @@ Public Class Main
             Overwrite.PopMain(Me)
             Overwrite.ShowDialog(Me)
         End If
-
+        If Overwrite.btnCancel.Text = "Cancelling" Then Exit Sub
         If ExportType = "PDF" Then
             PDFCreator(Destin, Total, Counter)
         ElseIf ExportType = "dxf" Then
@@ -1110,15 +1110,15 @@ Public Class Main
                                 Case UCase(My.Settings.RTSApprovedCol)
                                     If My.Settings.RTSApproved = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTSApprovedCol).Index, RevRow - 1).Value
                                 Case UCase(My.Settings.RTS1Col)
-                                    If My.Settings.RTS1 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTS1Col).Index, RevRow - 1).Value
+                                    If My.Settings.RTS1 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTS1Item).Index, RevRow - 1).Value
                                 Case UCase(My.Settings.RTS2Col)
-                                    If My.Settings.RTS2 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTS2Col).Index, RevRow - 1).Value
+                                    If My.Settings.RTS2 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTS2Item).Index, RevRow - 1).Value
                                 Case UCase(My.Settings.RTS3Col)
-                                    If My.Settings.RTS3 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTS3Col).Index, RevRow - 1).Value
+                                    If My.Settings.RTS3 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTS3Item).Index, RevRow - 1).Value
                                 Case UCase(My.Settings.RTS4Col)
-                                    If My.Settings.RTS4 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTS4Col).Index, RevRow - 1).Value
+                                    If My.Settings.RTS4 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTS4Item).Index, RevRow - 1).Value
                                 Case UCase(My.Settings.RTS5Col)
-                                    If My.Settings.RTS5 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTS5Col).Index, RevRow - 1).Value
+                                    If My.Settings.RTS5 = True Then oRevTable.RevisionTableRows.Item(RevRow).Item(i).Text = Checkneeded.tgvCheckNeeded(Checkneeded.tgvCheckNeeded.Columns(My.Settings.RTS5Item).Index, RevRow - 1).Value
                             End Select
                         End If
                         i = i + 1

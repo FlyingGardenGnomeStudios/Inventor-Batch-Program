@@ -22,6 +22,7 @@ Public Class CheckNeeded
     Dim ChangeFlag As Boolean = False
     Dim Pop As Boolean = False
     Dim SelectedCell As DataGridViewCell
+    Dim Q As Boolean = False
     Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()
@@ -304,9 +305,12 @@ Public Class CheckNeeded
         End If
     End Sub
     Private Sub btnOK_Click(sender As System.Object, e As System.EventArgs) Handles btnOK.Click
-
+        Dim Total As Integer = 0
         For Each node As TreeGridNode In tgvCheckNeeded.Rows
             node.Expand()
+            If node.Cells(tgvCheckNeeded.Columns("IsDirty").Index).Value = True Then
+                Total += 1
+            End If
         Next
 
         'For each drawing name, find the drawing source related to it
@@ -326,7 +330,7 @@ Public Class CheckNeeded
         '    Next
         'End If
         'Iterate through checkneeded table to get drawing name
-
+        Dim Run As Integer = 0
         For Each node In tgvCheckNeeded.Nodes
             Dim TotRevs As Integer = 1
             If node.HasChildren Then
@@ -335,13 +339,13 @@ Public Class CheckNeeded
                 Next
             End If
             If node.Cells.Item(tgvCheckNeeded.Columns("IsDirty").Index).Value = "True" Then
-                WriteRev(node, Nothing, TotRevs)
+                WriteRev(node, Nothing, TotRevs, Run, Total)
             End If
             If node.HasChildren = True Then
                 For Each Childnode As TreeGridNode In node.Nodes
                     If Childnode.Cells.Item(tgvCheckNeeded.Columns("IsDirty").Index).Value = "True" Then
                         Debug.Print(Childnode.Cells.Item(tgvCheckNeeded.Columns("Description").Index).Value)
-                        WriteRev(node, Childnode, TotRevs)
+                        WriteRev(node, Childnode, TotRevs, Run, Total)
                     End If
                 Next
             End If
@@ -351,7 +355,7 @@ Public Class CheckNeeded
         Me.Close()
         'If Main.chkCheck.CheckState = CheckState.Indeterminate Then Main.ExportCheck(Path, odoc:=Nothing, Archive:="", Main.dgvSubFiles, DrawingName:="", DrawSource:="", ExportType:="dxf")
     End Sub
-    Private Sub WriteRev(Node As TreeGridNode, Childnode As TreeGridNode, TotRevs As Integer)
+    Private Sub WriteRev(Node As TreeGridNode, Childnode As TreeGridNode, TotRevs As Integer, ByVal Run As Integer, ByVal Total As Integer)
         '''Needs fixing for child nodes
         Dim RevNode As TreeGridNode
         Dim DrawingName, DrawSource, Rev As String
@@ -366,7 +370,7 @@ Public Class CheckNeeded
         Dim SaveWarning As Boolean = False
         Dim Flag As Boolean = False
         DrawSource = Nothing
-        Dim Q As Boolean = False
+
 
 
         'For Each row In dgvCheckNeeded.Rows
@@ -507,8 +511,9 @@ Public Class CheckNeeded
             End Try
             Main.CloseLater(DrawingName, oDoc)
             _invApp.SilentOperation = False
-            ProgressBar1.Value = (Row / tgvCheckNeeded.RowCount) * 100
+            ProgressBar1.Value = (Run / Total) * 100
             ProgressBar1.PerformStep()
+            System.Windows.Forms.Application.DoEvents()
             'Exit For
         Catch ex As Exception
         End Try
@@ -554,38 +559,38 @@ Public Class CheckNeeded
                 End If
             Case UCase(My.Settings.RTS1Col)
                 If My.Settings.RTS1 = True Then
-                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS1Col).Index).Value Is Nothing Then
+                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS1Item).Index).Value Is Nothing Then
                         RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
                     End If
-                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS1Col).Index).Value
+                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS1Item).Index).Value
                 End If
             Case UCase(My.Settings.RTS2Col)
                 If My.Settings.RTS2 = True Then
-                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS2Col).Index).Value Is Nothing Then
+                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS2Item).Index).Value Is Nothing Then
                         RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
                     End If
-                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS2Col).Index).Value
+                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS2Item).Index).Value
                 End If
             Case UCase(My.Settings.RTS3Col)
                 If My.Settings.RTS3 = True Then
-                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS4Col).Index).Value Is Nothing Then
+                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS3Item).Index).Value Is Nothing Then
                         RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
                     End If
-                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS3Col).Index).Value
+                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS3Item).Index).Value
                 End If
             Case UCase(My.Settings.RTS4Col)
                 If My.Settings.RTS4 = True Then
-                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS4Col).Index).Value Is Nothing Then
+                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS4Item).Index).Value Is Nothing Then
                         RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
                     End If
-                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS4Col).Index).Value
+                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS4Item).Index).Value
                 End If
             Case UCase(My.Settings.RTS5Col)
                 If My.Settings.RTS5 = True Then
-                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS5Col).Index).Value Is Nothing Then
+                    If node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS5Item).Index).Value Is Nothing Then
                         RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = ""
                     End If
-                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS5Col).Index).Value
+                    RevTable.RevisionTableRows.Item(RevRow).Item(i).Text = node.Cells(tgvCheckNeeded.Columns(My.Settings.RTS5Item).Index).Value
                 End If
         End Select
     End Sub
@@ -949,7 +954,9 @@ Public Class CheckNeeded
         btnOK.Location = New Drawing.Point(btnOK.Location.X, Me.Height - 73)
         btnCancel.Location = New Drawing.Point(btnCancel.Location.X, Me.Height - 73)
         btnHide.Location = New Drawing.Point(btnHide.Location.X, Me.Height - 73)
-
+        ProgressBar1.Top = btnOK.Top
+        ProgressBar1.Left = btnHide.Right + 5
+        ProgressBar1.Width = tgvCheckNeeded.Right - btnHide.Right - 5
     End Sub
     Private Sub ClearCellToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ClearCellToolStripMenuItem.Click
         If tgvCheckNeeded.Columns(SelectedCell.ColumnIndex).ReadOnly = True Then
@@ -1133,7 +1140,17 @@ Public Class CheckNeeded
         Dim Value As String = SelectedCell.Value
         tgvCheckNeeded.CurrentCell = Nothing
         For Each Node As TreeGridNode In tgvCheckNeeded.Rows
-            If Node.Cells(SelectedCell.ColumnIndex).ReadOnly = False Then Node.Cells(SelectedCell.ColumnIndex).Value = Value
+            If Node.Cells(SelectedCell.ColumnIndex).ReadOnly = False Then
+                Node.Cells(SelectedCell.ColumnIndex).Value = Value
+                Node.Cells(tgvCheckNeeded.Columns("IsDirty").Index).Value = True
+            End If
+            If Node.HasChildren Then
+                Dim Childnode As TreeGridNode
+                For Each Childnode In Node.Nodes
+                    If Childnode.Cells(SelectedCell.ColumnIndex).ReadOnly = False Then Childnode.Cells(SelectedCell.ColumnIndex).Value = Value
+                    Childnode.Cells(tgvCheckNeeded.Columns("IsDirty").Index).Value = True
+                Next
+            End If
         Next
     End Sub
 
@@ -1145,7 +1162,19 @@ Public Class CheckNeeded
         Dim Value As String = SelectedCell.Value
         tgvCheckNeeded.CurrentCell = Nothing
         For Each Node As TreeGridNode In tgvCheckNeeded.Rows
-            If Node.Cells(SelectedCell.ColumnIndex).Value = "" AndAlso Node.Cells(SelectedCell.ColumnIndex).ReadOnly = False Then Node.Cells(SelectedCell.ColumnIndex).Value = Value
+            If Node.Cells(SelectedCell.ColumnIndex).Value = "" AndAlso Node.Cells(SelectedCell.ColumnIndex).ReadOnly = False Then
+                Node.Cells(SelectedCell.ColumnIndex).Value = Value
+                Node.Cells(tgvCheckNeeded.Columns("IsDirty").Index).Value = True
+            End If
+            If Node.HasChildren Then
+                Dim Childnode As TreeGridNode
+                For Each Childnode In Node.Nodes
+                    If Childnode.Cells(SelectedCell.ColumnIndex).Value = "" AndAlso Childnode.Cells(SelectedCell.ColumnIndex).ReadOnly = False Then
+                        Childnode.Cells(SelectedCell.ColumnIndex).Value = Value
+                        Childnode.Cells(tgvCheckNeeded.Columns("IsDirty").Index).Value = True
+                    End If
+                Next
+            End If
         Next
     End Sub
 
@@ -1160,4 +1189,7 @@ Public Class CheckNeeded
         End If
     End Sub
 
+    Private Sub tgvCheckNeeded_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles tgvCheckNeeded.CellContentClick
+
+    End Sub
 End Class

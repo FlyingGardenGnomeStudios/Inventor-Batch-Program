@@ -271,7 +271,6 @@ Partial Class CheckNeeded
         Me.IsDirty.HeaderText = "IsDirty"
         Me.IsDirty.Name = "IsDirty"
         Me.IsDirty.ReadOnly = True
-        Me.IsDirty.Visible = False
         Me.IsDirty.Width = 42
         '
         'CheckNeeded
