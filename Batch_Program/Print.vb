@@ -176,11 +176,11 @@ Public Class Print
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
         Print_Size.PopPrint(Me)
         If rdoCurrentPage.Checked = True Then
-            My.Settings.PrintRange = 2
+            My.Settings.PrintRange = 0
         ElseIf rdoFirstPage.Checked = True Then
             My.Settings.PrintRange = 1
         Else
-            My.Settings.PrintRange = 0
+            My.Settings.PrintRange = 2
         End If
         If rdoFull.Checked = True Then
             My.Settings.PrintSize = 0
@@ -193,9 +193,8 @@ Public Class Print
             My.Settings.PrintColour = 1
         End If
         My.Settings.PrintDwgLoc = chkDWGLocation.Checked
-
+            My.Settings.Save()
         My.Settings.PrintReverse = chkReverse.Checked
-        My.Settings.Save()
         Me.Hide()
         Dim dDoc As Inventor.DrawingDocument
         Dim Range, Direction As Integer : Range = 0 : Direction = 0
