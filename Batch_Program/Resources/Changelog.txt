@@ -2,14 +2,16 @@
 	- No tutorials yet
 	- Renaming function works but hasn't been thoroughly tested.
 
+Version 2.1.3.3 (01.01.09)
+	Revision table fixes
+	Resolved Issue #9
+
 Version 2.1.3.1 (12.20.18)
 	Fixed issue with hide completed revision button not functioning correctly
 
 Version 2.1.3.0 (12.11.18)
 	Added ability to delete/change childnodes in revtable
 	Added capability to modify varying revision tables
-	Fixed conversion issues when creating spreadsheet data
-	Added Create Drawings button
 
 Version 2.1.2.3 (12.03.18)
 	Modified how export options validate assemblies and flat patterns before export

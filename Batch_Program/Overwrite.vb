@@ -74,6 +74,11 @@ Public Class Overwrite
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        'For Each row In dgvOverwrite.Rows
+        '    dgvOverwrite(dgvOverwrite.Columns("chkOverwrite").Index, row.index).Value = False
+        'Next
+        btnCancel.Text = "Cancelling"
         Me.Close()
+
     End Sub
 End Class
