@@ -184,8 +184,8 @@ Partial Class CheckNeeded
         '
         Me.tgvCheckNeeded.AllowUserToAddRows = False
         Me.tgvCheckNeeded.AllowUserToDeleteRows = False
+        Me.tgvCheckNeeded.AllowUserToResizeRows = False
         Me.tgvCheckNeeded.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader
-        Me.tgvCheckNeeded.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells
         Me.tgvCheckNeeded.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DrawingName, Me.IsDirty})
         Me.tgvCheckNeeded.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.tgvCheckNeeded.ImageList = Nothing
@@ -268,9 +268,11 @@ Partial Class CheckNeeded
         '
         'IsDirty
         '
+        Me.IsDirty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
         Me.IsDirty.HeaderText = "IsDirty"
         Me.IsDirty.Name = "IsDirty"
         Me.IsDirty.ReadOnly = True
+        Me.IsDirty.Visible = False
         Me.IsDirty.Width = 42
         '
         'CheckNeeded

@@ -2105,7 +2105,7 @@ Public Class Main
 
             oSketch = oFlatPattern.Sketches.Add(oFlatPattern.TopFace)
         Catch ex As Exception
-            Debug.WriteLine("Error calculating area" & vbNewLine &
+            writeDebug("Error calculating area" & vbNewLine &
                             "Failure to create sketch in flat pattern on " & oDoc.DisplayName)
             oTransaction.Abort()
             Exit Function
@@ -2122,17 +2122,17 @@ Public Class Main
                 Call oSketch.AddByProjectingEntity(oEdge)
             Next
         Catch ex As Exception
-            Debug.WriteLine("Error calculating area" & vbNewLine &
+            writeDebug("Error calculating area" & vbNewLine &
                             "Failure to find perimeter edge " & oDoc.DisplayName)
             oTransaction.Abort()
             Exit Function
         End Try
-        Dim oProfile As Profile
+        Dim oProfile As Profile = Nothing
         Try
             oProfile = oSketch.Profiles.AddForSolid
 
         Catch ex As Exception
-            Debug.WriteLine("Error calculating area" & vbNewLine &
+            writeDebug("Error calculating area" & vbNewLine &
                             "Failure to create perimiter profile " & oDoc.DisplayName)
             oTransaction.Abort()
         End Try
@@ -2141,7 +2141,6 @@ Public Class Main
         oTransaction.Abort()
 
         AreaCalculate = dArea / (2.54 ^ 2) / 144
-        Dim oParameter As UserParameter
 
     End Function
     Public Sub ExtractThumb(ByRef PartName As String, ByRef Thumbnail As Image)
@@ -3704,7 +3703,7 @@ Public Class Main
                             IO.File.WriteAllBytes(IO.Path.Combine(IO.Path.GetTempPath, "Quote-Blank.xlsm"), My.Resources.Quote_Blank)
                             Dim xlPath = IO.Path.Combine(IO.Path.GetTempPath, "List-Blank.xlsm")
                             _ExcelApp.Workbooks.Open(xlPath)
-                            _ExcelApp.Visible = True
+                            _ExcelApp.Visible = False
                             ExcelDoc = _ExcelApp.ActiveWorkbook
                             'ShowParameters(oDoc)
                             GetProperties(oDoc, AsmDef.Occurrences, 0, 0, ExcelDoc, Total)
