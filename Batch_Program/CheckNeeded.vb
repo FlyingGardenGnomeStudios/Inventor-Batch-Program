@@ -377,8 +377,8 @@ Public Class CheckNeeded
         'If tgvCheckNeeded.IsCurrentRowDirty Then
         DrawingName = tgvCheckNeeded(tgvCheckNeeded.Columns("DrawingName").Index, Node.RowIndex).Value
         For Each X In Main.dgvSubFiles.Rows
-            If DrawingName = Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingName").Index, X.index).Value Then
-                DrawSource = Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingLocation").Index, X.index).Value
+            If DrawingName = Trim(Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingName").Index, X.index).Value) Then
+                DrawSource = Trim(Main.dgvSubFiles(Main.dgvSubFiles.Columns("DrawingLocation").Index, X.index).Value)
                 Exit For
             End If
         Next
