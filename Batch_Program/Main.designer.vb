@@ -96,6 +96,7 @@ Partial Class Main
         Me.chkPartExport = New System.Windows.Forms.CheckBox()
         Me.chkPartDXF = New System.Windows.Forms.CheckBox()
         Me.chkPartOpen = New System.Windows.Forms.CheckBox()
+        Me.btnCreateDwg = New System.Windows.Forms.Button()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.gbxUtilities = New System.Windows.Forms.GroupBox()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
@@ -126,7 +127,6 @@ Partial Class Main
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.pgbMain = New MSVistaProgressBar()
-        Me.btnCreateDwg = New System.Windows.Forms.Button()
         Me.gbxSelection.SuspendLayout()
         Me.gbxOpen.SuspendLayout()
         CType(Me.dgvOpenFiles, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -875,6 +875,16 @@ Partial Class Main
         Me.ToolTip1.SetToolTip(Me.chkPartOpen, "Open all the drawings selected")
         Me.chkPartOpen.UseVisualStyleBackColor = True
         '
+        'btnCreateDwg
+        '
+        Me.btnCreateDwg.Location = New System.Drawing.Point(6, 91)
+        Me.btnCreateDwg.Name = "btnCreateDwg"
+        Me.btnCreateDwg.Size = New System.Drawing.Size(130, 23)
+        Me.btnCreateDwg.TabIndex = 4
+        Me.btnCreateDwg.Text = "Create Drawing"
+        Me.ToolTip1.SetToolTip(Me.btnCreateDwg, "Create new drawings for selected referenced documents that are missing.")
+        Me.btnCreateDwg.UseVisualStyleBackColor = True
+        '
         'PictureBox2
         '
         Me.PictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
@@ -1128,16 +1138,6 @@ Partial Class Main
         Me.pgbMain.Size = New System.Drawing.Size(536, 23)
         Me.pgbMain.TabIndex = 62
         Me.pgbMain.Visible = False
-        '
-        'btnCreateDwg
-        '
-        Me.btnCreateDwg.Location = New System.Drawing.Point(6, 91)
-        Me.btnCreateDwg.Name = "btnCreateDwg"
-        Me.btnCreateDwg.Size = New System.Drawing.Size(130, 23)
-        Me.btnCreateDwg.TabIndex = 4
-        Me.btnCreateDwg.Text = "Create Drawing"
-        Me.ToolTip1.SetToolTip(Me.btnCreateDwg, "Create new drawings for selected referenced documents that are missing.")
-        Me.btnCreateDwg.UseVisualStyleBackColor = True
         '
         'Main
         '
