@@ -3749,14 +3749,17 @@ Public Class Main
                                 '_ExcelApp.Quit()
                                 '_ExcelApp.DisplayAlerts = True
                                 '_ExcelApp = Nothing
-                                'KillAllExcels(StartTime)
+                                KillAllExcels(StartTime)
                             End If
+
+                            pgbMain.Visible = False
                         End Try
                         Exit Sub
                     End If
                 Next
             End If
         Next
+
     End Sub
     Private Sub btnRef_Click(sender As System.Object, e As System.EventArgs) Handles btnRef.Click
         Dim Written As Boolean = False
