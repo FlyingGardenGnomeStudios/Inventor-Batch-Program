@@ -1952,10 +1952,15 @@ Public Class Main
                             Do Until ExcelDoc.ActiveSheet.Range("F" & Offset).Value = ""
                                 Offset = Offset + 1
                                 If CStr(ExcelDoc.ActiveSheet.Range("F" & Offset).Value) = CStr(StockNo) And
-                            CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = CStr(Material) Then
-                                    If InStrRev(ExcelDoc.ActiveSheet.Range("G" & Offset).Value, PartNo) = 0 And
-                                ExcelDoc.ActiveSheet.Range("G" & Offset).Value <> "" And
-                                InStr(ExcelDoc.ActiveSheet.range("G" & Offset).value, PartNo) = 0 Then
+                                 CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = CStr(Material) Then
+                                    If CStr(ExcelDoc.ActiveSheet.Range("G" & Offset).Value).Contains(PartNo) AndAlso
+                                        ExcelDoc.ActiveSheet.Range("E" & Offset).Value = Material AndAlso
+                                        ExcelDoc.ActiveSheet.Range("F" & Offset).Value = StockNo Then
+                                        ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length)
+                                    ElseIf Not CStr(ExcelDoc.ActiveSheet.Range("G" & Offset).Value).Contains(PartNo) AndAlso
+                                        ExcelDoc.ActiveSheet.Range("E" & Offset).Value = Material AndAlso
+                                        ExcelDoc.ActiveSheet.Range("F" & Offset).Value = StockNo Then
+                                        ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length)
                                         ExcelDoc.ActiveSheet.Range("G" & Offset).Value = ExcelDoc.ActiveSheet.Range("G" & Offset).Value & ", " & PartNo
                                     End If
                                     Exit Do
