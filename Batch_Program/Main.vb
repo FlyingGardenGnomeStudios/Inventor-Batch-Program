@@ -2159,9 +2159,16 @@ Public Class Main
             oProfile = oSketch.Profiles.AddForSolid
 
         Catch ex As Exception
-            writeDebug("Error calculating area" & vbNewLine &
-                            "Failure to create perimiter profile " & oDoc.DisplayName)
-            oTransaction.Abort()
+            writeDebug("Error creating perimiter profile" & vbNewLine & "Retrying with surface inputs")
+            writeDebug(ex.Message)
+            Try
+                oProfile = oSketch.Profiles.AddForSurface
+            Catch ex2 As Exception
+                writeDebug("Error calculating area" & vbNewLine &
+                                            "Failure to create perimiter profile " & oDoc.DisplayName)
+                writeDebug(ex2.Message)
+                oTransaction.Abort()
+            End Try
         End Try
         Dim dArea As Double
         dArea = oProfile.RegionProperties.Area
