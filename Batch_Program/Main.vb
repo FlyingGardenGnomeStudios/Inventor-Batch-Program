@@ -2005,15 +2005,18 @@ Public Class Main
                             ExcelDoc.Worksheets("Profile Cut").Activate()
                             Do Until ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ""
                                 Offset = Offset + 1
+                                writeDebug("1")
                                 If CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = CStr(StockNo) Then
+                                    writeDebug("2")
                                     ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + Area
                                     If InStrRev(ExcelDoc.ActiveSheet.Range("E" & Offset).Value, PartNo) = 0 And
                                 ExcelDoc.ActiveSheet.Range("E" & Offset).Value <> "" Then
+                                        writeDebug("3")
                                         ExcelDoc.ActiveSheet.Range("E" & Offset).Value = ExcelDoc.ActiveSheet.Range("E" & Offset).Value & ", " & PartNo
                                     End If
                                     Exit Do
                                 ElseIf ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Nothing Then
-
+                                    writeDebug("4")
                                     ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + Area
                                     ExcelDoc.ActiveSheet.Range("B" & Offset).Value = "Sq Ft."
                                     ExcelDoc.ActiveSheet.Range("D" & Offset).Value = StockNo
