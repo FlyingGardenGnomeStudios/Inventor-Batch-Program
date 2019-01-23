@@ -1948,23 +1948,30 @@ Public Class Main
                         End If
 
                         If Process = "SC" Or Process = "EX" Then
+                            writeDebug("A")
                             ExcelDoc.Worksheets("Saw Cut").activate()
+                            writeDebug("B")
                             Do Until ExcelDoc.ActiveSheet.Range("F" & Offset).Value = ""
                                 Offset = Offset + 1
+                                writeDebug("C")
                                 If CStr(ExcelDoc.ActiveSheet.Range("F" & Offset).Value) = CStr(StockNo) And
                                  CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = CStr(Material) Then
+                                    writeDebug("D")
                                     If CStr(ExcelDoc.ActiveSheet.Range("G" & Offset).Value).Contains(PartNo) AndAlso
                                         ExcelDoc.ActiveSheet.Range("E" & Offset).Value = Material AndAlso
                                         ExcelDoc.ActiveSheet.Range("F" & Offset).Value = StockNo Then
+                                        writeDebug("E")
                                         ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length)
                                     ElseIf Not CStr(ExcelDoc.ActiveSheet.Range("G" & Offset).Value).Contains(PartNo) AndAlso
                                         ExcelDoc.ActiveSheet.Range("E" & Offset).Value = Material AndAlso
                                         ExcelDoc.ActiveSheet.Range("F" & Offset).Value = StockNo Then
+                                        writeDebug("F")
                                         ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length)
                                         ExcelDoc.ActiveSheet.Range("G" & Offset).Value = ExcelDoc.ActiveSheet.Range("G" & Offset).Value & ", " & PartNo
                                     End If
                                     Exit Do
                                 ElseIf ExcelDoc.ActiveSheet.Range("F" & Offset).Value = Nothing Then
+                                    writeDebug("G")
                                     ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length)
                                     ExcelDoc.ActiveSheet.Range("B" & Offset).Value = "Ft."
                                     ExcelDoc.ActiveSheet.Range("F" & Offset).Value = StockNo
@@ -1972,15 +1979,20 @@ Public Class Main
                                     ExcelDoc.ActiveSheet.Range("G" & Offset).Value = PartNo
                                     Exit Do
                                 Else
+                                    writeDebug("H")
                                     'MsgBox "Jump to next line"
                                 End If
+                                writeDebug("I")
                             Loop
+                            writeDebug("J")
                             Offset = 1
                             ExcelDoc.Worksheets("Saw Cut Lengths").Activate()
+                            writeDebug("K")
                             Do Until ExcelDoc.ActiveSheet.Range("C" & Offset).Value = ""
                                 Offset = Offset + 1
 
                                 If ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Nothing Then
+                                    writeDebug("L")
                                     ExcelDoc.ActiveSheet.Range("A" & Offset).Value = Length
                                     ExcelDoc.ActiveSheet.Range("B" & Offset).Value = "Ft."
                                     ExcelDoc.ActiveSheet.Range("D" & Offset).Value = StockNo
@@ -2097,6 +2109,7 @@ Public Class Main
         Next
         ExcelDoc.Worksheets("Saw Cut").activate()
     End Sub
+
     Function AreaCalculate(ByRef oDoc As PartDocument, ByRef Occ As ComponentOccurrence) As Decimal
 
         Dim oDef As SheetMetalComponentDefinition
