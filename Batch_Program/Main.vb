@@ -1896,6 +1896,7 @@ Public Class Main
                         ElseIf TypeOf Occ.Definition Is VirtualComponentDefinition = True Then
                             Process = "VP"
                         End If
+                        writeDebug(Process)
                         StockNo = PropSets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("55").Value.ToString
                         Material = PropSets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("20").Value.ToString
                         PartNo = PropSets.Item("{32853F0F-3444-11D1-9E93-0060B03C1CA6}").ItemByPropId("5").Value.ToString
@@ -1943,8 +1944,12 @@ Public Class Main
                             Next
                             Length = TotalLength
                         ElseIf sReadablefiletype = "S" Then
-                            CreateFlatPattern(oDoc.ComponentDefinition, oDoc.DisplayName, oDoc, False)
-                            Area = AreaCalculate(oDoc, Occ)
+                            Try
+                                CreateFlatPattern(oDoc.ComponentDefinition, oDoc.DisplayName, oDoc, False)
+                                Area = AreaCalculate(oDoc, Occ)
+                            Catch ex As Exception
+                                writeDebug(ex.Message)
+                            End Try
                         End If
 
                         If Process = "SC" Or Process = "EX" Then
@@ -2002,6 +2007,7 @@ Public Class Main
                                 End If
                             Loop
                         ElseIf Process = "LC" Then
+                            writeDebug("01")
                             ExcelDoc.Worksheets("Profile Cut").Activate()
                             Do Until ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ""
                                 Offset = Offset + 1
