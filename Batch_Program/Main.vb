@@ -2108,7 +2108,7 @@ Public Class Main
     End Sub
 
     Function AreaCalculate(ByRef oDoc As PartDocument, ByRef Occ As ComponentOccurrence) As Decimal
-
+        Dim Abort As Boolean = False
         Dim oDef As SheetMetalComponentDefinition
         oDef = oDoc.ComponentDefinition
         Dim oFlatPattern As FlatPattern
@@ -2123,6 +2123,7 @@ Public Class Main
             writeDebug("Error calculating area" & vbNewLine &
                             "Failure to create sketch in flat pattern on " & oDoc.DisplayName)
             oTransaction.Abort()
+            Abort = True
             Exit Function
         End Try
         Try
@@ -2140,6 +2141,7 @@ Public Class Main
             writeDebug("Error calculating area" & vbNewLine &
                             "Failure to find perimeter edge " & oDoc.DisplayName)
             oTransaction.Abort()
+            Abort = True
             Exit Function
         End Try
         Dim oProfile As Profile = Nothing
@@ -2151,21 +2153,38 @@ Public Class Main
                        "Failure to create perimiter profile " & oDoc.DisplayName)
             writeDebug(ex.Message)
             oTransaction.Abort()
-
+            Abort = True
         End Try
         Dim dArea As Double = Nothing
         Try
             dArea = oProfile.RegionProperties.Area
-            AreaCalculate = dArea / (2.54 ^ 2) / 144
+
         Catch ex As Exception
             writeDebug("Area not calculated for " & oDoc.DisplayName)
             AreaCalculate = 0
         Finally
+            If Abort = True Then
+                dArea = Backup_Area_Calculate(oDoc)
+            End If
             oTransaction.Abort()
+            AreaCalculate = dArea / (2.54 ^ 2) / 144
         End Try
-
+        Return AreaCalculate
 
     End Function
+    Function Backup_Area_Calculate(oDoc As Document)
+        Dim oDef As SheetMetalComponentDefinition
+        oDef = oDoc.ComponentDefinition
+
+        Dim oFlatPattern As FlatPattern
+        oFlatPattern = oDef.FlatPattern
+
+        Dim dArea As Double
+        dArea = Math.Round(oFlatPattern.TopFace.Evaluator.Area, 4)
+        Return dArea
+
+    End Function
+
     Public Sub ExtractThumb(ByRef PartName As String, ByRef Thumbnail As Image)
         Dim X As Integer = 0
         For Each entry As List(Of String) In RenameTable
