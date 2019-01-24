@@ -1953,30 +1953,23 @@ Public Class Main
                         End If
 
                         If Process = "SC" Or Process = "EX" Then
-                            writeDebug("A")
                             ExcelDoc.Worksheets("Saw Cut").activate()
-                            writeDebug("B")
                             Do Until ExcelDoc.ActiveSheet.Range("F" & Offset).Value = ""
                                 Offset = Offset + 1
-                                writeDebug("C")
                                 If CStr(ExcelDoc.ActiveSheet.Range("F" & Offset).Value) = CStr(StockNo) And
                                  CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = CStr(Material) Then
-                                    writeDebug("D")
                                     If CStr(ExcelDoc.ActiveSheet.Range("G" & Offset).Value).Contains(PartNo) AndAlso
                                         ExcelDoc.ActiveSheet.Range("E" & Offset).Value = Material AndAlso
                                         ExcelDoc.ActiveSheet.Range("F" & Offset).Value = StockNo Then
-                                        writeDebug("E")
                                         ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length)
                                     ElseIf Not CStr(ExcelDoc.ActiveSheet.Range("G" & Offset).Value).Contains(PartNo) AndAlso
                                         ExcelDoc.ActiveSheet.Range("E" & Offset).Value = Material AndAlso
                                         ExcelDoc.ActiveSheet.Range("F" & Offset).Value = StockNo Then
-                                        writeDebug("F")
                                         ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length)
                                         ExcelDoc.ActiveSheet.Range("G" & Offset).Value = ExcelDoc.ActiveSheet.Range("G" & Offset).Value & ", " & PartNo
                                     End If
                                     Exit Do
                                 ElseIf ExcelDoc.ActiveSheet.Range("F" & Offset).Value = Nothing Then
-                                    writeDebug("G")
                                     ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length)
                                     ExcelDoc.ActiveSheet.Range("B" & Offset).Value = "Ft."
                                     ExcelDoc.ActiveSheet.Range("F" & Offset).Value = StockNo
@@ -1984,20 +1977,15 @@ Public Class Main
                                     ExcelDoc.ActiveSheet.Range("G" & Offset).Value = PartNo
                                     Exit Do
                                 Else
-                                    writeDebug("H")
                                     'MsgBox "Jump to next line"
                                 End If
-                                writeDebug("I")
                             Loop
-                            writeDebug("J")
                             Offset = 1
                             ExcelDoc.Worksheets("Saw Cut Lengths").Activate()
-                            writeDebug("K")
                             Do Until ExcelDoc.ActiveSheet.Range("C" & Offset).Value = ""
                                 Offset = Offset + 1
 
                                 If ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Nothing Then
-                                    writeDebug("L")
                                     ExcelDoc.ActiveSheet.Range("A" & Offset).Value = Length
                                     ExcelDoc.ActiveSheet.Range("B" & Offset).Value = "Ft."
                                     ExcelDoc.ActiveSheet.Range("D" & Offset).Value = StockNo
@@ -2141,12 +2129,12 @@ Public Class Main
             Dim oEdgeLoop As EdgeLoop = Nothing
             For Each oEdgeLoop In oFlatPattern.TopFace.EdgeLoops
                 If oEdgeLoop.IsOuterEdgeLoop Then
+                    Dim oEdge As Edge
+                    For Each oEdge In oEdgeLoop.Edges
+                        Call oSketch.AddByProjectingEntity(oEdge)
+                    Next
                     Exit For
                 End If
-            Next
-            Dim oEdge As Edge
-            For Each oEdge In oEdgeLoop.Edges
-                Call oSketch.AddByProjectingEntity(oEdge)
             Next
         Catch ex As Exception
             writeDebug("Error calculating area" & vbNewLine &
@@ -2159,22 +2147,23 @@ Public Class Main
             oProfile = oSketch.Profiles.AddForSolid
 
         Catch ex As Exception
-            writeDebug("Error creating perimiter profile" & vbNewLine & "Retrying with surface inputs")
+            writeDebug("Error calculating area" & vbNewLine &
+                       "Failure to create perimiter profile " & oDoc.DisplayName)
             writeDebug(ex.Message)
-            Try
-                oProfile = oSketch.Profiles.AddForSurface
-            Catch ex2 As Exception
-                writeDebug("Error calculating area" & vbNewLine &
-                                            "Failure to create perimiter profile " & oDoc.DisplayName)
-                writeDebug(ex2.Message)
-                oTransaction.Abort()
-            End Try
-        End Try
-        Dim dArea As Double
-        dArea = oProfile.RegionProperties.Area
-        oTransaction.Abort()
+            oTransaction.Abort()
 
-        AreaCalculate = dArea / (2.54 ^ 2) / 144
+        End Try
+        Dim dArea As Double = Nothing
+        Try
+            dArea = oProfile.RegionProperties.Area
+            AreaCalculate = dArea / (2.54 ^ 2) / 144
+        Catch ex As Exception
+            writeDebug("Area not calculated for " & oDoc.DisplayName)
+            AreaCalculate = 0
+        Finally
+            oTransaction.Abort()
+        End Try
+
 
     End Function
     Public Sub ExtractThumb(ByRef PartName As String, ByRef Thumbnail As Image)
