@@ -64,8 +64,6 @@ Public Class Main
     Dim strOutputDecrypt As String
     Dim fsInput As System.IO.FileStream
     Dim fsOutput As System.IO.FileStream
-    Dim ReVerifyNow As ReVerifyNow
-    Private ta As TurboActivate
     Private isGenuine As Boolean
     Dim myProcess As Process
     Dim InventorExited As Boolean = False
@@ -1898,8 +1896,8 @@ Public Class Main
                             ExcelDoc.Worksheets("Saw Cut").activate()
                             Do Until ExcelDoc.ActiveSheet.Range("F" & Offset).Value = ""
                                 Offset = Offset + 1
-                                If CStr(ExcelDoc.ActiveSheet.Range("F" & Offset).Value) = CStr(StockNo) And
-                                 CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = CStr(Material) Then
+                                If CStr(ExcelDoc.ActiveSheet.Range("F" & Offset).Value) = StockNo And
+                                 CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = Material Then
                                     If CStr(ExcelDoc.ActiveSheet.Range("G" & Offset).Value).Contains(PartNo) AndAlso
                                         ExcelDoc.ActiveSheet.Range("E" & Offset).Value = Material AndAlso
                                         ExcelDoc.ActiveSheet.Range("F" & Offset).Value = StockNo Then
@@ -1942,7 +1940,7 @@ Public Class Main
                             Do Until ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ""
                                 Offset = Offset + 1
                                 writeDebug("1")
-                                If CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = CStr(StockNo) Then
+                                If CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = StockNo Then
                                     writeDebug("2")
                                     ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + Area
                                     If InStrRev(ExcelDoc.ActiveSheet.Range("E" & Offset).Value, PartNo) = 0 And
@@ -1967,7 +1965,7 @@ Public Class Main
                             ExcelDoc.Worksheets("Torch Cut").Activate()
                             Do Until ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ""
                                 Offset = Offset + 1
-                                If CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = CStr(StockNo) Then
+                                If CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = StockNo Then
                                     ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length * Width)
                                     If InStrRev(ExcelDoc.ActiveSheet.Range("E" & Offset).Value, PartNo) = "" Then
                                         ExcelDoc.ActiveSheet.Range("E" & Offset).Value = ExcelDoc.ActiveSheet.Range("E" & Offset).Value & ", " & PartNo
@@ -1988,8 +1986,8 @@ Public Class Main
                             ExcelDoc.Worksheets("Purchased Parts").Activate()
                             Do Until ExcelDoc.ActiveSheet.Range("B" & Offset).Value = ""
                                 Offset = Offset + 1
-                                If CStr(ExcelDoc.ActiveSheet.Range("B" & Offset).Value) = CStr(Description) And
-                            CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = CStr(PartNo) Then
+                                If CStr(ExcelDoc.ActiveSheet.Range("B" & Offset).Value) = Description And
+                            CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = PartNo Then
                                     ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + 1
                                     Exit Do
                                 ElseIf ExcelDoc.ActiveSheet.Range("B" & Offset).Value = Nothing Then
@@ -2006,7 +2004,7 @@ Public Class Main
                             ExcelDoc.Worksheets("Other Parts").Activate()
                             Do Until ExcelDoc.ActiveSheet.Range("B" & Offset).Value = ""
                                 Offset = Offset + 1
-                                If CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = CStr(Description) AndAlso Not CStr(Description) = "" Then
+                                If CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = Description AndAlso Not Description = "" Then
                                     ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + 1
                                     ExcelDoc.ActiveSheet.Range("B" & Offset).Value = ExcelDoc.ActiveSheet.Range("B" & Offset).Value + (Length)
                                     'ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ExcelDoc.ActiveSheet.Range("D" & Offset).Value + (Length * Width)

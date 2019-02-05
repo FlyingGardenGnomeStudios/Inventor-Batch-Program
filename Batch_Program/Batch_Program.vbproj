@@ -242,12 +242,6 @@
     <Compile Include="Print Size.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ReVerifyNow.Designer.vb">
-      <DependentUpon>ReVerifyNow.vb</DependentUpon>
-    </Compile>
-    <Compile Include="ReVerifyNow.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Settings.Designer.vb">
       <DependentUpon>Settings.vb</DependentUpon>
     </Compile>
@@ -296,7 +290,6 @@
     <Compile Include="Splash.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TurboActivate.vb" />
     <None Include="ClassDiagram2.cd" />
     <Compile Include="Rev Switch.Designer.vb">
       <DependentUpon>Rev Switch.vb</DependentUpon>
@@ -324,9 +317,6 @@
     <Content Include="Resources\List-Blank.xlsm" />
     <Content Include="Resources\Quote-Blank.xlsm" />
     <Content Include="Resources\Rename.xlsm" />
-    <Content Include="TurboActivate.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="About.resx">
@@ -356,9 +346,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Print Size.resx">
       <DependentUpon>Print Size.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ReVerifyNow.resx">
-      <DependentUpon>ReVerifyNow.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.vb</DependentUpon>
@@ -412,13 +399,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Batch_Program.Addin" />
-    <Content Include="ReadMe.txt" />
-    <Content Include="TurboActivate.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TurboActivate.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Resources\Splash.jpeg" />
     <None Include="Resources\btn_donate_LG.gif" />
     <None Include="Resources\About.JPG" />

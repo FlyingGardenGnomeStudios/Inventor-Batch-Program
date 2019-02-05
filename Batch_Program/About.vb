@@ -22,7 +22,7 @@ Public Class About
 
     Private Sub PicDonate_Click(sender As Object, e As EventArgs) Handles PicDonate.Click
         Try
-            System.Diagnostics.Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HXDSA8NWCRM2G")
+            System.Diagnostics.Process.Start("https://www.PayPal.Me/fggs")
         Catch
             'Code to handle the error.
         End Try
