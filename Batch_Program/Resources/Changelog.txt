@@ -1,7 +1,6 @@
 ﻿Items not currently functioning
 	- No tutorials yet
 	- Renaming function works but hasn't been thoroughly tested.
-
 Version 2.1.3.6 (01.22.19)
 	Resolved Issue #10
 

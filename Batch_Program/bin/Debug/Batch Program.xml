@@ -324,12 +324,6 @@ Loop
  The button action to be assigned from anywhere outside.
  </summary>
 </member>
-<member name="M:Main.p_Exited(System.Object,System.EventArgs)">
- This event handler is called when TurboActivate.exe closes.
-</member>
-<member name="M:Main.CheckIfActivated">
- Rechecks if we're activated -- if so enable the app features.
-</member>
 <member name="F:wyDay.TurboActivate.TA_Flags.TA_DISALLOW_VM">
  <summary>
  Use the TA_DISALLOW_VM in UseTrial() to disallow trials in virtual machines. 

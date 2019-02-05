@@ -73,18 +73,7 @@ Public Class Main
     Dim bkgUpdateOpen As System.Threading.Thread
     Dim Busy As Boolean = False
     Dim MainClosed As Boolean = False
-    Private Delegate Sub IsActivatedDelegate()
-    ' Set the trial flags you want to use. Here we've selected that the
-    ' trial data should be stored system-wide (TA_SYSTEM) and that we should
-    ' use un-resetable verified trials (TA_VERIFIED_TRIAL).
-    Private trialFlags As TA_Flags = TA_Flags.TA_SYSTEM Or TA_Flags.TA_VERIFIED_TRIAL
-    ' Don't use 0 for either of these values.
-    ' We recommend 90, 14. But if you want to lower the values
-    ' we don't recommend going below 7 days for each value.
-    ' Anything lower and you're just punishing legit users.
-    Private Const DaysBetweenChecks As UInteger = 90
-    Private Const GracePeriodLength As UInteger = 14
-
+    Dim Paid As Boolean = True
 #Region "Setup"
     Public Sub writeDebug(ByVal x As String)
         Dim path As String = My.Computer.FileSystem.SpecialDirectories.Temp
@@ -186,62 +175,7 @@ Public Class Main
         bkgUpdateOpen.Start()
         bgwRun.WorkerReportsProgress = True
         AddHandler _invApp.ApplicationEvents.OnOpenDocument, AddressOf CreateOpenDocs
-        'Try
-        '    'TODO: goto the version page at LimeLM and paste this GUID here
-        '    ta = New TurboActivate("3d2a7b7e59bfcc74c5df44.47834669")
 
-        '    ' Check if we're activated, and every 90 days verify it with the activation servers
-        '    ' In this example we won't show an error if the activation was done offline
-        '    ' (see the 3rd parameter of the IsGenuine() function)
-        '    ' https://wyday.com/limelm/help/offline-activation/
-        '    Dim gr As IsGenuineResult = ta.IsGenuine(DaysBetweenChecks, GracePeriodLength, True)
-
-        '    isGenuine = (gr = IsGenuineResult.Genuine _
-        '                 OrElse gr = IsGenuineResult.GenuineFeaturesChanged _
-        '                 OrElse gr = IsGenuineResult.InternetError)
-        '    ' an internet error means the user is activated but
-        '    ' TurboActivate failed to contact the LimeLM servers
-
-
-
-        '    ' If IsGenuineEx() is telling us we're not activated
-        '    ' but the IsActivated() function is telling us that the activation
-        '    ' data on the computer is valid (i.e. the crypto-signed-fingerprint matches the computer)
-        '    ' then that means that the customer has passed the grace period and they must re-verify
-        '    ' with the servers to continue to use your app.
-
-        '    'Note: DO NOT allow the customer to just continue to use your app indefinitely with absolutely
-        '    '      no reverification with the servers. If you want to do that then don't use IsGenuine() or
-        '    '      IsGenuineEx() at all -- just use IsActivated().
-        '    If Not isGenuine AndAlso ta.IsActivated() Then
-
-        '        ' We're treating the customer as is if they aren't activated, so they can't use your app.
-
-        '        ' However, we show them a dialog where they can reverify with the servers immediately.
-
-        '        Dim frmReverify As ReVerifyNow = New ReVerifyNow(ta, DaysBetweenChecks, GracePeriodLength)
-
-        '        If frmReverify.ShowDialog(Me) = DialogResult.OK Then
-        '            isGenuine = True
-        '        ElseIf Not frmReverify.noLongerActivated Then ' the user clicked cancel and the user is still activated
-
-        '            ' Just bail out of your app
-        '            Close()
-        '            Return
-        '        End If
-        '    End If
-
-        'Catch ex As TurboActivateException
-        '    ' failed to check if activated, meaning the customer screwed
-        '    ' something up so kill the app immediately
-        '    MessageBox.Show("Failed to check if activated:  " + ex.Message)
-        '    Close()
-        '    Return
-        'End Try
-
-        ''Show a trial if we're not genuine
-        ''See step 9, below.
-        'ShowTrial(Not isGenuine)
         CreateOpenDocs()
     End Sub
 
@@ -262,6 +196,10 @@ Public Class Main
         'Iterate through each document open in Inventor and retrieve the display name
         Try
             For Each oDoc In _invApp.Documents.VisibleDocuments
+                If Paid = False AndAlso dgvOpenFiles.RowCount > 9 Then
+                    MsgBox("The trial version only displays the first 10 items")
+                    Exit For
+                End If
                 Exists = False
                 For Each item In dgvOpenFiles.Rows
                     If IO.Path.GetFileName(oDoc.DisplayName).Contains(dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, item.index).Value) Then
@@ -270,7 +208,6 @@ Public Class Main
                     End If
                 Next
                 If oDoc.FullFileName <> Nothing AndAlso Exists = False Then
-
                     'Compare file type to the files chosen to display and only display the selected documents.
                     'Add the document name to key & location to value for faster recall
                     If chkAssy.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
@@ -313,7 +250,7 @@ Public Class Main
         'End If
 
 
-        If dgvSubFiles.Rows.Count = 0 Then
+        If dgvSubFiles.DisplayedRowCount(True) = 0 Then
             'change display style to simulate an unusable entity
 
             dgvSubFiles.Rows.Add(False, "No Drawings Found")
@@ -1321,6 +1258,7 @@ Public Class Main
         If bgwUpdateSub.IsBusy = False Then
             bgwUpdateSub.RunWorkerAsync()
         End If
+        FilterSubFiles()
     End Sub
     Private Sub dgvOpenFiles_MouseUp(sender As Object, e As MouseEventArgs) Handles dgvOpenFiles.MouseUp
         ' UpdateOpenFiles()
@@ -1333,6 +1271,10 @@ Public Class Main
                     Dim PartSource As String = Nothing
                     Dim exists As Boolean
                     For Each oDoc As Document In _invApp.Documents.VisibleDocuments
+                        If Paid = False AndAlso dgvOpenFiles.RowCount > 9 Then
+                            MsgBox("The trial version only displays the first 10 items")
+                            Exit Sub
+                        End If
                         exists = False
                         For Each item In dgvOpenFiles.Rows
                             If IO.Path.GetFileName(oDoc.FullFileName).Contains(dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, item.index).Value) Then
@@ -2115,58 +2057,47 @@ Public Class Main
         oFlatPattern = oDef.FlatPattern
         Dim oTransaction As Transaction
         Dim oSketch As PlanarSketch
+        Dim oEdgeLoop As EdgeLoop = Nothing
+        Dim oProfile As Profile = Nothing
+        Dim dArea As Double = Nothing
         oTransaction = _invApp.TransactionManager.StartTransaction(oDoc, "Find area")
         Try
-
             oSketch = oFlatPattern.Sketches.Add(oFlatPattern.TopFace)
+            Try
+                For Each oEdgeLoop In oFlatPattern.TopFace.EdgeLoops
+                    If oEdgeLoop.IsOuterEdgeLoop Then
+                        Dim oEdge As Edge
+                        For Each oEdge In oEdgeLoop.Edges
+                            Call oSketch.AddByProjectingEntity(oEdge)
+                        Next
+                        Exit For
+                    End If
+                Next
+                Try
+                    oProfile = oSketch.Profiles.AddForSolid
+                Catch ex As Exception
+                    writeDebug("Error calculating area" & vbNewLine &
+                               "Failure to create perimiter profile " & oDoc.DisplayName)
+                    writeDebug(ex.Message)
+                    oTransaction.Abort()
+                    Abort = True
+                End Try
+            Catch ex As Exception
+                writeDebug("Error calculating area" & vbNewLine &
+                                "Failure to find perimeter edge " & oDoc.DisplayName)
+                Abort = True
+            End Try
         Catch ex As Exception
             writeDebug("Error calculating area" & vbNewLine &
                             "Failure to create sketch in flat pattern on " & oDoc.DisplayName)
-            oTransaction.Abort()
             Abort = True
-            Exit Function
-        End Try
-        Try
-            Dim oEdgeLoop As EdgeLoop = Nothing
-            For Each oEdgeLoop In oFlatPattern.TopFace.EdgeLoops
-                If oEdgeLoop.IsOuterEdgeLoop Then
-                    Dim oEdge As Edge
-                    For Each oEdge In oEdgeLoop.Edges
-                        Call oSketch.AddByProjectingEntity(oEdge)
-                    Next
-                    Exit For
-                End If
-            Next
-        Catch ex As Exception
-            writeDebug("Error calculating area" & vbNewLine &
-                            "Failure to find perimeter edge " & oDoc.DisplayName)
-            oTransaction.Abort()
-            Abort = True
-            Exit Function
-        End Try
-        Dim oProfile As Profile = Nothing
-        Try
-            oProfile = oSketch.Profiles.AddForSolid
-
-        Catch ex As Exception
-            writeDebug("Error calculating area" & vbNewLine &
-                       "Failure to create perimiter profile " & oDoc.DisplayName)
-            writeDebug(ex.Message)
-            oTransaction.Abort()
-            Abort = True
-        End Try
-        Dim dArea As Double = Nothing
-        Try
-            dArea = oProfile.RegionProperties.Area
-
-        Catch ex As Exception
-            writeDebug("Area not calculated for " & oDoc.DisplayName)
-            AreaCalculate = 0
         Finally
             If Abort = True Then
                 dArea = Backup_Area_Calculate(oDoc)
+                writeDebug("Area re-computed with hole compensation")
+            Else
+                dArea = oProfile.RegionProperties.Area
             End If
-            oTransaction.Abort()
             AreaCalculate = dArea / (2.54 ^ 2) / 144
         End Try
         Return AreaCalculate
@@ -2848,6 +2779,7 @@ Public Class Main
     End Sub
     Private Sub FilterSubFiles()
         'dgvSubFiles.Rows.Clear()
+        dgvSubFiles.Columns("chkSubFiles").Visible = True
         Dim search As String = txtSearch.Text
         If txtSearch.Text = "Search" Then
             search = ""
@@ -2855,6 +2787,8 @@ Public Class Main
         For Each row In dgvSubFiles.Rows
             If InStr(UCase(dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, row.index).Value), UCase(search)) = 0 Then
                 dgvSubFiles.Rows(row.index).Visible = False
+            ElseIf dgvsubfiles(dgvSubFiles.Columns("DrawingName").Index, row.index).value = "No Drawings Found" Then
+                dgvSubFiles.Rows.Remove(row)
             Else
                 If dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Empty Then
                     dgvSubFiles.Rows(row.index).Visible = True
@@ -2897,6 +2831,15 @@ Public Class Main
             dgvSubFiles.Columns("DrawingName").Visible = False
             dgvSubFiles.Columns("DrawingNameAlpha").Visible = True
             dgvSubFiles.Columns("Order").SortMode = DataGridViewColumnSortMode.Automatic
+        End If
+        If dgvSubFiles.DisplayedRowCount(True) = 0 Then
+            'change display style to simulate an unusable entity
+
+            dgvSubFiles.Rows.Add(False, "No Drawings Found")
+            dgvSubFiles.Columns("DrawingName").Visible = True
+            dgvSubFiles.Columns("DrawingNameAlpha").Visible = False
+            dgvSubFiles.Columns("chkSubFiles").Visible = False
+            dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = Drawing.Color.Gray
         End If
     End Sub
     Private Sub dgvSubFiles_MouseUp(sender As Object, e As MouseEventArgs) Handles dgvSubFiles.MouseUp
@@ -3135,95 +3078,7 @@ Public Class Main
     End Sub
 #End Region
 #Region "Top Menus"
-    Private Sub mnuActDeact_Click(sender As Object, e As EventArgs) Handles mnuActDeact.Click
-        If isGenuine Then
-            ' deactivate product without deleting the product key
-            ' allows the user to easily reactivate
-            Try
-                ta.Deactivate(False)
-            Catch ex As TurboActivateException
-                MessageBox.Show("Failed to deactivate: " + ex.Message)
-                Return
-            End Try
 
-            isGenuine = False
-            ShowTrial(True)
-        Else
-            'Note: you can launch the TurboActivate wizard or you can create you own interface
-
-            'launch TurboActivate.exe to get the product key from the user
-            Dim TAProcess As New Process
-            If My.Application.IsNetworkDeployed Then
-                TAProcess.StartInfo.FileName = IO.Path.Combine(IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase), "TurboActivate.exe")
-            Else
-                TAProcess.StartInfo.FileName = IO.Path.Combine(IO.Path.GetDirectoryName(My.Application.Info.DirectoryPath), "debug\TurboActivate.exe")
-            End If
-            TAProcess.EnableRaisingEvents = True
-            AddHandler TAProcess.Exited, New EventHandler(AddressOf p_Exited)
-            TAProcess.Start()
-        End If
-    End Sub
-    ''' This event handler is called when TurboActivate.exe closes.
-    Private Sub p_Exited(ByVal sender As Object, ByVal e As EventArgs)
-
-        ' remove the event
-        RemoveHandler DirectCast(sender, Process).Exited, New EventHandler(AddressOf p_Exited)
-
-        ' the UI thread is running asynchronous to TurboActivate closing
-        ' that's why we can't call TAIsActivated(); directly
-        Invoke(New IsActivatedDelegate(AddressOf CheckIfActivated))
-    End Sub
-    ''' Rechecks if we're activated -- if so enable the app features.
-    Private Sub CheckIfActivated()
-        ' recheck if activated
-        Dim isNowActivated As Boolean = False
-
-        Try
-            isNowActivated = ta.IsActivated
-        Catch ex As TurboActivateException
-            MessageBox.Show("Failed to check if activated: " + ex.Message)
-            Exit Sub
-        End Try
-
-        If isNowActivated Then
-            isGenuine = True
-            ReEnableAppFeatures()
-            ShowTrial(False)
-        End If
-    End Sub
-    Private Sub ShowTrial(ByVal show As Boolean)
-
-        'lblTrialMessage.Visible = show
-        'btnExtendTrial.Visible = show
-
-        mnuActDeact.Text = (If(show, "Activate...", "Deactivate"))
-
-        If show Then
-            Dim trialDaysRemaining As UInteger = 0UI
-
-            Try
-                ta.UseTrial(trialFlags)
-
-                ' get the number of remaining trial days
-                trialDaysRemaining = ta.TrialDaysRemaining(trialFlags)
-            Catch ex As TurboActivateException
-                MessageBox.Show("Failed to start the trial: " + ex.Message)
-            End Try
-
-            ' if no more trial days then disable all app features
-            If trialDaysRemaining = 0 Then
-                DisableAppFeatures()
-            Else
-                'lblTrialMessage.Text = "Your trial expires in " & trialDaysRemaining & " days."
-            End If
-        End If
-    End Sub
-    Private Sub DisableAppFeatures()
-        'TODO: disable all the features of the program
-    End Sub
-    Private Sub ReEnableAppFeatures()
-        'TODO: re-enable all the features of the program
-    End Sub
     Private Sub IFoundABugToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles IFoundABugToolStripMenuItem.Click
         BugFound.ShowDialog()
     End Sub
@@ -3430,7 +3285,7 @@ Public Class Main
         'Private Sub PopulateSubfiles()
         'iterate through the open files and display the available drawings in the Subfiles window
         dgvSubFiles.ForeColor = Drawing.Color.Black
-        dgvSubFiles.Columns("Chksubfiles").Visible = True
+        ' dgvSubFiles.Columns("Chksubfiles").Visible = True
         dgvSubFiles.Rows.Clear()
         Dim oDoc As Document
         Dim PartSource As String
@@ -3530,6 +3385,10 @@ Public Class Main
         txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, dgvSubFiles.Location.Y + dgvSubFiles.Height + 5)
 
         For i = 0 To SubfilesData.Rows.Count - 1
+            If Paid = False AndAlso dgvSubFiles.RowCount > 9 Then
+                MsgBox("The trial version only displays the first 10 items")
+                Exit For
+            End If
             dgvSubFiles.Rows.Add(New String() {True, Space(SubfilesData.Rows(i).Item(0) * 3) & SubfilesData.Rows(i).Item(1), SubfilesData.Rows(i).Item(1), SubfilesData.Rows(i).Item(2), SubfilesData.Rows(i).Item(3), SubfilesData.Rows(i).Item(4), dgvSubFiles.RowCount})
             If SubfilesData.Rows(i).Item(4) = "PPM" Then
                 dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = Drawing.Color.Red
@@ -3555,15 +3414,21 @@ Public Class Main
                 dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Red Then
                 dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.Index).Value = False
             End If
+
         Next
+        FilterSubFiles()
         UpdateSubFiles()
-        dgvSubFiles.Columns("chkSubFiles").Visible = True
+        'dgvSubFiles.Columns("chkSubFiles").Visible = True
         'if no drawings are found, notify the user
-        If dgvSubFiles.RowCount = 0 Then
+
+        If dgvSubFiles.DisplayedRowCount(True) = 0 Then
             'change display style to simulate an unusable entity
+
             dgvSubFiles.Rows.Add(False, "No Drawings Found")
-            dgvSubFiles.Rows(0).DefaultCellStyle.ForeColor = Drawing.Color.Gray
+            dgvSubFiles.Columns("DrawingName").Visible = True
+            dgvSubFiles.Columns("DrawingNameAlpha").Visible = False
             dgvSubFiles.Columns("chkSubFiles").Visible = False
+            dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = Drawing.Color.Gray
         ElseIf CMSHeirarchical.Checked = True Then
             ' SortHeirarchical()
 

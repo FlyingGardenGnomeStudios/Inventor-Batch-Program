@@ -110,7 +110,6 @@ Partial Class Main
         Me.IFoundABugToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TutorialsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DebugLogToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.gbxParts = New System.Windows.Forms.GroupBox()
         Me.chkPartDWG = New System.Windows.Forms.CheckBox()
         Me.bgwUpdateSub = New System.ComponentModel.BackgroundWorker()
@@ -715,19 +714,19 @@ Partial Class Main
         '
         Me.CMSSubFiles.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SortToolStripMenuItem, Me.ShowHideToolStripMenuItem, Me.ExportToToolStripMenuItem})
         Me.CMSSubFiles.Name = "ContextMenuStrip1"
-        Me.CMSSubFiles.Size = New System.Drawing.Size(134, 70)
+        Me.CMSSubFiles.Size = New System.Drawing.Size(153, 92)
         '
         'SortToolStripMenuItem
         '
         Me.SortToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSAlphabetical, Me.CMSHeirarchical})
         Me.SortToolStripMenuItem.Name = "SortToolStripMenuItem"
-        Me.SortToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.SortToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.SortToolStripMenuItem.Text = "Sort"
         '
         'CMSAlphabetical
         '
         Me.CMSAlphabetical.Name = "CMSAlphabetical"
-        Me.CMSAlphabetical.Size = New System.Drawing.Size(140, 22)
+        Me.CMSAlphabetical.Size = New System.Drawing.Size(152, 22)
         Me.CMSAlphabetical.Text = "Alphabetical"
         '
         'CMSHeirarchical
@@ -735,14 +734,14 @@ Partial Class Main
         Me.CMSHeirarchical.Checked = True
         Me.CMSHeirarchical.CheckState = System.Windows.Forms.CheckState.Checked
         Me.CMSHeirarchical.Name = "CMSHeirarchical"
-        Me.CMSHeirarchical.Size = New System.Drawing.Size(140, 22)
+        Me.CMSHeirarchical.Size = New System.Drawing.Size(152, 22)
         Me.CMSHeirarchical.Text = "Hierarchical"
         '
         'ShowHideToolStripMenuItem
         '
         Me.ShowHideToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSMissingDWG, Me.CMSMissingParts, Me.CMSReference})
         Me.ShowHideToolStripMenuItem.Name = "ShowHideToolStripMenuItem"
-        Me.ShowHideToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.ShowHideToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ShowHideToolStripMenuItem.Text = "Show/Hide"
         '
         'CMSMissingDWG
@@ -767,7 +766,7 @@ Partial Class Main
         '
         Me.ExportToToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSSubSpreadsheet, Me.CMSSubText})
         Me.ExportToToolStripMenuItem.Name = "ExportToToolStripMenuItem"
-        Me.ExportToToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
+        Me.ExportToToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ExportToToolStripMenuItem.Text = "Export To"
         '
         'CMSSubSpreadsheet
@@ -908,7 +907,7 @@ Partial Class Main
         Me.gbxUtilities.Size = New System.Drawing.Size(142, 120)
         Me.gbxUtilities.TabIndex = 60
         Me.gbxUtilities.TabStop = False
-        Me.gbxUtilities.Text = "Utilities"
+        Me.gbxUtilities.Text = "Experimental Utilities"
         '
         'MenuStrip1
         '
@@ -982,11 +981,6 @@ Partial Class Main
         Me.DebugLogToolStripMenuItem.Name = "DebugLogToolStripMenuItem"
         Me.DebugLogToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
         Me.DebugLogToolStripMenuItem.Text = "Debug Log"
-        '
-        'ContextMenuStrip1
-        '
-        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(61, 4)
         '
         'gbxParts
         '
@@ -1242,7 +1236,6 @@ Partial Class Main
     Friend WithEvents DefaultSettingsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents AboutToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents AboutBatchProgramToolStripMenuItem As Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ContextMenuStrip1 As Windows.Forms.ContextMenuStrip
     Friend WithEvents mnuActDeact As Windows.Forms.ToolStripMenuItem
     Friend WithEvents ExportToToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSSubSpreadsheet As Windows.Forms.ToolStripMenuItem
