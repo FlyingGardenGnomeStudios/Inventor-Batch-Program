@@ -60,7 +60,7 @@ Partial Class About
         'lblPublish
         '
         Me.lblPublish.AutoSize = True
-        Me.lblPublish.Location = New System.Drawing.Point(16, 354)
+        Me.lblPublish.Location = New System.Drawing.Point(16, 358)
         Me.lblPublish.Name = "lblPublish"
         Me.lblPublish.Size = New System.Drawing.Size(147, 13)
         Me.lblPublish.TabIndex = 3
@@ -69,7 +69,7 @@ Partial Class About
         'lblCopyright
         '
         Me.lblCopyright.AutoSize = True
-        Me.lblCopyright.Location = New System.Drawing.Point(16, 341)
+        Me.lblCopyright.Location = New System.Drawing.Point(16, 343)
         Me.lblCopyright.Name = "lblCopyright"
         Me.lblCopyright.Size = New System.Drawing.Size(51, 13)
         Me.lblCopyright.TabIndex = 4
@@ -82,8 +82,8 @@ Partial Class About
         Me.BackgroundImage = Global.My.Resources.Resources.About
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.ClientSize = New System.Drawing.Size(310, 422)
-        Me.Controls.Add(Me.lblCopyright)
         Me.Controls.Add(Me.lblPublish)
+        Me.Controls.Add(Me.lblCopyright)
         Me.Controls.Add(Me.lblName)
         Me.Controls.Add(Me.LblDonate)
         Me.Controls.Add(Me.PicDonate)

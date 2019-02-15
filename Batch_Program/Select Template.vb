@@ -1,4 +1,5 @@
 ﻿Public Class Select_Template
+    Dim Main As New Main
     Public Sub New()
 
         ' This call is required by the designer.

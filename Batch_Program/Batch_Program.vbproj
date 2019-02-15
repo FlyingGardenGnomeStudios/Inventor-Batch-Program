@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -8,12 +8,12 @@
     <SchemaVersion>
     </SchemaVersion>
     <ProjectGuid>{90389654-6354-46DD-98BE-679E86D8F19B}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>
     </RootNamespace>
-    <AssemblyName>Batch Program</AssemblyName>
+    <AssemblyName>BPAssembly</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>WindowsForms</MyType>
+    <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>true</IsWebBootstrapper>
@@ -39,6 +39,18 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>False</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>
+    </AssemblyVersionSettings>
+    <UpdatePackageVersion>False</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
+    <AssemblyFileVersionSettings>
+    </AssemblyFileVersionSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,12 +58,13 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>Batch Program.xml</DocumentationFile>
+    <DocumentationFile>BPAssembly.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DefineConstants>
     </DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -59,8 +72,9 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>Batch Program.xml</DocumentationFile>
+    <DocumentationFile>BPAssembly.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <OptionExplicit>On</OptionExplicit>
@@ -79,7 +93,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DocumentationFile>Batch Program.xml</DocumentationFile>
+    <DocumentationFile>BPAssembly.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -88,11 +102,12 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
     <DefineConstants>
     </DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\x86\Release\</OutputPath>
-    <DocumentationFile>Batch Program.xml</DocumentationFile>
+    <DocumentationFile>BPAssembly.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <DebugType>pdbonly</DebugType>
@@ -100,9 +115,11 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>true</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>My.MyApplication</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>BDAC8D2DFC4A460EB6DBA68E428A40FC4C63DBA4</ManifestCertificateThumbprint>
@@ -182,7 +199,6 @@
     <Compile Include="About.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddinGlobal.vb" />
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="BugFound.Designer.vb">
       <DependentUpon>BugFound.vb</DependentUpon>
@@ -190,7 +206,6 @@
     <Compile Include="BugFound.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ButtonActions.vb" />
     <Compile Include="CheckNeeded.designer.vb">
       <DependentUpon>CheckNeeded.vb</DependentUpon>
     </Compile>
@@ -248,18 +263,16 @@
     <Compile Include="Settings.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InventorAddinServer.vb" />
-    <Compile Include="InventorButton.vb" />
     <Compile Include="iProperties.designer.vb">
       <DependentUpon>iProperties.vb</DependentUpon>
     </Compile>
     <Compile Include="iProperties.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.designer.vb">
-      <DependentUpon>Main.vb</DependentUpon>
+    <Compile Include="Main Form.designer.vb">
+      <DependentUpon>Main Form.vb</DependentUpon>
     </Compile>
-    <Compile Include="Main.vb">
+    <Compile Include="Main Form.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -290,6 +303,7 @@
     <Compile Include="Splash.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Content Include="Resources\Version.txt" />
     <None Include="ClassDiagram2.cd" />
     <Compile Include="Rev Switch.Designer.vb">
       <DependentUpon>Rev Switch.vb</DependentUpon>
@@ -321,9 +335,11 @@
   <ItemGroup>
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="BugFound.resx">
       <DependentUpon>BugFound.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CheckNeeded.resx">
       <DependentUpon>CheckNeeded.vb</DependentUpon>
@@ -352,9 +368,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="iProperties.resx">
       <DependentUpon>iProperties.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Main.resx">
-      <DependentUpon>Main.vb</DependentUpon>
+    <EmbeddedResource Include="Main Form.resx">
+      <DependentUpon>Main Form.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -381,7 +398,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Batch_Program.X.manifest" />
     <None Include="ClassDiagram1.cd" />
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">
@@ -398,7 +414,6 @@
     <EmbeddedResource Include="Resources\addin.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Batch_Program.Addin" />
     <None Include="Resources\Splash.jpeg" />
     <None Include="Resources\btn_donate_LG.gif" />
     <None Include="Resources\About.JPG" />
@@ -449,6 +464,11 @@
   <Target Name="AfterCompile" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Exec Command="&quot;C:\Program Files (x86)\Windows Kits\10\bin\x86&quot; sign /f &quot;C:\temp\myPFX.pfx&quot; /p &quot;admin&quot; /v &quot;$(ProjectDir)obj\$(ConfigurationName)\$(TargetFileName)&quot;" />
   </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties BuildVersion_StartDate="2000/1/1" />
+    </VisualStudio>
+  </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

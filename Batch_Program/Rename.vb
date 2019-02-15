@@ -14,6 +14,7 @@ Public Class Rename
     'Dim _ExcelApp As New Excel.Application
     Dim _invapp As Inventor.Application
     Dim Time As System.DateTime = Now
+    Dim Main As New Main
     Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()

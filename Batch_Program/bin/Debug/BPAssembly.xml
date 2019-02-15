@@ -1,0 +1,261 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+BPAssembly
+</name>
+</assembly>
+<members>
+<member name="T:My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.About">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Batch_Program">
+<summary>
+  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Batch_Program___Beta">
+<summary>
+  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+</summary>
+</member>
+<member name="P:My.Resources.Resources.btn_donate_LG">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.BugFound">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Changelog">
+<summary>
+  Looks up a localized string similar to Items not currently functioning
+	- No tutorials yet
+	- Renaming function works but hasn&apos;t been thoroughly tested.
+
+Version 2.1.3.6 (01.22.19)
+	Resolved Issue #10
+
+Version 2.1.3.3 (01.01.09)
+	Revision table fixes
+	Resolved Issue #9
+
+Version 2.1.3.1 (12.20.18)
+	Fixed issue with hide completed revision button not functioning correctly
+
+Version 2.1.3.0 (12.11.18)
+	Added ability to delete/change childnodes in revtable
+	Added capability to modify varying revision tables
+
+Version 2.1.2.3 (12.03.1 [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.dwg">
+<summary>
+  Looks up a localized string similar to [EXPORT SELECT OPTIONS]
+AUTOCAD VERSION=AutoCAD 2010
+CREATE AUTOCAD MECHANICAL=No
+USE TRANSMITTAL=No
+USE CUSTOMIZE=No
+CUSTOMIZE FILE=C:\_Vault Working Folder\Designs\Templates\Design Data\DWG-DXF\FlatPattern.xml
+CREATE LAYER GROUP=No
+PARTS ONLY=No
+REPLACE SPLINE=No
+CHORD TOLERANCE=0.001000
+[EXPORT PROPERTIES]
+SELECTED PROPERTIES=
+[EXPORT DESTINATION]
+SPACE=Model
+SCALING=Geometry
+ALL SHEETS=Yes
+MAPPING=MapsBest
+MODEL GEOMETRY ONLY=No
+EXPLODE DIMENSIONS=No
+SYMBOLS ARE BLOCKED=Yes
+AUTOCAD T [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.DWGLN">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.DXF">
+<summary>
+  Looks up a localized string similar to [EXPORT SELECT OPTIONS]
+AUTOCAD VERSION=AutoCAD 2010
+CREATE AUTOCAD MECHANICAL=No
+USE TRANSMITTAL=No
+USE CUSTOMIZE=No
+CUSTOMIZE FILE=C:\Users\Public\Documents\Autodesk\Inventor 2013\Design Data\DWG-DXF\FlatPattern.xml
+CREATE LAYER GROUP=No
+PARTS ONLY=No
+REPLACE SPLINE=No
+CHORD TOLERANCE=0.001000
+[EXPORT PROPERTIES]
+SELECTED PROPERTIES=
+[EXPORT DESTINATION]
+SPACE=Model
+SCALING=Geometry
+ALL SHEETS=Yes
+MAPPING=MapsBest
+MODEL GEOMETRY ONLY=No
+EXPLODE DIMENSIONS=No
+SYMBOLS ARE BLOCKED=Yes
+AUT [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Get64BitPicture">
+<summary>
+  Looks up a localized string similar to Attribute VB_Name = &quot;Get64BitPicture&quot;
+Public Sub Thumbnail()
+On Error Resume Next
+Dim FSO As Object, TmpFolder As Object
+Set FSO = CreateObject(&quot;scripting.filesystemobject&quot;)
+Set TmpFolder = FSO.GetSpecialFolder(2)
+Dim strFilename As String: strFilename = TmpFolder &amp; &quot;\PartSource.txt&quot;
+Dim strTextLine As String
+Dim iFile As Integer: iFile = FreeFile
+        Open strFilename For Input As #iFile
+Do Until EOF(1)
+        Line Input #1, strTextLine
+Loop
+        Close #iFile
+&apos; Get the active document. [rest of string was truncated]&quot;;.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.inverse">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.inverse1">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.List_Blank">
+<summary>
+  Looks up a localized resource of type System.Byte[].
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Quote_Blank">
+<summary>
+  Looks up a localized resource of type System.Byte[].
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Rename">
+<summary>
+  Looks up a localized resource of type System.Byte[].
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Splash">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:MSVistaProgressBar.Value">
+ <summary>
+ The value that is displayed on the progress bar.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.MaxValue">
+ <summary>
+ The maximum value for the Value property.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.MinValue">
+ <summary>
+ The minimum value for the Value property.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.BarThresholds">
+ <summary>
+ The minimum value for the Value property.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.MarqueeSpeed">
+ <summary>
+ The color of the glow.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.BackgroundColor">
+ <summary>
+ The color of the background.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.BackgroundColor2">
+ <summary>
+ The color of the background.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.HighlightColor">
+ <summary>
+ The color of the highlights.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.TopHighlightColor">
+ <summary>
+ The color of the highlights.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.Animate">
+ <summary>
+ Whether the glow is animated.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.GlowColor">
+ <summary>
+ The color of the glow.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.GlowTmrInterval">
+ <summary>
+ The color of the glow.
+ </summary>
+</member>
+<member name="P:MSVistaProgressBar.GlowWhenFinished">
+ <summary>
+ Whether the glow is animated.
+ </summary>
+</member>
+<member name="T:MSVistaProgressBar.ValueChangedHandler">
+ When the Value property is changed.
+</member>
+<member name="E:MSVistaProgressBar.ValueChanged">
+ When the Value property is changed.
+</member>
+<member name="T:MSVistaProgressBar.MinChangedHandler">
+ When the MinValue property is changed.
+</member>
+<member name="E:MSVistaProgressBar.MinChanged">
+ When the MinValue property is changed.
+</member>
+<member name="T:MSVistaProgressBar.MaxChangedHandler">
+ When the MaxValue property is changed.
+</member>
+<member name="E:MSVistaProgressBar.MaxChanged">
+ When the MaxValue property is changed.
+</member>
+</members>
+</doc>

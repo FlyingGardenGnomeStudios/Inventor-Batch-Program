@@ -111,19 +111,25 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to 	Items not currently functioning
+        '''  Looks up a localized string similar to Items not currently functioning
         '''	- No tutorials yet
         '''	- Renaming function works but hasn&apos;t been thoroughly tested.
         '''
-        '''Version 2.1.1.8 (11.23.18)
-        '''	Minor UI tweaks
-        '''Version 2.1.1.7 (11.23.18)
-        '''	Improved search for drawing locations in referenced documents list
-        '''	High level debugging for spreadsheet creation
-        '''	Fixed bug where part would close after dxf creation
+        '''Version 2.1.3.6 (01.22.19)
+        '''	Resolved Issue #10
         '''
-        '''Version 2.1.1.1 (11.20.18)
-        '''	Merged Beta version with original.
+        '''Version 2.1.3.3 (01.01.09)
+        '''	Revision table fixes
+        '''	Resolved Issue #9
+        '''
+        '''Version 2.1.3.1 (12.20.18)
+        '''	Fixed issue with hide completed revision button not functioning correctly
+        '''
+        '''Version 2.1.3.0 (12.11.18)
+        '''	Added ability to delete/change childnodes in revtable
+        '''	Added capability to modify varying revision tables
+        '''
+        '''Version 2.1.2.3 (12.03.1 [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property Changelog() As String
             Get

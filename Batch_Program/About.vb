@@ -6,17 +6,11 @@ Public Class About
         InitializeComponent()
         Dim fecha As Date = IO.File.GetCreationTime(Assembly.GetExecutingAssembly().Location)
         lblCopyright.Text = My.Application.Info.Copyright
-        If My.Application.IsNetworkDeployed Then
-            With System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion
-                lblName.Text = "Inventor Batch Program " & .Major.ToString() & "." &
-                .Minor.ToString() & "." &
-                .Build.ToString() & "." &
-                .Revision.ToString() '& " Build Date: " & fecha.ToShortDateString.ToString
+        Dim AssemblyLocation = Assembly.GetExecutingAssembly().Location
+        Dim VersionNumber As String = System.Diagnostics.FileVersionInfo.GetVersionInfo(AssemblyLocation).FileVersion
 
-            End With
-        Else
-            lblPublish.Text = "Test Mode" & " Build Date: " & fecha.ToShortDateString.ToString
-        End If
+        lblPublish.Text = "Inventor Batch Program " & VersionNumber
+
 
     End Sub
 
