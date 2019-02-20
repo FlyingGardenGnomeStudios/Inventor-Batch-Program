@@ -1,0 +1,109 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+MSVistaPBar
+</name>
+</assembly>
+<members>
+<member name="T:MSVistaPBar.My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:MSVistaPBar.My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:MSVistaPBar.My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="P:MSVistaPBar.MSVistaProgressBar.Value">
+ <summary>
+ The value that is displayed on the progress bar.
+ </summary>
+</member>
+<member name="P:MSVistaPBar.MSVistaProgressBar.MaxValue">
+ <summary>
+ The maximum value for the Value property.
+ </summary>
+</member>
+<member name="P:MSVistaPBar.MSVistaProgressBar.MinValue">
+ <summary>
+ The minimum value for the Value property.
+ </summary>
+</member>
+<member name="P:MSVistaPBar.MSVistaProgressBar.BarThresholds">
+ <summary>
+ The minimum value for the Value property.
+ </summary>
+</member>
+<member name="P:MSVistaPBar.MSVistaProgressBar.MarqueeSpeed">
+ <summary>
+ The color of the glow.
+ </summary>
+</member>
+<member name="P:MSVistaPBar.MSVistaProgressBar.BackgroundColor">
+ <summary>
+ The color of the background.
+ </summary>
+</member>
+<member name="P:MSVistaPBar.MSVistaProgressBar.BackgroundColor2">
+ <summary>
+ The color of the background.
+ </summary>
+</member>
+<member name="P:MSVistaPBar.MSVistaProgressBar.HighlightColor">
+ <summary>
+ The color of the highlights.
+ </summary>
+</member>
+<member name="P:MSVistaPBar.MSVistaProgressBar.TopHighlightColor">
+ <summary>
+ The color of the highlights.
+ </summary>
+</member>
+<member name="P:MSVistaPBar.MSVistaProgressBar.Animate">
+ <summary>
+ Whether the glow is animated.
+ </summary>
+</member>
+<member name="P:MSVistaPBar.MSVistaProgressBar.GlowColor">
+ <summary>
+ The color of the glow.
+ </summary>
+</member>
+<member name="P:MSVistaPBar.MSVistaProgressBar.GlowTmrInterval">
+ <summary>
+ The color of the glow.
+ </summary>
+</member>
+<member name="P:MSVistaPBar.MSVistaProgressBar.GlowWhenFinished">
+ <summary>
+ Whether the glow is animated.
+ </summary>
+</member>
+<member name="T:MSVistaPBar.MSVistaProgressBar.ValueChangedHandler">
+ When the Value property is changed.
+</member>
+<member name="E:MSVistaPBar.MSVistaProgressBar.ValueChanged">
+ When the Value property is changed.
+</member>
+<member name="T:MSVistaPBar.MSVistaProgressBar.MinChangedHandler">
+ When the MinValue property is changed.
+</member>
+<member name="E:MSVistaPBar.MSVistaProgressBar.MinChanged">
+ When the MinValue property is changed.
+</member>
+<member name="T:MSVistaPBar.MSVistaProgressBar.MaxChangedHandler">
+ When the MaxValue property is changed.
+</member>
+<member name="E:MSVistaPBar.MSVistaProgressBar.MaxChanged">
+ When the MaxValue property is changed.
+</member>
+</members>
+</doc>

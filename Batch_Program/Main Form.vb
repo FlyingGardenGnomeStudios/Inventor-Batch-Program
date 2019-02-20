@@ -20,6 +20,7 @@ Public Class Main
     Dim CheckNeeded As CheckNeeded
     'Public CheckNeeded As CheckNeeded
     Public Settings As New Settings
+    ' Public GeneralSettings As New General_Settings
     Dim RenameTable As New List(Of List(Of String))
     Dim ThumbList As New List(Of Image)
     Dim OpenFiles As New List(Of KeyValuePair(Of String, String))
@@ -1266,7 +1267,7 @@ Public Class Main
             Threading.Thread.Sleep(1000)
         Loop
     End Sub
-    Private Sub TestForDrawing(Partsource As String, DrawingSource As String, ByVal Level As Integer, ByRef Total As Integer,
+    Private Sub TestForDrawing(ByRef Document As Document, Partsource As String, DrawingSource As String, ByVal Level As Integer, ByRef Total As Integer,
                                ByRef Counter As Integer, OpenDocs As ArrayList, ByRef Elog As String, Ref As Boolean)
         Dim Dup As Boolean = False
         Dim DrawingName As String
@@ -1294,12 +1295,18 @@ Public Class Main
         bgwUpdateSub.ReportProgress((Counter / Total) * 100, "Found: " & DrawingName)
         ' ProgressBar(Total, Counter, "Found: ", DrawingName)
         Dim Comments As String = ""
+
+
         If Not My.Computer.FileSystem.FileExists(Partsource) Then
-            Comments = "PPM"
+            If FindFile(Document, False) = "" Then
+                Comments = "PPM"
+            End If
         ElseIf Not My.Computer.FileSystem.FileExists(DrawingSource) Then
-            Comments = "DNE"
+            If FindFile(Document, True) = "" Then
+                Comments = "DNE"
+            End If
         ElseIf Ref = True Then
-            Comments = "REF"
+                Comments = "REF"
         End If
 
 
@@ -1319,6 +1326,55 @@ Public Class Main
             AddToSubfiles(Level, DrawingName, Partsource, Comments, DrawingSource, Elog, Counter)
         End If
     End Sub
+    Private Function FindFile(PartOrAssemblyDoc As Inventor.Document, Lookfordwg As Boolean)
+        Dim fullFilename As String = PartOrAssemblyDoc.FullFileName
+
+        ' Extract the path from the full filename. 
+        Dim path As String = System.IO.Path.GetFullPath(fullFilename)
+        Dim drawingFilename As String
+        ' Extract the filename from the full filename. 
+        Dim filename As String = System.IO.Path.GetFileNameWithoutExtension(fullFilename)
+        Dim invApp As Inventor.Application = PartOrAssemblyDoc.Parent
+        If Lookfordwg = True Then
+            ' Find if the dwg exists. 
+
+            drawingFilename = invApp.DesignProjectManager.ResolveFile(path, filename & ".idw")
+
+            ' Check the result. 
+            If drawingFilename = "" Then
+                ' Try again with idw extension. 
+                drawingFilename = invApp.DesignProjectManager.ResolveFile(path, filename & ".dwg")
+
+                ' Return the result. 
+                If drawingFilename <> "" Then
+                    Return drawingFilename
+                Else
+                    Return ""
+                End If
+            Else
+                ' Return the result. 
+                Return drawingFilename
+            End If
+        Else
+            drawingFilename = invApp.DesignProjectManager.ResolveFile(path, filename & ".ipt")
+
+            ' Check the result. 
+            If drawingFilename = "" Then
+                ' Try again with idw extension. 
+                drawingFilename = invApp.DesignProjectManager.ResolveFile(path, filename & ".iam")
+
+                ' Return the result. 
+                If drawingFilename <> "" Then
+                    Return drawingFilename
+                Else
+                    Return ""
+                End If
+            Else
+                ' Return the result. 
+                Return drawingFilename
+            End If
+        End If
+    End Function
     Private Sub AddToSubfiles(Level As String, DrawingName As String, Partsource As String, Comments As String, DrawingSource As String, Elog As String, ByRef Counter As Integer)
         Dim Dup As Boolean = False
         For i = 0 To SubfilesData.Rows.Count - 1
@@ -1350,7 +1406,7 @@ Public Class Main
         'AddtoRenameTable(Partsource, DrawingName, DrawingSource, True, "")
 
     End Sub
-    Private Sub CheckForDev(PartSource As String, ByRef Total As Integer, ByRef Counter As Integer, OpenDocs As ArrayList,
+    Private Sub CheckForDev(Document As Document, PartSource As String, ByRef Total As Integer, ByRef Counter As Integer, OpenDocs As ArrayList,
                             Elog As String, ByVal Level As Integer, ByRef Err As Boolean)
         If chkDerived.Checked = False Then Exit Sub
         Dim oAsmDoc As AssemblyDocument = Nothing
@@ -1379,7 +1435,7 @@ Public Class Main
 
                     TraverseAssembly(oAsmDoc.ComponentDefinition.Occurrences, PartSource, Level, Total, Counter, OpenDocs, Elog, True, Err)
                 Else
-                    TestForDrawing(PartSource, "", Level, Total, Counter, OpenDocs, Elog, False)
+                    TestForDrawing(Document, PartSource, "", Level, Total, Counter, OpenDocs, Elog, False)
                 End If
             Next
         End If
@@ -1387,7 +1443,7 @@ Public Class Main
     End Sub
     Private Sub TraverseAssemblyLoad(PartSource As String, Level As Integer, ByRef Total As Integer, ByRef Counter As Integer, Opendocs As ArrayList,
                                      ByRef Elog As String, ByRef Dev As Boolean, ByRef Err As Boolean)
-        Dim oAsmDoc As AssemblyDocument = Nothing
+        Dim oAsmDoc As Document = Nothing
         Dim strFile, DrawingName, ID As String
         Dim Add As String = "True"
         Dim RenameList As New List(Of String)
@@ -1425,7 +1481,7 @@ Public Class Main
         AddtoRenameTable(PartSource, DrawingName, strFile, Add, ID, Err)
         'End If
         'Check to see if the drawing exists and add to the list
-        TestForDrawing(PartSource, "", Level, Total, Counter, Opendocs, Elog, False)
+        TestForDrawing(oAsmDoc, PartSource, "", Level, Total, Counter, Opendocs, Elog, False)
         'If the part is an assembly, go through recursively and retrieve the sub-components
         ' Get all of the referenced documents. 
         Dim oRefDocs As DocumentsEnumerator
@@ -1467,7 +1523,7 @@ Public Class Main
                     'ProgressBar(Total, Counter, "Found:  ", DrawingName)
                     'FindWorker.ReportProgress(CInt((Counter / Total) * 100))
                     'Add to list if the drawing exists
-                    TestForDrawing(PartSource, "", Level, Total, Counter, OpenDocs, Elog, Ref)
+                    TestForDrawing(oOcc.Definition.Document, PartSource, "", Level, Total, Counter, OpenDocs, Elog, Ref)
                     'iterate through again for each sub-assembly found 
                     'Counter += 1
                     'Create a list of sub parts for use in the renaming section. this saves time having to recreate it again later.
@@ -1489,7 +1545,7 @@ Public Class Main
                         'Level += 1
                         TraverseAssembly(oOcc.SubOccurrences, PartSource, Level + 1, Total, Counter, OpenDocs, Elog, Dev, Err)
                     ElseIf oOcc.DefinitionDocumentType = DocumentTypeEnum.kPartDocumentObject Then
-                        CheckForDev(PartSource, Total, Counter, OpenDocs, Elog, Level + 1, Err)
+                        CheckForDev(oOcc.Definition.Document, PartSource, Total, Counter, OpenDocs, Elog, Level + 1, Err)
                     End If
 
                 Catch ex As Exception
@@ -1758,7 +1814,7 @@ Public Class Main
         Dim oPartDef As ComponentDefinition
         Dim PropSets As Inventor.PropertySets ', customPropSet, UserDefProps As Inventor.PropertySets
         Dim Process, StockNo, Material, PartNo, Description, Vendor, Length, Width, Thk, Title As String
-        Dim Area As String = ""
+        Dim Area As String = Nothing
         Dim Offset As Integer = 1
         Title = "Extracting"
         For Each Occ In Occurrences
@@ -1793,20 +1849,20 @@ Public Class Main
                         Try
                             Length = oPartDef.Parameters.Item("Length").Value / 30.48
                         Catch ex As Exception
-                            Length = ""
+                            Length = Nothing
                         End Try
                         Try
                             Width = oPartDef.Parameters.Item("Width").Value / 30.48
                         Catch ex As Exception
-                            Width = ""
+                            Width = Nothing
                         End Try
                         Try
                             Thk = oPartDef.Parameters.Item("Thickness").Value / 2.54
                         Catch ex As Exception
-                            Thk = ""
+                            Thk = Nothing
                         End Try
                         oDoc = _invApp.Documents.Open(Occ.Definition.Document.FullFileName, False)
-                        Dim sReadablefiletype As String = ""
+                        Dim sReadablefiletype As String = Nothing
                         SheetMetalTest(oDoc, sReadablefiletype)
                         If Process = "SC" AndAlso sReadablefiletype = "S" Then
                             Dim oDef As PartComponentDefinition = oDoc.componentdefinition
@@ -1839,7 +1895,7 @@ Public Class Main
 
                         If Process = "SC" Or Process = "EX" Then
                             ExcelDoc.Worksheets("Saw Cut").activate()
-                            Do Until ExcelDoc.ActiveSheet.Range("F" & Offset).Value = ""
+                            Do Until ExcelDoc.ActiveSheet.Range("F" & Offset).Value = Nothing
                                 Offset = Offset + 1
                                 If CStr(ExcelDoc.ActiveSheet.Range("F" & Offset).Value) = StockNo And
                                  CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = Material Then
@@ -1867,7 +1923,7 @@ Public Class Main
                             Loop
                             Offset = 1
                             ExcelDoc.Worksheets("Saw Cut Lengths").Activate()
-                            Do Until ExcelDoc.ActiveSheet.Range("C" & Offset).Value = ""
+                            Do Until ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Nothing
                                 Offset = Offset + 1
 
                                 If ExcelDoc.ActiveSheet.Range("C" & Offset).Value = Nothing Then
@@ -1882,14 +1938,14 @@ Public Class Main
                         ElseIf Process = "LC" Then
                             writeDebug("01")
                             ExcelDoc.Worksheets("Profile Cut").Activate()
-                            Do Until ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ""
+                            Do Until ExcelDoc.ActiveSheet.Range("D" & Offset).Value = Nothing
                                 Offset = Offset + 1
                                 writeDebug("1")
                                 If CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = StockNo Then
                                     writeDebug("2")
                                     ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + Area
                                     If InStrRev(ExcelDoc.ActiveSheet.Range("E" & Offset).Value, PartNo) = 0 And
-                                ExcelDoc.ActiveSheet.Range("E" & Offset).Value <> "" Then
+                                ExcelDoc.ActiveSheet.Range("E" & Offset).Value <> Nothing Then
                                         writeDebug("3")
                                         ExcelDoc.ActiveSheet.Range("E" & Offset).Value = ExcelDoc.ActiveSheet.Range("E" & Offset).Value & ", " & PartNo
                                     End If
@@ -1908,11 +1964,11 @@ Public Class Main
                             Loop
                         ElseIf Process = "HC" Then
                             ExcelDoc.Worksheets("Torch Cut").Activate()
-                            Do Until ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ""
+                            Do Until ExcelDoc.ActiveSheet.Range("D" & Offset).Value = Nothing
                                 Offset = Offset + 1
                                 If CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = StockNo Then
                                     ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + (Length * Width)
-                                    If InStrRev(ExcelDoc.ActiveSheet.Range("E" & Offset).Value, PartNo) = "" Then
+                                    If InStrRev(ExcelDoc.ActiveSheet.Range("E" & Offset).Value, PartNo) = Nothing Then
                                         ExcelDoc.ActiveSheet.Range("E" & Offset).Value = ExcelDoc.ActiveSheet.Range("E" & Offset).Value & ", " & PartNo
                                     End If
                                     Exit Do
@@ -1929,7 +1985,7 @@ Public Class Main
                             Loop
                         ElseIf Process = "PP" Then
                             ExcelDoc.Worksheets("Purchased Parts").Activate()
-                            Do Until ExcelDoc.ActiveSheet.Range("B" & Offset).Value = ""
+                            Do Until ExcelDoc.ActiveSheet.Range("B" & Offset).Value = Nothing
                                 Offset = Offset + 1
                                 If CStr(ExcelDoc.ActiveSheet.Range("B" & Offset).Value) = Description And
                             CStr(ExcelDoc.ActiveSheet.Range("D" & Offset).Value) = PartNo Then
@@ -1945,16 +2001,16 @@ Public Class Main
                                     'MsgBox "Jump to next line"
                                 End If
                             Loop
-                        ElseIf Process = "" And Occ.DefinitionDocumentType = DocumentTypeEnum.kPartDocumentObject Then
+                        ElseIf Process = Nothing And Occ.DefinitionDocumentType = DocumentTypeEnum.kPartDocumentObject Then
                             ExcelDoc.Worksheets("Other Parts").Activate()
-                            Do Until ExcelDoc.ActiveSheet.Range("B" & Offset).Value = ""
+                            Do Until ExcelDoc.ActiveSheet.Range("B" & Offset).Value = Nothing
                                 Offset = Offset + 1
-                                If CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = Description AndAlso Not Description = "" Then
+                                If CStr(ExcelDoc.ActiveSheet.Range("E" & Offset).Value) = Description AndAlso Not Description = Nothing Then
                                     ExcelDoc.ActiveSheet.Range("A" & Offset).Value = ExcelDoc.ActiveSheet.Range("A" & Offset).Value + 1
                                     ExcelDoc.ActiveSheet.Range("B" & Offset).Value = ExcelDoc.ActiveSheet.Range("B" & Offset).Value + (Length)
                                     'ExcelDoc.ActiveSheet.Range("D" & Offset).Value = ExcelDoc.ActiveSheet.Range("D" & Offset).Value + (Length * Width)
                                     Dim AddPart As String = ExcelDoc.ActiveSheet.Range("G" & Offset).Value
-                                    If AddPart.Contains(PartNo) AndAlso ExcelDoc.ActiveSheet.Range("G" & Offset).Value <> "" Then
+                                    If AddPart.Contains(PartNo) AndAlso ExcelDoc.ActiveSheet.Range("G" & Offset).Value <> Nothing Then
                                         ExcelDoc.ActiveSheet.Range("G" & Offset).Value = ExcelDoc.ActiveSheet.Range("G" & Offset).Value & ", " & PartNo
                                     End If
                                     Exit Do
@@ -2004,45 +2060,45 @@ Public Class Main
         Dim oProfile As Profile = Nothing
         Dim dArea As Double = Nothing
         oTransaction = _invApp.TransactionManager.StartTransaction(oDoc, "Find area")
-        Try
-            oSketch = oFlatPattern.Sketches.Add(oFlatPattern.TopFace)
-            Try
-                For Each oEdgeLoop In oFlatPattern.TopFace.EdgeLoops
-                    If oEdgeLoop.IsOuterEdgeLoop Then
-                        Dim oEdge As Edge
-                        For Each oEdge In oEdgeLoop.Edges
-                            Call oSketch.AddByProjectingEntity(oEdge)
-                        Next
-                        Exit For
-                    End If
-                Next
-                Try
-                    oProfile = oSketch.Profiles.AddForSolid
-                Catch ex As Exception
-                    writeDebug("Error calculating area" & vbNewLine &
-                               "Failure to create perimiter profile " & oDoc.DisplayName)
-                    writeDebug(ex.Message)
-                    oTransaction.Abort()
-                    Abort = True
-                End Try
-            Catch ex As Exception
-                writeDebug("Error calculating area" & vbNewLine &
-                                "Failure to find perimeter edge " & oDoc.DisplayName)
-                Abort = True
-            End Try
-        Catch ex As Exception
-            writeDebug("Error calculating area" & vbNewLine &
-                            "Failure to create sketch in flat pattern on " & oDoc.DisplayName)
-            Abort = True
-        Finally
-            If Abort = True Then
-                dArea = Backup_Area_Calculate(oDoc)
-                writeDebug("Area re-computed with hole compensation")
-            Else
-                dArea = oProfile.RegionProperties.Area
-            End If
-            AreaCalculate = dArea / (2.54 ^ 2) / 144
-        End Try
+        'Try
+        '    oSketch = oFlatPattern.Sketches.Add(oFlatPattern.TopFace)
+        '    Try
+        '        For Each oEdgeLoop In oFlatPattern.TopFace.EdgeLoops
+        '            If oEdgeLoop.IsOuterEdgeLoop Then
+        '                Dim oEdge As Edge
+        '                For Each oEdge In oEdgeLoop.Edges
+        '                    Call oSketch.AddByProjectingEntity(oEdge)
+        '                Next
+        '                Exit For
+        '            End If
+        '        Next
+        '        Try
+        '            oProfile = oSketch.Profiles.AddForSolid
+        '        Catch ex As Exception
+        '            writeDebug("Error calculating area" & vbNewLine &
+        '                       "Failure to create perimiter profile " & oDoc.DisplayName)
+        '            writeDebug(ex.Message)
+        '            oTransaction.Abort()
+        '            Abort = True
+        '        End Try
+        '    Catch ex As Exception
+        '        writeDebug("Error calculating area" & vbNewLine &
+        '                        "Failure to find perimeter edge " & oDoc.DisplayName)
+        '        Abort = True
+        '    End Try
+        'Catch ex As Exception
+        '    writeDebug("Error calculating area" & vbNewLine &
+        '                    "Failure to create sketch in flat pattern on " & oDoc.DisplayName)
+        '    Abort = True
+        'Finally
+        If Abort = True Then
+            dArea = Backup_Area_Calculate(oDoc)
+            writeDebug("Area re-computed with hole compensation")
+        Else
+            dArea = oProfile.RegionProperties.Area
+        End If
+        AreaCalculate = dArea / (2.54 ^ 2) / 144
+        'End Try
         Return AreaCalculate
 
     End Function
@@ -3030,24 +3086,21 @@ Public Class Main
         Dim About As New About
         About.ShowDialog()
     End Sub
-    Private Sub IPropertySettingsToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        Dim iPropertySettings As New iPropertySettings
-        iPropertySettings.ShowDialog()
-    End Sub
+
     Private Sub HowToToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles HowToToolStripMenuItem1.Click
         System.IO.File.WriteAllText(My.Computer.FileSystem.SpecialDirectories.Temp & "\changelog.txt", My.Resources.Changelog)
         Process.Start(My.Computer.FileSystem.SpecialDirectories.Temp & "\changelog.txt")
     End Sub
-    Private Sub DefaultSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DefaultSettingsToolStripMenuItem.Click
+    Private Sub DefaultSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs)
+        Settings.ShowDialog()
+    End Sub
+    Private Sub GeneralSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GeneralSettingsToolStripMenuItem.Click
         Settings.ShowDialog()
     End Sub
     Private Sub TutorialsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TutorialsToolStripMenuItem.Click
         Process.Start("https://www.youtube.com/playlist?list=PL5Jsz3IKLQ40-UCC4Fkm6WmQ9hINzAzEw")
     End Sub
-    Private Sub RevTableSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RevTableSettingsToolStripMenuItem.Click
-        Dim RevTableSettings As New Rev_Table_Settings
-        RevTableSettings.ShowDialog()
-    End Sub
+
 #End Region
 #Region "Background Workers"
     Private Sub FormBusy(ByRef FormBusy As Boolean)
@@ -3248,7 +3301,7 @@ Public Class Main
             If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, Row.index).Value = True Then
                 If Strings.InStr(dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, Row.index).Value, "idw") <> 0 Then
                     oDoc = _invApp.Documents.ItemByName(dgvOpenFiles(dgvOpenFiles.Columns("PartLocation").Index, Row.index).Value)
-                    TestForDrawing(dgvOpenFiles(dgvOpenFiles.Columns("PartLocation").Index, Row.index).Value, dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, Row.index).Value, 0, Total, Counter, OpenDocs, Elog, False)
+                    TestForDrawing(oDoc, dgvOpenFiles(dgvOpenFiles.Columns("PartLocation").Index, Row.index).Value, dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, Row.index).Value, 0, Total, Counter, OpenDocs, Elog, False)
                     'dgvSubFiles.Rows.Add(New String() {True,
                     '                         dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, Row.index).Value,
                     '                         dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, Row.index).Value,
@@ -3264,12 +3317,12 @@ Public Class Main
                     'oDoc = _invApp.Documents.ItemByName(OpenFiles.Item(lstOpenFiles.Items.IndexOf(lstOpenFiles.CheckedItems(X))).Value)
                     PartSource = oDoc.FullFileName
                     If oDoc.DocumentType = DocumentTypeEnum.kDrawingDocumentObject Then
-                        TestForDrawing(PartSource, "", 0, Total, Counter, OpenDocs, Elog, False)
+                        TestForDrawing(oDoc, PartSource, "", 0, Total, Counter, OpenDocs, Elog, False)
                         'Part/Presentation documents require a search for the associated drawings
                     ElseIf oDoc.DocumentType = DocumentTypeEnum.kPartDocumentObject Or oDoc.DocumentType = DocumentTypeEnum.kPresentationDocumentObject Then
                         'Test to see if assumed drawing name exists
-                        TestForDrawing(PartSource, "", 0, Total, Counter, OpenDocs, Elog, False)
-                        CheckForDev(PartSource, Total, Counter, OpenDocs, Elog, Level + 1, Err)
+                        TestForDrawing(oDoc, PartSource, "", 0, Total, Counter, OpenDocs, Elog, False)
+                        CheckForDev(oDoc, PartSource, Total, Counter, OpenDocs, Elog, Level + 1, Err)
                         'Assembly documents require a search for subfiles
                     ElseIf oDoc.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
                         'Total = Total + oDoc.ReferencedDocuments.Count 
@@ -3338,11 +3391,11 @@ Public Class Main
             End If
             dgvSubFiles.Rows.Add(New String() {True, Space(SubfilesData.Rows(i).Item(0) * 3) & SubfilesData.Rows(i).Item(1), SubfilesData.Rows(i).Item(1), SubfilesData.Rows(i).Item(2), SubfilesData.Rows(i).Item(3), SubfilesData.Rows(i).Item(4), dgvSubFiles.RowCount})
             If SubfilesData.Rows(i).Item(4) = "PPM" Then
-                dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = Drawing.Color.Red
+                dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = My.Settings.PPM
             ElseIf SubfilesData.Rows(i).Item(4) = "DNE" Then
-                dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = Drawing.Color.Gray
+                dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = My.Settings.DNE
             ElseIf SubfilesData.Rows(i).Item(4) = "REF" Then
-                dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = Drawing.Color.Blue
+                dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = My.Settings.REF
             End If
         Next
         If dgvSubFiles.Controls.OfType(Of VScrollBar).SingleOrDefault.Visible = False Then
@@ -3556,7 +3609,7 @@ Public Class Main
                             IO.File.WriteAllBytes(IO.Path.Combine(IO.Path.GetTempPath, "Quote-Blank.xlsm"), My.Resources.Quote_Blank)
                             Dim xlPath = IO.Path.Combine(IO.Path.GetTempPath, "List-Blank.xlsm")
                             _ExcelApp.Workbooks.Open(xlPath)
-                            _ExcelApp.Visible = False
+                            _ExcelApp.Visible = True
                             ExcelDoc = _ExcelApp.ActiveWorkbook
                             'ShowParameters(oDoc)
                             GetProperties(oDoc, AsmDef.Occurrences, 0, 0, ExcelDoc, Total)
@@ -4086,5 +4139,7 @@ Public Class Main
             End If
         Next
     End Sub
+
+
 #End Region
 End Class

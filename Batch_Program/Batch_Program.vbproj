@@ -8,12 +8,12 @@
     <SchemaVersion>
     </SchemaVersion>
     <ProjectGuid>{90389654-6354-46DD-98BE-679E86D8F19B}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>
     </RootNamespace>
     <AssemblyName>BPAssembly</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>Windows</MyType>
+    <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>true</IsWebBootstrapper>
@@ -118,8 +118,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>My.MyApplication</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>BDAC8D2DFC4A460EB6DBA68E428A40FC4C63DBA4</ManifestCertificateThumbprint>
@@ -161,6 +160,9 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="MSVistaPBar">
+      <HintPath>..\MSVistaPBar\MSVistaPBar\bin\Debug\MSVistaPBar.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -222,12 +224,6 @@
     <Compile Include="Overwrite.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Rev Table Settings.Designer.vb">
-      <DependentUpon>Rev Table Settings.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Rev Table Settings.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Select Template.Designer.vb">
       <DependentUpon>Select Template.vb</DependentUpon>
     </Compile>
@@ -238,12 +234,6 @@
       <DependentUpon>Warning.vb</DependentUpon>
     </Compile>
     <Compile Include="Warning.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="iPropertySettings.Designer.vb">
-      <DependentUpon>iPropertySettings.vb</DependentUpon>
-    </Compile>
-    <Compile Include="iPropertySettings.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\Resources2.Designer.vb">
@@ -348,17 +338,11 @@
     <EmbeddedResource Include="Overwrite.resx">
       <DependentUpon>Overwrite.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Rev Table Settings.resx">
-      <DependentUpon>Rev Table Settings.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Select Template.resx">
       <DependentUpon>Select Template.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Warning.resx">
       <DependentUpon>Warning.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="iPropertySettings.resx">
-      <DependentUpon>iPropertySettings.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Print Size.resx">
       <DependentUpon>Print Size.vb</DependentUpon>

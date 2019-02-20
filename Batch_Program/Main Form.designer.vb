@@ -101,8 +101,7 @@ Partial Class Main
         Me.gbxUtilities = New System.Windows.Forms.GroupBox()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DefaultSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RevTableSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GeneralSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutBatchProgramToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuActDeact = New System.Windows.Forms.ToolStripMenuItem()
@@ -125,7 +124,7 @@ Partial Class Main
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.pgbMain = New MSVistaProgressBar()
+        Me.pgbMain = New MSVistaPBar.MSVistaProgressBar()
         Me.gbxSelection.SuspendLayout()
         Me.gbxOpen.SuspendLayout()
         CType(Me.dgvOpenFiles, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -714,19 +713,19 @@ Partial Class Main
         '
         Me.CMSSubFiles.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SortToolStripMenuItem, Me.ShowHideToolStripMenuItem, Me.ExportToToolStripMenuItem})
         Me.CMSSubFiles.Name = "ContextMenuStrip1"
-        Me.CMSSubFiles.Size = New System.Drawing.Size(153, 92)
+        Me.CMSSubFiles.Size = New System.Drawing.Size(134, 70)
         '
         'SortToolStripMenuItem
         '
         Me.SortToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSAlphabetical, Me.CMSHeirarchical})
         Me.SortToolStripMenuItem.Name = "SortToolStripMenuItem"
-        Me.SortToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.SortToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
         Me.SortToolStripMenuItem.Text = "Sort"
         '
         'CMSAlphabetical
         '
         Me.CMSAlphabetical.Name = "CMSAlphabetical"
-        Me.CMSAlphabetical.Size = New System.Drawing.Size(152, 22)
+        Me.CMSAlphabetical.Size = New System.Drawing.Size(140, 22)
         Me.CMSAlphabetical.Text = "Alphabetical"
         '
         'CMSHeirarchical
@@ -734,14 +733,14 @@ Partial Class Main
         Me.CMSHeirarchical.Checked = True
         Me.CMSHeirarchical.CheckState = System.Windows.Forms.CheckState.Checked
         Me.CMSHeirarchical.Name = "CMSHeirarchical"
-        Me.CMSHeirarchical.Size = New System.Drawing.Size(152, 22)
+        Me.CMSHeirarchical.Size = New System.Drawing.Size(140, 22)
         Me.CMSHeirarchical.Text = "Hierarchical"
         '
         'ShowHideToolStripMenuItem
         '
         Me.ShowHideToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSMissingDWG, Me.CMSMissingParts, Me.CMSReference})
         Me.ShowHideToolStripMenuItem.Name = "ShowHideToolStripMenuItem"
-        Me.ShowHideToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ShowHideToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
         Me.ShowHideToolStripMenuItem.Text = "Show/Hide"
         '
         'CMSMissingDWG
@@ -766,7 +765,7 @@ Partial Class Main
         '
         Me.ExportToToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CMSSubSpreadsheet, Me.CMSSubText})
         Me.ExportToToolStripMenuItem.Name = "ExportToToolStripMenuItem"
-        Me.ExportToToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ExportToToolStripMenuItem.Size = New System.Drawing.Size(133, 22)
         Me.ExportToToolStripMenuItem.Text = "Export To"
         '
         'CMSSubSpreadsheet
@@ -920,22 +919,16 @@ Partial Class Main
         '
         'FileToolStripMenuItem
         '
-        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DefaultSettingsToolStripMenuItem, Me.RevTableSettingsToolStripMenuItem})
+        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GeneralSettingsToolStripMenuItem})
         Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
         Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
         Me.FileToolStripMenuItem.Text = "File"
         '
-        'DefaultSettingsToolStripMenuItem
+        'GeneralSettingsToolStripMenuItem
         '
-        Me.DefaultSettingsToolStripMenuItem.Name = "DefaultSettingsToolStripMenuItem"
-        Me.DefaultSettingsToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
-        Me.DefaultSettingsToolStripMenuItem.Text = "Export Settings"
-        '
-        'RevTableSettingsToolStripMenuItem
-        '
-        Me.RevTableSettingsToolStripMenuItem.Name = "RevTableSettingsToolStripMenuItem"
-        Me.RevTableSettingsToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
-        Me.RevTableSettingsToolStripMenuItem.Text = "Rev Table Settings"
+        Me.GeneralSettingsToolStripMenuItem.Name = "GeneralSettingsToolStripMenuItem"
+        Me.GeneralSettingsToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.GeneralSettingsToolStripMenuItem.Text = "Settings"
         '
         'AboutToolStripMenuItem
         '
@@ -1125,12 +1118,12 @@ Partial Class Main
         Me.pgbMain.DisplayText = "%P%"
         Me.pgbMain.DisplayTextColor = System.Drawing.SystemColors.ControlText
         Me.pgbMain.DisplayTextFont = New System.Drawing.Font("Arial", 8.0!)
-        Me.pgbMain.GradiantStyle = MSVistaProgressBar.BackGradiant.None
-        Me.pgbMain.Location = New System.Drawing.Point(12, 247)
+        Me.pgbMain.GradiantStyle = MSVistaPBar.MSVistaProgressBar.BackGradiant.None
+        Me.pgbMain.Location = New System.Drawing.Point(18, 246)
         Me.pgbMain.Name = "pgbMain"
         Me.pgbMain.ShowText = True
-        Me.pgbMain.Size = New System.Drawing.Size(536, 23)
-        Me.pgbMain.TabIndex = 62
+        Me.pgbMain.Size = New System.Drawing.Size(543, 23)
+        Me.pgbMain.TabIndex = 64
         Me.pgbMain.Visible = False
         '
         'Main
@@ -1139,8 +1132,8 @@ Partial Class Main
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Control
         Me.ClientSize = New System.Drawing.Size(746, 277)
-        Me.Controls.Add(Me.gbxParts)
         Me.Controls.Add(Me.pgbMain)
+        Me.Controls.Add(Me.gbxParts)
         Me.Controls.Add(Me.MenuStrip1)
         Me.Controls.Add(Me.PictureBox2)
         Me.Controls.Add(Me.gbxDrawings)
@@ -1204,7 +1197,6 @@ Partial Class Main
     Friend WithEvents gbxSub As System.Windows.Forms.GroupBox
     Friend WithEvents tmr As System.Windows.Forms.Timer
     Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
-    Friend WithEvents pgbMain As MSVistaProgressBar
     Friend WithEvents txtSearch As System.Windows.Forms.TextBox
     Friend WithEvents chkDWG As Windows.Forms.CheckBox
     Friend WithEvents chkPDF As Windows.Forms.CheckBox
@@ -1233,7 +1225,6 @@ Partial Class Main
     Friend WithEvents CMSMissingDWG As Windows.Forms.ToolStripMenuItem
     Friend WithEvents MenuStrip1 As Windows.Forms.MenuStrip
     Friend WithEvents FileToolStripMenuItem As Windows.Forms.ToolStripMenuItem
-    Friend WithEvents DefaultSettingsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents AboutToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents AboutBatchProgramToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuActDeact As Windows.Forms.ToolStripMenuItem
@@ -1245,7 +1236,6 @@ Partial Class Main
     Friend WithEvents IFoundABugToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents CMSMissingParts As Windows.Forms.ToolStripMenuItem
     Friend WithEvents TutorialsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
-    Friend WithEvents RevTableSettingsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
     Friend WithEvents dgvSubFiles As Windows.Forms.DataGridView
     Friend WithEvents dgvOpenFiles As Windows.Forms.DataGridView
     Friend WithEvents DataGridViewTextBoxColumn1 As Windows.Forms.DataGridViewTextBoxColumn
@@ -1284,4 +1274,6 @@ Partial Class Main
     Friend WithEvents Comments As Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Order As Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents btnCreateDwg As Windows.Forms.Button
+    Friend WithEvents pgbMain As MSVistaPBar.MSVistaProgressBar
+    Friend WithEvents GeneralSettingsToolStripMenuItem As Windows.Forms.ToolStripMenuItem
 End Class

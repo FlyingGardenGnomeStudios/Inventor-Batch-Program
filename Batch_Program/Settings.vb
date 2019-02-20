@@ -1,13 +1,13 @@
 ﻿Imports System.Windows.Forms
 Imports System.Text.RegularExpressions
-
+#Region "Export Settings"
 Public Class Settings
-    Dim Main As Main
-    Dim Settings As Settings
-
+    Private RowIndex As Integer = 0
     Public Sub New()
         InitializeComponent()
         LoadFormValues()
+        LoadGeneralsettings()
+        LoadRevTableSettings()
     End Sub
     Private Sub LoadFormValues()
         If My.Settings.PDFSaveNewLoc = True Then
@@ -94,7 +94,6 @@ Public Class Settings
             If txtPDFTag.Text = "" Then txtPDFTag.Text = "ex: \Drawings\PDF"
         End If
     End Sub
-
     Private Sub rdoPDFChoose_CheckedChanged(sender As Object, e As EventArgs) Handles rdoPDFChoose.CheckedChanged
         If rdoPDFChoose.Checked = True Then
             rdoPDFTag.Checked = False
@@ -132,7 +131,6 @@ Public Class Settings
             If txtDXFTag.Text = "" Then txtDXFTag.Text = "ex: \Drawings\DXF"
         End If
     End Sub
-
     Private Sub rdoDXFSub_CheckedChanged(sender As Object, e As EventArgs) Handles rdoDXFTag.CheckedChanged
         If rdoDXFTag.Checked = True Then
             rdoDXFChoose.Checked = False
@@ -142,7 +140,6 @@ Public Class Settings
             If txtDXFTag.Text.Contains("ex:") Then txtDXFTag.Text = ""
         End If
     End Sub
-
     Private Sub rdoDWGChoose_CheckedChanged(sender As Object, e As EventArgs) Handles rdoDWGChoose.CheckedChanged
         If rdoDWGChoose.Checked = True Then
             rdoDWGSaveLoc.Checked = False
@@ -161,7 +158,6 @@ Public Class Settings
             If txtDWGTag.Text = "" Then txtDWGTag.Text = "ex: \Drawings\DWG"
         End If
     End Sub
-
     Private Sub rdoDWGSub_CheckedChanged(sender As Object, e As EventArgs) Handles rdoDWGTag.CheckedChanged
         If rdoDWGTag.Checked = True Then
             rdoDWGChoose.Checked = False
@@ -171,13 +167,13 @@ Public Class Settings
             If txtDWGTag.Text.Contains("ex:") Then txtDWGTag.Text = ""
         End If
     End Sub
-
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         LoadFormValues()
         Me.Close()
     End Sub
-
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
+
+
         If rdoPDFSaveLoc.Checked = True Then
             My.Settings.PDFSaveLoc = txtPDFSaveLoc.Text
             My.Settings.PDFSaveNewLoc = True
@@ -293,8 +289,14 @@ Public Class Settings
         My.Settings.PDFRes = numRes.Value
         My.Settings.Save()
         Me.Close()
+        If rdoStrict.Checked = True Then
+            My.Settings.StrictSearch = True
+        Else
+            My.Settings.StrictSearch = False
+        End If
+        My.Settings.Save()
+        Me.Close()
     End Sub
-
     Private Sub btnPDFLocBrowse_Click(sender As Object, e As EventArgs) Handles btnPDFLocBrowse.Click
         Dim Folder As FolderBrowserDialog = New FolderBrowserDialog
         Folder.Description = "Choose the location you wish to save To"
@@ -309,7 +311,6 @@ Public Class Settings
             MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End Try
     End Sub
-
     Private Sub btnDXFLocBrowse_Click(sender As Object, e As EventArgs) Handles btnDXFLocBrowse.Click
         Dim Folder As FolderBrowserDialog = New FolderBrowserDialog
         Folder.Description = "Choose the location you wish to save To"
@@ -324,7 +325,6 @@ Public Class Settings
             MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End Try
     End Sub
-
     Private Sub btnDWGBrowse_Click(sender As Object, e As EventArgs) Handles btnDWGBrowse.Click
         Dim Folder As FolderBrowserDialog = New FolderBrowserDialog
         Folder.Description = "Choose the location you wish To save To"
@@ -342,17 +342,12 @@ Public Class Settings
     Private Function IsAlphaNum(ByVal strInputText As String) As Boolean
         Dim IsAlpha As Boolean = False
         If System.Text.RegularExpressions.Regex.IsMatch(strInputText, "^[a-zA-Z0-9-\\]+$") Then
-                IsAlpha = True
-            Else
-                IsAlpha = False
+            IsAlpha = True
+        Else
+            IsAlpha = False
         End If
         Return IsAlpha
     End Function
-
-    Private Sub tabPDF_Click(sender As Object, e As EventArgs) Handles tabPDF.Click
-
-    End Sub
-
     Private Sub chkCustDWGini_CheckedChanged(sender As Object, e As EventArgs) Handles chkCustDWGini.CheckedChanged
         If chkCustDWGini.Checked = True Then
             txtCustDWGini.Enabled = True
@@ -362,7 +357,6 @@ Public Class Settings
             btnDWGiniBrowse.Enabled = False
         End If
     End Sub
-
     Private Sub btnDWGiniBrowse_Click(sender As Object, e As EventArgs) Handles btnDWGiniBrowse.Click
         Dim Folder As OpenFileDialog = New OpenFileDialog
         Folder.Title = "Choose the location of the .ini file"
@@ -379,7 +373,6 @@ Public Class Settings
             MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End Try
     End Sub
-
     Private Sub chkDXFCustini_CheckedChanged(sender As Object, e As EventArgs) Handles chkCustDXFini.CheckedChanged
         If chkCustDXFini.Checked = True Then
             txtCustDXFini.Enabled = True
@@ -389,7 +382,6 @@ Public Class Settings
             btnDXFiniBrowse.Enabled = False
         End If
     End Sub
-
     Private Sub btnDXFiniBrowse_Click(sender As Object, e As EventArgs) Handles btnDXFiniBrowse.Click
         Dim Folder As OpenFileDialog = New OpenFileDialog
         Folder.Title = "Choose the location of the .ini file"
@@ -406,4 +398,209 @@ Public Class Settings
             MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End Try
     End Sub
+    Private Sub RefColour_ItemActivate(sender As Object, e As EventArgs) Handles RefColour.ItemActivate
+        Dim cDialog As New ColorDialog()
+        Dim Index As Integer = RefColour.FocusedItem.Index
+        cDialog.Color = RefColour.Items.Item(Index).ForeColor ' initial selection is current color.
+
+        If (cDialog.ShowDialog() = DialogResult.OK) Then
+            RefColour.Items.Item(Index).ForeColor = cDialog.Color ' update with user selected color.
+        End If
+        Select Case Index
+            Case 0
+                My.Settings.REF = cDialog.Color
+            Case 1
+                My.Settings.DNE = cDialog.Color
+            Case 2
+                My.Settings.PPM = cDialog.Color
+        End Select
+
+        RefColour.SelectedItems.Clear()
+    End Sub
+    Private Sub LoadGeneralsettings()
+        RefColour.Items.Item(0).ForeColor = My.Settings.REF
+        RefColour.Items.Item(1).ForeColor = My.Settings.DNE
+        RefColour.Items.Item(2).ForeColor = My.Settings.PPM
+        If My.Settings.StrictSearch = False Then
+            rdoLoose.Checked = True
+            rdoStrict.Checked = False
+        Else
+            rdoStrict.Checked = True
+            rdoLoose.Checked = False
+        End If
+    End Sub
+    Public Sub LoadRevTableSettings()
+
+        dgvRevTableLayout.Rows.Add(My.Settings.RTSCheckedBy, "Checked By", "Sheet iProperty", "Text")
+        dgvRevTableLayout.Rows.Add(My.Settings.RTSCheckedDate, "Check Date", "Sheet iProperty", "Date")
+        dgvRevTableLayout.Rows.Add(My.Settings.RTSRev, "Revision Number", My.Settings.RTSRevCol, "Number")
+        dgvRevTableLayout.Rows.Add(My.Settings.RTSDate, "Revision Date", My.Settings.RTSDateCol, "Date")
+        dgvRevTableLayout.Rows.Add(My.Settings.RTSDesc, "Revision Description", My.Settings.RTSDescCol, "Text")
+        dgvRevTableLayout.Rows.Add(My.Settings.RTSName, "Revision By", My.Settings.RTSNameCol, "Text")
+        dgvRevTableLayout.Rows.Add(My.Settings.RTSApproved, "Revision Approved", My.Settings.RTSApprovedCol, "Text")
+        For column = 0 To dgvRevTableLayout.Columns.Count - 1
+            For Row = 0 To 1
+                If column <> 0 Then
+                    dgvRevTableLayout(column, Row).ReadOnly = True
+                    dgvRevTableLayout(column, Row).Style.BackColor = Drawing.Color.LightGray
+                End If
+            Next
+            For row = 2 To dgvRevTableLayout.Rows.Count - 2
+                If column <> 0 AndAlso column <> 2 Then
+                    dgvRevTableLayout(column, row).ReadOnly = True
+                    dgvRevTableLayout(column, row).Style.BackColor = Drawing.Color.LightGray
+                End If
+            Next
+        Next
+        If My.Settings.RTS1Item <> "" Then dgvRevTableLayout.Rows.Add(My.Settings.RTS1, My.Settings.RTS1Item, My.Settings.RTS1Col, My.Settings.RTS1Value)
+        If My.Settings.RTS2Item <> "" Then dgvRevTableLayout.Rows.Add(My.Settings.RTS2, My.Settings.RTS2Item, My.Settings.RTS2Col, My.Settings.RTS2Value)
+        If My.Settings.RTS3Item <> "" Then dgvRevTableLayout.Rows.Add(My.Settings.RTS3, My.Settings.RTS3Item, My.Settings.RTS3Col, My.Settings.RTS3Value)
+        If My.Settings.RTS4Item <> "" Then dgvRevTableLayout.Rows.Add(My.Settings.RTS4, My.Settings.RTS4Item, My.Settings.RTS4Col, My.Settings.RTS4Value)
+        If My.Settings.RTS5Item <> "" Then dgvRevTableLayout.Rows.Add(My.Settings.RTS5, My.Settings.RTS5Item, My.Settings.RTS5Col, My.Settings.RTS5Value)
+        txtNumRev.Text = My.Settings.NumRev
+        txtAlphaRev.Text = My.Settings.AlphaRev
+        nudStartVal.Value = My.Settings.StartVal
+        Select Case My.Settings.DefRevLoc
+            Case "BL"
+                rdbBL.Checked = True
+            Case "BR"
+                rdbBR.Checked = True
+            Case "TL"
+                rdbTL.Checked = True
+            Case "TR"
+                rdbTR.Checked = True
+        End Select
+    End Sub
+    Public Sub RevTableOK()
+        For Row = 2 To 10
+            Select Case Row - 2
+                Case 0
+                    My.Settings.RTSRev = dgvRevTableLayout(0, Row).Value
+                    My.Settings.RTSRevCol = dgvRevTableLayout(2, Row).Value
+                Case 1
+                    My.Settings.RTSDate = dgvRevTableLayout(0, Row).Value
+                    My.Settings.RTSDateCol = dgvRevTableLayout(2, Row).Value
+                Case 2
+                    My.Settings.RTSDesc = dgvRevTableLayout(0, Row).Value
+                    My.Settings.RTSDescCol = dgvRevTableLayout(2, Row).Value
+                Case 3
+                    My.Settings.RTSName = dgvRevTableLayout(0, Row).Value
+                    My.Settings.RTSNameCol = dgvRevTableLayout(2, Row).Value
+                Case 4
+                    My.Settings.RTSApproved = dgvRevTableLayout(0, Row).Value
+                    My.Settings.RTSApprovedCol = dgvRevTableLayout(2, Row).Value
+                Case 5
+                    Try
+                        My.Settings.RTS1 = dgvRevTableLayout(0, Row).Value
+                        My.Settings.RTS1Item = dgvRevTableLayout(1, Row).Value
+                        My.Settings.RTS1Col = dgvRevTableLayout(2, Row).Value
+                        My.Settings.RTS1Value = dgvRevTableLayout(3, Row).Value
+                    Catch
+                        My.Settings.RTS1 = False
+                        My.Settings.RTS1Item = Nothing
+                        My.Settings.RTS1Col = Nothing
+                        My.Settings.RTS1Value = Nothing
+                    End Try
+                Case 6
+                    Try
+                        My.Settings.RTS2 = dgvRevTableLayout(0, Row).Value
+                        My.Settings.RTS2Item = dgvRevTableLayout(1, Row).Value
+                        My.Settings.RTS2Col = dgvRevTableLayout(2, Row).Value
+                        My.Settings.RTS2Value = dgvRevTableLayout(3, Row).Value
+                    Catch
+                        My.Settings.RTS2 = False
+                        My.Settings.RTS2Item = Nothing
+                        My.Settings.RTS2Col = Nothing
+                        My.Settings.RTS2Value = Nothing
+                    End Try
+                Case 7
+                    Try
+                        My.Settings.RTS3 = dgvRevTableLayout(0, Row).Value
+                        My.Settings.RTS3Item = dgvRevTableLayout(1, Row).Value
+                        My.Settings.RTS3Col = dgvRevTableLayout(2, Row).Value
+                        My.Settings.RTS3Value = dgvRevTableLayout(3, Row).Value
+                    Catch
+                        My.Settings.RTS3 = False
+                        My.Settings.RTS3Item = Nothing
+                        My.Settings.RTS3Col = Nothing
+                        My.Settings.RTS3Value = Nothing
+                    End Try
+                Case 8
+                    Try
+                        My.Settings.RTS4 = dgvRevTableLayout(0, Row).Value
+                        My.Settings.RTS4Item = dgvRevTableLayout(1, Row).Value
+                        My.Settings.RTS4Col = dgvRevTableLayout(2, Row).Value
+                        My.Settings.RTS4Value = dgvRevTableLayout(3, Row).Value
+                    Catch
+                        My.Settings.RTS4 = False
+                        My.Settings.RTS4Item = Nothing
+                        My.Settings.RTS4Col = Nothing
+                        My.Settings.RTS4Value = Nothing
+                    End Try
+                Case 9
+                    Try
+                        My.Settings.RTS5 = dgvRevTableLayout(0, Row).Value
+                        My.Settings.RTS5Item = dgvRevTableLayout(1, Row).Value
+                        My.Settings.RTS5Col = dgvRevTableLayout(2, Row).Value
+                        My.Settings.RTS5Value = dgvRevTableLayout(3, Row).Value
+                    Catch
+                        My.Settings.RTS5 = False
+                        My.Settings.RTS5Item = Nothing
+                        My.Settings.RTS5Col = Nothing
+                        My.Settings.RTS5Value = Nothing
+                    End Try
+                Case 10
+                    MsgBox("Batch Program currently only supports 5 custom fields")
+            End Select
+        Next
+        If txtAlphaRev.Text <> "" Then
+            My.Settings.AlphaRev = txtAlphaRev.Text
+        Else
+            MsgBox("Please enter a default description for alphabetical revisions")
+            Exit Sub
+        End If
+        If txtNumRev.Text <> "" Then
+            My.Settings.NumRev = txtNumRev.Text
+        Else
+            MsgBox("Please enter a default description for numerical revisions")
+            Exit Sub
+        End If
+        My.Settings.StartVal = nudStartVal.Value
+        My.Settings.Save()
+        Me.Close()
+        If rdbBL.Checked = True Then
+            My.Settings.DefRevLoc = "BL"
+        ElseIf rdbBR.Checked = True Then
+            My.Settings.DefRevLoc = "BR"
+        ElseIf rdbTL.Checked = True Then
+            My.Settings.DefRevLoc = "TL"
+        ElseIf rdbTR.Checked = True Then
+            My.Settings.DefRevLoc = "TR"
+        End If
+    End Sub
+    'Private Sub dgvRevTableLayout_CellMouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles dgvRevTableLayout.CellMouseClick
+    '    'Make sure the type is set to something, a work around if the grid contains checkboxes.
+    '    If e.RowIndex > -1 And e.ColumnIndex > -1 Then
+    '        If dgvRevTableLayout(e.ColumnIndex, e.RowIndex).EditType IsNot Nothing Then
+    '            'Check if the control is a combo box if so, edit on enter
+    '            If dgvRevTableLayout(e.ColumnIndex, e.RowIndex).EditType.ToString() = "System.Windows.Forms.DataGridViewComboBoxEditingControl" Then
+    '                'SendKeys.Send("{F4}")
+    '            End If
+    '        End If
+    '    End If
+    'End Sub
+    Private Sub ContextMenuStrip1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ContextMenuStrip1.Click
+        Try
+            If dgvRevTableLayout.CurrentCell.RowIndex > 6 Then
+                dgvRevTableLayout.Rows.RemoveAt(dgvRevTableLayout.CurrentCell.RowIndex)
+            Else
+                MsgBox("Cannot remove default item." & vbNewLine & "Uncheck this item if it does not apply")
+            End If
+        Catch
+        End Try
+    End Sub
+    Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click
+        My.Settings.Save()
+    End Sub
 End Class
+#End Region

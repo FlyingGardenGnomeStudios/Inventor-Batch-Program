@@ -1337,6 +1337,54 @@ Namespace My
                 Me("RecentSaveLoc") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Gray")>  _
+        Public Property DNE() As Global.System.Drawing.Color
+            Get
+                Return CType(Me("DNE"),Global.System.Drawing.Color)
+            End Get
+            Set
+                Me("DNE") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Red")>  _
+        Public Property PPM() As Global.System.Drawing.Color
+            Get
+                Return CType(Me("PPM"),Global.System.Drawing.Color)
+            End Get
+            Set
+                Me("PPM") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Blue")>  _
+        Public Property REF() As Global.System.Drawing.Color
+            Get
+                Return CType(Me("REF"),Global.System.Drawing.Color)
+            End Get
+            Set
+                Me("REF") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property StrictSearch() As Boolean
+            Get
+                Return CType(Me("StrictSearch"),Boolean)
+            End Get
+            Set
+                Me("StrictSearch") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

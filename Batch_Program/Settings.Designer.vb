@@ -22,6 +22,7 @@ Partial Class Settings
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Settings))
         Me.rdoPDFChoose = New System.Windows.Forms.RadioButton()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
@@ -65,12 +66,54 @@ Partial Class Settings
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
         Me.chkArchive = New System.Windows.Forms.CheckBox()
+        Me.tcrlSettings = New System.Windows.Forms.TabControl()
+        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.RefColour = New System.Windows.Forms.ListView()
+        Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+        Me.rdoLoose = New System.Windows.Forms.RadioButton()
+        Me.rdoStrict = New System.Windows.Forms.RadioButton()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.TabPage4 = New System.Windows.Forms.TabPage()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.dgvRevTableLayout = New System.Windows.Forms.DataGridView()
+        Me.chk = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Item = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ColumnName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataType = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.DeleteRowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.rdbBR = New System.Windows.Forms.RadioButton()
+        Me.nudStartVal = New System.Windows.Forms.NumericUpDown()
+        Me.rdbBL = New System.Windows.Forms.RadioButton()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.rdbTR = New System.Windows.Forms.RadioButton()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.rdbTL = New System.Windows.Forms.RadioButton()
+        Me.txtNumRev = New System.Windows.Forms.TextBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.txtAlphaRev = New System.Windows.Forms.TextBox()
+        Me.btnApply = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         Me.tabSaveLoc.SuspendLayout()
         Me.tabPDF.SuspendLayout()
         CType(Me.numRes, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabDXF.SuspendLayout()
         Me.tabDWG.SuspendLayout()
+        Me.tcrlSettings.SuspendLayout()
+        Me.TabPage1.SuspendLayout()
+        Me.TabPage2.SuspendLayout()
+        Me.TabPage4.SuspendLayout()
+        Me.GroupBox2.SuspendLayout()
+        CType(Me.dgvRevTableLayout, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ContextMenuStrip1.SuspendLayout()
+        Me.GroupBox3.SuspendLayout()
+        CType(Me.nudStartVal, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'rdoPDFChoose
@@ -365,14 +408,245 @@ Partial Class Settings
         Me.chkArchive.Name = "chkArchive"
         Me.chkArchive.UseVisualStyleBackColor = True
         '
+        'tcrlSettings
+        '
+        Me.tcrlSettings.Controls.Add(Me.TabPage1)
+        Me.tcrlSettings.Controls.Add(Me.TabPage2)
+        Me.tcrlSettings.Controls.Add(Me.TabPage4)
+        resources.ApplyResources(Me.tcrlSettings, "tcrlSettings")
+        Me.tcrlSettings.Name = "tcrlSettings"
+        Me.tcrlSettings.SelectedIndex = 0
+        '
+        'TabPage1
+        '
+        Me.TabPage1.Controls.Add(Me.RefColour)
+        Me.TabPage1.Controls.Add(Me.CheckBox1)
+        Me.TabPage1.Controls.Add(Me.rdoLoose)
+        Me.TabPage1.Controls.Add(Me.rdoStrict)
+        Me.TabPage1.Controls.Add(Me.Label3)
+        resources.ApplyResources(Me.TabPage1, "TabPage1")
+        Me.TabPage1.Name = "TabPage1"
+        Me.TabPage1.UseVisualStyleBackColor = True
+        '
+        'RefColour
+        '
+        Me.RefColour.Activation = System.Windows.Forms.ItemActivation.OneClick
+        Me.RefColour.AutoArrange = False
+        Me.RefColour.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader4})
+        Me.RefColour.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None
+        Me.RefColour.Items.AddRange(New System.Windows.Forms.ListViewItem() {CType(resources.GetObject("RefColour.Items"), System.Windows.Forms.ListViewItem), CType(resources.GetObject("RefColour.Items1"), System.Windows.Forms.ListViewItem), CType(resources.GetObject("RefColour.Items2"), System.Windows.Forms.ListViewItem)})
+        resources.ApplyResources(Me.RefColour, "RefColour")
+        Me.RefColour.MultiSelect = False
+        Me.RefColour.Name = "RefColour"
+        Me.RefColour.UseCompatibleStateImageBehavior = False
+        Me.RefColour.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader4
+        '
+        resources.ApplyResources(Me.ColumnHeader4, "ColumnHeader4")
+        '
+        'CheckBox1
+        '
+        resources.ApplyResources(Me.CheckBox1, "CheckBox1")
+        Me.CheckBox1.Checked = True
+        Me.CheckBox1.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.CheckBox1.Name = "CheckBox1"
+        Me.CheckBox1.UseVisualStyleBackColor = True
+        '
+        'rdoLoose
+        '
+        resources.ApplyResources(Me.rdoLoose, "rdoLoose")
+        Me.rdoLoose.Name = "rdoLoose"
+        Me.rdoLoose.UseVisualStyleBackColor = True
+        '
+        'rdoStrict
+        '
+        resources.ApplyResources(Me.rdoStrict, "rdoStrict")
+        Me.rdoStrict.Checked = True
+        Me.rdoStrict.Name = "rdoStrict"
+        Me.rdoStrict.TabStop = True
+        Me.rdoStrict.UseVisualStyleBackColor = True
+        '
+        'Label3
+        '
+        resources.ApplyResources(Me.Label3, "Label3")
+        Me.Label3.Name = "Label3"
+        '
+        'TabPage2
+        '
+        Me.TabPage2.Controls.Add(Me.GroupBox1)
+        Me.TabPage2.Controls.Add(Me.chkArchive)
+        resources.ApplyResources(Me.TabPage2, "TabPage2")
+        Me.TabPage2.Name = "TabPage2"
+        Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'TabPage4
+        '
+        Me.TabPage4.Controls.Add(Me.GroupBox2)
+        Me.TabPage4.Controls.Add(Me.GroupBox3)
+        resources.ApplyResources(Me.TabPage4, "TabPage4")
+        Me.TabPage4.Name = "TabPage4"
+        Me.TabPage4.UseVisualStyleBackColor = True
+        '
+        'GroupBox2
+        '
+        Me.GroupBox2.Controls.Add(Me.dgvRevTableLayout)
+        resources.ApplyResources(Me.GroupBox2, "GroupBox2")
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.TabStop = False
+        '
+        'dgvRevTableLayout
+        '
+        Me.dgvRevTableLayout.AllowUserToResizeColumns = False
+        Me.dgvRevTableLayout.AllowUserToResizeRows = False
+        Me.dgvRevTableLayout.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.dgvRevTableLayout.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvRevTableLayout.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.chk, Me.Item, Me.ColumnName, Me.DataType})
+        Me.dgvRevTableLayout.ContextMenuStrip = Me.ContextMenuStrip1
+        resources.ApplyResources(Me.dgvRevTableLayout, "dgvRevTableLayout")
+        Me.dgvRevTableLayout.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
+        Me.dgvRevTableLayout.MultiSelect = False
+        Me.dgvRevTableLayout.Name = "dgvRevTableLayout"
+        Me.dgvRevTableLayout.RowHeadersVisible = False
+        Me.dgvRevTableLayout.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
+        '
+        'chk
+        '
+        Me.chk.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        resources.ApplyResources(Me.chk, "chk")
+        Me.chk.Name = "chk"
+        '
+        'Item
+        '
+        Me.Item.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.Item.FillWeight = 34.04429!
+        resources.ApplyResources(Me.Item, "Item")
+        Me.Item.Name = "Item"
+        '
+        'ColumnName
+        '
+        Me.ColumnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.ColumnName.FillWeight = 53.71433!
+        resources.ApplyResources(Me.ColumnName, "ColumnName")
+        Me.ColumnName.Name = "ColumnName"
+        '
+        'DataType
+        '
+        Me.DataType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
+        resources.ApplyResources(Me.DataType, "DataType")
+        Me.DataType.Items.AddRange(New Object() {"Date", "Number", "Text"})
+        Me.DataType.MaxDropDownItems = 3
+        Me.DataType.Name = "DataType"
+        Me.DataType.Sorted = True
+        '
+        'ContextMenuStrip1
+        '
+        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeleteRowToolStripMenuItem})
+        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
+        resources.ApplyResources(Me.ContextMenuStrip1, "ContextMenuStrip1")
+        '
+        'DeleteRowToolStripMenuItem
+        '
+        Me.DeleteRowToolStripMenuItem.Name = "DeleteRowToolStripMenuItem"
+        resources.ApplyResources(Me.DeleteRowToolStripMenuItem, "DeleteRowToolStripMenuItem")
+        '
+        'GroupBox3
+        '
+        Me.GroupBox3.Controls.Add(Me.Label4)
+        Me.GroupBox3.Controls.Add(Me.rdbBR)
+        Me.GroupBox3.Controls.Add(Me.nudStartVal)
+        Me.GroupBox3.Controls.Add(Me.rdbBL)
+        Me.GroupBox3.Controls.Add(Me.Label5)
+        Me.GroupBox3.Controls.Add(Me.rdbTR)
+        Me.GroupBox3.Controls.Add(Me.Label6)
+        Me.GroupBox3.Controls.Add(Me.PictureBox1)
+        Me.GroupBox3.Controls.Add(Me.rdbTL)
+        Me.GroupBox3.Controls.Add(Me.txtNumRev)
+        Me.GroupBox3.Controls.Add(Me.Label7)
+        Me.GroupBox3.Controls.Add(Me.txtAlphaRev)
+        resources.ApplyResources(Me.GroupBox3, "GroupBox3")
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.TabStop = False
+        '
+        'Label4
+        '
+        resources.ApplyResources(Me.Label4, "Label4")
+        Me.Label4.Name = "Label4"
+        '
+        'rdbBR
+        '
+        resources.ApplyResources(Me.rdbBR, "rdbBR")
+        Me.rdbBR.Name = "rdbBR"
+        Me.rdbBR.UseVisualStyleBackColor = True
+        '
+        'nudStartVal
+        '
+        resources.ApplyResources(Me.nudStartVal, "nudStartVal")
+        Me.nudStartVal.Name = "nudStartVal"
+        '
+        'rdbBL
+        '
+        resources.ApplyResources(Me.rdbBL, "rdbBL")
+        Me.rdbBL.Name = "rdbBL"
+        Me.rdbBL.UseVisualStyleBackColor = True
+        '
+        'Label5
+        '
+        resources.ApplyResources(Me.Label5, "Label5")
+        Me.Label5.Name = "Label5"
+        '
+        'rdbTR
+        '
+        resources.ApplyResources(Me.rdbTR, "rdbTR")
+        Me.rdbTR.Name = "rdbTR"
+        Me.rdbTR.UseVisualStyleBackColor = True
+        '
+        'Label6
+        '
+        resources.ApplyResources(Me.Label6, "Label6")
+        Me.Label6.Name = "Label6"
+        '
+        'PictureBox1
+        '
+        resources.ApplyResources(Me.PictureBox1, "PictureBox1")
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.TabStop = False
+        '
+        'rdbTL
+        '
+        resources.ApplyResources(Me.rdbTL, "rdbTL")
+        Me.rdbTL.Name = "rdbTL"
+        Me.rdbTL.UseVisualStyleBackColor = True
+        '
+        'txtNumRev
+        '
+        resources.ApplyResources(Me.txtNumRev, "txtNumRev")
+        Me.txtNumRev.Name = "txtNumRev"
+        '
+        'Label7
+        '
+        resources.ApplyResources(Me.Label7, "Label7")
+        Me.Label7.Name = "Label7"
+        '
+        'txtAlphaRev
+        '
+        resources.ApplyResources(Me.txtAlphaRev, "txtAlphaRev")
+        Me.txtAlphaRev.Name = "txtAlphaRev"
+        '
+        'btnApply
+        '
+        resources.ApplyResources(Me.btnApply, "btnApply")
+        Me.btnApply.Name = "btnApply"
+        Me.btnApply.UseVisualStyleBackColor = True
+        '
         'Settings
         '
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.Controls.Add(Me.chkArchive)
+        Me.Controls.Add(Me.btnApply)
+        Me.Controls.Add(Me.tcrlSettings)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnOK)
-        Me.Controls.Add(Me.GroupBox1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Name = "Settings"
         Me.GroupBox1.ResumeLayout(False)
@@ -384,8 +658,20 @@ Partial Class Settings
         Me.tabDXF.PerformLayout()
         Me.tabDWG.ResumeLayout(False)
         Me.tabDWG.PerformLayout()
+        Me.tcrlSettings.ResumeLayout(False)
+        Me.TabPage1.ResumeLayout(False)
+        Me.TabPage1.PerformLayout()
+        Me.TabPage2.ResumeLayout(False)
+        Me.TabPage2.PerformLayout()
+        Me.TabPage4.ResumeLayout(False)
+        Me.GroupBox2.ResumeLayout(False)
+        CType(Me.dgvRevTableLayout, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ContextMenuStrip1.ResumeLayout(False)
+        Me.GroupBox3.ResumeLayout(False)
+        Me.GroupBox3.PerformLayout()
+        CType(Me.nudStartVal, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
 
@@ -431,4 +717,36 @@ Partial Class Settings
     Friend WithEvents cmbSheets As Windows.Forms.ComboBox
     Friend WithEvents chkLineWeights As Windows.Forms.CheckBox
     Friend WithEvents chkPDFBW As Windows.Forms.CheckBox
+    Friend WithEvents tcrlSettings As Windows.Forms.TabControl
+    Friend WithEvents TabPage1 As Windows.Forms.TabPage
+    Friend WithEvents TabPage2 As Windows.Forms.TabPage
+    Friend WithEvents RefColour As Windows.Forms.ListView
+    Friend WithEvents ColumnHeader4 As Windows.Forms.ColumnHeader
+    Friend WithEvents CheckBox1 As Windows.Forms.CheckBox
+    Friend WithEvents rdoLoose As Windows.Forms.RadioButton
+    Friend WithEvents rdoStrict As Windows.Forms.RadioButton
+    Friend WithEvents Label3 As Windows.Forms.Label
+    Friend WithEvents TabPage4 As Windows.Forms.TabPage
+    Friend WithEvents GroupBox2 As Windows.Forms.GroupBox
+    Friend WithEvents dgvRevTableLayout As Windows.Forms.DataGridView
+    Friend WithEvents chk As Windows.Forms.DataGridViewCheckBoxColumn
+    Friend WithEvents Item As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents ColumnName As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents DataType As Windows.Forms.DataGridViewComboBoxColumn
+    Friend WithEvents GroupBox3 As Windows.Forms.GroupBox
+    Friend WithEvents Label4 As Windows.Forms.Label
+    Friend WithEvents rdbBR As Windows.Forms.RadioButton
+    Friend WithEvents nudStartVal As Windows.Forms.NumericUpDown
+    Friend WithEvents rdbBL As Windows.Forms.RadioButton
+    Friend WithEvents Label5 As Windows.Forms.Label
+    Friend WithEvents rdbTR As Windows.Forms.RadioButton
+    Friend WithEvents Label6 As Windows.Forms.Label
+    Friend WithEvents PictureBox1 As Windows.Forms.PictureBox
+    Friend WithEvents rdbTL As Windows.Forms.RadioButton
+    Friend WithEvents txtNumRev As Windows.Forms.TextBox
+    Friend WithEvents Label7 As Windows.Forms.Label
+    Friend WithEvents txtAlphaRev As Windows.Forms.TextBox
+    Friend WithEvents btnApply As Windows.Forms.Button
+    Friend WithEvents ContextMenuStrip1 As Windows.Forms.ContextMenuStrip
+    Friend WithEvents DeleteRowToolStripMenuItem As Windows.Forms.ToolStripMenuItem
 End Class
