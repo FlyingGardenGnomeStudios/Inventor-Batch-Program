@@ -3,7 +3,9 @@
 	- Renaming function works but hasn't been thoroughly tested.
 Version 3.0.0.0 (02.15.19)
 	Moved program over to add-in
+	Improved search algorithm
 	Combined settings windows
+	Changed method of updating
 
 Version 2.1.3.6 (01.22.19)
 	Resolved Issue #10

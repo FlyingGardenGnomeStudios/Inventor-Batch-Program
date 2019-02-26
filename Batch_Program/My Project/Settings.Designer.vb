@@ -1244,10 +1244,10 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
-        Public Property PrintColour() As Integer
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property PrintColour() As Boolean
             Get
-                Return CType(Me("PrintColour"),Integer)
+                Return CType(Me("PrintColour"),Boolean)
             End Get
             Set
                 Me("PrintColour") = value
@@ -1383,6 +1383,209 @@ Namespace My
             End Get
             Set
                 Me("StrictSearch") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property Experimental() As Boolean
+            Get
+                Return CType(Me("Experimental"),Boolean)
+            End Get
+            Set
+                Me("Experimental") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property ColourCode() As Boolean
+            Get
+                Return CType(Me("ColourCode"),Boolean)
+            End Get
+            Set
+                Me("ColourCode") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+        Public Property NameFormat() As Global.System.Collections.Specialized.StringCollection
+            Get
+                Return CType(Me("NameFormat"),Global.System.Collections.Specialized.StringCollection)
+            End Get
+            Set
+                Me("NameFormat") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("10")>  _
+        Public Property MaxRefNum() As Integer
+            Get
+                Return CType(Me("MaxRefNum"),Integer)
+            End Get
+            Set
+                Me("MaxRefNum") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property Scale() As Boolean
+            Get
+                Return CType(Me("Scale"),Boolean)
+            End Get
+            Set
+                Me("Scale") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property BScale() As Integer
+            Get
+                Return CType(Me("BScale"),Integer)
+            End Get
+            Set
+                Me("BScale") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property CScale() As Integer
+            Get
+                Return CType(Me("CScale"),Integer)
+            End Get
+            Set
+                Me("CScale") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property DScale() As Integer
+            Get
+                Return CType(Me("DScale"),Integer)
+            End Get
+            Set
+                Me("DScale") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property EScale() As Integer
+            Get
+                Return CType(Me("EScale"),Integer)
+            End Get
+            Set
+                Me("EScale") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("1")>  _
+        Public Property PrintCopies() As Integer
+            Get
+                Return CType(Me("PrintCopies"),Integer)
+            End Get
+            Set
+                Me("PrintCopies") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property FScale() As Integer
+            Get
+                Return CType(Me("FScale"),Integer)
+            End Get
+            Set
+                Me("FScale") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property ASize() As Boolean
+            Get
+                Return CType(Me("ASize"),Boolean)
+            End Get
+            Set
+                Me("ASize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property BSize() As Boolean
+            Get
+                Return CType(Me("BSize"),Boolean)
+            End Get
+            Set
+                Me("BSize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property CSize() As Boolean
+            Get
+                Return CType(Me("CSize"),Boolean)
+            End Get
+            Set
+                Me("CSize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property DSize() As Boolean
+            Get
+                Return CType(Me("DSize"),Boolean)
+            End Get
+            Set
+                Me("DSize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property ESize() As Boolean
+            Get
+                Return CType(Me("ESize"),Boolean)
+            End Get
+            Set
+                Me("ESize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property FSize() As Boolean
+            Get
+                Return CType(Me("FSize"),Boolean)
+            End Get
+            Set
+                Me("FSize") = value
             End Set
         End Property
     End Class

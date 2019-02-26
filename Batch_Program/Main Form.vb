@@ -11,6 +11,8 @@ Imports System.IO
 Imports Microsoft.Win32
 Imports Microsoft.Office.Interop
 Imports System.Reflection
+Imports System.Net
+Imports System.Text
 
 Public Class Main
     Dim _invApp As Inventor.Application
@@ -47,6 +49,7 @@ Public Class Main
     Dim Busy As Boolean = False
     Dim MainClosed As Boolean = False
     Dim Paid As Boolean = True
+    Dim Print_Size As New Print_Size
 #Region "Setup"
     Public Sub writeDebug(ByVal x As String)
         Dim path As String = My.Computer.FileSystem.SpecialDirectories.Temp
@@ -85,15 +88,15 @@ Public Class Main
             End If
         End If
 
-        If My.Settings.DonateShowMe = True Then
-            If My.Settings.DonateCount = 0 Then
-                Warning.Donate()
-            ElseIf My.Settings.DonateCount < 4 Then
-                My.Settings.DonateCount = My.Settings.DonateCount + 1
-            ElseIf My.Settings.DonateCount = 4 Then
-                My.Settings.DonateCount = 0
-            End If
-        End If
+        'If My.Settings.DonateShowMe = True Then
+        '    If My.Settings.DonateCount = 0 Then
+        '        Warning.Donate()
+        '    ElseIf My.Settings.DonateCount < 4 Then
+        '        My.Settings.DonateCount = My.Settings.DonateCount + 1
+        '    ElseIf My.Settings.DonateCount = 4 Then
+        '        My.Settings.DonateCount = 0
+        '    End If
+        'End If
 
         'Add any initialization after the InitializeComponent() call.
         Try
@@ -188,9 +191,10 @@ Public Class Main
                         For Each osheet As Sheet In oDoc.sheets
                             Try
                                 PartSource = osheet.DrawingViews.Item(1).ReferencedDocumentDescriptor.ReferencedDocument.FullFileName
+                                Exit For
                             Catch
                             End Try
-                            Exit For
+
                         Next
                         dgvOpenFiles.Rows.Add(New String() {False, IO.Path.GetFileName(oDoc.FullFileName), oDoc.FullFileName, PartSource, dgvOpenFiles.RowCount})
                     ElseIf chkPres.Checked = True And oDoc.DocumentType = DocumentTypeEnum.kPresentationDocumentObject Then
@@ -290,10 +294,10 @@ Public Class Main
         UpdateForm()
         writeDebug("Presentation Checked = " & chkPres.CheckState)
     End Sub
-    Private Sub WriteChildren(Occurrences As ComponentOccurrences, Layer As Integer,
+    Private Sub WriteChildren(Occurrences As DocumentsEnumerator, Layer As Integer,
                           ByRef R As Integer, ByRef Col As Integer, ByRef Maxlayer As Integer,
                           Parent As List(Of List(Of String)), ParentName As String, ByRef Total As Integer, ByRef Counter As Integer)
-        Dim Occ As ComponentOccurrence
+        ' Dim Occ As ComponentOccurrence
         'Dim Title As String = "Getting References: "
         'Dim oDoc As Document
         'Dim ColVal As Integer
@@ -303,39 +307,38 @@ Public Class Main
         'Parent(Layer, Col) = Occ.Name
         ParentName = ParentName
         'go through each sub-file
-        For Each Occ In Occurrences
-            If Occ.Name <> "" Then
+        For Each oOcc As Document In Occurrences
+            If oOcc.componentdefinition.document.displayname <> "" Then
                 'Parse out part name from the occurance name
-                If InStr(Occ.Name, ":") <> 0 Then
-                    PartName = Strings.Left(Occ.Name, InStrRev(Occ.Name, ":") - 1)
-                Else
-                    PartName = Occ.Name
-                End If
-                'Match the case of the name to IMM Standard
-                Match = (PartName Like "?###[-.]#####") Or (PartName Like "?##[-.]#####") Or (PartName Like "?###[-.]#####[-.]##") Or (PartName Like "?##[-.]#####[-.]##")
-                'If Match = True Then
-                Col += 1
-                ' ProgressBar(Total, Counter, Title, Col)
-                bgwRun.ReportProgress((Counter / Total) * 100, "Getting References: ")
-                'For Parents with more children, add another list to the current list
-                If Layer > Maxlayer Then
-                    Maxlayer = Layer
-                    Parent.Add(New List(Of String))
-                End If
-                'search for repetitions in the current list
-                If Parent(Layer).Contains(ParentName & "," & PartName) Then
-                Else
-                    'add the new part to the current list
+                PartName = IO.Path.GetFileNameWithoutExtension(oOcc.componentdefinition.document.displayname)
+                For Each NameFormat As String In My.Settings.NameFormat
+                    Match = PartName Like Strings.Left(NameFormat, InStr(NameFormat, "*") - 1)
+                    If Match = True Then Exit For
+                Next
+
+                If Match = True Then
+                    Col += 1
+                    ' ProgressBar(Total, Counter, Title, Col)
+                    bgwRun.ReportProgress((Counter / Total) * 100, "Getting References: ")
+                    'For Parents with more children, add another list to the current list
+                    If Layer > Maxlayer Then
+                        Maxlayer = Layer
+                        Parent.Add(New List(Of String))
+                    End If
+                    'search for repetitions in the current list
+                    If Parent(Layer).Contains(ParentName & "," & PartName) Then
+                    Else
+                        'add the new part to the current list
 
 
 
-                    Parent(Layer).Add(ParentName & "," & PartName)
+                        Parent(Layer).Add(ParentName & "," & PartName)
+                    End If
                 End If
-                'End If
-                If Occ.DefinitionDocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
+                If oOcc.componentdefinition.document.DocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
                     'Go through for each assembly found
                     Counter += 1
-                    WriteChildren(Occ.SubOccurrences, Layer + 1, R, Col, Maxlayer, Parent, PartName, Total, Counter)
+                    WriteChildren(oOcc.AllReferencedDocuments, Layer + 1, R, Col, Maxlayer, Parent, PartName, Total, Counter)
                 End If
             End If
         Next
@@ -411,16 +414,18 @@ Public Class Main
                 Total += 1
             End If
         Next
-        For X = 0 To dgvSubFiles.RowCount - 1
+        Dim X As Integer = 0
+        For Each row In dgvSubFiles.Rows ' X = 0 To dgvSubFiles.RowCount - 1
             If bgwRun.CancellationPending = True Then Exit Sub
             'Look through all sub files in open documents to get the part sourcefile
-            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, X).Value = True = True AndAlso
-                dgvSubFiles.Rows(X).Visible = True Then
+            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.index).Value = True = True AndAlso
+                dgvSubFiles.Rows(row.index).Visible = True Then
+                X += 1
                 'MatchDrawing(DrawSource, DrawingName, X)
                 If Type = "Part" Then
-                    FileToOpen = dgvSubFiles(dgvSubFiles.Columns("DrawingSource").Index, X).Value
+                    FileToOpen = dgvSubFiles(dgvSubFiles.Columns("DrawingSource").Index, row.index).Value
                 Else
-                    FileToOpen = dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, X).Value
+                    FileToOpen = dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, row.index).Value
                 End If
                 'DrawSource = Strings.Left(SubFiles.Item(X).Value, Len(SubFiles.Item(X).Value) - 3) & "idw"
                 bgwRun.ReportProgress((X / Total) * 100, "Opening: " & FileToOpen)
@@ -1272,19 +1277,23 @@ Public Class Main
         Dim Dup As Boolean = False
         Dim DrawingName As String
         'Extract the file name from the full file path
-
+        DrawingName = IO.Path.GetFileNameWithoutExtension(Partsource) & ".idw"
         If DrawingSource = "" Then
-            DrawingName = IO.Path.GetFileNameWithoutExtension(Partsource) & ".idw"
-            Dim dir As DirectoryInfo = New DirectoryInfo(IO.Path.GetDirectoryName(Partsource))
-            For Each file In dir.GetFiles(DrawingName, SearchOption.AllDirectories)
-                DrawingSource = file.FullName
-            Next
-            ' If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)) Then
-            'If My.Computer.FileSystem.FileExists(DrawingSource) Then
-            '    DrawingSource = IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)
-            'Else
-            '    DrawingSource = ""
-            'End If
+            If My.Settings.StrictSearch = False Then
+
+                Dim dir As DirectoryInfo = New DirectoryInfo(IO.Path.GetDirectoryName(Partsource))
+                For Each file In dir.GetFiles(DrawingName, SearchOption.AllDirectories)
+                    DrawingSource = file.FullName
+                Next
+            Else
+                If My.Computer.FileSystem.FileExists(IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)) Then
+                    ' If My.Computer.FileSystem.FileExists(DrawingSource) Then
+                    DrawingSource = IO.Path.Combine(IO.Path.GetDirectoryName(Partsource), DrawingName)
+                Else
+                    DrawingSource = ""
+                    'End If
+                End If
+            End If
         Else
             DrawingName = IO.Path.GetFileName(DrawingSource)
         End If
@@ -1296,19 +1305,27 @@ Public Class Main
         ' ProgressBar(Total, Counter, "Found: ", DrawingName)
         Dim Comments As String = ""
 
-
-        If Not My.Computer.FileSystem.FileExists(Partsource) Then
-            If FindFile(Document, False) = "" Then
-                Comments = "PPM"
+        If My.Settings.StrictSearch = False Then
+            If Not My.Computer.FileSystem.FileExists(Partsource) Then
+                If FindFile(Document, False) = "" Then
+                    Comments = "PPM"
+                End If
+            ElseIf Not My.Computer.FileSystem.FileExists(DrawingSource) Then
+                If FindFile(Document, True) = "" Then
+                    Comments = "DNE"
+                End If
             End If
-        ElseIf Not My.Computer.FileSystem.FileExists(DrawingSource) Then
-            If FindFile(Document, True) = "" Then
+        Else
+            If Not My.Computer.FileSystem.FileExists(Partsource) Then
+                Comments = "PPM"
+            ElseIf Not My.Computer.FileSystem.FileExists(DrawingSource) Then
                 Comments = "DNE"
             End If
-        ElseIf Ref = True Then
-                Comments = "REF"
         End If
 
+        If Ref = True Then
+            Comments = "REF"
+        End If
 
         Elog = Elog & DrawingName & ": "
         'Check to see if the part has already been added to the list
@@ -1432,8 +1449,8 @@ Public Class Main
                             Exit Sub
                         End Try
                     End If
-
-                    TraverseAssembly(oAsmDoc.ComponentDefinition.Occurrences, PartSource, Level, Total, Counter, OpenDocs, Elog, True, Err)
+                    TraverseAssembly(oAsmDoc.AllReferencedDocuments, PartSource, Level, Total, Counter, OpenDocs, Elog, True, Err)
+                    '   TraverseAssembly(oAsmDoc.ComponentDefinition.Occurrences, PartSource, Level, Total, Counter, OpenDocs, Elog, True, Err)
                 Else
                     TestForDrawing(Document, PartSource, "", Level, Total, Counter, OpenDocs, Elog, False)
                 End If
@@ -1488,33 +1505,37 @@ Public Class Main
         oRefDocs = oAsmDoc.AllReferencedDocuments
 
         ' Iterate through the list of documents. 
-        Dim oRefDoc As Document
-        For Each oRefDoc In oRefDocs
-            Total = Total + 1
-        Next
-        TraverseAssembly(oAsmDoc.ComponentDefinition.Occurrences, PartSource, Level + 1, Total, Counter, Opendocs, Elog, Dev, Err)
+        'Dim oRefDoc As Document
+
+        Total = Total + oRefDocs.Count
+        TraverseAssembly(oRefDocs, PartSource, Level + 1, Total, Counter, Opendocs, Elog, Dev, Err)
+        'TraverseAssembly(oAsmDoc.ComponentDefinition.Occurrences, PartSource, Level + 1, Total, Counter, Opendocs, Elog, Dev, Err)
         CloseLater(strFile, oAsmDoc)
     End Sub
-    Private Sub TraverseAssembly(Occurrences As ComponentOccurrences, PartSource As String, Level As Integer, ByRef Total As Integer, ByRef Counter As Integer,
-                                 OpenDocs As ArrayList, ByRef Elog As String, ByVal Dev As Boolean, ByRef Err As Boolean)
+    'Private Sub TraverseAssembly(Occurrences As ComponentOccurrences, PartSource As String, Level As Integer, ByRef Total As Integer, ByRef Counter As Integer,
+    '                             OpenDocs As ArrayList, ByRef Elog As String, ByVal Dev As Boolean, ByRef Err As Boolean)
+    Private Sub TraverseAssembly(Occurrences As DocumentsEnumerator, PartSource As String, Level As Integer, ByRef Total As Integer, ByRef Counter As Integer,
+                                OpenDocs As ArrayList, ByRef Elog As String, ByVal Dev As Boolean, ByRef Err As Boolean)
 
         'Count the level of the sub-component
         Dim Add As Boolean = True
         Dim strFile, DrawingName, ID As String
-        Dim oOcc As ComponentOccurrence
+        'Dim oOcc As ComponentOccurrence
         Dim Ref As Boolean
         'iterate through each occurrence in the assembly
         'Total = Total + Occurrences.Count
         For Each oOcc In Occurrences
             If bgwUpdateSub.CancellationPending = False Then
                 Try
-                    If oOcc.BOMStructure = BOMStructureEnum.kReferenceBOMStructure Then
+                    If oOcc.componentdefinition.bomstructure = BOMStructureEnum.kReferenceBOMStructure Then
+                        'If oOcc.BOMStructure = BOMStructureEnum.kReferenceBOMStructure Then
                         Ref = True
                     Else
                         Ref = False
                     End If
 
-                    PartSource = oOcc.Definition.Document.fullfilename
+                    PartSource = oOcc.fullfilename
+
                     'setting the mass to something updates the mass property in the drawing
                     'create drawing name
                     strFile = IO.Path.GetFileName(PartSource)
@@ -1523,29 +1544,29 @@ Public Class Main
                     'ProgressBar(Total, Counter, "Found:  ", DrawingName)
                     'FindWorker.ReportProgress(CInt((Counter / Total) * 100))
                     'Add to list if the drawing exists
-                    TestForDrawing(oOcc.Definition.Document, PartSource, "", Level, Total, Counter, OpenDocs, Elog, Ref)
+                    TestForDrawing(oOcc.inventordocument, PartSource, "", Level, Total, Counter, OpenDocs, Elog, Ref)
                     'iterate through again for each sub-assembly found 
                     'Counter += 1
                     'Create a list of sub parts for use in the renaming section. this saves time having to recreate it again later.
                     'If VBAFlag <> "NA" And Strings.InStr(PartSource, "Content Center") = 0 Then 
                     If Dev = False Then
-                        If LCase(PartSource).Contains("purchased parts") Or oOcc.BOMStructure = BOMStructureEnum.kPurchasedBOMStructure Then
+                        If LCase(PartSource).Contains("purchased parts") Or oOcc.componentdefinition.BOMStructure = BOMStructureEnum.kPurchasedBOMStructure Then
                             ID = "PP"
                         ElseIf LCase(PartSource).Contains("content center") Then
                             ID = "CC"
                         Else
-                            ID = oOcc.Definition.Document.propertysets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("5").Value
+                            ID = oOcc.inventorDocument.propertysets.Item("{F29F85E0-4FF9-1068-AB91-08002B27B3D9}").ItemByPropId("5").Value
                         End If
                     Else
                         ID = "DP"
                     End If
                     AddtoRenameTable(PartSource, DrawingName, strFile, Add, ID, Err)
                     'If the sub assembly is an assembly itself, redo the iteration until all parts have been found.
-                    If oOcc.DefinitionDocumentType = DocumentTypeEnum.kAssemblyDocumentObject Then
+                    If oOcc.componentdefinition.document.documenttype = DocumentTypeEnum.kAssemblyDocumentObject Then
                         'Level += 1
-                        TraverseAssembly(oOcc.SubOccurrences, PartSource, Level + 1, Total, Counter, OpenDocs, Elog, Dev, Err)
-                    ElseIf oOcc.DefinitionDocumentType = DocumentTypeEnum.kPartDocumentObject Then
-                        CheckForDev(oOcc.Definition.Document, PartSource, Total, Counter, OpenDocs, Elog, Level + 1, Err)
+                        TraverseAssembly(oOcc.allreferenceddocuments, PartSource, Level + 1, Total, Counter, OpenDocs, Elog, Dev, Err)
+                    ElseIf oOcc.componentdefinition.document.documenttype = DocumentTypeEnum.kPartDocumentObject Then
+                        CheckForDev(oOcc.componentdefinition.document, PartSource, Total, Counter, OpenDocs, Elog, Level + 1, Err)
                     End If
 
                 Catch ex As Exception
@@ -2248,6 +2269,11 @@ Public Class Main
             Me.Close()
         End If
         InventorExited = False
+        If My.Settings.Experimental = True Then
+            gbxUtilities.Visible = True
+        Else
+            gbxUtilities.Visible = False
+        End If
     End Sub
     Private Sub Rename_Resize(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Resize
         chkiProp.Location = New Drawing.Point(Me.Width - 203, 27)
@@ -2756,6 +2782,385 @@ Public Class Main
             If Me.MinimumSize.Height = Me.Height - 15 Then Me.Height = Me.Height - 15
         End If
     End Sub
+    Private Sub PrintSetup()
+        Dim PEnd, PStart, Z As Integer
+        For X = 0 To dgvSubFiles.RowCount - 1
+            If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, X).Value Then
+                PEnd += 1
+            End If
+        Next
+        Dim dDoc As Inventor.DrawingDocument
+        Dim Range, Direction As Integer : Range = 0 : Direction = 0
+        Dim Mass As Double
+        Dim DrawSource As String = ""
+        Dim DrawingName As String = ""
+        Z = 1
+        For Y = 1 To My.Settings.PrintCopies
+            If My.Settings.PrintReverse = False Then
+                Direction = 1
+                PEnd = PEnd
+                PStart = 0
+            Else
+                Direction = -1
+                PStart = PEnd
+                PEnd = 0
+            End If
+            For X = PStart To PEnd - 1 Step Direction
+                If bgwRun.CancellationPending = True Then Exit Sub
+                If dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, X).Value = True Then
+                    DrawingName = dgvSubFiles(dgvSubFiles.Columns("DrawingName").Index, X).Value
+                    dDoc = _invApp.Documents.Open(dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, X).Value, True)
+                    'For Each oDoc In dDoc.ReferencedFiles
+                    'Mass = oDoc.ComponentDefinition.MassProperties.mass
+                    Try
+                        Mass = dDoc.ReferencedFiles.Item(1).componentdefinition.massproperties.mass
+                        'Next
+                        Call dDoc.Update()
+                    Catch
+                    End Try
+                    'PDrawingName = Strings.Right(dDoc.FullDocumentName, Len(dDoc.FullDocumentName) - InStrRev(dDoc.FullDocumentName, "\"))
+                    'Main.ProgressBar(PEnd + 1 * Y, Z, "Printing: ", DrawingName)
+                    bgwRun.ReportProgress((Z / (PEnd + 1 * Y)) * 100, "Printing: " & DrawingName)
+                    Z += 1
+
+                    PrintSheets(DrawingName, My.Settings.Scale, My.Settings.PrintRange, dDoc, My.Settings.PrintColour)
+                    CloseLater(DrawingName, dDoc)
+                End If
+            Next
+        Next
+        Print_Size.rdoAsk.Checked = True
+        Print_Size.rdoDontAsk.Checked = False
+        Print_Size.chkQuestion.Checked = False
+        Print_Size.chkScale.Checked = False
+    End Sub
+    Private Sub PrintSheets(Drawingname As String, ScaleSelect As Boolean, Range As Integer, dDoc As Document, Colour As Boolean)
+        Dim Size As Double
+        Dim X As Integer = 0
+        'Set up print manager according to generic standards
+        Dim oDoc As Inventor.DrawingDocument
+        oDoc = _invApp.ActiveDocument
+        Dim oSheet As Inventor.Sheet
+        oSheet = oDoc.ActiveSheet
+        Dim oPM As Inventor.PrintManager
+        Dim odef As ControlDefinition = Nothing
+        oPM = oDoc.PrintManager
+        oPM.scalemode = Inventor.PrintScaleModeEnum.kPrintBestFitScale
+        oPM.printrange = Inventor.PrintRangeEnum.kPrintCurrentSheet
+        If Range <> 2 Then
+            dDoc.Sheets.Item(1).Activate()
+        End If
+
+        If Colour = True Then
+            oPM.ColorMode = PrintColorModeEnum.kPrintDefaultColorMode
+        Else
+            oPM.ColorMode = PrintColorModeEnum.kPrintGrayScale
+        End If
+        'Scale drawings to the same size if chosen by the user
+        If Print_Size.lblDWGSize.Text = "Cancel" Then Exit Sub
+        Dim PageSizes As New List(Of String)
+        PageSizes.Add("Do not scale")
+        If My.Settings.ASize = True Then PageSizes.Add("Scale to A")
+        If My.Settings.BSize = True Then PageSizes.Add("Scale to B")
+        If My.Settings.CSize = True Then PageSizes.Add("Scale to C")
+        If My.Settings.DSize = True Then PageSizes.Add("Scale to D")
+        If My.Settings.ESize = True Then PageSizes.Add("Scale to E")
+        If My.Settings.FSize = True Then PageSizes.Add("Scale to F")
+
+        Try
+            For X = 1 To dDoc.sheets.count
+                If Range <> 2 Then dDoc.sheets.item(X).activate
+                Size = dDoc.activesheet.size
+                If ScaleSelect = True Then
+                    Select Case Size
+                        Case 9987
+                            If My.Settings.ASize = False Then
+                                PageSize(odef, "A")
+                            Else
+                                oPM.PaperSize = PaperSizeEnum.kPaperSizeLetter
+                            End If
+                        Case 9988
+                            Select Case My.Settings.BScale
+                                Case 0
+                                    If My.Settings.BSize = False Then
+                                        PageSize(odef, "B")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSize11x17
+                                    End If
+                                Case 1
+                                    If Print_Size.chkQuestion.Checked = True Then
+                                        Print_Size.cmbScaleSize.Items.Clear()
+                                        For Page = 0 To PageSizes.Count - 1
+                                            Print_Size.cmbScaleSize.Items.Add(PageSizes(Page))
+                                        Next
+                                        Print_Size.lblDWGSize.Text = "The current drawing is a B size sheet," & vbNewLine & "Select the size you would like to print."
+                                        Print_Size.ShowDialog()
+                                    End If
+                                Case 2
+                                    If My.Settings.ASize = False Then
+                                        PageSize(odef, "A")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSizeLetter
+                                    End If
+                            End Select
+                        Case 9989
+                            Select Case My.Settings.CScale
+                                Case 0
+                                    If My.Settings.CSize = False Then
+                                        PageSize(odef, "C")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSizeCSheet
+                                    End If
+                                Case 1
+                                    If Print_Size.chkQuestion.Checked = True Then
+                                        Print_Size.cmbScaleSize.Items.Clear()
+                                        For Page = 0 To PageSizes.Count - 1
+                                            Print_Size.cmbScaleSize.Items.Add(PageSizes(Page))
+                                        Next
+                                        Print_Size.lblDWGSize.Text = "The current drawing is a C size sheet," & vbNewLine & "Select the size you would like to print."
+                                        Print_Size.ShowDialog()
+                                    End If
+                                Case 2
+                                    If My.Settings.ASize = False Then
+                                        PageSize(odef, "A")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSizeLetter
+                                    End If
+                                Case 3
+                                    If My.Settings.BSize = False Then
+                                        PageSize(odef, "B")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSize11x17
+                                    End If
+                            End Select
+                        Case 9990
+                            Select Case My.Settings.DScale
+                                Case 0
+                                    If My.Settings.DSize = False Then
+                                        PageSize(odef, "D")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSizeDSheet
+                                    End If
+                                Case 1
+                                    If Print_Size.chkQuestion.Checked = True Then
+                                        Print_Size.cmbScaleSize.Items.Clear()
+                                        For Page = 0 To PageSizes.Count - 1
+                                            Print_Size.cmbScaleSize.Items.Add(PageSizes(Page))
+                                        Next
+                                        Print_Size.lblDWGSize.Text = "The current drawing is a D size sheet," & vbNewLine & "Select the size you would like to print."
+                                        Print_Size.ShowDialog()
+                                    End If
+                                Case 2
+                                    If My.Settings.ASize = False Then
+                                        PageSize(odef, "A")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSizeLetter
+                                    End If
+                                Case 3
+                                    If My.Settings.BSize = False Then
+                                        PageSize(odef, "B")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSize11x17
+                                    End If
+                                Case 4
+                                    If My.Settings.CSize = False Then
+                                        PageSize(odef, "C")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSizeCSheet
+                                    End If
+                            End Select
+                        Case 9991
+                            Select Case My.Settings.EScale
+                                Case 0
+                                    If My.Settings.ESize = False Then
+                                        PageSize(odef, "E")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSizeESheet
+                                    End If
+                                Case 1
+                                    If Print_Size.chkQuestion.Checked = True Then
+                                        Print_Size.cmbScaleSize.Items.Clear()
+                                        For Page = 0 To PageSizes.Count - 1
+                                            Print_Size.cmbScaleSize.Items.Add(PageSizes(Page))
+                                        Next
+                                        Print_Size.lblDWGSize.Text = "The current drawing is a E size sheet," & vbNewLine & "Select the size you would like to print."
+                                        Print_Size.ShowDialog()
+                                    End If
+                                Case 2
+                                    If My.Settings.ASize = False Then
+                                        PageSize(odef, "A")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSizeLetter
+                                    End If
+                                Case 3
+                                    If My.Settings.BSize = False Then
+                                        PageSize(odef, "B")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSize11x17
+                                    End If
+                                Case 4
+                                    If My.Settings.CSize = False Then
+                                        PageSize(odef, "C")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSizeCSheet
+                                    End If
+                                Case 5
+                                    If My.Settings.DSize = False Then
+                                        PageSize(odef, "D")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSizeDSheet
+                                    End If
+                            End Select
+                        Case 9992
+                            Select Case My.Settings.FScale
+                                Case 0
+                                    oPM.PaperSize = PaperSizeEnum.kPaperSizeCustom
+                                    oPM.PaperWidth = oDoc.ActiveSheet.Width
+                                    oPM.PaperHeight = oDoc.ActiveSheet.Height
+                                Case 1
+                                    If Print_Size.chkquestion.checked = True Then
+                                        Print_Size.cmbScaleSize.Items.Clear()
+                                        For Page = 0 To PageSizes.Count - 1
+                                            Print_Size.cmbScaleSize.Items.Add(PageSizes(Page))
+                                        Next
+                                        Print_Size.lblDWGSize.Text = "The current drawing is a F size sheet," & vbNewLine & "Select the size you would like to print."
+                                        Print_Size.ShowDialog()
+                                    End If
+                                Case 2
+                                    If My.Settings.ASize = False Then
+                                        PageSize(odef, "A")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSizeLetter
+                                    End If
+                                Case 3
+                                    If My.Settings.BSize = False Then
+                                        PageSize(odef, "B")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSize11x17
+                                    End If
+                                Case 4
+                                    If My.Settings.CSize = False Then
+                                        PageSize(odef, "C")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSizeCSheet
+                                    End If
+                                Case 5
+                                    If My.Settings.DSize = False Then
+                                        PageSize(odef, "D")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSizeDSheet
+                                    End If
+                                Case 6
+                                    If My.Settings.ESize = False Then
+                                        PageSize(odef, "E")
+                                    Else
+                                        oPM.PaperSize = PaperSizeEnum.kPaperSizeESheet
+                                    End If
+                            End Select
+                    End Select
+                End If
+                If oDoc.Sheets.Item(X).ExcludeFromPrinting = False Then
+                    Dim oSketch As DrawingSketch = Nothing
+                    If My.Settings.PrintDwgLoc = True Then
+                        oSketch = dDoc.activesheet.sketches.add
+                        oSketch.Edit()
+                        Dim oTG As TransientGeometry = _invApp.TransientGeometry
+                        Dim DWGLoc As String = dDoc.FullFileName
+                        Dim oBorder As Border = Nothing
+                        Try
+                            oBorder = oDoc.ActiveSheet.Border
+                        Catch ex As Exception
+                            MessageBox.Show("Drawing border missing" & vbNewLine & ex.Message)
+                        End Try
+                        Dim oTextBox As Inventor.TextBox
+                        Select Case My.Settings.DWGLoc
+                            Case "TR"
+                                oTextBox = oSketch.TextBoxes.AddFitted(oTG.CreatePoint2d(oBorder.RangeBox.MaxPoint.X, oBorder.RangeBox.MaxPoint.Y + 0.45), DWGLoc)
+                                oTextBox.HorizontalJustification = HorizontalTextAlignmentEnum.kAlignTextRight
+                            Case "BR"
+                                oTextBox = oSketch.TextBoxes.AddFitted(oTG.CreatePoint2d(oBorder.RangeBox.MaxPoint.X, oBorder.RangeBox.MinPoint.Y - 0.3), DWGLoc)
+                                oTextBox.HorizontalJustification = HorizontalTextAlignmentEnum.kAlignTextRight
+                            Case "TL"
+                                oTextBox = oSketch.TextBoxes.AddFitted(oTG.CreatePoint2d(oBorder.RangeBox.MinPoint.X, oBorder.RangeBox.MaxPoint.Y + 0.45), DWGLoc)
+                                oTextBox.HorizontalJustification = HorizontalTextAlignmentEnum.kAlignTextLeft
+                            Case "BL"
+                                oTextBox = oSketch.TextBoxes.AddFitted(oTG.CreatePoint2d(oBorder.RangeBox.MinPoint.X, oBorder.RangeBox.MinPoint.Y - 0.3), DWGLoc)
+                                oTextBox.HorizontalJustification = HorizontalTextAlignmentEnum.kAlignTextLeft
+                        End Select
+                    End If
+                    oSketch.ExitEdit()
+
+                    If Print_Size.chkScale.CheckState = CheckState.Checked Then
+                        Select Case True
+                            Case Print_Size.cmbScaleSize.SelectedItem.Contains("to A")
+                                oPM.PaperSize = PaperSizeEnum.kPaperSizeLetter
+                            Case Print_Size.cmbScaleSize.SelectedItem.Contains("to B")
+                                oPM.PaperSize = PaperSizeEnum.kPaperSize11x17
+                            Case Print_Size.cmbScaleSize.SelectedItem.Contains("to C")
+                                oPM.PaperSize = PaperSizeEnum.kPaperSizeCSheet
+                            Case Print_Size.cmbScaleSize.SelectedItem.Contains("to D")
+                                oPM.PaperSize = PaperSizeEnum.kPaperSizeDSheet
+                            Case Print_Size.cmbScaleSize.SelectedItem.Contains("to E")
+                                oPM.PaperSize = PaperSizeEnum.kPaperSizeESheet
+                        End Select
+                    ElseIf Print_Size.chkScale.CheckState = CheckState.Indeterminate Then
+                        Select Case Size
+                            Case 9987
+                                oPM.PaperSize = PaperSizeEnum.kPaperSizeLetter
+                                If My.Settings.ASize = False Then
+                                    PageSize(odef, "A")
+                                End If
+                            Case 9988
+                                oPM.PaperSize = PaperSizeEnum.kPaperSize11x17
+                                If My.Settings.BSize = False Then
+                                    PageSize(odef, "B")
+                                End If
+                            Case 9989
+                                oPM.PaperSize = PaperSizeEnum.kPaperSizeCSheet
+                                If My.Settings.CSize = False Then
+                                    PageSize(odef, "C")
+                                End If
+                            Case 9990
+                                oPM.PaperSize = PaperSizeEnum.kPaperSizeDSheet
+                                If My.Settings.DSize = False Then
+                                    PageSize(odef, "D")
+                                End If
+                            Case 9991
+                                oPM.PaperSize = PaperSizeEnum.kPaperSizeESheet
+                                If My.Settings.ESize = False Then
+                                    PageSize(odef, "E")
+                                End If
+                            Case 9992
+                                oPM.PaperSize = PaperSizeEnum.kPaperSizeCustom
+                                oPM.PaperWidth = oDoc.ActiveSheet.Width
+                                oPM.PaperHeight = oDoc.ActiveSheet.Height
+                                If My.Settings.FSize = False Then
+                                    PageSize(odef, "F")
+                                End If
+                        End Select
+                    End If
+                    If Print_Size.lblDWGSize.Text = "Cancel" Then Exit Sub
+                    If Print_Size.chkScale.Checked = False Then oPM.SubmitPrint()
+                    writeDebug("Printing page " & X & " of " & oDoc.DisplayName & vbNewLine & "Size: " & Size & " Printed: " & oPM.PaperSize.ToString)
+                    Try
+                        oSketch.Delete()
+                    Catch
+                    End Try
+                End If
+                If Range <> 0 Then Exit For
+            Next
+        Catch ex As Exception
+            MsgBox("There was an error printing page " & X & " of " & oDoc.DisplayName & vbNewLine & ex.Message)
+            writeDebug("Error printing page " & X & " of " & oDoc.DisplayName)
+        End Try
+    End Sub
+    Private Function PageSize(ByVal oDef As ControlDefinition, ByVal SheetSize As String)
+        oDef = _invApp.CommandManager.ControlDefinitions("AppFilePrintCmd")
+        MsgBox("Your current settings do not have " & SheetSize & " size sheets as an available page size" & vbNewLine &
+"If this is incorrect, please update the Batch Program 'Available Printer Sheet Sizes'")
+        Print_Size.chkScale.Checked = False
+        oDef.Execute()
+        Return Nothing
+    End Function
 #End Region
 #Region "List Calls"
     Private Sub txtSearch_Click(sender As Object, e As System.EventArgs) Handles txtSearch.Click
@@ -2792,21 +3197,22 @@ Public Class Main
                 If dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Empty Then
                     dgvSubFiles.Rows(row.index).Visible = True
                 End If
-                If dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Gray Then
+                If dgvSubFiles(dgvSubFiles.Columns("Comments").Index, row.index).Value = "DNE" Then
                     If CMSMissingDWG.Text = "Show Missing Drawings" Then
                         dgvSubFiles.Rows(row.index).Visible = False
                     Else
                         dgvSubFiles.Rows(row.index).Visible = True
                     End If
                 End If
-                If dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Red Then
+                If dgvSubFiles(dgvSubFiles.Columns("Comments").Index, row.index).Value = "PPM" Then
                     If CMSMissingParts.Text = "Show Missing Parts" Then
                         dgvSubFiles.Rows(row.index).Visible = False
                     Else
                         dgvSubFiles.Rows(row.index).Visible = True
                     End If
                 End If
-                If dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Blue Then
+                If dgvSubFiles(dgvSubFiles.Columns("Comments").Index, row.index).Value = "REF" Then
+
                     If CMSReference.Text = "Show Reference Parts" Then
                         dgvSubFiles.Rows(row.index).Visible = False
                     Else
@@ -3135,7 +3541,6 @@ Public Class Main
         Me.pgbMain.DisplayText = e.UserState.ToString & " " & e.ProgressPercentage & "%"
     End Sub
     Private Sub bgwRun_DoWork(sender As Object, e As DoWorkEventArgs) Handles bgwRun.DoWork
-        Dim Print As New Print
         Dim NoPart As Boolean = True
         Dim NoDraw As Boolean = True
         Dim Path As Documents = _invApp.Documents
@@ -3202,9 +3607,10 @@ Public Class Main
         End If
         If chkPrint.Checked = True Then
             writeDebug("Accessing Print dialog")
-            Print.PopMain(Me)
-            Print.PopulatePrint(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs, SubFiles, AlphaSub)
-            Print.ShowDialog(Me)
+            ' Print.PopMain(Me)
+            ' Print.PopulatePrint(Path, oDoc, Archive, DrawingName, DrawSource, OpenDocs, SubFiles, AlphaSub)
+            ' Print.ShowDialog(Me)
+            PrintSetup()
             chkPrint.Checked = False
         End If
         If chkDXF.Checked = True Then
@@ -3390,11 +3796,11 @@ Public Class Main
                 Exit For
             End If
             dgvSubFiles.Rows.Add(New String() {True, Space(SubfilesData.Rows(i).Item(0) * 3) & SubfilesData.Rows(i).Item(1), SubfilesData.Rows(i).Item(1), SubfilesData.Rows(i).Item(2), SubfilesData.Rows(i).Item(3), SubfilesData.Rows(i).Item(4), dgvSubFiles.RowCount})
-            If SubfilesData.Rows(i).Item(4) = "PPM" Then
+            If SubfilesData.Rows(i).Item(4) = "PPM" And My.Settings.ColourCode = True Then
                 dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = My.Settings.PPM
-            ElseIf SubfilesData.Rows(i).Item(4) = "DNE" Then
+            ElseIf SubfilesData.Rows(i).Item(4) = "DNE" And My.Settings.ColourCode = True Then
                 dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = My.Settings.DNE
-            ElseIf SubfilesData.Rows(i).Item(4) = "REF" Then
+            ElseIf SubfilesData.Rows(i).Item(4) = "REF" And My.Settings.ColourCode = True Then
                 dgvSubFiles.Rows(dgvSubFiles.RowCount - 1).DefaultCellStyle.ForeColor = My.Settings.REF
             End If
         Next
@@ -3410,8 +3816,9 @@ Public Class Main
             txtSearch.Location = New Drawing.Point(dgvSubFiles.Location.X, Me.Height - 135)
         End If
         For Each row In dgvSubFiles.Rows
-            If dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Gray Or
-                dgvSubFiles.Rows(row.index).DefaultCellStyle.ForeColor = Drawing.Color.Red Then
+            If dgvSubFiles(dgvSubFiles.Columns("Comments").Index, row.index).Value = "DNE" Then
+                dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.Index).Value = False
+            ElseIf dgvSubFiles(dgvSubFiles.Columns("Comments").Index, row.index).Value = "PPM" Then
                 dgvSubFiles(dgvSubFiles.Columns("chkSubFiles").Index, row.Index).Value = False
             End If
 
@@ -3441,8 +3848,6 @@ Public Class Main
         dgvSubFiles.ClearSelection()
         Me.Update()
     End Sub
-
-
     Private Function SelectScale(Size)
         Select Case Size
             Case > 1250
@@ -3609,7 +4014,7 @@ Public Class Main
                             IO.File.WriteAllBytes(IO.Path.Combine(IO.Path.GetTempPath, "Quote-Blank.xlsm"), My.Resources.Quote_Blank)
                             Dim xlPath = IO.Path.Combine(IO.Path.GetTempPath, "List-Blank.xlsm")
                             _ExcelApp.Workbooks.Open(xlPath)
-                            _ExcelApp.Visible = True
+                            _ExcelApp.Visible = False
                             ExcelDoc = _ExcelApp.ActiveWorkbook
                             'ShowParameters(oDoc)
                             GetProperties(oDoc, AsmDef.Occurrences, 0, 0, ExcelDoc, Total)
@@ -3698,7 +4103,7 @@ Public Class Main
             'Look through all sub files in open documents to get the part sourcefile
             If dgvOpenFiles(dgvOpenFiles.Columns("chkOpenFiles").Index, X).Value = True Then
                 'iterate through opend documents to find the selected file
-                If IO.Path.GetExtension(dgvOpenFiles(dgvOpenFiles.Columns("OpenFiles").Index, X).Value) = ".iam" Then
+                If IO.Path.GetExtension(dgvOpenFiles(dgvOpenFiles.Columns("PartName").Index, X).Value) = ".iam" Then
                     C += 1
                 End If
             End If
@@ -3731,22 +4136,22 @@ Public Class Main
                 'If InStr(_invApp.Documents.Item(Y).FullFileName, lstOpenFiles.Items.Item(X)) <> 0 Then
                 oDoc = _invApp.Documents.ItemByName(dgvOpenFiles(dgvOpenFiles.Columns("PartSource").Index, X).Value)
 
-                oDoc = _invApp.Documents.Open(_invApp.Documents.Item(Y).FullFileName)
+                ' oDoc = _invApp.Documents.Open(_invApp.Documents.Item(X).FullFileName)
                 Ans = MsgBox("This action will overwrite" & vbNewLine & "all previous references." _
                                 & vbNewLine & "Do you wish to continue?", vbYesNo, "Overwrite References")
                 If Ans = vbNo Then
                     Exit Sub
                 Else
                     ' activate matching document
-                    AsmDoc = _invApp.ActiveDocument
+                    AsmDoc = _invApp.Documents.Open(dgvOpenFiles(dgvOpenFiles.Columns("Partsource").Index, X).Value)
                     DocType = AsmDoc.DocumentType
-                    strFile = Strings.Left(AsmDoc.FullFileName, Strings.Len(AsmDoc.FullFileName) - 4)
-                    strFile = Strings.Right(strFile, Strings.Len(strFile) - InStrRev(strFile, "\"))
+                    strFile = IO.Path.GetFileNameWithoutExtension(AsmDoc.FullFileName) ' Strings.Left(AsmDoc.FullFileName, Strings.Len(AsmDoc.FullFileName) - 4)
+                    'strFile = Strings.Right(strFile, Strings.Len(strFile) - InStrRev(strFile, "\"))
                     'Add list to the array for new Parent
                     Parent.Add(New List(Of String))
                     Parent(Layer).Add(strFile)
                     'call recursive sub to go through all sub files
-                    WriteChildren(AsmDoc.ComponentDefinition.Occurrences, Layer + 1, R, Col, Maxlayer, Parent, strFile, Total, Counter)
+                    WriteChildren(AsmDoc.AllReferencedDocuments, Layer + 1, R, Col, Maxlayer, Parent, strFile, Total, Counter)
                     Exit For
                 End If
             End If
@@ -3756,22 +4161,36 @@ Public Class Main
         Counter = 1
         For X = 0 To dgvSubFiles.RowCount - 1
             Counter += 1
-            For Y = 1 To _invApp.Documents.Count - 1
-                'oDoc = Path.Item(Y)
-                'Archive = oDoc.FullFileName
-                'Use the Partsource file to create the drawingsource file
-                'DrawSource = Strings.Left(Archive, Strings.Len(Archive) - 3) & "idw"
-                'If My.Computer.FileSystem.FileExists(DrawSource) Then
-                ' DrawingName = Strings.Right(DrawSource, Strings.Len(DrawSource) - Strings.InStrRev(DrawSource, "\"))
-                'If the drawing file is listed, open the drawing in Inventor
-                'If Trim(LVSubFiles.Items.Item(X).Text) = DrawingName Then
-                oDoc = _invApp.Documents.ItemByName(dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, Y).Value)
+
+            'For Y = 1 To _invApp.Documents.Count - 1
+            'oDoc = Path.Item(Y)
+            'Archive = oDoc.FullFileName
+            'Use the Partsource file to create the drawingsource file
+            'DrawSource = Strings.Left(Archive, Strings.Len(Archive) - 3) & "idw"
+            'If My.Computer.FileSystem.FileExists(DrawSource) Then
+            ' DrawingName = Strings.Right(DrawSource, Strings.Len(DrawSource) - Strings.InStrRev(DrawSource, "\"))
+            'If the drawing file is listed, open the drawing in Inventor
+            'If Trim(LVSubFiles.Items.Item(X).Text) = DrawingName Then
+            If dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, X).Value <> "" Then
+                oDoc = _invApp.Documents.Open(dgvSubFiles(dgvSubFiles.Columns("DrawingLocation").Index, X).Value)
+
                 'oDoc = _invApp.Documents.Open(DrawSource, False)
-                CustomPropSet = oDoc.PropertySets.Item("{D5CDD505-2E9C-101B-9397-08002B2CF9AE}")
-                PartName = Strings.Right(oDoc.FullFileName, Len(oDoc.FullFileName) - InStrRev(oDoc.FullFileName, "\"))
+                CustomPropSet = oDoc.PropertySets.Item("Inventor User Defined Properties")
+                PartName = IO.Path.GetFileName(oDoc.FullFileName)
+                'define custom property collection
+                'oCustomPropertySet = ThisDoc.Document.PropertySets.Item("Inventor User Defined Properties")
+                'look at each property in the collection
+                For Each oCustProp In CustomPropSet
 
+                    If oCustProp.name.ToString.Contains("Reference") Then
+                        Try
+                            oCustProp.Delete
+                        Catch
+                        End Try
+                    End If
+                Next
 
-                For P = 0 To 9
+                For P = 0 To My.Settings.MaxRefNum
                     Try
                         InvRef(P) = CustomPropSet.Item("Reference" & P)
                     Catch
@@ -3779,7 +4198,7 @@ Public Class Main
                         InvRef(P) = CustomPropSet.Item("Reference" & P)
                     End Try
                 Next
-                For P = 0 To 9
+                For P = 0 To My.Settings.MaxRefNum
                     InvRef(P).Value = ""
                 Next
                 P = 0
@@ -3794,18 +4213,15 @@ Public Class Main
                             ChildFile = Strings.Right(test, Len(test) - (InStrRev(test, ",")))
                             ParentFile = Strings.Left(test, (InStr(test, ",") - 1))
                         End If
-                        If (Strings.Left(PartName, Len(PartName) - 4) = ChildFile) And ChildFile <> "" Then
-                            If P = 7 Then
+                        If IO.Path.GetFileNameWithoutExtension(PartName) = ChildFile AndAlso ChildFile <> "" Then
+                            If P = My.Settings.MaxRefNum + 1 Then
                                 Warning2 = True
                                 If InStr(Fix, ChildFile) = 0 Then
                                     Fix = Fix & ChildFile & vbNewLine
                                 End If
-                            ElseIf P = 6 Then
-                                MsgBox("The current titleblock holds 6 references." & vbNewLine &
-                                            "All following references will be added, but the Titleblock needs to be updated before they can be shown.", MsgBoxStyle.SystemModal)
-                            ElseIf P = 10 Then
-                                MsgBox("Currently the program can only keep 10 references." & vbNewLine &
-                                            "All following references will not be added.", MsgBoxStyle.SystemModal)
+                            ElseIf P = My.Settings.MaxRefNum + 1 Then
+                                MsgBox("The current maximum references is set to " & My.Settings.MaxRefNum & "." & vbNewLine &
+                            "All following references will not be added.", MsgBoxStyle.SystemModal)
                             End If
                             Try
                                 InvRef(P) = CustomPropSet.Item("Reference" & P)
@@ -3833,18 +4249,20 @@ Public Class Main
                 'MsVistaProgressBar.ProgressBarStyle = MSVistaProgressBar.BarStyle.Marquee
                 bgwRun.ReportProgress((Counter / Total) * 100, "Writing Reference: " & DrawingName)
                 ' ProgressBar(Total, Counter, "Writing Reference: ", DrawingName)
-                If Written = True Then
-                    Written = False
-                    Exit For
-                End If
-            Next
+                'If Written = True Then
+                '    Written = False
+                '    Exit For
+                'End If
+            End If
         Next
+        ' Next
         ' MsVistaProgressBar.Visible = False
         If Warning2 = True Then
             MsgBox(Fix & vbNewLine & "These drawings need to be updated manually.", MsgBoxStyle.SystemModal)
         End If
 
         MsgBox("All the references have been updated", MsgBoxStyle.SystemModal)
+        pgbMain.Visible = False
     End Sub
     Private Sub btnRename_Click(sender As System.Object, e As System.EventArgs) Handles btnRename.Click
         'If lstOpenFiles.CheckedItems.Count = 0 Then
@@ -3978,156 +4396,6 @@ Public Class Main
                 Dim oIsoView As DrawingView = oSheet.DrawingViews.AddProjectedView(oFrontView, oTG.CreatePoint2d(oSheet.Width * (3 / 4),
                                                                                     (oSheet.Height * 3 / 4)),
                                                                                    DrawingViewStyleEnum.kHiddenLineRemovedDrawingViewStyle, Scale * 0.75)
-
-                'MsgBox("Create section view.")
-
-                '' Create a front section view by
-
-                '' defining a section line in the front view.
-
-                'Dim oSectionSketch As DrawingSketch
-
-                'oSectionSketch = oFrontView.Sketches.Add
-
-                'oSectionSketch.Edit()
-                '' Get the circular edge of the top of the part.
-
-                'Dim oObjs As ObjectCollection
-
-                'oObjs = oPartDoc.AttributeManager.FindObjects("Name", "Name", "Edge13")
-
-                'Dim oCircularEdge As Edge
-
-                'oCircularEdge = oObjs.Item(1)
-
-
-
-                '' Get the associated drawingcurve.
-
-                'Dim oDrawViewCurves As DrawingCurvesEnumerator
-
-                'oDrawViewCurves = oFrontView.DrawingCurves(oCircularEdge)
-
-                'Dim oCircularCurve As DrawingCurve
-
-                'oCircularCurve = oDrawViewCurves.Item(1)
-
-
-
-                'Dim oCircularEntity As SketchEntity
-
-                'oCircularEntity = oSectionSketch.AddByProjectingEntity(oCircularCurve)
-
-
-
-                '' Draw the section line.
-
-                'Dim oSectionLine As SketchLine
-
-                'oSectionLine = oSectionSketch.SketchLines.AddByTwoPoints(oTG.CreatePoint2d(0, 0.9), oTG.CreatePoint2d(0, -0.9))
-
-
-
-                '' Create a constraint to the projected circle center point and the line.
-
-                'Call oSectionSketch.GeometricConstraints.AddCoincident(oSectionLine, oCircularEntity.CenterSketchPoint)
-                'oSectionSketch.ExitEdit()
-
-
-
-                '' Create the section view.
-
-                'Dim oSectionView As SectionDrawingView
-
-                'oSectionView = oSheet.DrawingViews.AddSectionView(oFrontView, oSectionSketch, oTG.CreatePoint2d(34, 10), DrawingViewStyleEnum.kHiddenLineRemovedDrawingViewStyle, Nothing, False)
-
-                'MsgBox("Create detail view.")
-
-
-
-                '' Create the detail view.
-
-                'Dim oDetailView As DetailDrawingView
-
-                'oDetailView = oSheet.DrawingViews.AddDetailView(oSectionView, oTG.CreatePoint2d(35, 15), DrawingViewStyleEnum.kFromBaseDrawingViewStyle, False, oTG.CreatePoint2d(21, 16), oTG.CreatePoint2d(24, 18), , 10, , "A")
-
-                '' Get the various edges of the model.
-
-                'Dim aoEdges(0 To 13) As Edge
-
-                'Dim i As Integer
-
-                'For i = 1 To 13
-                '    oObjs = oPartDoc.AttributeManager.FindObjects("Name", "Name", "Edge" & i)
-                '    aoEdges(i) = oObjs.Item(1)
-                'Next
-
-
-
-                '' Get the equivalent drawing curves.
-
-                'Dim aoDrawCurves(0 To 13) As DrawingCurve
-
-                'For i = 1 To 13
-                '    oDrawViewCurves = oFrontView.DrawingCurves(aoEdges(i))
-                '    aoDrawCurves(i) = oDrawViewCurves.Item(1)
-                'Next
-
-                'MsgBox("Create dimensions to the curves in the view.")
-
-                '' Create some dimensions
-
-                'Dim oGeneralDims As GeneralDimensions
-
-                'oGeneralDims = oSheet.DrawingDimensions.GeneralDimensions
-
-
-
-                'Dim oDim As GeneralDimension
-
-
-
-                'oDim = oGeneralDims.AddLinear(oTG.CreatePoint2d(15.5, 13), oSheet.CreateGeometryIntent(aoDrawCurves(1)), oSheet.CreateGeometryIntent(aoDrawCurves(3)), DimensionTypeEnum.kVerticalDimensionType)
-
-                'oDim = oGeneralDims.AddLinear(oTG.CreatePoint2d(16, 9), oSheet.CreateGeometryIntent(aoDrawCurves(2)), oSheet.CreateGeometryIntent(aoDrawCurves(4)), DimensionTypeEnum.kHorizontalDimensionType)
-
-                'oDim = oGeneralDims.AddRadius(oTG.CreatePoint2d(17, 19), oSheet.CreateGeometryIntent(aoDrawCurves(13)))
-
-                'oDim = oGeneralDims.AddDiameter(oTG.CreatePoint2d(8, 20), oSheet.CreateGeometryIntent(aoDrawCurves(13)), True, False)
-
-
-
-                'MsgBox("Create a text box with a leader.")
-
-
-
-                '' Place a text box with a leader.
-
-                'Dim oObjColl As ObjectCollection
-
-                'oObjColl = _invApp.TransientObjects.CreateObjectCollection
-
-                'Call oObjColl.Add(oTG.CreatePoint2d(17.5, 11))
-
-                'Dim oEval As Curve2dEvaluator
-
-                'oEval = aoDrawCurves(4).Evaluator2D
-
-                'Dim adParams(0) As Double
-
-                'adParams(0) = 0.6
-
-                'Dim adPoints(0 To 1) As Double
-
-                'Call oEval.GetPointAtParam(adParams, adPoints)
-
-                'Call oObjColl.Add(oTG.CreatePoint2d(adPoints(0), adPoints(1)))
-
-                'Dim oLeaderNote As LeaderNote
-
-                'oLeaderNote = oSheet.DrawingNotes.LeaderNotes.Add(oObjColl, "Text with a leader")
-
-                'oLeaderNote.DimensionStyle = oLeaderNote.DimensionStyle
             ElseIf DrawWarning = False Then
                 Dim ans As Boolean
                 ans = MsgBox("Only parts with missing drawings can be created" & vbNewLine & "Would you like to create drawings for the remaining items?", vbYesNo)
@@ -4140,6 +4408,13 @@ Public Class Main
         Next
     End Sub
 
-
+    Private Sub Main_Load(sender As Object, e As EventArgs) Handles Me.Load
+        If My.Settings.Experimental = True Then
+            gbxUtilities.Visible = True
+        Else
+            gbxUtilities.Visible = False
+        End If
+    End Sub
 #End Region
 End Class
+

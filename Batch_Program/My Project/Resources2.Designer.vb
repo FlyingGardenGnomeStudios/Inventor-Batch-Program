@@ -116,6 +116,8 @@ Namespace My.Resources
         '''	- Renaming function works but hasn&apos;t been thoroughly tested.
         '''Version 3.0.0.0 (02.15.19)
         '''	Moved program over to add-in
+        '''	Improved search algorithm
+        '''	Combined settings windows
         '''
         '''Version 2.1.3.6 (01.22.19)
         '''	Resolved Issue #10
@@ -128,8 +130,7 @@ Namespace My.Resources
         '''	Fixed issue with hide completed revision button not functioning correctly
         '''
         '''Version 2.1.3.0 (12.11.18)
-        '''	Added ability to delete/change childnodes in revtable
-        '''	Added capability to [rest of string was truncated]&quot;;.
+        '''	Added ability to de [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property Changelog() As String
             Get

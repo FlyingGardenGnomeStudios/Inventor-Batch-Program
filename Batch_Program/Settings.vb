@@ -1,15 +1,318 @@
 ﻿Imports System.Windows.Forms
 Imports System.Text.RegularExpressions
-#Region "Export Settings"
+Imports System.IO
+Imports System.Data
 Public Class Settings
-    Private RowIndex As Integer = 0
+    'Private RowIndex As Integer = 0
+    Dim NameFormatDT As New DataTable
     Public Sub New()
         InitializeComponent()
-        LoadFormValues()
-        LoadGeneralsettings()
+        PrintLoad()
+        LoadGeneralSettings()
         LoadRevTableSettings()
+        ExportLoad()
     End Sub
-    Private Sub LoadFormValues()
+#Region "General"
+    Private Sub RefColour_ItemActivate(sender As Object, e As EventArgs) Handles lvRefColour.ItemActivate
+        Dim cDialog As New ColorDialog()
+        Dim Index As Integer = lvRefColour.FocusedItem.Index
+        cDialog.Color = lvRefColour.Items.Item(Index).ForeColor ' initial selection is current color.
+
+        If (cDialog.ShowDialog() = DialogResult.OK) Then
+            lvRefColour.Items.Item(Index).ForeColor = cDialog.Color ' update with user selected color.
+        End If
+        Select Case Index
+            Case 0
+                My.Settings.REF = cDialog.Color
+            Case 1
+                My.Settings.DNE = cDialog.Color
+            Case 2
+                My.Settings.PPM = cDialog.Color
+        End Select
+
+        lvRefColour.SelectedItems.Clear()
+    End Sub
+    Private Sub txtNameFormat_Click(sender As Object, e As EventArgs) Handles txtNameFormat.Click
+        txtNameFormat.ForeColor = Drawing.Color.Black
+        If txtNameFormat.Text.Contains("ex: ") Then
+            txtNameFormat.Text = ""
+        End If
+    End Sub
+    Private Sub txtNameFormat_LostFocus(sender As Object, e As EventArgs) Handles txtNameFormat.LostFocus
+        If txtNameFormat.Text = "" Then
+            txtNameFormat.Text = "ex: 1234-12.ABC"
+            txtNameFormat.ForeColor = Drawing.Color.Gray
+        End If
+    End Sub
+    Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
+        Dim NameFormat As String = RemoveInvalidFileNameChars(txtNameFormat.Text)
+        Dim Example As String = Nothing
+        Dim Alpha As String = "@"
+        Dim Num As Integer = "0"
+        If NameFormat <> txtNameFormat.Text Then
+            MsgBox("Invalid characters have been removed from the submitted filename")
+            txtNameFormat.Text = NameFormat
+        End If
+        NameFormat = Nothing
+        For Letter = 0 To Len(txtNameFormat.Text) - 1
+            If Num > 9 Then Num = Num - 10
+            If Chr(Asc(Alpha)) > Chr(Asc("A") + 25) Then Alpha = Chr(Asc(Alpha) - 25)
+            If Char.IsNumber(txtNameFormat.Text.Chars(Letter)) Then ' IsNumeric(Strings.Left(txtNameFormat.Text, Letter)) = True Then
+                NameFormat = NameFormat & "#" ' Replace(Letter, Strings.Left(NameFormat, Letter), "#")
+                Example = Example & Num + 1
+                Num += 1
+            ElseIf Char.IsLetter(txtNameFormat.Text.Chars(Letter)) Then ' Regex.IsMatch(Strings.Left(UCase(txtNameFormat.Text), Letter), "^[A-Z]{1}$") Then
+                NameFormat = NameFormat & "?" 'Replace(Letter, Strings.Left(NameFormat, Letter), "?")
+                Example = Example & Chr(Asc(Alpha) + 1)
+                Alpha = Chr(Asc(Alpha) + 1)
+            Else
+                NameFormat = NameFormat & txtNameFormat.Text.Chars(Letter)
+                Example = Example & txtNameFormat.Text.Chars(Letter)
+                Alpha = "@"
+                Num = 0
+            End If
+        Next
+        Dim Dup As Boolean = False
+        For Each Row In dgvNameFormat.Rows
+            If NameFormat = dgvNameFormat(dgvNameFormat.Columns("Format").Index, Row.index).Value Then
+                Dup = True
+                Exit For
+            End If
+        Next
+        If Dup = False Then
+            dgvNameFormat.Rows.Add({NameFormat, Example})
+        End If
+    End Sub
+    Private Sub btnRemove_Click(sender As Object, e As EventArgs) Handles btnRemove.Click
+        If dgvNameFormat.SelectedRows Is Nothing Then
+            Exit Sub
+        Else
+            For Each Row In dgvNameFormat.SelectedRows
+                dgvNameFormat.Rows.Remove(dgvNameFormat.Rows(Row.index))
+            Next
+        End If
+
+    End Sub
+    Private Sub LoadGeneralSettings()
+        lvRefColour.Items.Item(0).ForeColor = My.Settings.REF
+        lvRefColour.Items.Item(1).ForeColor = My.Settings.DNE
+        lvRefColour.Items.Item(2).ForeColor = My.Settings.PPM
+        If My.Settings.StrictSearch = True Then
+            rdoLoose.Checked = False
+            rdoStrict.Checked = True
+        Else
+            rdoStrict.Checked = False
+            rdoLoose.Checked = True
+        End If
+
+        chkExperimental.Checked = My.Settings.Experimental
+        chkColourCode.Checked = My.Settings.ColourCode
+        If dgvNameFormat.RowCount = 0 Then
+            If Not My.Settings.NameFormat Is Nothing Then
+                For Each Item As String In My.Settings.NameFormat
+                    Dim Items As String() = Strings.Split(Item, "*")
+                    dgvNameFormat.Rows.Add({Items(0), Items(1)})
+                Next
+            End If
+        End If
+        If chkExperimental.Checked = True Then
+            GroupBox5.Height = 238
+        Else
+            GroupBox5.Height = 39
+        End If
+        nudMaxRef.Value = My.Settings.MaxRefNum
+        If chkColourCode.Checked = False Then
+            lvRefColour.Enabled = False
+        Else
+            lvRefColour.Enabled = True
+        End If
+    End Sub
+    Private Sub chkColourCode_CheckedChanged(sender As Object, e As EventArgs) Handles chkColourCode.CheckedChanged
+        If chkColourCode.Checked = False Then
+            lvRefColour.Enabled = False
+        Else
+            lvRefColour.Enabled = True
+        End If
+
+    End Sub
+    Private Sub chkExperimental_CheckedChanged(sender As Object, e As EventArgs) Handles chkExperimental.CheckedChanged
+        If chkExperimental.Checked = True Then
+            GroupBox5.Height = 238
+        Else
+            GroupBox5.Height = 39
+        End If
+    End Sub
+    Private Sub GeneralOK()
+        My.Settings.StrictSearch = rdoStrict.Checked
+        My.Settings.ColourCode = chkColourCode.Checked
+        My.Settings.Experimental = chkExperimental.Checked
+        Dim NameFormatDT As DataTable = New DataTable
+        For Each col As DataGridViewColumn In dgvNameFormat.Columns
+            NameFormatDT.Columns.Add(col.Name)
+        Next
+        For Each row As DataGridViewRow In dgvNameFormat.Rows
+            Dim dRow As DataRow = NameFormatDT.NewRow
+            For Each cell As DataGridViewCell In row.Cells
+                dRow(cell.ColumnIndex) = cell.Value
+            Next
+            NameFormatDT.Rows.Add(dRow)
+        Next
+        dgvNameFormat.SelectAll()
+        If Not My.Settings.NameFormat Is Nothing Then My.Settings.NameFormat.Clear()
+        If My.Settings.NameFormat Is Nothing Then My.Settings.NameFormat = New Specialized.StringCollection
+        If dgvNameFormat.SelectedRows.Count > 0 Then
+            Dim DRC As DataGridViewSelectedRowCollection = dgvNameFormat.SelectedRows
+            Dim IDS As New List(Of String)
+            For i As Integer = 0 To DRC.Count - 1
+                Dim id As String = DRC(i).Cells(0).Value & "*" & DRC(i).Cells(1).Value
+                My.Settings.NameFormat.Add(id)
+            Next
+        End If
+        My.Settings.MaxRefNum = nudMaxRef.Value
+    End Sub
+#End Region
+#Region "Print"
+    Private Sub PrintLoad()
+        chkDWGLocation.Checked = My.Settings.PrintDwgLoc
+        If My.Settings.PrintDwgLoc = True Then
+            Select Case My.Settings.DWGLoc
+                Case "TR"
+                    rdoTR.Checked = True
+                Case "TL"
+                    rdoTL.Checked = True
+                Case "BR"
+                    rdoBR.Checked = True
+                Case "BL"
+                    rdoBL.Checked = True
+            End Select
+        End If
+        Select Case My.Settings.PrintRange
+            Case 0
+                rdoAllPages.Checked = True
+            Case 1
+                rdoFirstPage.Checked = True
+            Case 2
+                rdoCurrentPage.Checked = True
+        End Select
+        Select Case My.Settings.PrintColour
+            Case True
+                rdoColour.Checked = True
+            Case False
+                rdoBW.Checked = True
+        End Select
+        If My.Settings.Scale = False Then
+            rdoScale.Checked = False
+            rdoFull.Checked = True
+        Else
+            rdoScale.Checked = True
+            rdoFull.Checked = False
+        End If
+        txtCopies.Value = My.Settings.PrintCopies
+        chkReverse.Checked = My.Settings.PrintReverse
+        cmbScaleB.SelectedIndex = My.Settings.BScale
+        cmbScaleC.SelectedIndex = My.Settings.CScale
+        cmbScaleD.SelectedIndex = My.Settings.DScale
+        cmbScaleE.SelectedIndex = My.Settings.EScale
+        cmbScaleF.SelectedIndex = My.Settings.FScale
+        chkA.Checked = My.Settings.ASize
+        chkB.Checked = My.Settings.BSize
+        chkC.Checked = My.Settings.CSize
+        chkD.Checked = My.Settings.DSize
+        chkE.Checked = My.Settings.ESize
+        chkF.Checked = My.Settings.FSize
+    End Sub
+    Private Sub rdoScale_CheckedChanged(sender As Object, e As EventArgs) Handles rdoScale.CheckedChanged
+        gbxScale.Visible = rdoScale.Checked
+        My.Settings.Scale = rdoScale.Checked
+    End Sub
+    Private Sub rdoBR_CheckedChanged(sender As Object, e As EventArgs) Handles rdoBR.CheckedChanged
+        If rdoBR.Checked = True Then
+            rdoBL.Checked = False
+            rdoTL.Checked = False
+            rdoTR.Checked = False
+            My.Settings.DWGLoc = "BR"
+        End If
+    End Sub
+    Private Sub rdoTL_CheckedChanged(sender As Object, e As EventArgs) Handles rdoTL.CheckedChanged
+        If rdoTL.Checked = True Then
+            rdoBL.Checked = False
+            rdoTR.Checked = False
+            rdoBR.Checked = False
+            My.Settings.DWGLoc = "TL"
+        End If
+    End Sub
+    Private Sub rdoBL_CheckedChanged(sender As Object, e As EventArgs) Handles rdoBL.CheckedChanged
+        If rdoBL.Checked = True Then
+            rdoTL.Checked = False
+            rdoTR.Checked = False
+            rdoBR.Checked = False
+            My.Settings.DWGLoc = "BL"
+        End If
+    End Sub
+    Private Sub rdoTR_CheckedChanged(sender As Object, e As EventArgs) Handles rdoTR.CheckedChanged
+        If rdoTR.Checked = True Then
+            rdoBL.Checked = False
+            rdoTL.Checked = False
+            rdoBR.Checked = False
+            My.Settings.DWGLoc = "TR"
+        End If
+    End Sub
+    Private Sub chkDWGLocation_CheckedChanged(sender As Object, e As EventArgs) Handles chkDWGLocation.CheckedChanged
+        If chkDWGLocation.Checked = True Then
+            Select Case My.Settings.DWGLoc
+                Case "TR"
+                    rdoTR.Checked = True
+                Case "TL"
+                    rdoTL.Checked = True
+                Case "BR"
+                    rdoBR.Checked = True
+                Case "BL"
+                    rdoBL.Checked = True
+            End Select
+        Else
+            rdoTR.Checked = False
+            rdoTL.Checked = False
+            rdoBR.Checked = False
+            rdoBL.Checked = False
+        End If
+    End Sub
+    Private Sub PrintOK()
+        My.Settings.Scale = rdoScale.Checked
+        My.Settings.BScale = cmbScaleB.SelectedIndex
+        My.Settings.CScale = cmbScaleC.SelectedIndex
+        My.Settings.DScale = cmbScaleD.SelectedIndex
+        My.Settings.EScale = cmbScaleE.SelectedIndex
+        My.Settings.FScale = cmbScaleF.SelectedIndex
+        My.Settings.ASize = chkA.Checked
+        My.Settings.BSize = chkb.Checked
+        My.Settings.CSize = chkc.checked
+        My.Settings.DSize = chkD.Checked
+        My.Settings.ESize = chkE.Checked
+        My.Settings.FSize = chkF.Checked
+        If rdoCurrentPage.Checked = True Then
+            My.Settings.PrintRange = 2
+        ElseIf rdoFirstPage.Checked = True Then
+            My.Settings.PrintRange = 1
+        Else
+            My.Settings.PrintRange = 0
+        End If
+        If rdoFull.Checked = True Then
+            My.Settings.PrintSize = 0
+        Else
+            My.Settings.PrintSize = 1
+        End If
+        If rdoColour.Checked = True Then
+            My.Settings.PrintColour = True
+        Else
+            My.Settings.PrintColour = False
+        End If
+        My.Settings.PrintDwgLoc = chkDWGLocation.Checked
+        My.Settings.PrintReverse = chkReverse.Checked
+        txtCopies.Value = My.Settings.PrintCopies
+    End Sub
+#End Region
+#Region "Export"
+    Private Sub ExportLoad()
         If My.Settings.PDFSaveNewLoc = True Then
             txtPDFSaveLoc.Text = My.Settings.PDFSaveLoc
             txtPDFSaveLoc.Enabled = True
@@ -83,6 +386,12 @@ Public Class Settings
         End If
         cmbSheets.SelectedIndex = My.Settings.PDFRange
         numRes.Value = My.Settings.PDFRes
+        Select Case My.Settings.PrintSize
+            Case 0
+                rdoFull.Checked = True
+            Case 1
+                rdoScale.Checked = True
+        End Select
     End Sub
     Private Sub rdoPDFSaveLoc_CheckedChanged(sender As Object, e As EventArgs) Handles rdoPDFSaveLoc.CheckedChanged
         If rdoPDFSaveLoc.Checked = True Then
@@ -167,136 +476,6 @@ Public Class Settings
             If txtDWGTag.Text.Contains("ex:") Then txtDWGTag.Text = ""
         End If
     End Sub
-    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
-        LoadFormValues()
-        Me.Close()
-    End Sub
-    Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
-
-
-        If rdoPDFSaveLoc.Checked = True Then
-            My.Settings.PDFSaveLoc = txtPDFSaveLoc.Text
-            My.Settings.PDFSaveNewLoc = True
-            My.Settings.PDFSaveTag = False
-        ElseIf rdoPDFTag.Checked = True Then
-            If Regex.IsMatch(txtPDFTag.Text, ("^[a-zA-Z0-9_]*$")) Then
-                MsgBox("The PDF location you have selected Is invalid")
-                Exit Sub
-            End If
-            If Strings.Left(txtPDFTag.Text, 1) <> "\" Then
-                txtPDFTag.Text = "\" & txtPDFTag.Text
-            End If
-            If Strings.Right(txtPDFTag.Text, 1) = "\" Then
-                txtPDFTag.Text = Strings.Left(txtPDFTag.Text, Len(txtPDFTag.Text) - 1)
-            End If
-            My.Settings.PDFTag = txtPDFTag.Text
-            My.Settings.PDFSaveNewLoc = False
-            My.Settings.PDFSaveTag = True
-        Else
-            My.Settings.PDFSaveNewLoc = False
-            My.Settings.PDFSaveTag = False
-        End If
-        If chkPDFRev.Checked = True Then
-            My.Settings.PDFRev = True
-        Else
-            My.Settings.PDFRev = False
-        End If
-
-
-        If rdoDXFSaveLoc.Checked = True Then
-            My.Settings.DXFSaveLoc = txtDXFSaveLoc.Text
-            My.Settings.DXFSaveNewLoc = True
-            My.Settings.DXFSaveTag = False
-        ElseIf rdoDXFTag.Checked = True Then
-            If Regex.IsMatch(txtDXFTag.Text, ("^[a-zA-Z0-9_]*$")) Then
-                MsgBox("The DXF location you have selected Is invalid")
-                Exit Sub
-            End If
-            If Strings.Left(txtDXFTag.Text, 1) <> "\" Then
-                txtDXFTag.Text = "\" & txtDXFTag.Text
-            End If
-            If Strings.Right(txtDXFTag.Text, 1) = "\" Then
-                txtDXFTag.Text = Strings.Left(txtDXFTag.Text, Len(txtDXFTag.Text) - 1)
-            End If
-            My.Settings.DXFTag = txtDXFTag.Text
-            My.Settings.DXFSaveNewLoc = False
-            My.Settings.DXFSaveTag = True
-        Else
-            My.Settings.DXFSaveNewLoc = False
-            My.Settings.DXFSaveTag = False
-        End If
-        If chkDXFRev.Checked = True Then
-            My.Settings.DXFRev = True
-        Else
-            My.Settings.DXFRev = False
-        End If
-
-        If rdoDWGSaveLoc.Checked = True Then
-            My.Settings.DWGSaveLoc = txtDWGSaveLoc.Text
-            My.Settings.DWGSaveNewLoc = True
-            My.Settings.DWGSaveTag = False
-        ElseIf rdoDWGTag.Checked = True Then
-            If Regex.IsMatch(txtDWGTag.Text, ("^[a-zA-Z0-9_]*$")) Then
-                MsgBox("The DWG location you have selected Is invalid")
-                Exit Sub
-            End If
-            If Strings.Left(txtDWGTag.Text, 1) <> "\" Then
-                txtDWGTag.Text = "\" & txtDWGTag.Text
-            End If
-            If Strings.Right(txtDWGTag.Text, 1) = "\" Then
-                txtDWGTag.Text = Strings.Left(txtDWGTag.Text, Len(txtDWGTag.Text) - 1)
-            End If
-            My.Settings.DWGTag = txtDWGTag.Text
-            My.Settings.DWGSaveNewLoc = False
-            My.Settings.DWGSaveTag = True
-        Else
-            My.Settings.DWGSaveNewLoc = False
-            My.Settings.DWGSaveTag = False
-        End If
-        If chkDWGRev.Checked = True Then
-            My.Settings.DWGRev = True
-        Else
-            My.Settings.DWGRev = False
-        End If
-        If chkArchive.Checked = True Then
-            My.Settings.ArchiveExport = True
-        Else
-            My.Settings.ArchiveExport = False
-        End If
-        If chkCustDWGini.Checked = True Then
-            My.Settings.DWGini = True
-            My.Settings.DWGiniLoc = txtCustDWGini.Text
-        Else
-            My.Settings.DWGini = False
-        End If
-        If chkCustDXFini.Checked = True Then
-            My.Settings.DXFini = True
-            My.Settings.DXFiniLoc = txtCustDXFini.Text
-        Else
-            My.Settings.DXFini = False
-        End If
-        If chkLineWeights.Checked = True Then
-            My.Settings.PDFLineWeights = True
-        Else
-            My.Settings.PDFLineWeights = False
-        End If
-        If chkPDFBW.Checked Then
-            My.Settings.PDFColoursBlack = True
-        Else
-            My.Settings.PDFColoursBlack = False
-        End If
-        My.Settings.PDFRange = cmbSheets.SelectedIndex
-        My.Settings.PDFRes = numRes.Value
-        My.Settings.Save()
-        Me.Close()
-        If rdoStrict.Checked = True Then
-            My.Settings.StrictSearch = True
-        Else
-            My.Settings.StrictSearch = False
-        End If
-        My.Settings.Save()
-        Me.Close()
-    End Sub
     Private Sub btnPDFLocBrowse_Click(sender As Object, e As EventArgs) Handles btnPDFLocBrowse.Click
         Dim Folder As FolderBrowserDialog = New FolderBrowserDialog
         Folder.Description = "Choose the location you wish to save To"
@@ -339,15 +518,6 @@ Public Class Settings
             MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End Try
     End Sub
-    Private Function IsAlphaNum(ByVal strInputText As String) As Boolean
-        Dim IsAlpha As Boolean = False
-        If System.Text.RegularExpressions.Regex.IsMatch(strInputText, "^[a-zA-Z0-9-\\]+$") Then
-            IsAlpha = True
-        Else
-            IsAlpha = False
-        End If
-        Return IsAlpha
-    End Function
     Private Sub chkCustDWGini_CheckedChanged(sender As Object, e As EventArgs) Handles chkCustDWGini.CheckedChanged
         If chkCustDWGini.Checked = True Then
             txtCustDWGini.Enabled = True
@@ -398,39 +568,67 @@ Public Class Settings
             MessageBox.Show(ex.Message, "Exception Details", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End Try
     End Sub
-    Private Sub RefColour_ItemActivate(sender As Object, e As EventArgs) Handles RefColour.ItemActivate
-        Dim cDialog As New ColorDialog()
-        Dim Index As Integer = RefColour.FocusedItem.Index
-        cDialog.Color = RefColour.Items.Item(Index).ForeColor ' initial selection is current color.
-
-        If (cDialog.ShowDialog() = DialogResult.OK) Then
-            RefColour.Items.Item(Index).ForeColor = cDialog.Color ' update with user selected color.
-        End If
-        Select Case Index
-            Case 0
-                My.Settings.REF = cDialog.Color
-            Case 1
-                My.Settings.DNE = cDialog.Color
-            Case 2
-                My.Settings.PPM = cDialog.Color
-        End Select
-
-        RefColour.SelectedItems.Clear()
-    End Sub
-    Private Sub LoadGeneralsettings()
-        RefColour.Items.Item(0).ForeColor = My.Settings.REF
-        RefColour.Items.Item(1).ForeColor = My.Settings.DNE
-        RefColour.Items.Item(2).ForeColor = My.Settings.PPM
-        If My.Settings.StrictSearch = False Then
-            rdoLoose.Checked = True
-            rdoStrict.Checked = False
+    Private Sub ExportOK()
+        If rdoPDFSaveLoc.Checked = True Then
+            My.Settings.PDFSaveLoc = txtPDFSaveLoc.Text
+            My.Settings.PDFSaveNewLoc = True
+            My.Settings.PDFSaveTag = False
+        ElseIf rdoPDFTag.Checked = True Then
+            My.Settings.PDFTag = txtPDFTag.Text
+            My.Settings.PDFSaveNewLoc = False
+            My.Settings.PDFSaveTag = True
         Else
-            rdoStrict.Checked = True
-            rdoLoose.Checked = False
+            My.Settings.PDFSaveNewLoc = False
+            My.Settings.PDFSaveTag = False
         End If
-    End Sub
-    Public Sub LoadRevTableSettings()
+        My.Settings.PDFRev = chkPDFRev.Checked
+        If rdoDXFSaveLoc.Checked = True Then
+            My.Settings.DXFSaveLoc = txtDXFSaveLoc.Text
+            My.Settings.DXFSaveNewLoc = True
+            My.Settings.DXFSaveTag = False
+        ElseIf rdoDXFTag.Checked = True Then
 
+            My.Settings.DXFTag = txtDXFTag.Text
+            My.Settings.DXFSaveNewLoc = False
+            My.Settings.DXFSaveTag = True
+        Else
+            My.Settings.DXFSaveNewLoc = False
+            My.Settings.DXFSaveTag = False
+        End If
+        If chkDXFRev.Checked = True Then
+            My.Settings.DXFRev = True
+        Else
+            My.Settings.DXFRev = False
+        End If
+        If rdoDWGSaveLoc.Checked = True Then
+            My.Settings.DWGSaveLoc = txtDWGSaveLoc.Text
+            My.Settings.DWGSaveNewLoc = True
+            My.Settings.DWGSaveTag = False
+        ElseIf rdoDWGTag.Checked = True Then
+
+            My.Settings.DWGTag = txtDWGTag.Text
+            My.Settings.DWGSaveNewLoc = False
+            My.Settings.DWGSaveTag = True
+        Else
+            My.Settings.DWGSaveNewLoc = False
+            My.Settings.DWGSaveTag = False
+        End If
+        My.Settings.DWGRev = chkDWGRev.Checked
+        My.Settings.ArchiveExport = chkArchive.Checked
+        My.Settings.DWGini = chkCustDWGini.Checked
+        My.Settings.DWGiniLoc = txtCustDWGini.Text
+        My.Settings.DXFini = chkCustDXFini.Checked
+        My.Settings.DXFiniLoc = txtCustDXFini.Text
+        My.Settings.PDFLineWeights = chkLineWeights.Checked
+        My.Settings.PDFColoursBlack = chkPDFBW.Checked
+        My.Settings.PDFRange = cmbSheets.SelectedIndex
+        My.Settings.PDFRes = numRes.Value
+        rdoStrict.Checked = My.Settings.StrictSearch
+        My.Settings.Experimental = chkExperimental.Checked
+    End Sub
+#End Region
+#Region "Rev Table"
+    Public Sub LoadRevTableSettings()
         dgvRevTableLayout.Rows.Add(My.Settings.RTSCheckedBy, "Checked By", "Sheet iProperty", "Text")
         dgvRevTableLayout.Rows.Add(My.Settings.RTSCheckedDate, "Check Date", "Sheet iProperty", "Date")
         dgvRevTableLayout.Rows.Add(My.Settings.RTSRev, "Revision Number", My.Settings.RTSRevCol, "Number")
@@ -553,21 +751,7 @@ Public Class Settings
                     MsgBox("Batch Program currently only supports 5 custom fields")
             End Select
         Next
-        If txtAlphaRev.Text <> "" Then
-            My.Settings.AlphaRev = txtAlphaRev.Text
-        Else
-            MsgBox("Please enter a default description for alphabetical revisions")
-            Exit Sub
-        End If
-        If txtNumRev.Text <> "" Then
-            My.Settings.NumRev = txtNumRev.Text
-        Else
-            MsgBox("Please enter a default description for numerical revisions")
-            Exit Sub
-        End If
         My.Settings.StartVal = nudStartVal.Value
-        My.Settings.Save()
-        Me.Close()
         If rdbBL.Checked = True Then
             My.Settings.DefRevLoc = "BL"
         ElseIf rdbBR.Checked = True Then
@@ -577,6 +761,146 @@ Public Class Settings
         ElseIf rdbTR.Checked = True Then
             My.Settings.DefRevLoc = "TR"
         End If
+    End Sub
+#End Region
+#Region "Functions"
+    Private Function RemoveInvalidFileNameChars(UserInput As String) As String
+        For Each invalidChar In IO.Path.GetInvalidFileNameChars
+            UserInput = UserInput.Replace(invalidChar, "")
+        Next
+        Return UserInput
+    End Function
+    Public Function ConvertDatatableToXML(ByVal dt As DataTable) As String
+        Dim str As New MemoryStream()
+        dt.WriteXml(str, True)
+        str.Seek(0, SeekOrigin.Begin)
+        Dim sr As New StreamReader(str)
+        Dim xmlstr As String
+        xmlstr = sr.ReadToEnd()
+        Return (xmlstr)
+    End Function
+    Private Function IsAlphaNum(ByVal strInputText As String) As Boolean
+        Dim IsAlpha As Boolean = False
+        If System.Text.RegularExpressions.Regex.IsMatch(strInputText, "^[a-zA-Z0-9-\\]+$") Then
+            IsAlpha = True
+        Else
+            IsAlpha = False
+        End If
+        Return IsAlpha
+    End Function
+    Private Sub ContextMenuStrip1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ContextMenuStrip1.Click
+        Try
+            If dgvRevTableLayout.CurrentCell.RowIndex > 6 Then
+                dgvRevTableLayout.Rows.RemoveAt(dgvRevTableLayout.CurrentCell.RowIndex)
+            Else
+                MsgBox("Cannot remove default item." & vbNewLine & "Uncheck this item if it does not apply")
+            End If
+        Catch
+        End Try
+    End Sub
+    Public Shared Function FilenameIsOK(ByVal fileName As String) As Boolean
+        If fileName = Nothing Then Return False
+        Dim file As String = Path.GetFileName(fileName)
+        Dim directory As String = Path.GetDirectoryName(fileName)
+
+        Return Not (file.Intersect(Path.GetInvalidFileNameChars()).Any() _
+                OrElse
+                directory.Intersect(Path.GetInvalidPathChars()).Any())
+    End Function
+    Function TestValues() As Boolean
+        If txtPDFSaveLoc.Text = Nothing AndAlso rdoPDFSaveLoc.Checked = True Then
+            MsgBox("A valid location is needed for the PDF save location")
+            tcrlSettings.SelectedIndex = 2
+            tabSaveLoc.SelectedIndex = 0
+            Return False
+        End If
+
+        If txtDXFSaveLoc.Text = Nothing AndAlso rdoDXFSaveLoc.Checked = True Then
+            MsgBox("A valid location is needed for the DXF save location")
+            tcrlSettings.SelectedIndex = 2
+            tabSaveLoc.SelectedIndex = 1
+            Return False
+        End If
+
+        If txtDWGSaveLoc.Text = Nothing AndAlso rdoDWGSaveLoc.Checked = True Then
+            MsgBox("A valid location is needed for the DWG save location")
+            tcrlSettings.SelectedIndex = 2
+            tabSaveLoc.SelectedIndex = 2
+            Return False
+        End If
+        If txtPDFTag.Text = Nothing AndAlso rdoPDFTag.Checked = True Then
+            If FilenameIsOK(txtPDFTag.Text) = False Then
+                'If Regex.IsMatch(txtPDFTag.Text, ("^[a-zA-Z0-9_]*$")) Then
+                MsgBox("The PDF export location you have selected Is invalid")
+                tcrlSettings.SelectedIndex = 2
+                tabSaveLoc.SelectedIndex = 0
+                Return False
+            End If
+            If Strings.Left(txtPDFTag.Text, 1) <> "\" Then
+                txtPDFTag.Text = "\" & txtPDFTag.Text
+            End If
+            If Strings.Right(txtPDFTag.Text, 1) = "\" Then
+                txtPDFTag.Text = Strings.Left(txtPDFTag.Text, Len(txtPDFTag.Text) - 1)
+            End If
+        End If
+        If txtDXFTag.Text = Nothing AndAlso rdoDXFTag.Checked = True Then
+            If FilenameIsOK(txtDXFTag.Text) = False Then
+                'If Regex.IsMatch(txtDXFTag.Text, ("^[a-zA-Z0-9_]*$")) Then
+                MsgBox("The DXF export location you have selected Is invalid")
+                tcrlSettings.SelectedIndex = 2
+                tabSaveLoc.SelectedIndex = 1
+                Return False
+            End If
+            If Strings.Left(txtDXFTag.Text, 1) <> "\" Then
+                txtDXFTag.Text = "\" & txtDXFTag.Text
+            End If
+            If Strings.Right(txtDXFTag.Text, 1) = "\" Then
+                txtDXFTag.Text = Strings.Left(txtDXFTag.Text, Len(txtDXFTag.Text) - 1)
+            End If
+        End If
+        If txtDWGTag.Text = Nothing AndAlso rdoDWGTag.Checked = True Then
+            If FilenameIsOK(txtDWGTag.Text) = False Then
+                'If Regex.IsMatch(txtDWGTag.Text, ("^[a-zA-Z0-9_]*$")) Then
+                MsgBox("The DWG export location you have selected Is invalid")
+                tcrlSettings.SelectedIndex = 2
+                tabSaveLoc.SelectedIndex = 2
+                Return False
+            End If
+            If Strings.Left(txtDWGTag.Text, 1) <> "\" Then
+                txtDWGTag.Text = "\" & txtDWGTag.Text
+            End If
+            If Strings.Right(txtDWGTag.Text, 1) = "\" Then
+                txtDWGTag.Text = Strings.Left(txtDWGTag.Text, Len(txtDWGTag.Text) - 1)
+            End If
+        End If
+        If txtAlphaRev.Text = Nothing Then
+            MsgBox("Please enter a default description for alphabetical revisions")
+            tcrlSettings.SelectedIndex = 3
+            Return False
+        End If
+        If txtNumRev.Text = Nothing Then
+            MsgBox("Please enter a default description for numerical revisions")
+            tcrlSettings.SelectedIndex = 3
+            Return False
+        End If
+        Return True
+    End Function
+#End Region
+    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        Me.Close()
+    End Sub
+    Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
+        ExportOK()
+        GeneralOK()
+        RevTableOK()
+        PrintOK()
+        If TestValues() = True Then
+            My.Settings.Save()
+            Me.Close()
+        End If
+    End Sub
+    Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click
+        If TestValues() = True Then My.Settings.Save()
     End Sub
     'Private Sub dgvRevTableLayout_CellMouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles dgvRevTableLayout.CellMouseClick
     '    'Make sure the type is set to something, a work around if the grid contains checkboxes.
@@ -589,18 +913,4 @@ Public Class Settings
     '        End If
     '    End If
     'End Sub
-    Private Sub ContextMenuStrip1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ContextMenuStrip1.Click
-        Try
-            If dgvRevTableLayout.CurrentCell.RowIndex > 6 Then
-                dgvRevTableLayout.Rows.RemoveAt(dgvRevTableLayout.CurrentCell.RowIndex)
-            Else
-                MsgBox("Cannot remove default item." & vbNewLine & "Uncheck this item if it does not apply")
-            End If
-        Catch
-        End Try
-    End Sub
-    Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click
-        My.Settings.Save()
-    End Sub
 End Class
-#End Region

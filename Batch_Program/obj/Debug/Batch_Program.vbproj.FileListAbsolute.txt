@@ -12,7 +12,6 @@
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Settings.resources
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\iProperties.resources
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Resources.resources
-\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Print.resources
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Rename.resources
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Rev_Switch.resources
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\RevTable.resources
@@ -70,15 +69,9 @@ C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\BPAssembly.xml
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\BPAssembly.pdb
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Main.resources
-\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\BPAssembly.exe.config
-\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\BPAssembly.exe.manifest
-\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\BPAssembly.application
-\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\BPAssembly.exe
-\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\BPAssembly.TrustInfo.xml
-\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\BPAssembly.exe.manifest
-\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\BPAssembly.application
-\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\BPAssembly.exe
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\MSVistaPBar.dll
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\MSVistaPBar.pdb
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\MSVistaPBar.xml
-\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch_Program.vbprojResolveAssemblyReference.cache
+\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\BPAssembly.dll.config
+\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\BPAssembly.dll
+\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\BPAssembly.dll

@@ -416,7 +416,8 @@ Public Class iProperties
                              , ByRef Read As Boolean)
         Dim Y, Total As Integer
         For Y = 0 To Main.dgvSubFiles.RowCount - 1
-            If Main.dgvSubFiles(Main.dgvSubFiles.Columns("chkSubFiles").Index, Y).Value = True Then
+            If Main.dgvSubFiles(Main.dgvSubFiles.Columns("chkSubFiles").Index, Y).Value = True AndAlso
+               Main.dgvSubFiles.Rows(Y).Visible = True Then
                 Total += 1
             End If
         Next

@@ -67,15 +67,65 @@ Partial Class Settings
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
         Me.chkArchive = New System.Windows.Forms.CheckBox()
         Me.tcrlSettings = New System.Windows.Forms.TabControl()
-        Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.RefColour = New System.Windows.Forms.ListView()
-        Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
-        Me.rdoLoose = New System.Windows.Forms.RadioButton()
-        Me.rdoStrict = New System.Windows.Forms.RadioButton()
+        Me.GeneralTab = New System.Windows.Forms.TabPage()
+        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox6 = New System.Windows.Forms.GroupBox()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.nudMaxRef = New System.Windows.Forms.NumericUpDown()
+        Me.txtNameFormat = New System.Windows.Forms.TextBox()
+        Me.dgvNameFormat = New System.Windows.Forms.DataGridView()
+        Me.Format = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Example = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.btnAdd = New System.Windows.Forms.Button()
+        Me.btnRemove = New System.Windows.Forms.Button()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.chkExperimental = New System.Windows.Forms.CheckBox()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.TabPage4 = New System.Windows.Forms.TabPage()
+        Me.lvRefColour = New System.Windows.Forms.ListView()
+        Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.rdoStrict = New System.Windows.Forms.RadioButton()
+        Me.chkColourCode = New System.Windows.Forms.CheckBox()
+        Me.rdoLoose = New System.Windows.Forms.RadioButton()
+        Me.PrintTab = New System.Windows.Forms.TabPage()
+        Me.GroupBox10 = New System.Windows.Forms.GroupBox()
+        Me.chkF = New System.Windows.Forms.CheckBox()
+        Me.chkE = New System.Windows.Forms.CheckBox()
+        Me.chkD = New System.Windows.Forms.CheckBox()
+        Me.chkB = New System.Windows.Forms.CheckBox()
+        Me.chkA = New System.Windows.Forms.CheckBox()
+        Me.gbxScale = New System.Windows.Forms.GroupBox()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.cmbScaleF = New System.Windows.Forms.ComboBox()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.cmbScaleE = New System.Windows.Forms.ComboBox()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.cmbScaleD = New System.Windows.Forms.ComboBox()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.cmbScaleC = New System.Windows.Forms.ComboBox()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.cmbScaleB = New System.Windows.Forms.ComboBox()
+        Me.rdoBR = New System.Windows.Forms.RadioButton()
+        Me.rdoBL = New System.Windows.Forms.RadioButton()
+        Me.rdoTR = New System.Windows.Forms.RadioButton()
+        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.rdoTL = New System.Windows.Forms.RadioButton()
+        Me.chkDWGLocation = New System.Windows.Forms.CheckBox()
+        Me.GroupBox7 = New System.Windows.Forms.GroupBox()
+        Me.rdoColour = New System.Windows.Forms.RadioButton()
+        Me.rdoBW = New System.Windows.Forms.RadioButton()
+        Me.chkReverse = New System.Windows.Forms.CheckBox()
+        Me.txtCopies = New System.Windows.Forms.NumericUpDown()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.GroupBox8 = New System.Windows.Forms.GroupBox()
+        Me.rdoScale = New System.Windows.Forms.RadioButton()
+        Me.rdoFull = New System.Windows.Forms.RadioButton()
+        Me.GroupBox9 = New System.Windows.Forms.GroupBox()
+        Me.rdoFirstPage = New System.Windows.Forms.RadioButton()
+        Me.rdoCurrentPage = New System.Windows.Forms.RadioButton()
+        Me.rdoAllPages = New System.Windows.Forms.RadioButton()
+        Me.ExportTab = New System.Windows.Forms.TabPage()
+        Me.RevTableTab = New System.Windows.Forms.TabPage()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.dgvRevTableLayout = New System.Windows.Forms.DataGridView()
         Me.chk = New System.Windows.Forms.DataGridViewCheckBoxColumn()
@@ -98,6 +148,7 @@ Partial Class Settings
         Me.Label7 = New System.Windows.Forms.Label()
         Me.txtAlphaRev = New System.Windows.Forms.TextBox()
         Me.btnApply = New System.Windows.Forms.Button()
+        Me.chkC = New System.Windows.Forms.CheckBox()
         Me.GroupBox1.SuspendLayout()
         Me.tabSaveLoc.SuspendLayout()
         Me.tabPDF.SuspendLayout()
@@ -105,9 +156,22 @@ Partial Class Settings
         Me.tabDXF.SuspendLayout()
         Me.tabDWG.SuspendLayout()
         Me.tcrlSettings.SuspendLayout()
-        Me.TabPage1.SuspendLayout()
-        Me.TabPage2.SuspendLayout()
-        Me.TabPage4.SuspendLayout()
+        Me.GeneralTab.SuspendLayout()
+        Me.GroupBox5.SuspendLayout()
+        Me.GroupBox6.SuspendLayout()
+        CType(Me.nudMaxRef, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgvNameFormat, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox4.SuspendLayout()
+        Me.PrintTab.SuspendLayout()
+        Me.GroupBox10.SuspendLayout()
+        Me.gbxScale.SuspendLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox7.SuspendLayout()
+        CType(Me.txtCopies, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox8.SuspendLayout()
+        Me.GroupBox9.SuspendLayout()
+        Me.ExportTab.SuspendLayout()
+        Me.RevTableTab.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         CType(Me.dgvRevTableLayout, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip1.SuspendLayout()
@@ -410,54 +474,143 @@ Partial Class Settings
         '
         'tcrlSettings
         '
-        Me.tcrlSettings.Controls.Add(Me.TabPage1)
-        Me.tcrlSettings.Controls.Add(Me.TabPage2)
-        Me.tcrlSettings.Controls.Add(Me.TabPage4)
+        Me.tcrlSettings.Controls.Add(Me.GeneralTab)
+        Me.tcrlSettings.Controls.Add(Me.PrintTab)
+        Me.tcrlSettings.Controls.Add(Me.ExportTab)
+        Me.tcrlSettings.Controls.Add(Me.RevTableTab)
         resources.ApplyResources(Me.tcrlSettings, "tcrlSettings")
         Me.tcrlSettings.Name = "tcrlSettings"
         Me.tcrlSettings.SelectedIndex = 0
         '
-        'TabPage1
+        'GeneralTab
         '
-        Me.TabPage1.Controls.Add(Me.RefColour)
-        Me.TabPage1.Controls.Add(Me.CheckBox1)
-        Me.TabPage1.Controls.Add(Me.rdoLoose)
-        Me.TabPage1.Controls.Add(Me.rdoStrict)
-        Me.TabPage1.Controls.Add(Me.Label3)
-        resources.ApplyResources(Me.TabPage1, "TabPage1")
-        Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.UseVisualStyleBackColor = True
+        Me.GeneralTab.Controls.Add(Me.GroupBox5)
+        Me.GeneralTab.Controls.Add(Me.GroupBox4)
+        resources.ApplyResources(Me.GeneralTab, "GeneralTab")
+        Me.GeneralTab.Name = "GeneralTab"
+        Me.GeneralTab.UseVisualStyleBackColor = True
         '
-        'RefColour
+        'GroupBox5
         '
-        Me.RefColour.Activation = System.Windows.Forms.ItemActivation.OneClick
-        Me.RefColour.AutoArrange = False
-        Me.RefColour.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader4})
-        Me.RefColour.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None
-        Me.RefColour.Items.AddRange(New System.Windows.Forms.ListViewItem() {CType(resources.GetObject("RefColour.Items"), System.Windows.Forms.ListViewItem), CType(resources.GetObject("RefColour.Items1"), System.Windows.Forms.ListViewItem), CType(resources.GetObject("RefColour.Items2"), System.Windows.Forms.ListViewItem)})
-        resources.ApplyResources(Me.RefColour, "RefColour")
-        Me.RefColour.MultiSelect = False
-        Me.RefColour.Name = "RefColour"
-        Me.RefColour.UseCompatibleStateImageBehavior = False
-        Me.RefColour.View = System.Windows.Forms.View.Details
+        Me.GroupBox5.Controls.Add(Me.GroupBox6)
+        Me.GroupBox5.Controls.Add(Me.Label8)
+        Me.GroupBox5.Controls.Add(Me.chkExperimental)
+        resources.ApplyResources(Me.GroupBox5, "GroupBox5")
+        Me.GroupBox5.Name = "GroupBox5"
+        Me.GroupBox5.TabStop = False
+        '
+        'GroupBox6
+        '
+        Me.GroupBox6.Controls.Add(Me.Label9)
+        Me.GroupBox6.Controls.Add(Me.nudMaxRef)
+        Me.GroupBox6.Controls.Add(Me.txtNameFormat)
+        Me.GroupBox6.Controls.Add(Me.dgvNameFormat)
+        Me.GroupBox6.Controls.Add(Me.btnAdd)
+        Me.GroupBox6.Controls.Add(Me.btnRemove)
+        resources.ApplyResources(Me.GroupBox6, "GroupBox6")
+        Me.GroupBox6.Name = "GroupBox6"
+        Me.GroupBox6.TabStop = False
+        '
+        'Label9
+        '
+        resources.ApplyResources(Me.Label9, "Label9")
+        Me.Label9.Name = "Label9"
+        '
+        'nudMaxRef
+        '
+        resources.ApplyResources(Me.nudMaxRef, "nudMaxRef")
+        Me.nudMaxRef.Name = "nudMaxRef"
+        Me.nudMaxRef.Value = New Decimal(New Integer() {10, 0, 0, 0})
+        '
+        'txtNameFormat
+        '
+        Me.txtNameFormat.AcceptsReturn = True
+        Me.txtNameFormat.ForeColor = System.Drawing.Color.Gray
+        resources.ApplyResources(Me.txtNameFormat, "txtNameFormat")
+        Me.txtNameFormat.Name = "txtNameFormat"
+        '
+        'dgvNameFormat
+        '
+        Me.dgvNameFormat.AllowUserToAddRows = False
+        Me.dgvNameFormat.AllowUserToDeleteRows = False
+        Me.dgvNameFormat.AllowUserToResizeColumns = False
+        Me.dgvNameFormat.AllowUserToResizeRows = False
+        Me.dgvNameFormat.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvNameFormat.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Format, Me.Example})
+        resources.ApplyResources(Me.dgvNameFormat, "dgvNameFormat")
+        Me.dgvNameFormat.Name = "dgvNameFormat"
+        Me.dgvNameFormat.RowHeadersVisible = False
+        Me.dgvNameFormat.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        '
+        'Format
+        '
+        Me.Format.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        resources.ApplyResources(Me.Format, "Format")
+        Me.Format.Name = "Format"
+        Me.Format.ReadOnly = True
+        '
+        'Example
+        '
+        Me.Example.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        resources.ApplyResources(Me.Example, "Example")
+        Me.Example.Name = "Example"
+        Me.Example.ReadOnly = True
+        '
+        'btnAdd
+        '
+        resources.ApplyResources(Me.btnAdd, "btnAdd")
+        Me.btnAdd.Name = "btnAdd"
+        Me.btnAdd.UseVisualStyleBackColor = True
+        '
+        'btnRemove
+        '
+        resources.ApplyResources(Me.btnRemove, "btnRemove")
+        Me.btnRemove.Name = "btnRemove"
+        Me.btnRemove.UseVisualStyleBackColor = True
+        '
+        'Label8
+        '
+        resources.ApplyResources(Me.Label8, "Label8")
+        Me.Label8.Name = "Label8"
+        '
+        'chkExperimental
+        '
+        resources.ApplyResources(Me.chkExperimental, "chkExperimental")
+        Me.chkExperimental.Name = "chkExperimental"
+        Me.chkExperimental.UseVisualStyleBackColor = True
+        '
+        'GroupBox4
+        '
+        Me.GroupBox4.Controls.Add(Me.Label3)
+        Me.GroupBox4.Controls.Add(Me.lvRefColour)
+        Me.GroupBox4.Controls.Add(Me.rdoStrict)
+        Me.GroupBox4.Controls.Add(Me.chkColourCode)
+        Me.GroupBox4.Controls.Add(Me.rdoLoose)
+        resources.ApplyResources(Me.GroupBox4, "GroupBox4")
+        Me.GroupBox4.Name = "GroupBox4"
+        Me.GroupBox4.TabStop = False
+        '
+        'Label3
+        '
+        resources.ApplyResources(Me.Label3, "Label3")
+        Me.Label3.Name = "Label3"
+        '
+        'lvRefColour
+        '
+        Me.lvRefColour.Activation = System.Windows.Forms.ItemActivation.OneClick
+        Me.lvRefColour.AutoArrange = False
+        Me.lvRefColour.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader4})
+        Me.lvRefColour.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None
+        Me.lvRefColour.Items.AddRange(New System.Windows.Forms.ListViewItem() {CType(resources.GetObject("lvRefColour.Items"), System.Windows.Forms.ListViewItem), CType(resources.GetObject("lvRefColour.Items1"), System.Windows.Forms.ListViewItem), CType(resources.GetObject("lvRefColour.Items2"), System.Windows.Forms.ListViewItem)})
+        resources.ApplyResources(Me.lvRefColour, "lvRefColour")
+        Me.lvRefColour.MultiSelect = False
+        Me.lvRefColour.Name = "lvRefColour"
+        Me.lvRefColour.UseCompatibleStateImageBehavior = False
+        Me.lvRefColour.View = System.Windows.Forms.View.Details
         '
         'ColumnHeader4
         '
         resources.ApplyResources(Me.ColumnHeader4, "ColumnHeader4")
-        '
-        'CheckBox1
-        '
-        resources.ApplyResources(Me.CheckBox1, "CheckBox1")
-        Me.CheckBox1.Checked = True
-        Me.CheckBox1.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.UseVisualStyleBackColor = True
-        '
-        'rdoLoose
-        '
-        resources.ApplyResources(Me.rdoLoose, "rdoLoose")
-        Me.rdoLoose.Name = "rdoLoose"
-        Me.rdoLoose.UseVisualStyleBackColor = True
         '
         'rdoStrict
         '
@@ -467,26 +620,308 @@ Partial Class Settings
         Me.rdoStrict.TabStop = True
         Me.rdoStrict.UseVisualStyleBackColor = True
         '
-        'Label3
+        'chkColourCode
         '
-        resources.ApplyResources(Me.Label3, "Label3")
-        Me.Label3.Name = "Label3"
+        resources.ApplyResources(Me.chkColourCode, "chkColourCode")
+        Me.chkColourCode.Checked = True
+        Me.chkColourCode.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkColourCode.Name = "chkColourCode"
+        Me.chkColourCode.UseVisualStyleBackColor = True
         '
-        'TabPage2
+        'rdoLoose
         '
-        Me.TabPage2.Controls.Add(Me.GroupBox1)
-        Me.TabPage2.Controls.Add(Me.chkArchive)
-        resources.ApplyResources(Me.TabPage2, "TabPage2")
-        Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.UseVisualStyleBackColor = True
+        resources.ApplyResources(Me.rdoLoose, "rdoLoose")
+        Me.rdoLoose.Name = "rdoLoose"
+        Me.rdoLoose.UseVisualStyleBackColor = True
         '
-        'TabPage4
+        'PrintTab
         '
-        Me.TabPage4.Controls.Add(Me.GroupBox2)
-        Me.TabPage4.Controls.Add(Me.GroupBox3)
-        resources.ApplyResources(Me.TabPage4, "TabPage4")
-        Me.TabPage4.Name = "TabPage4"
-        Me.TabPage4.UseVisualStyleBackColor = True
+        Me.PrintTab.Controls.Add(Me.GroupBox10)
+        Me.PrintTab.Controls.Add(Me.gbxScale)
+        Me.PrintTab.Controls.Add(Me.rdoBR)
+        Me.PrintTab.Controls.Add(Me.rdoBL)
+        Me.PrintTab.Controls.Add(Me.rdoTR)
+        Me.PrintTab.Controls.Add(Me.PictureBox2)
+        Me.PrintTab.Controls.Add(Me.rdoTL)
+        Me.PrintTab.Controls.Add(Me.chkDWGLocation)
+        Me.PrintTab.Controls.Add(Me.GroupBox7)
+        Me.PrintTab.Controls.Add(Me.chkReverse)
+        Me.PrintTab.Controls.Add(Me.txtCopies)
+        Me.PrintTab.Controls.Add(Me.Label10)
+        Me.PrintTab.Controls.Add(Me.GroupBox8)
+        Me.PrintTab.Controls.Add(Me.GroupBox9)
+        resources.ApplyResources(Me.PrintTab, "PrintTab")
+        Me.PrintTab.Name = "PrintTab"
+        Me.PrintTab.UseVisualStyleBackColor = True
+        '
+        'GroupBox10
+        '
+        Me.GroupBox10.Controls.Add(Me.chkC)
+        Me.GroupBox10.Controls.Add(Me.chkF)
+        Me.GroupBox10.Controls.Add(Me.chkE)
+        Me.GroupBox10.Controls.Add(Me.chkD)
+        Me.GroupBox10.Controls.Add(Me.chkB)
+        Me.GroupBox10.Controls.Add(Me.chkA)
+        resources.ApplyResources(Me.GroupBox10, "GroupBox10")
+        Me.GroupBox10.Name = "GroupBox10"
+        Me.GroupBox10.TabStop = False
+        '
+        'chkF
+        '
+        resources.ApplyResources(Me.chkF, "chkF")
+        Me.chkF.Name = "chkF"
+        Me.chkF.UseVisualStyleBackColor = True
+        '
+        'chkE
+        '
+        resources.ApplyResources(Me.chkE, "chkE")
+        Me.chkE.Name = "chkE"
+        Me.chkE.UseVisualStyleBackColor = True
+        '
+        'chkD
+        '
+        resources.ApplyResources(Me.chkD, "chkD")
+        Me.chkD.Name = "chkD"
+        Me.chkD.UseVisualStyleBackColor = True
+        '
+        'chkB
+        '
+        resources.ApplyResources(Me.chkB, "chkB")
+        Me.chkB.Checked = True
+        Me.chkB.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkB.Name = "chkB"
+        Me.chkB.UseVisualStyleBackColor = True
+        '
+        'chkA
+        '
+        resources.ApplyResources(Me.chkA, "chkA")
+        Me.chkA.Checked = True
+        Me.chkA.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkA.Name = "chkA"
+        Me.chkA.UseVisualStyleBackColor = True
+        '
+        'gbxScale
+        '
+        Me.gbxScale.Controls.Add(Me.Label11)
+        Me.gbxScale.Controls.Add(Me.cmbScaleF)
+        Me.gbxScale.Controls.Add(Me.Label15)
+        Me.gbxScale.Controls.Add(Me.cmbScaleE)
+        Me.gbxScale.Controls.Add(Me.Label14)
+        Me.gbxScale.Controls.Add(Me.cmbScaleD)
+        Me.gbxScale.Controls.Add(Me.Label12)
+        Me.gbxScale.Controls.Add(Me.cmbScaleC)
+        Me.gbxScale.Controls.Add(Me.Label13)
+        Me.gbxScale.Controls.Add(Me.cmbScaleB)
+        resources.ApplyResources(Me.gbxScale, "gbxScale")
+        Me.gbxScale.Name = "gbxScale"
+        Me.gbxScale.TabStop = False
+        '
+        'Label11
+        '
+        resources.ApplyResources(Me.Label11, "Label11")
+        Me.Label11.Name = "Label11"
+        '
+        'cmbScaleF
+        '
+        Me.cmbScaleF.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbScaleF.FormattingEnabled = True
+        Me.cmbScaleF.Items.AddRange(New Object() {resources.GetString("cmbScaleF.Items"), resources.GetString("cmbScaleF.Items1"), resources.GetString("cmbScaleF.Items2"), resources.GetString("cmbScaleF.Items3"), resources.GetString("cmbScaleF.Items4"), resources.GetString("cmbScaleF.Items5"), resources.GetString("cmbScaleF.Items6")})
+        resources.ApplyResources(Me.cmbScaleF, "cmbScaleF")
+        Me.cmbScaleF.Name = "cmbScaleF"
+        '
+        'Label15
+        '
+        resources.ApplyResources(Me.Label15, "Label15")
+        Me.Label15.Name = "Label15"
+        '
+        'cmbScaleE
+        '
+        Me.cmbScaleE.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbScaleE.FormattingEnabled = True
+        Me.cmbScaleE.Items.AddRange(New Object() {resources.GetString("cmbScaleE.Items"), resources.GetString("cmbScaleE.Items1"), resources.GetString("cmbScaleE.Items2"), resources.GetString("cmbScaleE.Items3"), resources.GetString("cmbScaleE.Items4"), resources.GetString("cmbScaleE.Items5")})
+        resources.ApplyResources(Me.cmbScaleE, "cmbScaleE")
+        Me.cmbScaleE.Name = "cmbScaleE"
+        '
+        'Label14
+        '
+        resources.ApplyResources(Me.Label14, "Label14")
+        Me.Label14.Name = "Label14"
+        '
+        'cmbScaleD
+        '
+        Me.cmbScaleD.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbScaleD.FormattingEnabled = True
+        Me.cmbScaleD.Items.AddRange(New Object() {resources.GetString("cmbScaleD.Items"), resources.GetString("cmbScaleD.Items1"), resources.GetString("cmbScaleD.Items2"), resources.GetString("cmbScaleD.Items3"), resources.GetString("cmbScaleD.Items4")})
+        resources.ApplyResources(Me.cmbScaleD, "cmbScaleD")
+        Me.cmbScaleD.Name = "cmbScaleD"
+        '
+        'Label12
+        '
+        resources.ApplyResources(Me.Label12, "Label12")
+        Me.Label12.Name = "Label12"
+        '
+        'cmbScaleC
+        '
+        Me.cmbScaleC.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbScaleC.FormattingEnabled = True
+        Me.cmbScaleC.Items.AddRange(New Object() {resources.GetString("cmbScaleC.Items"), resources.GetString("cmbScaleC.Items1"), resources.GetString("cmbScaleC.Items2"), resources.GetString("cmbScaleC.Items3")})
+        resources.ApplyResources(Me.cmbScaleC, "cmbScaleC")
+        Me.cmbScaleC.Name = "cmbScaleC"
+        '
+        'Label13
+        '
+        resources.ApplyResources(Me.Label13, "Label13")
+        Me.Label13.Name = "Label13"
+        '
+        'cmbScaleB
+        '
+        Me.cmbScaleB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbScaleB.FormattingEnabled = True
+        Me.cmbScaleB.Items.AddRange(New Object() {resources.GetString("cmbScaleB.Items"), resources.GetString("cmbScaleB.Items1"), resources.GetString("cmbScaleB.Items2")})
+        resources.ApplyResources(Me.cmbScaleB, "cmbScaleB")
+        Me.cmbScaleB.Name = "cmbScaleB"
+        '
+        'rdoBR
+        '
+        resources.ApplyResources(Me.rdoBR, "rdoBR")
+        Me.rdoBR.Name = "rdoBR"
+        Me.rdoBR.UseVisualStyleBackColor = True
+        '
+        'rdoBL
+        '
+        resources.ApplyResources(Me.rdoBL, "rdoBL")
+        Me.rdoBL.Name = "rdoBL"
+        Me.rdoBL.UseVisualStyleBackColor = True
+        '
+        'rdoTR
+        '
+        resources.ApplyResources(Me.rdoTR, "rdoTR")
+        Me.rdoTR.Name = "rdoTR"
+        Me.rdoTR.UseVisualStyleBackColor = True
+        '
+        'PictureBox2
+        '
+        resources.ApplyResources(Me.PictureBox2, "PictureBox2")
+        Me.PictureBox2.Name = "PictureBox2"
+        Me.PictureBox2.TabStop = False
+        '
+        'rdoTL
+        '
+        resources.ApplyResources(Me.rdoTL, "rdoTL")
+        Me.rdoTL.Name = "rdoTL"
+        Me.rdoTL.UseVisualStyleBackColor = True
+        '
+        'chkDWGLocation
+        '
+        resources.ApplyResources(Me.chkDWGLocation, "chkDWGLocation")
+        Me.chkDWGLocation.Name = "chkDWGLocation"
+        Me.chkDWGLocation.UseVisualStyleBackColor = True
+        '
+        'GroupBox7
+        '
+        Me.GroupBox7.Controls.Add(Me.rdoColour)
+        Me.GroupBox7.Controls.Add(Me.rdoBW)
+        resources.ApplyResources(Me.GroupBox7, "GroupBox7")
+        Me.GroupBox7.Name = "GroupBox7"
+        Me.GroupBox7.TabStop = False
+        '
+        'rdoColour
+        '
+        resources.ApplyResources(Me.rdoColour, "rdoColour")
+        Me.rdoColour.Checked = True
+        Me.rdoColour.Name = "rdoColour"
+        Me.rdoColour.TabStop = True
+        Me.rdoColour.UseVisualStyleBackColor = True
+        '
+        'rdoBW
+        '
+        resources.ApplyResources(Me.rdoBW, "rdoBW")
+        Me.rdoBW.Name = "rdoBW"
+        Me.rdoBW.UseVisualStyleBackColor = True
+        '
+        'chkReverse
+        '
+        resources.ApplyResources(Me.chkReverse, "chkReverse")
+        Me.chkReverse.Name = "chkReverse"
+        Me.chkReverse.UseVisualStyleBackColor = True
+        '
+        'txtCopies
+        '
+        resources.ApplyResources(Me.txtCopies, "txtCopies")
+        Me.txtCopies.Name = "txtCopies"
+        Me.txtCopies.Value = New Decimal(New Integer() {1, 0, 0, 0})
+        '
+        'Label10
+        '
+        resources.ApplyResources(Me.Label10, "Label10")
+        Me.Label10.Name = "Label10"
+        '
+        'GroupBox8
+        '
+        Me.GroupBox8.Controls.Add(Me.rdoScale)
+        Me.GroupBox8.Controls.Add(Me.rdoFull)
+        resources.ApplyResources(Me.GroupBox8, "GroupBox8")
+        Me.GroupBox8.Name = "GroupBox8"
+        Me.GroupBox8.TabStop = False
+        '
+        'rdoScale
+        '
+        resources.ApplyResources(Me.rdoScale, "rdoScale")
+        Me.rdoScale.Name = "rdoScale"
+        Me.rdoScale.UseVisualStyleBackColor = True
+        '
+        'rdoFull
+        '
+        resources.ApplyResources(Me.rdoFull, "rdoFull")
+        Me.rdoFull.Checked = True
+        Me.rdoFull.Name = "rdoFull"
+        Me.rdoFull.TabStop = True
+        Me.rdoFull.UseVisualStyleBackColor = True
+        '
+        'GroupBox9
+        '
+        Me.GroupBox9.Controls.Add(Me.rdoFirstPage)
+        Me.GroupBox9.Controls.Add(Me.rdoCurrentPage)
+        Me.GroupBox9.Controls.Add(Me.rdoAllPages)
+        resources.ApplyResources(Me.GroupBox9, "GroupBox9")
+        Me.GroupBox9.Name = "GroupBox9"
+        Me.GroupBox9.TabStop = False
+        '
+        'rdoFirstPage
+        '
+        resources.ApplyResources(Me.rdoFirstPage, "rdoFirstPage")
+        Me.rdoFirstPage.Name = "rdoFirstPage"
+        Me.rdoFirstPage.UseVisualStyleBackColor = True
+        '
+        'rdoCurrentPage
+        '
+        resources.ApplyResources(Me.rdoCurrentPage, "rdoCurrentPage")
+        Me.rdoCurrentPage.Name = "rdoCurrentPage"
+        Me.rdoCurrentPage.UseVisualStyleBackColor = True
+        '
+        'rdoAllPages
+        '
+        resources.ApplyResources(Me.rdoAllPages, "rdoAllPages")
+        Me.rdoAllPages.Checked = True
+        Me.rdoAllPages.Name = "rdoAllPages"
+        Me.rdoAllPages.TabStop = True
+        Me.rdoAllPages.UseVisualStyleBackColor = True
+        '
+        'ExportTab
+        '
+        Me.ExportTab.Controls.Add(Me.GroupBox1)
+        Me.ExportTab.Controls.Add(Me.chkArchive)
+        resources.ApplyResources(Me.ExportTab, "ExportTab")
+        Me.ExportTab.Name = "ExportTab"
+        Me.ExportTab.UseVisualStyleBackColor = True
+        '
+        'RevTableTab
+        '
+        Me.RevTableTab.Controls.Add(Me.GroupBox2)
+        Me.RevTableTab.Controls.Add(Me.GroupBox3)
+        resources.ApplyResources(Me.RevTableTab, "RevTableTab")
+        Me.RevTableTab.Name = "RevTableTab"
+        Me.RevTableTab.UseVisualStyleBackColor = True
         '
         'GroupBox2
         '
@@ -639,6 +1074,12 @@ Partial Class Settings
         Me.btnApply.Name = "btnApply"
         Me.btnApply.UseVisualStyleBackColor = True
         '
+        'chkC
+        '
+        resources.ApplyResources(Me.chkC, "chkC")
+        Me.chkC.Name = "chkC"
+        Me.chkC.UseVisualStyleBackColor = True
+        '
         'Settings
         '
         resources.ApplyResources(Me, "$this")
@@ -659,11 +1100,32 @@ Partial Class Settings
         Me.tabDWG.ResumeLayout(False)
         Me.tabDWG.PerformLayout()
         Me.tcrlSettings.ResumeLayout(False)
-        Me.TabPage1.ResumeLayout(False)
-        Me.TabPage1.PerformLayout()
-        Me.TabPage2.ResumeLayout(False)
-        Me.TabPage2.PerformLayout()
-        Me.TabPage4.ResumeLayout(False)
+        Me.GeneralTab.ResumeLayout(False)
+        Me.GroupBox5.ResumeLayout(False)
+        Me.GroupBox5.PerformLayout()
+        Me.GroupBox6.ResumeLayout(False)
+        Me.GroupBox6.PerformLayout()
+        CType(Me.nudMaxRef, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvNameFormat, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox4.ResumeLayout(False)
+        Me.GroupBox4.PerformLayout()
+        Me.PrintTab.ResumeLayout(False)
+        Me.PrintTab.PerformLayout()
+        Me.GroupBox10.ResumeLayout(False)
+        Me.GroupBox10.PerformLayout()
+        Me.gbxScale.ResumeLayout(False)
+        Me.gbxScale.PerformLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox7.ResumeLayout(False)
+        Me.GroupBox7.PerformLayout()
+        CType(Me.txtCopies, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox8.ResumeLayout(False)
+        Me.GroupBox8.PerformLayout()
+        Me.GroupBox9.ResumeLayout(False)
+        Me.GroupBox9.PerformLayout()
+        Me.ExportTab.ResumeLayout(False)
+        Me.ExportTab.PerformLayout()
+        Me.RevTableTab.ResumeLayout(False)
         Me.GroupBox2.ResumeLayout(False)
         CType(Me.dgvRevTableLayout, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ContextMenuStrip1.ResumeLayout(False)
@@ -718,15 +1180,15 @@ Partial Class Settings
     Friend WithEvents chkLineWeights As Windows.Forms.CheckBox
     Friend WithEvents chkPDFBW As Windows.Forms.CheckBox
     Friend WithEvents tcrlSettings As Windows.Forms.TabControl
-    Friend WithEvents TabPage1 As Windows.Forms.TabPage
-    Friend WithEvents TabPage2 As Windows.Forms.TabPage
-    Friend WithEvents RefColour As Windows.Forms.ListView
+    Friend WithEvents GeneralTab As Windows.Forms.TabPage
+    Friend WithEvents ExportTab As Windows.Forms.TabPage
+    Friend WithEvents lvRefColour As Windows.Forms.ListView
     Friend WithEvents ColumnHeader4 As Windows.Forms.ColumnHeader
-    Friend WithEvents CheckBox1 As Windows.Forms.CheckBox
+    Friend WithEvents chkColourCode As Windows.Forms.CheckBox
     Friend WithEvents rdoLoose As Windows.Forms.RadioButton
     Friend WithEvents rdoStrict As Windows.Forms.RadioButton
     Friend WithEvents Label3 As Windows.Forms.Label
-    Friend WithEvents TabPage4 As Windows.Forms.TabPage
+    Friend WithEvents RevTableTab As Windows.Forms.TabPage
     Friend WithEvents GroupBox2 As Windows.Forms.GroupBox
     Friend WithEvents dgvRevTableLayout As Windows.Forms.DataGridView
     Friend WithEvents chk As Windows.Forms.DataGridViewCheckBoxColumn
@@ -749,4 +1211,55 @@ Partial Class Settings
     Friend WithEvents btnApply As Windows.Forms.Button
     Friend WithEvents ContextMenuStrip1 As Windows.Forms.ContextMenuStrip
     Friend WithEvents DeleteRowToolStripMenuItem As Windows.Forms.ToolStripMenuItem
+    Friend WithEvents GroupBox5 As Windows.Forms.GroupBox
+    Friend WithEvents chkExperimental As Windows.Forms.CheckBox
+    Friend WithEvents GroupBox4 As Windows.Forms.GroupBox
+    Friend WithEvents btnRemove As Windows.Forms.Button
+    Friend WithEvents btnAdd As Windows.Forms.Button
+    Friend WithEvents txtNameFormat As Windows.Forms.TextBox
+    Friend WithEvents Label8 As Windows.Forms.Label
+    Friend WithEvents dgvNameFormat As Windows.Forms.DataGridView
+    Friend WithEvents Format As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Example As Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents GroupBox6 As Windows.Forms.GroupBox
+    Friend WithEvents Label9 As Windows.Forms.Label
+    Friend WithEvents nudMaxRef As Windows.Forms.NumericUpDown
+    Friend WithEvents PrintTab As Windows.Forms.TabPage
+    Friend WithEvents rdoBR As Windows.Forms.RadioButton
+    Friend WithEvents rdoBL As Windows.Forms.RadioButton
+    Friend WithEvents rdoTR As Windows.Forms.RadioButton
+    Friend WithEvents PictureBox2 As Windows.Forms.PictureBox
+    Friend WithEvents rdoTL As Windows.Forms.RadioButton
+    Friend WithEvents chkDWGLocation As Windows.Forms.CheckBox
+    Friend WithEvents GroupBox7 As Windows.Forms.GroupBox
+    Friend WithEvents rdoColour As Windows.Forms.RadioButton
+    Friend WithEvents rdoBW As Windows.Forms.RadioButton
+    Friend WithEvents chkReverse As Windows.Forms.CheckBox
+    Friend WithEvents txtCopies As Windows.Forms.NumericUpDown
+    Friend WithEvents Label10 As Windows.Forms.Label
+    Friend WithEvents GroupBox8 As Windows.Forms.GroupBox
+    Friend WithEvents rdoScale As Windows.Forms.RadioButton
+    Friend WithEvents rdoFull As Windows.Forms.RadioButton
+    Friend WithEvents GroupBox9 As Windows.Forms.GroupBox
+    Friend WithEvents rdoFirstPage As Windows.Forms.RadioButton
+    Friend WithEvents rdoCurrentPage As Windows.Forms.RadioButton
+    Friend WithEvents rdoAllPages As Windows.Forms.RadioButton
+    Friend WithEvents gbxScale As Windows.Forms.GroupBox
+    Friend WithEvents Label15 As Windows.Forms.Label
+    Friend WithEvents cmbScaleE As Windows.Forms.ComboBox
+    Friend WithEvents Label14 As Windows.Forms.Label
+    Friend WithEvents cmbScaleD As Windows.Forms.ComboBox
+    Friend WithEvents Label12 As Windows.Forms.Label
+    Friend WithEvents cmbScaleC As Windows.Forms.ComboBox
+    Friend WithEvents Label13 As Windows.Forms.Label
+    Friend WithEvents cmbScaleB As Windows.Forms.ComboBox
+    Friend WithEvents Label11 As Windows.Forms.Label
+    Friend WithEvents cmbScaleF As Windows.Forms.ComboBox
+    Friend WithEvents GroupBox10 As Windows.Forms.GroupBox
+    Friend WithEvents chkF As Windows.Forms.CheckBox
+    Friend WithEvents chkE As Windows.Forms.CheckBox
+    Friend WithEvents chkD As Windows.Forms.CheckBox
+    Friend WithEvents chkB As Windows.Forms.CheckBox
+    Friend WithEvents chkA As Windows.Forms.CheckBox
+    Friend WithEvents chkC As Windows.Forms.CheckBox
 End Class

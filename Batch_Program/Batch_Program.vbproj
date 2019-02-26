@@ -8,12 +8,12 @@
     <SchemaVersion>
     </SchemaVersion>
     <ProjectGuid>{90389654-6354-46DD-98BE-679E86D8F19B}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>
     </RootNamespace>
     <AssemblyName>BPAssembly</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>WindowsForms</MyType>
+    <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>true</IsWebBootstrapper>
@@ -118,7 +118,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>My.MyApplication</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>BDAC8D2DFC4A460EB6DBA68E428A40FC4C63DBA4</ManifestCertificateThumbprint>
@@ -275,12 +276,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Print.Designer.vb">
-      <DependentUpon>Print.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Print.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Rename.Designer.vb">
       <DependentUpon>Rename.vb</DependentUpon>
     </Compile>
@@ -337,18 +332,22 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Overwrite.resx">
       <DependentUpon>Overwrite.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Select Template.resx">
       <DependentUpon>Select Template.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Warning.resx">
       <DependentUpon>Warning.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Print Size.resx">
       <DependentUpon>Print Size.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="iProperties.resx">
       <DependentUpon>iProperties.vb</DependentUpon>
@@ -364,17 +363,17 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources2.Designer.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Print.resx">
-      <DependentUpon>Print.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Rename.resx">
       <DependentUpon>Rename.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Rev Switch.resx">
       <DependentUpon>Rev Switch.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="RevTable.resx">
       <DependentUpon>RevTable.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Splash.resx">
       <DependentUpon>Splash.vb</DependentUpon>
