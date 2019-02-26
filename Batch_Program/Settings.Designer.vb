@@ -89,6 +89,7 @@ Partial Class Settings
         Me.rdoLoose = New System.Windows.Forms.RadioButton()
         Me.PrintTab = New System.Windows.Forms.TabPage()
         Me.GroupBox10 = New System.Windows.Forms.GroupBox()
+        Me.chkC = New System.Windows.Forms.CheckBox()
         Me.chkF = New System.Windows.Forms.CheckBox()
         Me.chkE = New System.Windows.Forms.CheckBox()
         Me.chkD = New System.Windows.Forms.CheckBox()
@@ -148,7 +149,6 @@ Partial Class Settings
         Me.Label7 = New System.Windows.Forms.Label()
         Me.txtAlphaRev = New System.Windows.Forms.TextBox()
         Me.btnApply = New System.Windows.Forms.Button()
-        Me.chkC = New System.Windows.Forms.CheckBox()
         Me.GroupBox1.SuspendLayout()
         Me.tabSaveLoc.SuspendLayout()
         Me.tabPDF.SuspendLayout()
@@ -666,6 +666,12 @@ Partial Class Settings
         Me.GroupBox10.Name = "GroupBox10"
         Me.GroupBox10.TabStop = False
         '
+        'chkC
+        '
+        resources.ApplyResources(Me.chkC, "chkC")
+        Me.chkC.Name = "chkC"
+        Me.chkC.UseVisualStyleBackColor = True
+        '
         'chkF
         '
         resources.ApplyResources(Me.chkF, "chkF")
@@ -987,6 +993,8 @@ Partial Class Settings
         '
         'GroupBox3
         '
+        Me.GroupBox3.Controls.Add(Me.txtAlphaRev)
+        Me.GroupBox3.Controls.Add(Me.txtNumRev)
         Me.GroupBox3.Controls.Add(Me.Label4)
         Me.GroupBox3.Controls.Add(Me.rdbBR)
         Me.GroupBox3.Controls.Add(Me.nudStartVal)
@@ -996,9 +1004,7 @@ Partial Class Settings
         Me.GroupBox3.Controls.Add(Me.Label6)
         Me.GroupBox3.Controls.Add(Me.PictureBox1)
         Me.GroupBox3.Controls.Add(Me.rdbTL)
-        Me.GroupBox3.Controls.Add(Me.txtNumRev)
         Me.GroupBox3.Controls.Add(Me.Label7)
-        Me.GroupBox3.Controls.Add(Me.txtAlphaRev)
         resources.ApplyResources(Me.GroupBox3, "GroupBox3")
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.TabStop = False
@@ -1073,12 +1079,6 @@ Partial Class Settings
         resources.ApplyResources(Me.btnApply, "btnApply")
         Me.btnApply.Name = "btnApply"
         Me.btnApply.UseVisualStyleBackColor = True
-        '
-        'chkC
-        '
-        resources.ApplyResources(Me.chkC, "chkC")
-        Me.chkC.Name = "chkC"
-        Me.chkC.UseVisualStyleBackColor = True
         '
         'Settings
         '

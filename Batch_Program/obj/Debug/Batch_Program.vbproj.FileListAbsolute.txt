@@ -75,4 +75,3 @@ C:\Users\Luther\Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\BPAssembly.dll.config
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\bin\Debug\BPAssembly.dll
 \\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\BPAssembly.dll
-\\server03\users$\tfehr\My Documents\GitHub\Inventor-Batch-Program\Batch_Program\obj\Debug\Batch_Program.vbprojResolveAssemblyReference.cache
